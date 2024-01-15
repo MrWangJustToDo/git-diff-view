@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   ReactNode,
@@ -61,8 +62,10 @@ export const DiffView = ({ data }: { data: DiffFileData }) => {
     )
   );
 
+  // @ts-ignore
   const [oldList, setOldList] = useState<Record<number, ReactNode[]>>({});
 
+  // @ts-ignore
   const [newList, setNewList] = useState<Record<number, ReactNode[]>>({});
 
   const diffFile = useMemo(() => parseDiffFile(data), [data]);
