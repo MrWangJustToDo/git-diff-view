@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { DiffFile } from "../diff";
 import { addWidgetBGName, addWidgetColorName } from "./color";
 
 // TODO
+//@ts-ignore
 export const DiffAddWidget = ({ diffFile }: { diffFile: DiffFile }) => {
   return (
     <div
