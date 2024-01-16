@@ -73,6 +73,7 @@ export const DiffView = ({ data }: { data: DiffFileData }) => {
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);
 
   useEffect(() => {
+    console.log(diffFile);
     diffFile.init();
     diffFile.buildSplitDiffLines();
     diffFile.buildUnifiedDiffLines();

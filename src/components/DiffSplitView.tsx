@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef } from "react";
 import debounce from "lodash/debounce";
-import { DiffFile, numIterater } from "../diff";
+import { DiffFile, numIterator } from "../diff";
 import { DiffSplitLine } from "./DiffSplitLine";
 import {
   DiffSplitExpandLastLine,
@@ -79,7 +79,7 @@ const DiffSplitViewTable = ({
           fontSize: "var(--diff-font-size--)",
         }}
       >
-        {numIterater(lineLength, (index) => (
+        {numIterator(lineLength, (index) => (
           <Fragment key={index}>
             <DiffSplitHunkLine
               index={index}

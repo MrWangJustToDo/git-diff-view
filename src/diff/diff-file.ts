@@ -1,4 +1,4 @@
-import { numIterater, relativeChanges } from ".";
+import { numIterator, relativeChanges } from ".";
 import { DiffLine, DiffLineType } from "./diff-line";
 import { DiffParser } from "./diff-parse";
 import { File } from "./file";
@@ -99,7 +99,7 @@ export class DiffFile {
 
   #listeners: (() => void)[] = [];
 
-  hasHilighted: boolean = false;
+  hasHighlighted: boolean = false;
 
   #_hasInitRaw: boolean = false;
 
@@ -357,7 +357,7 @@ export class DiffFile {
     const lang = oldFileLang || newFileLang || "txt";
     this.#composeSyntax(oldFileLang || lang, newFileLang || lang);
     this.#_hasInitSyntax = true;
-    this.hasHilighted = true;
+    this.hasHighlighted = true;
   }
 
   init() {
@@ -375,7 +375,7 @@ export class DiffFile {
     let newFileLineNumber = 1;
     let prevIsHidden = false;
     let hideStart = Infinity;
-    numIterater(this.lineLength, () => {
+    numIterator(this.lineLength, () => {
       const oldRawLine = this.#getOldRawLine(oldFileLineNumber);
       const oldDiffLine = this.#getOldDiffLine(oldFileLineNumber);
       const newRawLine = this.#getNewRawLine(newFileLineNumber);
@@ -657,7 +657,7 @@ export class DiffFile {
     return this.#unifiedHunksLines?.[index];
   };
 
-  onUnifiedHunkExapnd = (dir: "up" | "down" | "all", index: number) => {
+  onUnifiedHunkExpand = (dir: "up" | "down" | "all", index: number) => {
     const current = this.#unifiedHunksLines?.[index];
     if (!current) return;
 

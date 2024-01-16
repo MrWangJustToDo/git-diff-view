@@ -4,31 +4,36 @@ import { addContentHighlightBGName, delContentHighlightBGName } from "./color";
 const DiffString = ({
   rawLine,
   diffLine,
-  operetar,
+  operator,
 }: {
   rawLine: string;
   diffLine?: DiffLine;
-  operetar?: "add" | "del";
+  operator?: "add" | "del";
 }) => {
   const range = diffLine?.range;
 
   if (range && range.length > 0 && range.length < rawLine.length) {
     return (
       <span className="diff-line-content-raw">
-        {rawLine.slice(0, range.location)}
         <span
-          data-highlight
-          className="rounded-[0.2em]"
-          style={{
-            backgroundColor:
-              operetar === "add"
-                ? `var(${addContentHighlightBGName})`
-                : `var(${delContentHighlightBGName})`,
-          }}
+          data-range-start={range.location}
+          data-range-end={range.location + range.length}
         >
-          {rawLine.slice(range.location, range.location + range.length)}
+          {rawLine.slice(0, range.location)}
+          <span
+            data-diff-highlight
+            className="rounded-[0.2em]"
+            style={{
+              backgroundColor:
+                operator === "add"
+                  ? `var(${addContentHighlightBGName})`
+                  : `var(${delContentHighlightBGName})`,
+            }}
+          >
+            {rawLine.slice(range.location, range.location + range.length)}
+          </span>
+          {rawLine.slice(range.location + range.length)}
         </span>
-        {rawLine.slice(range.location + range.length)}
       </span>
     );
   }
@@ -39,17 +44,17 @@ const DiffString = ({
 const DiffSyntax = ({
   rawLine,
   diffLine,
-  operetar,
+  operator,
   syntaxLine,
 }: {
   rawLine: string;
   diffLine?: DiffLine;
   syntaxLine?: SyntaxLine;
-  operetar?: "add" | "del";
+  operator?: "add" | "del";
 }) => {
   if (!syntaxLine) {
     return (
-      <DiffString rawLine={rawLine} diffLine={diffLine} operetar={operetar} />
+      <DiffString rawLine={rawLine} diffLine={diffLine} operator={operator} />
     );
   }
 
@@ -96,10 +101,10 @@ const DiffSyntax = ({
                 >
                   {str1}
                   <span
-                    data-highlight
+                    data-diff-highlight
                     style={{
                       backgroundColor:
-                        operetar === "add"
+                        operator === "add"
                           ? `var(${addContentHighlightBGName})`
                           : `var(${delContentHighlightBGName})`,
                       borderTopLeftRadius: isStart ? "0.2em" : undefined,
@@ -165,21 +170,21 @@ export const DiffContent = ({
       }}
     >
       <span
-        data-operater={isAdded ? "+" : isDelete ? "-" : undefined}
-        className="diff-line-content-operater inline-block w-[1.5em] ml-[-1.5em] indent-[0.2em] select-none"
+        data-operator={isAdded ? "+" : isDelete ? "-" : undefined}
+        className="diff-line-content-operator inline-block w-[1.5em] ml-[-1.5em] indent-[0.2em] select-none"
       >
         {isAdded ? "+" : isDelete ? "-" : " "}
       </span>
-      {isHighlight && diffFile.hasHilighted ? (
+      {isHighlight && diffFile.hasHighlighted ? (
         <DiffSyntax
-          operetar={isAdded ? "add" : isDelete ? "del" : undefined}
+          operator={isAdded ? "add" : isDelete ? "del" : undefined}
           rawLine={rawLine}
           diffLine={diffLine}
           syntaxLine={syntaxLine}
         />
       ) : (
         <DiffString
-          operetar={isAdded ? "add" : isDelete ? "del" : undefined}
+          operator={isAdded ? "add" : isDelete ? "del" : undefined}
           rawLine={rawLine}
           diffLine={diffLine}
         />

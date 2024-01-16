@@ -1,11 +1,10 @@
 import { DiffFile, SyntaxLine } from "../diff";
 import { DiffLine } from "../diff/diff-line";
+import { DiffAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import {
   addContentBGName,
   addLineNumberBGName,
-  addWidgetBGName,
-  addWidgetColorName,
   delContentBGName,
   delLineNumberBGName,
   expandContentBGName,
@@ -49,24 +48,7 @@ const DiffUnifiedOldLine = ({
           backgroundColor: `var(${delLineNumberBGName})`,
         }}
       >
-        <div
-          className="diff-add-widget-wrapper absolute left-[100%] top-[1px] translate-x-[-50%]"
-          style={{
-            width: "calc(var(--diff-font-size--) * 1.4)",
-            height: "calc(var(--diff-font-size--) * 1.4)",
-          }}
-        >
-          <div
-            className="diff-add-widget absolute overflow-hidden cursor-pointer rounded-md w-0 h-0 left-[0] top-[0] flex items-center justify-center transition-transform origin-center group-hover:w-full group-hover:h-full hover:scale-110"
-            style={{
-              color: `var(${addWidgetColorName})`,
-              zIndex: 1,
-              backgroundColor: `var(${addWidgetBGName})`,
-            }}
-          >
-            +
-          </div>
-        </div>
+        <DiffAddWidget diffFile={diffFile} />
         <div className="flex">
           <span data-line-num-old={lineNumber} className="inline-block w-[50%]">
             {lineNumber}
@@ -124,24 +106,7 @@ const DiffUnifiedNewLine = ({
           backgroundColor: `var(${addLineNumberBGName})`,
         }}
       >
-        <div
-          className="diff-add-widget-wrapper absolute left-[100%] top-[1px] translate-x-[-50%]"
-          style={{
-            width: "calc(var(--diff-font-size--) * 1.4)",
-            height: "calc(var(--diff-font-size--) * 1.4)",
-          }}
-        >
-          <div
-            className="diff-add-widget absolute overflow-hidden cursor-pointer rounded-md w-0 h-0 left-[0] top-[0] flex items-center justify-center transition-transform origin-center group-hover:w-full group-hover:h-full hover:scale-110"
-            style={{
-              color: `var(${addWidgetColorName})`,
-              zIndex: 1,
-              backgroundColor: `var(${addWidgetBGName})`,
-            }}
-          >
-            +
-          </div>
-        </div>
+        <DiffAddWidget diffFile={diffFile} />
         <div className="flex">
           <span className="inline-block w-[50%]" />
           <span className="shrink-0 w-[10px]" />
@@ -249,26 +214,7 @@ export const DiffUnifiedLine = ({
               : `var(${expandContentBGName})`,
           }}
         >
-          {hasDiff && (
-            <div
-              className="diff-add-widget-wrapper absolute left-[100%] top-[1px] translate-x-[-50%]"
-              style={{
-                width: "calc(var(--diff-font-size--) * 1.4)",
-                height: "calc(var(--diff-font-size--) * 1.4)",
-              }}
-            >
-              <div
-                className="diff-add-widget absolute overflow-hidden cursor-pointer rounded-md w-0 h-0 left-[0] top-[0] flex items-center justify-center transition-transform origin-center group-hover:w-full group-hover:h-full hover:scale-110"
-                style={{
-                  color: `var(${addWidgetColorName})`,
-                  zIndex: 1,
-                  backgroundColor: `var(${addWidgetBGName})`,
-                }}
-              >
-                +
-              </div>
-            </div>
-          )}
+          {hasDiff && <DiffAddWidget diffFile={diffFile} />}
           <div className="flex opacity-[0.5]">
             <span
               data-line-num-old={unifiedLine.oldLineNumber}

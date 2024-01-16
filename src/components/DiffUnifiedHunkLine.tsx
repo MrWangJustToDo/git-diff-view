@@ -49,7 +49,7 @@ export const DiffUnifiedHunkLine = ({
           <div
             className="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
             title="Expand All"
-            onClick={() => diffFile.onUnifiedHunkExapnd("all", index)}
+            onClick={() => diffFile.onUnifiedHunkExpand("all", index)}
           >
             <ExpandAll className="fill-current" />
           </div>
@@ -58,14 +58,14 @@ export const DiffUnifiedHunkLine = ({
             <div
               className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
               title="Expand Down"
-              onClick={() => diffFile.onUnifiedHunkExapnd("down", index)}
+              onClick={() => diffFile.onUnifiedHunkExpand("down", index)}
             >
               <ExpandDown className="fill-current" />
             </div>
             <div
               className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
               title="Expand Up"
-              onClick={() => diffFile.onUnifiedHunkExapnd("up", index)}
+              onClick={() => diffFile.onUnifiedHunkExpand("up", index)}
             >
               <ExpandUp className="fill-current" />
             </div>

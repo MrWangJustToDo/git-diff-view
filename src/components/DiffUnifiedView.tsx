@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { DiffFile, numIterater } from "../diff";
+import { DiffFile, numIterator } from "../diff";
 import { DiffUnifiedLine } from "./DiffUnifiedLine";
 import {
   DiffUnifiedExpandLastLine,
@@ -33,7 +33,7 @@ export const DiffUnifiedView = ({ diffFile }: { diffFile: DiffFile }) => {
               fontSize: "var(--diff-font-size--)",
             }}
           >
-            {numIterater(unifiedLineLength, (index) => (
+            {numIterator(unifiedLineLength, (index) => (
               <Fragment key={index}>
                 <DiffUnifiedHunkLine
                   index={index}

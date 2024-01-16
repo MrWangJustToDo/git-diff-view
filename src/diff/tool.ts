@@ -75,7 +75,7 @@ export function getHunkHeaderExpansionType(
   }
 }
 
-export const numIterater = <T>(num: number, cb: (index: number) => T): T[] => {
+export const numIterator = <T>(num: number, cb: (index: number) => T): T[] => {
   const re = [];
   for (let i = 0; i < num; i++) {
     re.push(cb(i));

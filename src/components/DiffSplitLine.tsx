@@ -1,13 +1,12 @@
 import { DiffFile } from "../diff";
 import { DiffLineType } from "../diff/diff-line";
 import { useSyncHeight } from "../hooks/useSyncHeight";
+import { DiffAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import { SplitSide } from "./DiffSplitView";
 import {
   addContentBGName,
   addLineNumberBGName,
-  addWidgetBGName,
-  addWidgetColorName,
   delContentBGName,
   delLineNumberBGName,
   emptyBGName,
@@ -97,26 +96,7 @@ export const DiffSplitLine = ({
             color: `var(${plainLineNumberColorName})`,
           }}
         >
-          {hasDiff && (
-            <div
-              className="diff-add-widget-wrapper absolute left-[100%] top-[1px] translate-x-[-50%]"
-              style={{
-                width: "calc(var(--diff-font-size--) * 1.4)",
-                height: "calc(var(--diff-font-size--) * 1.4)",
-              }}
-            >
-              <div
-                className="diff-add-widget absolute overflow-hidden cursor-pointer rounded-md w-0 h-0 left-[0] top-[0] flex items-center justify-center transition-transform origin-center group-hover:w-full group-hover:h-full hover:scale-110"
-                style={{
-                  color: `var(${addWidgetColorName})`,
-                  zIndex: 1,
-                  backgroundColor: `var(${addWidgetBGName})`,
-                }}
-              >
-                +
-              </div>
-            </div>
-          )}
+          {hasDiff && <DiffAddWidget diffFile={diffFile} />}
           <span
             data-line-num={currentItem.lineNumber}
             style={{ opacity: hasChange ? undefined : 0.5 }}
