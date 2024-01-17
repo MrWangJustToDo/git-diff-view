@@ -38,7 +38,7 @@ export const DiffUnifiedHunkLine = ({
       style={{ backgroundColor: `var(${hunkContentBGName})` }}
     >
       <td
-        className="diff-line-num diff-line-num-hunk left-[0] text-left select-none w-[1%] min-w-[60px] whitespace-nowrap"
+        className="diff-line-num diff-line-num-hunk left-[0] text-left select-none w-[1%] min-w-[60px] whitespace-nowrap z-[1]"
         style={{
           position: isWrap ? "relative" : "sticky",
           backgroundColor: `var(${hunkLineNumberBGName})`,
