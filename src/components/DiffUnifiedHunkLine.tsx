@@ -98,8 +98,9 @@ export const DiffUnifiedExpandLastLine = ({
   if (
     !diffFile.unifiedLastStartIndex ||
     !Number.isFinite(diffFile.unifiedLastStartIndex)
-  )
+  ) {
     return null;
+  }
 
   return (
     <tr

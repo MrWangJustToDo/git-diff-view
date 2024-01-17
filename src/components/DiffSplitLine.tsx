@@ -1,7 +1,7 @@
-import { DiffFile } from "../diff";
+import { DiffFile, DiffFileExtends } from "../diff";
 import { DiffLineType } from "../diff/diff-line";
 import { useSyncHeight } from "../hooks/useSyncHeight";
-import { DiffAddWidget } from "./DiffAddWidget";
+import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import { SplitSide } from "./DiffSplitView";
 import {
@@ -96,7 +96,7 @@ export const DiffSplitLine = ({
             color: `var(${plainLineNumberColorName})`,
           }}
         >
-          {hasDiff && <DiffAddWidget diffFile={diffFile} />}
+          {hasDiff && <DiffSplitAddWidget index={index} side={side} diffFile={diffFile as DiffFileExtends} />}
           <span
             data-line-num={currentItem.lineNumber}
             style={{ opacity: hasChange ? undefined : 0.5 }}

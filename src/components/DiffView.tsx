@@ -8,7 +8,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { DiffFileData, parseDiffFile } from "../diff";
+import { DiffFileData, DiffFileExtends } from "../diff";
 import { useDiffConfig } from "../hooks/useDiffConfig";
 import { DiffSplitView } from "./DiffSplitView";
 import { DiffUnifiedView } from "./DiffUnifiedView";
@@ -68,7 +68,17 @@ export const DiffView = ({ data }: { data: DiffFileData }) => {
   // @ts-ignore
   const [newList, setNewList] = useState<Record<number, ReactNode[]>>({});
 
-  const diffFile = useMemo(() => parseDiffFile(data), [data]);
+  const diffFile = useMemo(
+    () =>
+      new DiffFileExtends(
+        data.oldFile?.filePath || "",
+        data.oldFile?.content || "",
+        data.newFile?.filePath || "",
+        data.newFile?.content || "",
+        data.hunks.map(({ patchContent }) => patchContent)
+      ),
+    [data]
+  );
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);
 

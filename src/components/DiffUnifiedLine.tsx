@@ -1,6 +1,6 @@
-import { DiffFile, SyntaxLine } from "../diff";
+import { DiffFile, DiffFileExtends, SyntaxLine } from "../diff";
 import { DiffLine } from "../diff/diff-line";
-import { DiffAddWidget } from "./DiffAddWidget";
+import { DiffUnifiedAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import {
   addContentBGName,
@@ -48,7 +48,10 @@ const DiffUnifiedOldLine = ({
           backgroundColor: `var(${delLineNumberBGName})`,
         }}
       >
-        <DiffAddWidget diffFile={diffFile} />
+        <DiffUnifiedAddWidget
+          index={index - 1}
+          diffFile={diffFile as DiffFileExtends}
+        />
         <div className="flex">
           <span data-line-num-old={lineNumber} className="inline-block w-[50%]">
             {lineNumber}
@@ -106,7 +109,10 @@ const DiffUnifiedNewLine = ({
           backgroundColor: `var(${addLineNumberBGName})`,
         }}
       >
-        <DiffAddWidget diffFile={diffFile} />
+        <DiffUnifiedAddWidget
+          index={index - 1}
+          diffFile={diffFile as DiffFileExtends}
+        />
         <div className="flex">
           <span className="inline-block w-[50%]" />
           <span className="shrink-0 w-[10px]" />
@@ -214,7 +220,12 @@ export const DiffUnifiedLine = ({
               : `var(${expandContentBGName})`,
           }}
         >
-          {hasDiff && <DiffAddWidget diffFile={diffFile} />}
+          {hasDiff && (
+            <DiffUnifiedAddWidget
+              index={index}
+              diffFile={diffFile as DiffFileExtends}
+            />
+          )}
           <div className="flex opacity-[0.5]">
             <span
               data-line-num-old={unifiedLine.oldLineNumber}

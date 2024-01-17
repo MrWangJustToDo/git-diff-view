@@ -1,11 +1,12 @@
 import { Fragment } from "react";
-import { DiffFile, numIterator } from "../diff";
+import { DiffFile, DiffFileExtends, numIterator } from "../diff";
 import { DiffUnifiedLine } from "./DiffUnifiedLine";
 import {
   DiffUnifiedExpandLastLine,
   DiffUnifiedHunkLine,
 } from "./DiffUnifiedHunkLine";
 import { useDiffViewContext } from "./DiffViewContext";
+import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
 
 export const DiffUnifiedView = ({ diffFile }: { diffFile: DiffFile }) => {
   const { isWrap, isHighlight } = useDiffViewContext();
@@ -48,6 +49,13 @@ export const DiffUnifiedView = ({ diffFile }: { diffFile: DiffFile }) => {
                   isHighlight={isHighlight}
                   isWrap={isWrap}
                   diffFile={diffFile}
+                />
+                <DiffUnifiedExtendLine
+                  index={index}
+                  lineNumber={index + 1}
+                  isHighlight={isHighlight}
+                  isWrap={isWrap}
+                  diffFile={diffFile as DiffFileExtends}
                 />
               </Fragment>
             ))}

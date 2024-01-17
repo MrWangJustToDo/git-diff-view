@@ -787,13 +787,3 @@ export type DiffFileData = {
     patchContent: string;
   }[];
 };
-
-export const parseDiffFile = (data: DiffFileData) => {
-  return new DiffFile(
-    data.oldFile?.filePath || "",
-    data.oldFile?.content || "",
-    data.newFile?.filePath || "",
-    data.newFile?.content || "",
-    data.hunks.map(({ patchContent }) => patchContent)
-  );
-};

@@ -1,12 +1,12 @@
 import { Fragment, useEffect, useRef } from "react";
-import debounce from "lodash/debounce";
-import { DiffFile, numIterator } from "../diff";
+import { DiffFile, DiffFileExtends, numIterator } from "../diff";
 import { DiffSplitLine } from "./DiffSplitLine";
 import {
   DiffSplitExpandLastLine,
   DiffSplitHunkLine,
 } from "./DiffSplitHunkLine";
 import { useDiffViewContext } from "./DiffViewContext";
+import { DiffSplitExtendLine } from "./DiffSplitExtendLine";
 
 export enum SplitSide {
   old,
@@ -14,7 +14,7 @@ export enum SplitSide {
 }
 
 const syncScroll = (left: HTMLElement, right: HTMLElement) => {
-  const onScroll = debounce(function (event: Event) {
+  const onScroll = function (event: Event) {
     if (event === null || event.target === null) return;
     if (event.target === left) {
       right.scrollTop = left.scrollTop;
@@ -23,7 +23,7 @@ const syncScroll = (left: HTMLElement, right: HTMLElement) => {
       left.scrollTop = right.scrollTop;
       left.scrollLeft = right.scrollLeft;
     }
-  });
+  };
   if (!left.onscroll) {
     left.onscroll = onScroll;
   }
@@ -97,6 +97,14 @@ const DiffSplitViewTable = ({
               isHighlight={isHighlight}
               diffFile={diffFile}
             />
+            <DiffSplitExtendLine
+              index={index}
+              side={side}
+              isWrap={isWrap}
+              lineNumber={index + 1}
+              isHighlight={isHighlight}
+              diffFile={diffFile as DiffFileExtends}
+            />
           </Fragment>
         ))}
         {showExpandLast && (
@@ -131,7 +139,11 @@ export const DiffSplitView = ({ diffFile }: { diffFile: DiffFile }) => {
 
   return (
     <div className="split-diff-view w-full flex basis-[50%]">
-      <div className="old-diff-table-wrapper overflow-auto w-full" ref={ref1}>
+      <div
+        className="old-diff-table-wrapper overflow-auto w-full"
+        ref={ref1}
+        style={{ overscrollBehaviorX: "none" }}
+      >
         <DiffSplitViewTable
           side={SplitSide.old}
           isHighlight={isHighlight}
@@ -141,7 +153,11 @@ export const DiffSplitView = ({ diffFile }: { diffFile: DiffFile }) => {
         />
       </div>
       <div className="diff-split-line w-[1.5px] bg-[grey] opacity-[0.4]" />
-      <div className="new-diff-table-wrapper overflow-auto w-full" ref={ref2}>
+      <div
+        className="new-diff-table-wrapper overflow-auto w-full"
+        ref={ref2}
+        style={{ overscrollBehaviorX: "none" }}
+      >
         <DiffSplitViewTable
           side={SplitSide.new}
           isHighlight={isHighlight}
