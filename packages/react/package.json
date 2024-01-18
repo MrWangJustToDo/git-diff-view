@@ -1,0 +1,76 @@
+{
+  "name": "@git-diff-view/react",
+  "description": "@git-diff-view/react",
+  "author": "MrWangJustToDo",
+  "license": "MIT",
+  "version": "0.0.1",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "unpkg": "./dist/umd/index.development.js",
+  "jsdelivr": "./dist/umd/index.development.js",
+  "files": [
+    "dist",
+    "index.js",
+    "index.d.ts"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MrWangJustToDo/git-diff-view",
+    "directory": "packages/react"
+  },
+  "homepage": "https://github.com/MrWangJustToDo/git-diff-view",
+  "exports": {
+    ".": {
+      "require": "./index.js",
+      "types": "./index.d.ts",
+      "import": "./dist/esm/index.mjs"
+    },
+    "./styles/*": "./dist/css/*",
+    "./package.json": "./package.json"
+  },
+  "buildOptions": [
+    {
+      "input": "./src/index.withStyle.ts",
+      "output": [
+        {
+          "dir": "./dist",
+          "entryFileNames": "esm/index.mjs",
+          "format": "esm",
+          "sourcemap": true
+        }
+      ]
+    },
+    {
+      "input": "./src/index.ts",
+      "output": [
+        {
+          "dir": "./dist",
+          "entryFileNames": "cjs/index.js",
+          "format": "cjs",
+          "type": true,
+          "multiple": true,
+          "sourcemap": true
+        }
+      ]
+    }
+  ],
+  "keywords": [
+    "diff component",
+    "react diff component"
+  ],
+  "dependencies": {
+    "@git-diff-view/core": "^0.0.1",
+    "highlight.js": "^11.9.0",
+    "reactivity-store": "^0.3.1",
+    "lowlight": "^3.1.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
+    "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
+  }
+}

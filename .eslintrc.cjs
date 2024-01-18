@@ -1,18 +1,9 @@
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:react-hooks/recommended',
-  ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
-  parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh'],
-  rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
+  env: {
+    node: true,
   },
-}
+  // eslint will auto add `eslint-config` for a no scope package(which not start with '@' chart), so here use absolute file path
+  extends: [require.resolve("project-tool/baseLint")],
+  ignorePatterns: ["dist", "dev"],
+};

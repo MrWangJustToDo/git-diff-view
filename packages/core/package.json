@@ -1,0 +1,56 @@
+{
+  "name": "@git-diff-view/core",
+  "description": "@git-diff-view/core",
+  "author": "MrWangJustToDo",
+  "license": "MIT",
+  "version": "0.0.1",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "unpkg": "./dist/umd/index.development.js",
+  "jsdelivr": "./dist/umd/index.development.js",
+  "files": [
+    "dist",
+    "index.js",
+    "index.d.ts"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MrWangJustToDo/git-diff-view",
+    "directory": "packages/core"
+  },
+  "homepage": "https://github.com/MrWangJustToDo/git-diff-view",
+  "exports": {
+    ".": {
+      "require": "./index.js",
+      "types": "./index.d.ts",
+      "import": "./dist/esm/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "buildOptions": {
+    "input": "./src/index.ts",
+    "output": [
+      {
+        "dir": "./dist",
+        "entryFileNames": "cjs/index.js",
+        "format": "cjs",
+        "type": true,
+        "multiple": true,
+        "sourcemap": true
+      },
+      {
+        "dir": "./dist",
+        "entryFileNames": "esm/index.mjs",
+        "format": "esm",
+        "sourcemap": true
+      }
+    ]
+  },
+  "keywords": [
+    "diff",
+    "diff parse"
+  ],
+  "dependencies": {
+    "lowlight": "^3.1.0"
+  }
+}

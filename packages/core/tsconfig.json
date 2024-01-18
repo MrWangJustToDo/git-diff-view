@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "target": "ESNext",
+    "moduleResolution": "Bundler",
+    "stripInternal": true
+  },
+  "include": ["./src"],
+  "exclude": ["node_modules"]
+}
