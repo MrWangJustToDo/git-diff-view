@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { useDiffViewContext, SplitSide } from "..";
+import { useDomWidth } from "../hooks/useDomWidth";
 
 import type { DiffFileExtends } from "../utils";
 
@@ -11,13 +12,20 @@ const _DiffUnifiedWidgetLine = ({ index, diffFile }: { index: number; diffFile: 
 
   const newWidget = unifiedItem?.newLineNumber ? diffFile.checkWidgetLine(unifiedItem.newLineNumber, SplitSide.new) : undefined;
 
-  const { enableWrap, renderAddWidget } = useDiffViewContext();
+  const { renderAddWidget } = useDiffViewContext();
+
+  const width = useDomWidth({
+    selector: ".unified-diff-table-wrapper",
+    enable: true,
+  });
 
   return (
     <tr data-state="widget" className="diff-line diff-line-widget">
-      <td className="diff-line-widget-content" style={{ position: enableWrap ? "relative" : "sticky" }} colSpan={4}>
-        {oldWidget && renderAddWidget?.({ diffFile, side: SplitSide.old, lineNumber: unifiedItem.oldLineNumber, onClose: diffFile.onCloseAddWidget })}
-        {newWidget && renderAddWidget?.({ diffFile, side: SplitSide.new, lineNumber: unifiedItem.newLineNumber, onClose: diffFile.onCloseAddWidget })}
+      <td className="diff-line-widget-content p-0" colSpan={4}>
+        <div className="diff-line-widget-wrapper sticky left-0" style={{ width }}>
+          {oldWidget && renderAddWidget?.({ diffFile, side: SplitSide.old, lineNumber: unifiedItem.oldLineNumber, onClose: diffFile.onCloseAddWidget })}
+          {newWidget && renderAddWidget?.({ diffFile, side: SplitSide.new, lineNumber: unifiedItem.newLineNumber, onClose: diffFile.onCloseAddWidget })}
+        </div>
       </td>
     </tr>
   );

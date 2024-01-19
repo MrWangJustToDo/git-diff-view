@@ -74,9 +74,9 @@ function App() {
             <div className="border flex flex-col w-full px-[4px] py-[8px]">
               <textarea className="w-full border min-h-[80px] p-[2px]" value={val} onChange={(e) => setVal(e.target.value)} />
               <div className="m-[5px] mt-[0.8em] text-right">
-                <div className="inline-flex gap-x-[12px] sticky right-[10px] justify-end">
+                <div className="inline-flex gap-x-[12px] justify-end">
                   <button
-                    className="border float-right px-[12px] py-[6px] rounded-[4px]"
+                    className="border px-[12px] py-[6px] rounded-[4px]"
                     onClick={() => {
                       onClose();
                       if (val) {
@@ -93,7 +93,7 @@ function App() {
                     submit
                   </button>
                   <button
-                    className="border float-right px-[12px] py-[6px] rounded-[4px]"
+                    className="border px-[12px] py-[6px] rounded-[4px]"
                     onClick={() => {
                       onClose();
                       setVal("");

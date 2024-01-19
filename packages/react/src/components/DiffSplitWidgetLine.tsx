@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import { useDiffViewContext, SplitSide } from "..";
+import { useDomWidth } from "../hooks/useDomWidth";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
 import { emptyBGName } from "./color";
@@ -20,11 +21,16 @@ const _DiffSplitWidgetLine = ({ index, diffFile, side, lineNumber }: { index: nu
 
   const currentWidget = side === SplitSide.old ? leftWidget : rightWidget;
 
-  const { enableWrap, renderAddWidget } = useDiffViewContext();
+  const { renderAddWidget } = useDiffViewContext();
 
   useSyncHeight({
     selector: `tr[data-line="${lineNumber}-widget"]`,
     side: side === SplitSide.old ? "left" : "right",
+    enable: !!currentWidget,
+  });
+
+  const width = useDomWidth({
+    selector: side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper",
     enable: !!currentWidget,
   });
 
@@ -38,8 +44,10 @@ const _DiffSplitWidgetLine = ({ index, diffFile, side, lineNumber }: { index: nu
         backgroundColor: !currentWidget ? `var(${emptyBGName})` : undefined,
       }}
     >
-      <td className="diff-line-widget-content" style={{ position: enableWrap ? "relative" : "sticky" }} colSpan={2}>
-        {currentWidget && renderAddWidget?.({ diffFile, side, lineNumber: currentItem.lineNumber, onClose: diffFile.onCloseAddWidget })}
+      <td className="diff-line-widget-content p-0" colSpan={2}>
+        <div className="diff-line-widget-wrapper sticky left-0" style={{ width }}>
+          {currentWidget && renderAddWidget?.({ diffFile, side, lineNumber: currentItem.lineNumber, onClose: diffFile.onCloseAddWidget })}
+        </div>
       </td>
     </tr>
   );

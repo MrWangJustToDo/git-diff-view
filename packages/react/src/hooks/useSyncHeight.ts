@@ -9,7 +9,7 @@ export const useSyncHeight = ({ selector, side, enable }: { selector: string; si
     if (enable) {
       const container = document.querySelector(`#diff-root${id}`);
 
-      const elements = Array.from(container.querySelectorAll(selector));
+      const elements = Array.from(container?.querySelectorAll(selector));
 
       if (elements.length === 2) {
         const ele1 = elements[0] as HTMLElement;

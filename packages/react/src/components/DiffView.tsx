@@ -122,10 +122,16 @@ export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
   }, [props.data, props.diffFile]);
 
   useEffect(() => {
-    diffFile.init();
+    diffFile.initRaw();
     diffFile.buildSplitDiffLines();
     diffFile.buildUnifiedDiffLines();
   }, [diffFile]);
+
+  useEffect(() => {
+    if (props.diffViewHighlight) {
+      diffFile.initSyntax();
+    }
+  }, [diffFile, props.diffViewHighlight]);
 
   return <InternalDiffView {...props} diffFile={diffFile} />;
 };
