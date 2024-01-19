@@ -46,7 +46,7 @@ const _DiffSplitWidgetLine = ({ index, diffFile, side, lineNumber }: { index: nu
     >
       <td className="diff-line-widget-content p-0" colSpan={2}>
         <div className="diff-line-widget-wrapper sticky left-0" style={{ width }}>
-          {currentWidget && renderAddWidget?.({ diffFile, side, lineNumber: currentItem.lineNumber, onClose: diffFile.onCloseAddWidget })}
+          {width > 0 && currentWidget && renderAddWidget?.({ diffFile, side, lineNumber: currentItem.lineNumber, onClose: diffFile.onCloseAddWidget })}
         </div>
       </td>
     </tr>

@@ -44,7 +44,9 @@ const _DiffSplitExtendLine = ({ index, diffFile, side, lineNumber }: { index: nu
     >
       <td className="diff-line-extend-content align-top p-[0]" colSpan={2}>
         <div className="diff-line-extend-wrapper sticky left-0" style={{ width }}>
-          {currentExtend && renderExtendLine({ diffFile, side, lineNumber: currentExtend.lineNumber, data: currentExtend.data, onUpdate: diffFile.notifyAll })}
+          {width > 0 &&
+            currentExtend &&
+            renderExtendLine({ diffFile, side, lineNumber: currentExtend.lineNumber, data: currentExtend.data, onUpdate: diffFile.notifyAll })}
         </div>
       </td>
     </tr>

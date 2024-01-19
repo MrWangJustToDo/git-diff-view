@@ -23,9 +23,11 @@ const _DiffUnifiedExtendLine = ({ index, diffFile, lineNumber }: { index: number
     <tr data-line={`${lineNumber}-extend`} data-state="extend" className="diff-line diff-line-extend">
       <td className="diff-line-extend-content align-top p-[0]" colSpan={4}>
         <div className="diff-line-extend-wrapper sticky left-0" style={{ width }}>
-          {oldExtend &&
+          {width > 0 &&
+            oldExtend &&
             renderExtendLine({ diffFile, side: SplitSide.old, lineNumber: oldExtend.lineNumber, data: oldExtend.data, onUpdate: diffFile.notifyAll })}
-          {newExtend &&
+          {width > 0 &&
+            newExtend &&
             renderExtendLine({ diffFile, side: SplitSide.new, lineNumber: newExtend.lineNumber, data: newExtend.data, onUpdate: diffFile.notifyAll })}
         </div>
       </td>

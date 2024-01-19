@@ -23,8 +23,12 @@ const _DiffUnifiedWidgetLine = ({ index, diffFile }: { index: number; diffFile: 
     <tr data-state="widget" className="diff-line diff-line-widget">
       <td className="diff-line-widget-content p-0" colSpan={4}>
         <div className="diff-line-widget-wrapper sticky left-0" style={{ width }}>
-          {oldWidget && renderAddWidget?.({ diffFile, side: SplitSide.old, lineNumber: unifiedItem.oldLineNumber, onClose: diffFile.onCloseAddWidget })}
-          {newWidget && renderAddWidget?.({ diffFile, side: SplitSide.new, lineNumber: unifiedItem.newLineNumber, onClose: diffFile.onCloseAddWidget })}
+          {width > 0 &&
+            oldWidget &&
+            renderAddWidget?.({ diffFile, side: SplitSide.old, lineNumber: unifiedItem.oldLineNumber, onClose: diffFile.onCloseAddWidget })}
+          {width > 0 &&
+            newWidget &&
+            renderAddWidget?.({ diffFile, side: SplitSide.new, lineNumber: unifiedItem.newLineNumber, onClose: diffFile.onCloseAddWidget })}
         </div>
       </td>
     </tr>
