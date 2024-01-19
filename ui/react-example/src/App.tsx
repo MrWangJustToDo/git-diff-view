@@ -79,13 +79,15 @@ function App() {
                     className="border float-right px-[12px] py-[6px] rounded-[4px]"
                     onClick={() => {
                       onClose();
-                      const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
-                      setExtend((prev) => {
-                        const res = { ...prev };
-                        res[sideKey] = { ...res[sideKey], [lineNumber]: { lineNumber, data: val } };
-                        return res;
-                      });
-                      setVal("");
+                      if (val) {
+                        const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
+                        setExtend((prev) => {
+                          const res = { ...prev };
+                          res[sideKey] = { ...res[sideKey], [lineNumber]: { lineNumber, data: val } };
+                          return res;
+                        });
+                        setVal("");
+                      }
                     }}
                   >
                     submit
@@ -107,7 +109,10 @@ function App() {
           renderExtendLine={({ data }) => {
             return (
               <div className="border flex px-[10px] py-[8px] bg-slate-400">
-                <h2 className="text-[20px]">{'>> '}{data}</h2>
+                <h2 className="text-[20px]">
+                  {">> "}
+                  {data}
+                </h2>
               </div>
             );
           }}

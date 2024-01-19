@@ -52,7 +52,7 @@ export const DiffSplitExtendLine = ({
         backgroundColor: !currentExtend ? `var(${emptyBGName})` : undefined,
       }}
     >
-      <td className="diff-line-extend-content" style={{ position: enableWrap ? "relative" : "sticky" }} colSpan={2}>
+      <td className="diff-line-extend-content align-top" style={{ position: enableWrap ? "relative" : "sticky" }} colSpan={2}>
         {currentExtend && renderExtendLine({ diffFile, side, lineNumber: currentExtend.lineNumber, data: currentExtend.data, onUpdate: diffFile.notifyAll })}
       </td>
     </tr>
