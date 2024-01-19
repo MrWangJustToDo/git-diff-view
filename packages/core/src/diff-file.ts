@@ -2,10 +2,11 @@
 import { relativeChanges } from "./change-range";
 import { DiffLineType } from "./diff-line";
 import { parseInstance } from "./diff-parse";
-import { File } from "./file";
+import { getFile } from "./file";
 import { numIterator } from "./tool";
 
 import type { DiffLine } from "./diff-line";
+import type { File} from "./file";
 import type { IRawDiff } from "./raw-diff";
 
 export const composeLen = 20;
@@ -41,7 +42,6 @@ interface DiffHunkItem extends DiffLineItem {
     newLength: number;
   };
 }
-
 
 const getLang = (fileName: string) => {
   const dotIndex = fileName.lastIndexOf(".");
@@ -86,7 +86,7 @@ export class DiffFile {
 
   #splitHunksLines?: Record<string, DiffHunkItem>;
 
-  splitLastStartIndex?: number;
+  #splitLastStartIndex?: number;
 
   #unifiedLines: {
     oldLineNumber?: number;
@@ -98,21 +98,27 @@ export class DiffFile {
 
   #unifiedHunksLines?: Record<string, DiffHunkItem>;
 
-  unifiedLastStartIndex?: number;
+  #unifiedLastStartIndex?: number;
 
   #listeners: (() => void)[] = [];
-
-  hasHighlighted: boolean = false;
 
   #_hasInitRaw: boolean = false;
 
   #_hasInitSyntax: boolean = false;
 
+  #_hasBuildSplit: boolean = false;
+
+  #_hasBuildUnified: boolean = false;
+
   #_updateCount: number = 0;
 
   _oldFileContent: string = "";
 
+  _oldFileLang: string = "";
+
   _newFileContent: string = "";
+
+  _newFileLang: string = "";
 
   lineLength: number = 0;
 
@@ -123,13 +129,17 @@ export class DiffFile {
     _oldFileContent: string,
     readonly _newFileName: string,
     _newFileContent: string,
-    readonly _diffList: string[]
+    readonly _diffList: string[],
+    _oldFileLang?: string,
+    _newFileLang?: string
   ) {
     let oldContent = _oldFileContent;
     let newContent = _newFileContent;
     Object.defineProperties(this, {
       _oldFileName: { get: () => _oldFileName },
       _newFileName: { get: () => _newFileName },
+      _oldFileLang: { get: () => getLang(_oldFileLang || _oldFileName || _newFileLang || _newFileName) || "txt" },
+      _newFileLang: { get: () => getLang(_newFileLang || _newFileName || _oldFileLang || _oldFileName) || "txt" },
       _oldFileContent: {
         get: () => oldContent,
         set: (v: string) => (oldContent = v),
@@ -158,11 +168,11 @@ export class DiffFile {
     if (!this._oldFileContent && !this._newFileContent) return;
 
     if (this._oldFileContent) {
-      this.#oldFileResult = new File(this._oldFileContent);
+      this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang);
     }
 
     if (this._newFileContent) {
-      this.#newFileResult = new File(this._newFileContent);
+      this.#newFileResult = getFile(this._newFileContent, this._newFileLang);
     }
   }
 
@@ -195,7 +205,7 @@ export class DiffFile {
       }
       if (newFileContent === this._oldFileContent) return;
       this._newFileContent = newFileContent;
-      this.#newFileResult = new File(this._newFileContent);
+      this.#newFileResult = getFile(this._newFileContent, this._newFileLang);
       this.#newFileResult?.doRaw();
       this.#newFileLines = this.#newFileResult?.rawFile;
       return;
@@ -215,7 +225,7 @@ export class DiffFile {
       }
       if (oldFileContent === this._newFileContent) return;
       this._oldFileContent = oldFileContent;
-      this.#oldFileResult = new File(this._oldFileContent);
+      this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang);
       this.#oldFileResult?.doRaw();
       this.#oldFileLines = this.#oldFileResult?.rawFile;
       return;
@@ -294,12 +304,12 @@ export class DiffFile {
     }, {});
   }
 
-  #composeSyntax(oldLang: string, newLang: string) {
-    this.#oldFileResult?.doSyntax(oldLang);
+  #composeSyntax() {
+    this.#oldFileResult?.doSyntax();
 
     this.#oldSyntaxLines = this.#oldFileResult?.syntaxFile;
 
-    this.#newFileResult?.doSyntax(newLang);
+    this.#newFileResult?.doSyntax();
 
     this.#newSyntaxLines = this.#newFileResult?.syntaxFile;
   }
@@ -329,17 +339,14 @@ export class DiffFile {
     this.#doFile();
     this.#composeRaw();
     this.#composeFile();
+    this.lineLength = Math.max(this.lineLength, this.#oldFileResult?.rawLength || 0, this.#newFileResult?.rawLength || 0);
     this.#_hasInitRaw = true;
   }
 
   initSyntax() {
     if (this.#_hasInitSyntax) return;
-    const oldFileLang = getLang(this._oldFileName);
-    const newFileLang = getLang(this._newFileName);
-    const lang = oldFileLang || newFileLang || "txt";
-    this.#composeSyntax(oldFileLang || lang, newFileLang || lang);
+    this.#composeSyntax();
     this.#_hasInitSyntax = true;
-    this.hasHighlighted = true;
   }
 
   init() {
@@ -347,8 +354,8 @@ export class DiffFile {
     this.initSyntax();
   }
 
-  buildSplitDiffLines = () => {
-    this.lineLength = Math.max(this.lineLength, this.#oldFileResult?.rawLength || 0, this.#newFileResult?.rawLength || 0);
+  buildSplitDiffLines() {
+    if (!this.lineLength || this.#_hasBuildSplit) return;
     let oldFileLineNumber = 1;
     let newFileLineNumber = 1;
     let prevIsHidden = false;
@@ -420,13 +427,15 @@ export class DiffFile {
       }
     });
 
-    this.splitLastStartIndex = hideStart;
+    this.#splitLastStartIndex = hideStart;
+
+    this.#_hasBuildSplit = true;
 
     this.notifyAll();
-  };
+  }
 
-  buildUnifiedDiffLines = () => {
-    if (!this.lineLength) return;
+  buildUnifiedDiffLines() {
+    if (!this.lineLength || this.#_hasBuildUnified) return;
     let oldFileLineNumber = 1;
     let newFileLineNumber = 1;
     let prevIsHidden = false;
@@ -492,12 +501,15 @@ export class DiffFile {
         }
       }
     }
+
     this.unifiedLineLength = this.#unifiedLines.length;
 
-    this.unifiedLastStartIndex = hideStart;
+    this.#unifiedLastStartIndex = hideStart;
+
+    this.#_hasBuildUnified = true;
 
     this.notifyAll();
-  };
+  }
 
   getSplitLeftLine = (index: number) => {
     return this.#splitLeftLines[index];
@@ -570,19 +582,23 @@ export class DiffFile {
     this.notifyAll();
   };
 
-  onSplitLastExpand = () => {
-    if (!this.splitLastStartIndex || !Number.isFinite(this.splitLastStartIndex)) return;
+  onSplitLastExpand = (expandAll?: boolean) => {
+    if (!this.#splitLastStartIndex || !Number.isFinite(this.#splitLastStartIndex)) return;
 
-    for (let i = this.splitLastStartIndex; i < this.splitLastStartIndex + composeLen; i++) {
+    const start = this.#splitLastStartIndex;
+
+    const end = expandAll ? this.lineLength : this.#splitLastStartIndex + composeLen;
+
+    for (let i = start; i < end; i++) {
       const leftLine = this.#splitLeftLines[i];
       const rightLine = this.#splitRightLines[i];
       if (leftLine?.isHidden) leftLine.isHidden = false;
       if (rightLine?.isHidden) rightLine.isHidden = false;
     }
 
-    this.splitLastStartIndex += composeLen;
+    this.#splitLastStartIndex = end;
 
-    this.splitLastStartIndex = this.splitLastStartIndex >= this.lineLength ? Infinity : this.splitLastStartIndex;
+    this.#splitLastStartIndex = this.#splitLastStartIndex >= this.lineLength ? Infinity : this.#splitLastStartIndex;
 
     this.notifyAll();
   };
@@ -650,17 +666,21 @@ export class DiffFile {
     this.notifyAll();
   };
 
-  onUnifiedLastExpand = () => {
-    if (!this.unifiedLastStartIndex || !Number.isFinite(this.unifiedLastStartIndex)) return;
+  onUnifiedLastExpand = (expandAll?: boolean) => {
+    if (!this.#unifiedLastStartIndex || !Number.isFinite(this.#unifiedLastStartIndex)) return;
 
-    for (let i = this.unifiedLastStartIndex; i < this.unifiedLastStartIndex + composeLen; i++) {
+    const start = this.#unifiedLastStartIndex;
+
+    const end = expandAll ? this.unifiedLineLength : this.#unifiedLastStartIndex + composeLen;
+
+    for (let i = start; i < end; i++) {
       const unifiedLine = this.#unifiedLines[i];
       if (unifiedLine?.isHidden) unifiedLine.isHidden = false;
     }
 
-    this.unifiedLastStartIndex += composeLen;
+    this.#unifiedLastStartIndex = end;
 
-    this.unifiedLastStartIndex = this.unifiedLastStartIndex >= this.unifiedLineLength ? Infinity : this.unifiedLastStartIndex;
+    this.#unifiedLastStartIndex = this.#unifiedLastStartIndex >= this.unifiedLineLength ? Infinity : this.#unifiedLastStartIndex;
 
     this.notifyAll();
   };
@@ -687,4 +707,12 @@ export class DiffFile {
   };
 
   getUpdateCount = () => this.#_updateCount;
+
+  getNeedShowExpandAll = (mode: "split" | "unified") => {
+    if (mode === "split") {
+      return this.#splitLastStartIndex && Number.isFinite(this.#splitLastStartIndex);
+    } else {
+      return this.#unifiedLastStartIndex && Number.isFinite(this.#unifiedLastStartIndex);
+    }
+  };
 }

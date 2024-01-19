@@ -1,4 +1,5 @@
 import { DiffLineType, type DiffFile, type DiffLine, type SyntaxLine } from "@git-diff-view/core";
+import * as React from "react";
 
 import { addContentHighlightBGName, delContentHighlightBGName } from "./color";
 
@@ -104,16 +105,15 @@ export const DiffContent = ({
   diffLine,
   rawLine,
   syntaxLine,
-  diffFile,
-  isWrap,
-  isHighlight,
+  enableWrap,
+  enableHighlight,
 }: {
   rawLine: string;
   syntaxLine?: SyntaxLine;
   diffLine?: DiffLine;
   diffFile: DiffFile;
-  isWrap: boolean;
-  isHighlight: boolean;
+  enableWrap: boolean;
+  enableHighlight: boolean;
 }) => {
   const isAdded = diffLine?.type === DiffLineType.Add;
 
@@ -124,8 +124,8 @@ export const DiffContent = ({
       className="diff-line-content-item pl-[2.0em]"
       data-val={rawLine}
       style={{
-        whiteSpace: isWrap ? "pre-wrap" : "pre",
-        wordBreak: isWrap ? "break-all" : "initial",
+        whiteSpace: enableWrap ? "pre-wrap" : "pre",
+        wordBreak: enableWrap ? "break-all" : "initial",
       }}
     >
       <span
@@ -134,7 +134,7 @@ export const DiffContent = ({
       >
         {isAdded ? "+" : isDelete ? "-" : " "}
       </span>
-      {isHighlight && diffFile.hasHighlighted ? (
+      {enableHighlight && syntaxLine ? (
         <DiffSyntax operator={isAdded ? "add" : isDelete ? "del" : undefined} rawLine={rawLine} diffLine={diffLine} syntaxLine={syntaxLine} />
       ) : (
         <DiffString operator={isAdded ? "add" : isDelete ? "del" : undefined} rawLine={rawLine} diffLine={diffLine} />

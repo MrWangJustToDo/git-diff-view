@@ -1,14 +1,15 @@
+import * as React from "react";
+
+import { useDiffViewContext, SplitSide } from "..";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
 import { emptyBGName } from "./color";
-import { SplitSide } from "./DiffSplitView";
 
 import type { DiffFileExtends } from "../utils";
 
 export const DiffSplitExtendLine = ({
   index,
   diffFile,
-  isWrap,
   side,
   lineNumber,
 }: {
@@ -16,37 +17,43 @@ export const DiffSplitExtendLine = ({
   side: SplitSide;
   diffFile: DiffFileExtends;
   lineNumber: number;
-  isWrap: boolean;
-  isHighlight: boolean;
 }) => {
-  const currentLeftExtend = diffFile.getSplitExtendLine(index, "left");
+  const { enableWrap, extendData, renderExtendLine } = useDiffViewContext();
 
-  const currentRightExtend = diffFile.getSplitExtendLine(index, "right");
+  const oldItem = diffFile.getSplitLeftLine(index);
 
-  const currentIsShow = currentLeftExtend || currentRightExtend;
+  const newItem = diffFile.getSplitRightLine(index);
+
+  const currentItem = side === SplitSide.old ? oldItem : newItem;
+
+  const oldExtend = extendData?.oldFile?.[oldItem?.lineNumber];
+
+  const newExtend = extendData?.newFile?.[newItem.lineNumber];
+
+  const currentIsShow = (oldExtend || newExtend) && currentItem && !currentItem.isHidden && currentItem.diff;
+
+  const currentExtend = side === SplitSide.old ? oldExtend : newExtend;
 
   useSyncHeight({
     selector: `tr[data-line="${lineNumber}-extend"]`,
     side: side === SplitSide.old ? "left" : "right",
-    enable: !!currentIsShow,
+    enable: !!currentExtend,
   });
 
   if (!currentIsShow) return null;
 
-  const currentExtend = side === SplitSide.old ? currentLeftExtend : currentRightExtend;
-
   return (
     <tr
       data-line={`${lineNumber}-extend`}
-      data-state="hunk"
+      data-state="extend"
       data-side={side === SplitSide.old ? "left" : "right"}
       className="diff-line diff-line-extend"
       style={{
         backgroundColor: !currentExtend ? `var(${emptyBGName})` : undefined,
       }}
     >
-      <td className="diff-line-extend-content" style={{ position: isWrap ? "relative" : "sticky" }} colSpan={2}>
-        {currentExtend}
+      <td className="diff-line-extend-content" style={{ position: enableWrap ? "relative" : "sticky" }} colSpan={2}>
+        {currentExtend && renderExtendLine({ diffFile, side, lineNumber: currentExtend.lineNumber, data: currentExtend.data, onUpdate: diffFile.notifyAll })}
       </td>
     </tr>
   );

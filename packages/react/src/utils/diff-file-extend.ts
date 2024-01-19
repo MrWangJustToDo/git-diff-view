@@ -1,54 +1,28 @@
 import { DiffFile } from "@git-diff-view/core";
 
-import type { ReactNode } from "react";
+import type { SplitSide } from "..";
 
 export class DiffFileExtends extends DiffFile {
-  #splitLeftExtendLines: Record<string, ReactNode> = {};
+  #widgetSide?: SplitSide;
 
-  #splitRightExtendLines: Record<string, ReactNode> = {};
+  #widgetLineNumber?: number;
 
-  #unifiedExtendLines: Record<string, ReactNode> = {};
-
-  getSplitExtendLine = (index: number, side: "left" | "right") => {
-    if (side === "left") {
-      return this.#splitLeftExtendLines[index];
-    } else {
-      return this.#splitRightExtendLines[index];
-    }
-  };
-
-  getUnifiedExtendLine = (index: number) => {
-    return this.#unifiedExtendLines[index];
-  };
-
-  removeSplitExtendLine = (index: number, side: "left" | "right") => {
-    if (side === "left") {
-      delete this.#splitLeftExtendLines[index];
-    } else {
-      delete this.#splitRightExtendLines[index];
-    }
+  onOpenAddWidget = (lineNumber: number, side: SplitSide) => {
+    this.#widgetSide = side;
+    this.#widgetLineNumber = lineNumber;
 
     this.notifyAll();
   };
 
-  addSplitExtendLine = (index: number, side: "left" | "right", element: ReactNode) => {
-    if (side === "left") {
-      this.#splitLeftExtendLines[index] = element;
-    } else {
-      this.#splitRightExtendLines[index] = element;
+  checkWidgetLine = (lineNumber: number, side: SplitSide) => {
+    if (side === this.#widgetSide && lineNumber === this.#widgetLineNumber) {
+      return true;
     }
-
-    this.notifyAll();
   };
 
-  removeUnifiedExtendLine = (index: number) => {
-    delete this.#unifiedExtendLines[index];
-
-    this.notifyAll();
-  };
-
-  addUnifiedLine = (index: number, element: ReactNode) => {
-    this.#unifiedExtendLines[index] = element;
+  onCloseAddWidget = () => {
+    this.#widgetSide = undefined;
+    this.#widgetLineNumber = undefined;
 
     this.notifyAll();
   };

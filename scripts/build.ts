@@ -2,7 +2,7 @@ import { rollupBuild } from "project-tool/rollup";
 import postcss from "rollup-plugin-postcss";
 import tailwindcss from "tailwindcss";
 
-const external = (id: string) => id.includes("node_modules") && !id.includes("tslib");
+const external = (id: string) => id.includes("node_modules") && !id.includes("tslib") && !id.endsWith('.css');
 
 const start = async () => {
   await rollupBuild({ packageName: "core", packageScope: "packages", external: external });
@@ -18,7 +18,7 @@ const start = async () => {
             path: "./postcss.config.js",
             ctx: "packages/react",
           },
-          extract: "css/tailwind.css", // 'dist/tailwind.css
+          extract: "css/diff-view.css",
           extensions: [".css"],
           plugins: [tailwindcss({ content: [`${absolutePath}/src/**/*.{js,ts,jsx,tsx}`] })],
           minimize: true,
@@ -31,7 +31,7 @@ const start = async () => {
             path: "./postcss.config.js",
             ctx: "packages/react",
           },
-          extract: "css/tailwind.css", // 'dist/tailwind.css
+          extract: "css/diff-view.css",
           extensions: [".css"],
           plugins: [tailwindcss({ content: [`${absolutePath}/src/**/*.{js,ts,jsx,tsx}`] })],
           minimize: true,
@@ -44,7 +44,7 @@ const start = async () => {
             path: "./postcss.config.js",
             ctx: "packages/react",
           },
-          extract: "css/tailwind.css", // 'dist/tailwind.css
+          extract: "css/diff-view.css",
           extensions: [".css"],
           plugins: [tailwindcss({ content: [`${absolutePath}/src/**/*.{js,ts,jsx,tsx}`] })],
           minimize: true,

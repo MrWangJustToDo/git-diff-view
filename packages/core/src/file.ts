@@ -1,6 +1,9 @@
 import { highlighter } from "./highlighter";
 
-import type { ATS} from "./highlighter";
+import type { ATS } from "./highlighter";
+
+// TODO LRU Cache
+const map = {} as Record<string, File>;
 
 export type SyntaxNode = {
   type: string;
@@ -20,24 +23,29 @@ export type SyntaxLine = {
 };
 
 export class File {
-  lang?: string;
-
   ast?: ATS;
 
   rawFile: Record<number, string> = {};
+
+  hasDoRaw: boolean = false;
 
   rawLength?: number;
 
   syntaxFile: Record<number, SyntaxLine> = {};
 
+  hasDoSyntax: boolean = false;
+
   syntaxLength?: number;
 
   maxLineNumber: number = 0;
 
-  constructor(readonly raw: string) {}
+  constructor(
+    readonly raw: string,
+    readonly lang: string
+  ) {}
 
-  doSyntax(lang: string) {
-    if (!this.raw) return;
+  doSyntax() {
+    if (!this.raw || this.hasDoSyntax) return;
 
     if (!this.rawLength) {
       console.error("current file is empty" + this.raw);
@@ -49,24 +57,24 @@ export class File {
       return;
     }
 
-    this.lang = lang;
-
-    if (!highlighter.registered(lang)) {
-      console.warn(`not support current lang: ${lang} yet`);
+    if (!highlighter.registered(this.lang)) {
+      console.warn(`not support current lang: ${this.lang} yet`);
       return;
     }
 
-    const ast = highlighter.highlight(lang, this.raw);
+    const ast = highlighter.highlight(this.lang, this.raw);
 
     this.ast = ast;
 
     this.#doAST();
 
     this.#doCheck();
+
+    this.hasDoSyntax = true;
   }
 
   doRaw() {
-    if (!this.raw) return;
+    if (!this.raw || this.hasDoRaw) return;
 
     const rawString = this.raw;
 
@@ -83,6 +91,8 @@ export class File {
       }),
       {}
     );
+
+    this.hasDoRaw = true;
   }
 
   #doAST() {
@@ -154,7 +164,6 @@ export class File {
           return;
         }
         if (node.children) {
-
           loopAST(node.children, node);
 
           node.lineNumber = lineNumber;
@@ -174,17 +183,21 @@ export class File {
       }
       Object.values(this.syntaxFile).forEach(({ value, lineNumber }) => {
         if (value !== this.rawFile[lineNumber]) {
-          console.log(
-            "some line not match:" +
-              value +
-              " __ " +
-              this.rawFile[lineNumber] +
-              " __ at: " +
-              lineNumber +
-              " lineNumber"
-          );
+          console.log("some line not match:" + value + " __ " + this.rawFile[lineNumber] + " __ at: " + lineNumber + " lineNumber");
         }
       });
     }
   }
 }
+
+export const getFile = (raw: string, lang: string) => {
+  const key = raw + "--" + __VERSION__ + "--" + lang;
+
+  if (map[key]) return map[key];
+
+  const file = new File(raw, lang);
+
+  map[key] = file;
+
+  return file;
+};

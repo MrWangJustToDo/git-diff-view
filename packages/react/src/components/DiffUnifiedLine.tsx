@@ -1,3 +1,7 @@
+import * as React from "react";
+
+import { SplitSide, useDiffViewContext } from "..";
+
 import {
   addContentBGName,
   addLineNumberBGName,
@@ -21,8 +25,8 @@ const DiffUnifiedOldLine = ({
   syntaxLine,
   lineNumber,
   diffFile,
-  isWrap,
-  isHighlight,
+  enableWrap,
+  enableHighlight,
 }: {
   index: number;
   lineNumber: number;
@@ -30,20 +34,20 @@ const DiffUnifiedOldLine = ({
   syntaxLine?: SyntaxLine;
   diffLine?: DiffLine;
   diffFile: DiffFile;
-  isWrap: boolean;
-  isHighlight: boolean;
+  enableWrap: boolean;
+  enableHighlight: boolean;
 }) => {
   return (
     <tr data-line={index} data-state="diff" data-mode="del" className="diff-line group" style={{ backgroundColor: `var(${delContentBGName})` }}>
       <td
         className="diff-line-num left-[0] pl-[10px] pr-[10px] text-left select-none w-[1%] min-w-[60px] whitespace-nowrap align-top"
         style={{
-          position: isWrap ? "relative" : "sticky",
+          position: enableWrap ? "relative" : "sticky",
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${delLineNumberBGName})`,
         }}
       >
-        <DiffUnifiedAddWidget index={index - 1} diffFile={diffFile as DiffFileExtends} />
+        <DiffUnifiedAddWidget index={index - 1} lineNumber={lineNumber} diffFile={diffFile as DiffFileExtends} side={SplitSide.old} />
         <div className="flex">
           <span data-line-num-old={lineNumber} className="inline-block w-[50%]">
             {lineNumber}
@@ -53,7 +57,7 @@ const DiffUnifiedOldLine = ({
         </div>
       </td>
       <td className="diff-line-content pr-[10px] align-top">
-        <DiffContent isWrap={isWrap} diffFile={diffFile} isHighlight={isHighlight} rawLine={rawLine} diffLine={diffLine} syntaxLine={syntaxLine} />
+        <DiffContent enableWrap={enableWrap} diffFile={diffFile} enableHighlight={enableHighlight} rawLine={rawLine} diffLine={diffLine} syntaxLine={syntaxLine} />
       </td>
     </tr>
   );
@@ -66,8 +70,8 @@ const DiffUnifiedNewLine = ({
   syntaxLine,
   lineNumber,
   diffFile,
-  isWrap,
-  isHighlight,
+  enableWrap,
+  enableHighlight,
 }: {
   index: number;
   lineNumber: number;
@@ -75,20 +79,20 @@ const DiffUnifiedNewLine = ({
   syntaxLine?: SyntaxLine;
   diffLine?: DiffLine;
   diffFile: DiffFile;
-  isWrap: boolean;
-  isHighlight: boolean;
+  enableWrap: boolean;
+  enableHighlight: boolean;
 }) => {
   return (
     <tr data-line={index} data-state="diff" data-mode="add" className="diff-line group" style={{ backgroundColor: `var(${addContentBGName})` }}>
       <td
         className="diff-line-num left-[0] pl-[10px] pr-[10px] text-left select-none w-[1%] min-w-[60px] whitespace-nowrap align-top"
         style={{
-          position: isWrap ? "relative" : "sticky",
+          position: enableWrap ? "relative" : "sticky",
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${addLineNumberBGName})`,
         }}
       >
-        <DiffUnifiedAddWidget index={index - 1} diffFile={diffFile as DiffFileExtends} />
+        <DiffUnifiedAddWidget index={index - 1} lineNumber={lineNumber} diffFile={diffFile as DiffFileExtends} side={SplitSide.new} />
         <div className="flex">
           <span className="inline-block w-[50%]" />
           <span className="shrink-0 w-[10px]" />
@@ -98,28 +102,16 @@ const DiffUnifiedNewLine = ({
         </div>
       </td>
       <td className="diff-line-content pr-[10px] align-top">
-        <DiffContent isWrap={isWrap} diffFile={diffFile} isHighlight={isHighlight} rawLine={rawLine} diffLine={diffLine} syntaxLine={syntaxLine} />
+        <DiffContent enableWrap={enableWrap} diffFile={diffFile} enableHighlight={enableHighlight} rawLine={rawLine} diffLine={diffLine} syntaxLine={syntaxLine} />
       </td>
     </tr>
   );
 };
 
-export const DiffUnifiedLine = ({
-  index,
-  diffFile,
-  lineNumber,
-  isWrap,
-  isHighlight,
-}: {
-  index: number;
-  diffFile: DiffFile;
-  lineNumber: number;
-  isWrap: boolean;
-  isHighlight: boolean;
-}) => {
+const _DiffUnifiedLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
   const unifiedLine = diffFile.getUnifiedLine(index);
 
-  if (unifiedLine?.isHidden) return null;
+  const { enableWrap, enableHighlight, enableAddWidget } = useDiffViewContext();
 
   const hasDiff = unifiedLine.diff;
 
@@ -140,12 +132,12 @@ export const DiffUnifiedLine = ({
       return (
         <DiffUnifiedOldLine
           index={lineNumber}
-          isWrap={isWrap}
+          enableWrap={enableWrap}
           diffFile={diffFile}
           rawLine={rawLine}
           diffLine={diffLine}
           syntaxLine={syntaxLine}
-          isHighlight={isHighlight}
+          enableHighlight={enableHighlight}
           lineNumber={unifiedLine.oldLineNumber}
         />
       );
@@ -153,12 +145,12 @@ export const DiffUnifiedLine = ({
       return (
         <DiffUnifiedNewLine
           index={lineNumber}
-          isWrap={isWrap}
+          enableWrap={enableWrap}
           rawLine={rawLine}
           diffLine={diffLine}
           diffFile={diffFile}
           syntaxLine={syntaxLine}
-          isHighlight={isHighlight}
+          enableHighlight={enableHighlight}
           lineNumber={unifiedLine.newLineNumber!}
         />
       );
@@ -176,12 +168,14 @@ export const DiffUnifiedLine = ({
         <td
           className="diff-line-num left-[0] pl-[10px] pr-[10px] text-left select-none w-[1%] min-w-[60px] whitespace-nowrap align-top"
           style={{
-            position: isWrap ? "relative" : "sticky",
+            position: enableWrap ? "relative" : "sticky",
             color: `var(${plainLineNumberColorName})`,
             backgroundColor: hasDiff ? `var(${plainLineNumberBGName})` : `var(${expandContentBGName})`,
           }}
         >
-          {hasDiff && <DiffUnifiedAddWidget index={index} diffFile={diffFile as DiffFileExtends} />}
+          {enableAddWidget && hasDiff && (
+            <DiffUnifiedAddWidget index={index} diffFile={diffFile as DiffFileExtends} lineNumber={unifiedLine.newLineNumber} side={SplitSide.new} />
+          )}
           <div className="flex opacity-[0.5]">
             <span data-line-num-old={unifiedLine.oldLineNumber} className="inline-block w-[50%]">
               {unifiedLine.oldLineNumber}
@@ -193,9 +187,17 @@ export const DiffUnifiedLine = ({
           </div>
         </td>
         <td className="diff-line-content pr-[10px] align-top">
-          <DiffContent isWrap={isWrap} diffFile={diffFile} isHighlight={isHighlight} rawLine={rawLine} diffLine={diffLine} syntaxLine={syntaxLine} />
+          <DiffContent enableWrap={enableWrap} diffFile={diffFile} enableHighlight={enableHighlight} rawLine={rawLine} diffLine={diffLine} syntaxLine={syntaxLine} />
         </td>
       </tr>
     );
   }
+};
+
+export const DiffUnifiedLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
+  const unifiedLine = diffFile.getUnifiedLine(index);
+
+  if (unifiedLine?.isHidden) return null;
+
+  return <_DiffUnifiedLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
 };

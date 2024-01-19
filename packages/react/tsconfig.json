@@ -4,7 +4,7 @@
     "target": "ESNext",
     "moduleResolution": "Bundler",
     "stripInternal": true,
-    "jsx": "react-jsx",
+    "jsx": "react",
   },
   "include": ["./src"],
   "exclude": ["node_modules"]

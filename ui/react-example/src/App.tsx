@@ -1,14 +1,33 @@
-import { DiffModeEnum, DiffView, useDiffConfig } from "@git-diff-view/react";
-import { useState } from "react";
+import { DiffModeEnum, DiffView, SplitSide } from "@git-diff-view/react";
+import { useEffect, useState } from "react";
 
 import * as data from "./data";
+import { useDiffConfig } from "./hooks/useDiffConfig";
+import { usePrevious } from "./hooks/usePrevious";
+
+import type { DiffViewProps } from "@git-diff-view/react";
 
 type K = "a" | "b" | "c" | "d" | "e";
 
 function App() {
   const [v, setV] = useState<K>("b");
 
-  const { mode, setMode, setHighlight, setWrap, wrap, highlight } = useDiffConfig((s) => ({ ...s }));
+  const previous = usePrevious(v);
+
+  const [extend, setExtend] = useState<DiffViewProps<string>["extendData"]>({
+    oldFile: { "80": { lineNumber: 80, data: "hello world!" } },
+    newFile: { "87": { lineNumber: 87, data: "line have been changed!" } },
+  });
+
+  const [val, setVal] = useState("");
+
+  useEffect(() => {
+    if (v !== previous) {
+      setExtend({ oldFile: {}, newFile: {} });
+    }
+  }, [v, previous]);
+
+  const { mode, setMode, highlight, setHighlight, wrap, setWrap, fontsize } = useDiffConfig((s) => ({ ...s }));
 
   return (
     <>
@@ -49,7 +68,55 @@ function App() {
       </div>
 
       <div className="w-[90%] m-auto border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]">
-        <DiffView data={data[v]} />
+        <DiffView<string>
+          data={data[v]}
+          renderAddWidget={({ onClose, side, lineNumber }) => (
+            <div className="border flex flex-col w-full px-[4px] py-[8px]">
+              <textarea className="w-full border min-h-[80px] p-[2px]" value={val} onChange={(e) => setVal(e.target.value)} />
+              <div className="m-[5px] mt-[0.8em] text-right">
+                <div className="inline-flex gap-x-[12px] sticky right-[10px] justify-end">
+                  <button
+                    className="border float-right px-[12px] py-[6px] rounded-[4px]"
+                    onClick={() => {
+                      onClose();
+                      const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
+                      setExtend((prev) => {
+                        const res = { ...prev };
+                        res[sideKey] = { ...res[sideKey], [lineNumber]: { lineNumber, data: val } };
+                        return res;
+                      });
+                      setVal("");
+                    }}
+                  >
+                    submit
+                  </button>
+                  <button
+                    className="border float-right px-[12px] py-[6px] rounded-[4px]"
+                    onClick={() => {
+                      onClose();
+                      setVal("");
+                    }}
+                  >
+                    cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          extendData={extend}
+          renderExtendLine={({ data }) => {
+            return (
+              <div className="border flex px-[10px] py-[8px] bg-slate-400">
+                <h2 className="text-[20px]">{'>> '}{data}</h2>
+              </div>
+            );
+          }}
+          diffViewFontSize={fontsize}
+          diffViewHighlight={highlight}
+          diffViewMode={mode}
+          diffViewWrap={wrap}
+          diffViewAddWidget
+        />
       </div>
     </>
   );

@@ -1,6 +1,5 @@
+import { DiffModeEnum } from "@git-diff-view/react";
 import { createState } from "reactivity-store";
-
-import { DiffModeEnum } from "../components/DiffViewContext";
 
 type DiffConfig = {
   highlight: boolean;
@@ -14,8 +13,8 @@ export const useDiffConfig = createState(
     ({
       highlight: true,
       wrap: true,
-      fontsize: 13,
-      mode: DiffModeEnum.Unified,
+      fontsize: 14,
+      mode: DiffModeEnum.Split,
     } as DiffConfig),
   {
     withActions(state) {

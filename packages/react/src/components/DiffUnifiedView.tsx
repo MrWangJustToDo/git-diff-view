@@ -1,17 +1,16 @@
 import { numIterator } from "@git-diff-view/core";
+import * as React from "react";
 import { Fragment } from "react";
 
 import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
 import { DiffUnifiedExpandLastLine, DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
 import { DiffUnifiedLine } from "./DiffUnifiedLine";
-import { useDiffViewContext } from "./DiffViewContext";
+import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
 
 import type { DiffFileExtends } from "../utils";
 import type { DiffFile } from "@git-diff-view/core";
 
 export const DiffUnifiedView = ({ diffFile }: { diffFile: DiffFile }) => {
-  const { isWrap, isHighlight } = useDiffViewContext();
-
   const unifiedLineLength = diffFile.unifiedLineLength;
 
   return (
@@ -37,12 +36,13 @@ export const DiffUnifiedView = ({ diffFile }: { diffFile: DiffFile }) => {
           >
             {numIterator(unifiedLineLength, (index) => (
               <Fragment key={index}>
-                <DiffUnifiedHunkLine index={index} lineNumber={index + 1} isHighlight={isHighlight} isWrap={isWrap} diffFile={diffFile} />
-                <DiffUnifiedLine index={index} lineNumber={index + 1} isHighlight={isHighlight} isWrap={isWrap} diffFile={diffFile} />
-                <DiffUnifiedExtendLine index={index} lineNumber={index + 1} isHighlight={isHighlight} isWrap={isWrap} diffFile={diffFile as DiffFileExtends} />
+                <DiffUnifiedHunkLine index={index} lineNumber={index + 1} diffFile={diffFile} />
+                <DiffUnifiedLine index={index} lineNumber={index + 1} diffFile={diffFile} />
+                <DiffUnifiedWidgetLine index={index} lineNumber={index + 1} diffFile={diffFile as DiffFileExtends} />
+                <DiffUnifiedExtendLine index={index} lineNumber={index + 1} diffFile={diffFile as DiffFileExtends} />
               </Fragment>
             ))}
-            <DiffUnifiedExpandLastLine isWrap={isWrap} diffFile={diffFile} isHighlight={isHighlight} />
+            <DiffUnifiedExpandLastLine diffFile={diffFile} />
           </tbody>
         </table>
       </div>

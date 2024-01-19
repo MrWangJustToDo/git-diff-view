@@ -1,12 +1,19 @@
 import { useEffect } from "react";
 
+import { useDiffViewContext } from "../components/DiffViewContext";
+
 export const useSyncHeight = ({ selector, side, enable }: { selector: string; side: "left" | "right"; enable: boolean }) => {
+  const { id } = useDiffViewContext();
+
   useEffect(() => {
     if (enable) {
-      const eles = Array.from(document.querySelectorAll(selector));
-      if (eles.length === 2) {
-        const ele1 = eles[0] as HTMLElement;
-        const ele2 = eles[1] as HTMLElement;
+      const container = document.querySelector(`#diff-root${id}`);
+
+      const elements = Array.from(container.querySelectorAll(selector));
+
+      if (elements.length === 2) {
+        const ele1 = elements[0] as HTMLElement;
+        const ele2 = elements[1] as HTMLElement;
 
         const cb = () => {
           ele1.style.height = "auto";
@@ -33,5 +40,5 @@ export const useSyncHeight = ({ selector, side, enable }: { selector: string; si
         return () => observer.disconnect();
       }
     }
-  }, [selector, enable, side]);
+  }, [selector, enable, side, id]);
 };

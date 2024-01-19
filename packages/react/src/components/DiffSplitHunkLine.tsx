@@ -1,36 +1,22 @@
 import { composeLen, type DiffFile } from "@git-diff-view/core";
+import * as React from "react";
 
+import { useDiffViewContext, SplitSide } from "..";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
 import { hunkContentBGName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
-import { SplitSide } from "./DiffSplitView";
 import { ExpandAll, ExpandDown, ExpandUp } from "./Expand";
 
-export const DiffSplitHunkLine = ({
-  index,
-  diffFile,
-  isWrap,
-  side,
-  lineNumber,
-}: {
-  index: number;
-  side: SplitSide;
-  diffFile: DiffFile;
-  lineNumber: number;
-  isWrap: boolean;
-  isHighlight: boolean;
-}) => {
+const _DiffSplitHunkLine = ({ index, diffFile, side, lineNumber }: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
   const currentHunk = diffFile.getSplitHunkLine(index);
 
-  const currentIsShow = currentHunk && currentHunk.splitInfo.startHiddenIndex < currentHunk.splitInfo.endHiddenIndex;
+  const { enableWrap } = useDiffViewContext();
 
   useSyncHeight({
     selector: `tr[data-line="${lineNumber}-hunk"]`,
     side: side === SplitSide.old ? "left" : "right",
-    enable: !!currentIsShow,
+    enable: true,
   });
-
-  if (!currentIsShow) return null;
 
   const showExpand = side === SplitSide.old;
 
@@ -47,7 +33,7 @@ export const DiffSplitHunkLine = ({
       <td
         className="diff-line-num diff-line-num-hunk left-[0] z-[1] p-[1px]"
         style={{
-          position: isWrap ? "relative" : "sticky",
+          position: enableWrap ? "relative" : "sticky",
           backgroundColor: side === SplitSide.old ? `var(${hunkLineNumberBGName})` : undefined,
           color: `var(${plainLineNumberColorName})`,
         }}
@@ -85,8 +71,8 @@ export const DiffSplitHunkLine = ({
           <div
             className="opacity-[0.5] pl-[1.5em]"
             style={{
-              whiteSpace: isWrap ? "pre-wrap" : "pre",
-              wordBreak: isWrap ? "break-all" : "initial",
+              whiteSpace: enableWrap ? "pre-wrap" : "pre",
+              wordBreak: enableWrap ? "break-all" : "initial",
             }}
           >
             {currentHunk.splitInfo.plainText}
@@ -97,40 +83,58 @@ export const DiffSplitHunkLine = ({
   );
 };
 
-export const DiffSplitExpandLastLine = ({ diffFile, isWrap, side }: { side: SplitSide; diffFile: DiffFile; isWrap: boolean; isHighlight: boolean }) => {
+export const DiffSplitHunkLine = ({ index, diffFile, side, lineNumber }: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
+  const currentHunk = diffFile.getSplitHunkLine(index);
+
+  const currentIsShow = currentHunk && currentHunk.splitInfo.startHiddenIndex < currentHunk.splitInfo.endHiddenIndex;
+
+  if (!currentIsShow) return null;
+
+  return <_DiffSplitHunkLine index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
+};
+
+export const DiffSplitExpandLastLine = ({ diffFile, side }: { side: SplitSide; diffFile: DiffFile }) => {
+  const currentIsShow = diffFile.getNeedShowExpandAll("split");
+
   useSyncHeight({
     selector: `tr[data-line="last-hunk"]`,
     side: side === SplitSide.old ? "left" : "right",
-    enable: side === SplitSide.old,
+    enable: currentIsShow,
   });
 
-  return (
-    <tr
-      data-line="last-hunk"
-      data-state="hunk"
-      data-side={side === SplitSide.old ? "left" : "right"}
-      style={{ backgroundColor: `var(${hunkContentBGName})` }}
-      className="diff-line diff-line-hunk select-none"
-    >
-      <td
-        className="diff-line-num diff-line-num-hunk left-[0] z-[1] p-[1px]"
-        style={{
-          position: isWrap ? "relative" : "sticky",
-          backgroundColor: side === SplitSide.old ? `var(${hunkLineNumberBGName})` : undefined,
-          color: `var(${plainLineNumberColorName})`,
-        }}
+  const { enableWrap } = useDiffViewContext();
+
+  if (currentIsShow) {
+    return (
+      <tr
+        data-line="last-hunk"
+        data-state="hunk"
+        data-side={side === SplitSide.old ? "left" : "right"}
+        style={{ backgroundColor: `var(${hunkContentBGName})` }}
+        className="diff-line diff-line-hunk select-none"
       >
-        {side === SplitSide.old && (
-          <div
-            className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
-            title="Expand Down"
-            onClick={() => diffFile.onSplitLastExpand()}
-          >
-            <ExpandDown className="fill-current" />
-          </div>
-        )}
-      </td>
-      <td className="diff-line-content diff-line-content-hunk pr-[10px] align-middle"></td>
-    </tr>
-  );
+        <td
+          className="diff-line-num diff-line-num-hunk left-[0] z-[1] p-[1px]"
+          style={{
+            position: enableWrap ? "relative" : "sticky",
+            backgroundColor: side === SplitSide.old ? `var(${hunkLineNumberBGName})` : undefined,
+            color: `var(${plainLineNumberColorName})`,
+          }}
+        >
+          {side === SplitSide.old && (
+            <div
+              className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
+              title="Expand Down"
+              onClick={() => diffFile.onSplitLastExpand()}
+            >
+              <ExpandDown className="fill-current" />
+            </div>
+          )}
+        </td>
+        <td className="diff-line-content diff-line-content-hunk pr-[10px] align-middle"></td>
+      </tr>
+    );
+  }
+
+  return null;
 };

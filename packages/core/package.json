@@ -6,8 +6,6 @@
   "version": "0.0.1",
   "main": "index.js",
   "types": "index.d.ts",
-  "unpkg": "./dist/umd/index.development.js",
-  "jsdelivr": "./dist/umd/index.development.js",
   "files": [
     "dist",
     "index.js",

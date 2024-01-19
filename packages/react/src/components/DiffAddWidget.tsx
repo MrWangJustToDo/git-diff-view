@@ -1,9 +1,11 @@
-import { addWidgetBGName, addWidgetColorName } from "./color";
-import { SplitSide } from "./DiffSplitView";
+import * as React from "react";
 
+import { addWidgetBGName, addWidgetColorName } from "./color";
+
+import type { SplitSide } from "..";
 import type { DiffFileExtends } from "../utils/diff-file-extend";
 
-export const DiffSplitAddWidget = ({ diffFile, side, index }: { index: number; diffFile: DiffFileExtends; side: SplitSide }) => {
+export const DiffSplitAddWidget = ({ diffFile, side, lineNumber }: { index: number; lineNumber: number; diffFile: DiffFileExtends; side: SplitSide }) => {
   return (
     <div
       className="diff-add-widget-wrapper absolute left-[100%] top-[1px] translate-x-[-50%]"
@@ -20,23 +22,7 @@ export const DiffSplitAddWidget = ({ diffFile, side, index }: { index: number; d
           fontSize: `1.2em`,
           backgroundColor: `var(${addWidgetBGName})`,
         }}
-        onClick={() => {
-          diffFile.addSplitExtendLine(
-            index,
-            side === SplitSide.old ? "left" : "right",
-            <div className="border flex flex-col w-full">
-              <textarea className="w-full border min-h-[80px] p-[2px]" />
-              <div className="m-[5px] mt-[0.8em]">
-                <button
-                  className="border float-right px-[12px] py-[6px] rounded-[4px] sticky right-[10px]"
-                  onClick={() => diffFile.removeSplitExtendLine(index, side === SplitSide.old ? "left" : "right")}
-                >
-                  cancel
-                </button>
-              </div>
-            </div>
-          );
-        }}
+        onClick={() => diffFile.onOpenAddWidget(lineNumber, side)}
       >
         +
       </button>
@@ -44,7 +30,7 @@ export const DiffSplitAddWidget = ({ diffFile, side, index }: { index: number; d
   );
 };
 
-export const DiffUnifiedAddWidget = ({ diffFile, index }: { index: number; diffFile: DiffFileExtends }) => {
+export const DiffUnifiedAddWidget = ({ diffFile, lineNumber, side }: { index: number; diffFile: DiffFileExtends; lineNumber: number; side: SplitSide }) => {
   return (
     <div
       className="diff-add-widget-wrapper absolute left-[100%] top-[1px] translate-x-[-50%]"
@@ -61,22 +47,7 @@ export const DiffUnifiedAddWidget = ({ diffFile, index }: { index: number; diffF
           fontSize: `1.2em`,
           backgroundColor: `var(${addWidgetBGName})`,
         }}
-        onClick={() => {
-          diffFile.addUnifiedLine(
-            index,
-            <div className="border flex flex-col w-full px-[4px] py-[8px]">
-              <textarea className="w-full border min-h-[80px] p-[2px]" />
-              <div className="m-[5px] mt-[0.8em]">
-                <button
-                  className="border float-right px-[12px] py-[6px] rounded-[4px] sticky right-[10px]"
-                  onClick={() => diffFile.removeUnifiedExtendLine(index)}
-                >
-                  cancel
-                </button>
-              </div>
-            </div>
-          );
-        }}
+        onClick={() => diffFile.onOpenAddWidget(lineNumber, side)}
       >
         +
       </button>

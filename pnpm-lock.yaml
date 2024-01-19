@@ -71,9 +71,6 @@ importers:
       lowlight:
         specifier: ^3.1.0
         version: 3.1.0
-      react:
-        specifier: ^16.8.0 || ^17.0.0 || ^18.0.0
-        version: 18.2.0
       react-dom:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0
         version: 18.2.0(react@18.2.0)
@@ -87,6 +84,9 @@ importers:
       postcss:
         specifier: ^8.4.33
         version: 8.4.33
+      react:
+        specifier: ^18.0.0
+        version: 18.2.0
       tailwindcss:
         specifier: ^3.4.1
         version: 3.4.1(ts-node@10.9.2)
@@ -4463,7 +4463,6 @@ packages:
     engines: {node: '>=0.10.0'}
     dependencies:
       loose-envify: 1.4.0
-    dev: false
 
   /reactivity-store@0.3.1(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-TSrfmKhY+7pCc42qnpaeEKICLlEtl07uEA31LsRGez/UMbLyUdfhRzcBE1w7vzPnc79CWRzEsTanGypflsEE+g==}

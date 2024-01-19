@@ -6,8 +6,6 @@
   "version": "0.0.1",
   "main": "index.js",
   "types": "index.d.ts",
-  "unpkg": "./dist/umd/index.development.js",
-  "jsdelivr": "./dist/umd/index.development.js",
   "files": [
     "dist",
     "index.js",
@@ -61,11 +59,11 @@
   "dependencies": {
     "@git-diff-view/core": "^0.0.1",
     "highlight.js": "^11.9.0",
-    "reactivity-store": "^0.3.1",
     "lowlight": "^3.1.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.16",
+    "react": "^18.0.0",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1"
   },

@@ -1,18 +1,16 @@
 import { numIterator } from "@git-diff-view/core";
 import { Fragment, useEffect, useRef } from "react";
+import * as React from "react";
 
 import { DiffSplitExtendLine } from "./DiffSplitExtendLine";
 import { DiffSplitExpandLastLine, DiffSplitHunkLine } from "./DiffSplitHunkLine";
 import { DiffSplitLine } from "./DiffSplitLine";
+import { DiffSplitWidgetLine } from "./DiffSplitWidgetLine";
+import { SplitSide } from "./DiffView";
 import { useDiffViewContext } from "./DiffViewContext";
 
 import type { DiffFileExtends } from "../utils";
 import type { DiffFile } from "@git-diff-view/core";
-
-export enum SplitSide {
-  old,
-  new,
-}
 
 const syncScroll = (left: HTMLElement, right: HTMLElement) => {
   const onScroll = function (event: Event) {
@@ -38,22 +36,8 @@ const syncScroll = (left: HTMLElement, right: HTMLElement) => {
   };
 };
 
-const DiffSplitViewTable = ({
-  side,
-  lineLength,
-  isHighlight,
-  isWrap,
-  diffFile,
-}: {
-  side: SplitSide;
-  lineLength: number;
-  isHighlight: boolean;
-  isWrap: boolean;
-  diffFile: DiffFile;
-}) => {
+const DiffSplitViewTable = ({ side, lineLength, diffFile }: { side: SplitSide; lineLength: number; diffFile: DiffFile }) => {
   const className = side === SplitSide.new ? "new-diff-table" : "old-diff-table";
-
-  const showExpandLast = diffFile.splitLastStartIndex && Number.isFinite(diffFile.splitLastStartIndex);
 
   return (
     <table className={className + " border-collapse w-full"} data-mode={SplitSide[side]}>
@@ -76,26 +60,20 @@ const DiffSplitViewTable = ({
       >
         {numIterator(lineLength, (index) => (
           <Fragment key={index}>
-            <DiffSplitHunkLine index={index} side={side} isWrap={isWrap} lineNumber={index + 1} isHighlight={isHighlight} diffFile={diffFile} />
-            <DiffSplitLine index={index} side={side} isWrap={isWrap} lineNumber={index + 1} isHighlight={isHighlight} diffFile={diffFile} />
-            <DiffSplitExtendLine
-              index={index}
-              side={side}
-              isWrap={isWrap}
-              lineNumber={index + 1}
-              isHighlight={isHighlight}
-              diffFile={diffFile as DiffFileExtends}
-            />
+            <DiffSplitHunkLine index={index} side={side} lineNumber={index + 1} diffFile={diffFile} />
+            <DiffSplitLine index={index} side={side} lineNumber={index + 1} diffFile={diffFile} />
+            <DiffSplitWidgetLine index={index} side={side} lineNumber={index + 1} diffFile={diffFile as DiffFileExtends} />
+            <DiffSplitExtendLine index={index} side={side} lineNumber={index + 1} diffFile={diffFile as DiffFileExtends} />
           </Fragment>
         ))}
-        {showExpandLast && <DiffSplitExpandLastLine side={side} key="last" isWrap={isWrap} isHighlight={isHighlight} diffFile={diffFile} />}
+        <DiffSplitExpandLastLine side={side} key="last" diffFile={diffFile} />
       </tbody>
     </table>
   );
 };
 
 export const DiffSplitView = ({ diffFile }: { diffFile: DiffFile }) => {
-  const { isWrap, isHighlight } = useDiffViewContext();
+  const { enableWrap } = useDiffViewContext();
 
   const ref1 = useRef<HTMLDivElement>(null);
 
@@ -108,16 +86,16 @@ export const DiffSplitView = ({ diffFile }: { diffFile: DiffFile }) => {
     const right = ref2.current;
     if (!left || !right) return;
     return syncScroll(left, right);
-  }, [isWrap]);
+  }, [enableWrap]);
 
   return (
     <div className="split-diff-view w-full flex basis-[50%]">
       <div className="old-diff-table-wrapper overflow-auto w-full" ref={ref1} style={{ overscrollBehaviorX: "none" }}>
-        <DiffSplitViewTable side={SplitSide.old} isHighlight={isHighlight} isWrap={isWrap} lineLength={lineLength} diffFile={diffFile} />
+        <DiffSplitViewTable side={SplitSide.old} lineLength={lineLength} diffFile={diffFile} />
       </div>
       <div className="diff-split-line w-[1.5px] bg-[grey] opacity-[0.4]" />
       <div className="new-diff-table-wrapper overflow-auto w-full" ref={ref2} style={{ overscrollBehaviorX: "none" }}>
-        <DiffSplitViewTable side={SplitSide.new} isHighlight={isHighlight} isWrap={isWrap} lineLength={lineLength} diffFile={diffFile} />
+        <DiffSplitViewTable side={SplitSide.new} lineLength={lineLength} diffFile={diffFile} />
       </div>
     </div>
   );
