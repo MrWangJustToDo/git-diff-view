@@ -21,6 +21,8 @@ const _DiffSplitExtendLine = ({ index, diffFile, side, lineNumber }: { index: nu
 
   const currentExtend = side === SplitSide.old ? oldExtend : newExtend;
 
+  const currentLineNumber = side === SplitSide.old ? oldItem.lineNumber : newItem.lineNumber;
+
   useSyncHeight({
     selector: `tr[data-line="${lineNumber}-extend"]`,
     side: side === SplitSide.old ? "left" : "right",
@@ -37,16 +39,16 @@ const _DiffSplitExtendLine = ({ index, diffFile, side, lineNumber }: { index: nu
       data-line={`${lineNumber}-extend`}
       data-state="extend"
       data-side={side === SplitSide.old ? "left" : "right"}
-      className="diff-line diff-line-extend"
+      className={"diff-line diff-line-extend" + !currentExtend ? " diff-line-extend-empty" : ""}
       style={{
         backgroundColor: !currentExtend ? `var(${emptyBGName})` : undefined,
       }}
     >
-      <td className="diff-line-extend-content align-top p-[0]" colSpan={2}>
+      <td className="diff-line-extend-content align-top p-0" colSpan={2}>
         <div className="diff-line-extend-wrapper sticky left-0" style={{ width }}>
           {width > 0 &&
             currentExtend &&
-            renderExtendLine({ diffFile, side, lineNumber: currentExtend.lineNumber, data: currentExtend.data, onUpdate: diffFile.notifyAll })}
+            renderExtendLine({ diffFile, side, lineNumber: currentLineNumber, data: currentExtend.data, onUpdate: diffFile.notifyAll })}
         </div>
       </td>
     </tr>

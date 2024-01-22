@@ -31,7 +31,7 @@ const _DiffSplitHunkLine = ({ index, diffFile, side, lineNumber }: { index: numb
       className="diff-line diff-line-hunk select-none"
     >
       <td
-        className="diff-line-num diff-line-num-hunk left-[0] z-[1] p-[1px]"
+        className="diff-line-num diff-line-num-hunk left-0 z-[1] p-[1px]"
         style={{
           position: enableWrap ? "relative" : "sticky",
           backgroundColor: side === SplitSide.old ? `var(${hunkLineNumberBGName})` : undefined,
@@ -111,7 +111,7 @@ const _DiffSplitExpandLastLine = ({ diffFile, side }: { side: SplitSide; diffFil
       className="diff-line diff-line-hunk select-none"
     >
       <td
-        className="diff-line-num diff-line-num-hunk left-[0] z-[1] p-[1px]"
+        className="diff-line-num diff-line-num-hunk left-0 z-[1] p-[1px]"
         style={{
           position: enableWrap ? "relative" : "sticky",
           backgroundColor: side === SplitSide.old ? `var(${hunkLineNumberBGName})` : undefined,

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useSyncExternalStore } from "react";
 import * as React from "react";
 
+import { useCallbackRef } from "../hooks/useCallbackRef";
 import { useUnmount } from "../hooks/useUnmount";
 import { DiffFileExtends } from "../utils";
 
@@ -29,7 +30,7 @@ export type DiffViewProps<T> = {
     newFile?: { fileName?: string | null; fileLang?: string | null; content: string | null };
     hunks: string[];
   };
-  extendData?: { oldFile?: Record<string, { lineNumber: number; data: T }>; newFile?: Record<string, { lineNumber: number; data: T }> };
+  extendData?: { oldFile?: Record<string, { data: T }>; newFile?: Record<string, { data: T }> };
   diffFile?: DiffFileExtends;
   className?: string;
   style?: CSSProperties;
@@ -39,8 +40,9 @@ export type DiffViewProps<T> = {
   diffViewFontSize?: number;
   diffViewHighlight?: boolean;
   diffViewAddWidget?: boolean;
-  renderAddWidget?: DiffViewContextProps["renderAddWidget"];
+  renderWidgetLine?: DiffViewContextProps["renderWidgetLine"];
   renderExtendLine?: DiffViewContextProps<T>["renderExtendLine"];
+  onAddWidgetClick?: DiffViewContextProps["onAddWidgetClick"];
 };
 
 const InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data" | "registerHighlight">) => {
@@ -52,11 +54,14 @@ const InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data
     diffViewWrap,
     diffViewFontSize,
     diffViewHighlight,
-    renderAddWidget,
+    renderWidgetLine,
     renderExtendLine,
     extendData,
     diffViewAddWidget,
+    onAddWidgetClick,
   } = props;
+
+  const memoOnAddWidgetClick = useCallbackRef(onAddWidgetClick);
 
   const id = useMemo(() => {
     let id = "--" + Math.random().toString().slice(2);
@@ -77,10 +82,22 @@ const InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data
         enableHighlight: diffViewHighlight,
         fontSize: diffViewFontSize,
         extendData,
-        renderAddWidget,
+        renderWidgetLine,
         renderExtendLine,
+        onAddWidgetClick: memoOnAddWidgetClick,
       }) as DiffViewContextProps,
-    [diffViewFontSize, diffViewHighlight, diffViewMode, diffViewWrap, diffViewAddWidget, id, renderAddWidget, renderExtendLine, extendData]
+    [
+      diffViewFontSize,
+      diffViewHighlight,
+      diffViewMode,
+      diffViewWrap,
+      diffViewAddWidget,
+      id,
+      renderWidgetLine,
+      renderExtendLine,
+      extendData,
+      memoOnAddWidgetClick,
+    ]
   );
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);

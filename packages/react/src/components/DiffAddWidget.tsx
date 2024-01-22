@@ -5,7 +5,18 @@ import { addWidgetBGName, addWidgetColorName } from "./color";
 import type { SplitSide } from "..";
 import type { DiffFileExtends } from "../utils/diff-file-extend";
 
-export const DiffSplitAddWidget = ({ diffFile, side, lineNumber }: { index: number; lineNumber: number; diffFile: DiffFileExtends; side: SplitSide }) => {
+export const DiffSplitAddWidget = ({
+  diffFile,
+  side,
+  lineNumber,
+  onWidgetClick,
+}: {
+  index: number;
+  lineNumber: number;
+  diffFile: DiffFileExtends;
+  side: SplitSide;
+  onWidgetClick?: (lineNumber: number, side: SplitSide) => void;
+}) => {
   return (
     <div
       className="diff-add-widget-wrapper absolute left-[100%] top-[1px] translate-x-[-50%]"
@@ -15,14 +26,17 @@ export const DiffSplitAddWidget = ({ diffFile, side, lineNumber }: { index: numb
       }}
     >
       <button
-        className="diff-add-widget absolute overflow-hidden cursor-pointer rounded-md w-0 h-0 left-[0] top-[0] flex items-center justify-center transition-transform origin-center group-hover:w-full group-hover:h-full hover:scale-110"
+        className="diff-add-widget absolute overflow-hidden cursor-pointer rounded-md w-0 h-0 left-0 top-0 flex items-center justify-center transition-transform origin-center group-hover:w-full group-hover:h-full hover:scale-110"
         style={{
           color: `var(${addWidgetColorName})`,
           zIndex: 1,
           fontSize: `1.2em`,
           backgroundColor: `var(${addWidgetBGName})`,
         }}
-        onClick={() => diffFile.onOpenAddWidget(lineNumber, side)}
+        onClick={() => {
+          diffFile.onOpenAddWidget(lineNumber, side);
+          onWidgetClick?.(lineNumber, side);
+        }}
       >
         +
       </button>
@@ -30,7 +44,18 @@ export const DiffSplitAddWidget = ({ diffFile, side, lineNumber }: { index: numb
   );
 };
 
-export const DiffUnifiedAddWidget = ({ diffFile, lineNumber, side }: { index: number; diffFile: DiffFileExtends; lineNumber: number; side: SplitSide }) => {
+export const DiffUnifiedAddWidget = ({
+  diffFile,
+  lineNumber,
+  side,
+  onWidgetClick,
+}: {
+  index: number;
+  diffFile: DiffFileExtends;
+  lineNumber: number;
+  side: SplitSide;
+  onWidgetClick?: (lineNumber: number, side: SplitSide) => void;
+}) => {
   return (
     <div
       className="diff-add-widget-wrapper absolute left-[100%] top-[1px] translate-x-[-50%]"
@@ -40,14 +65,17 @@ export const DiffUnifiedAddWidget = ({ diffFile, lineNumber, side }: { index: nu
       }}
     >
       <button
-        className="diff-add-widget absolute overflow-hidden cursor-pointer rounded-md w-0 h-0 left-[0] top-[0] flex items-center justify-center transition-transform origin-center group-hover:w-full group-hover:h-full hover:scale-110"
+        className="diff-add-widget absolute overflow-hidden cursor-pointer rounded-md w-0 h-0 left-0 top-0 flex items-center justify-center transition-transform origin-center group-hover:w-full group-hover:h-full hover:scale-110"
         style={{
           color: `var(${addWidgetColorName})`,
           zIndex: 1,
           fontSize: `1.2em`,
           backgroundColor: `var(${addWidgetBGName})`,
         }}
-        onClick={() => diffFile.onOpenAddWidget(lineNumber, side)}
+        onClick={() => {
+          diffFile.onOpenAddWidget(lineNumber, side);
+          onWidgetClick?.(lineNumber, side);
+        }}
       >
         +
       </button>

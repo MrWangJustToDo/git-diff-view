@@ -23,7 +23,7 @@ const _DiffUnifiedHunkLine = ({ index, diffFile, lineNumber }: { index: number; 
       style={{ backgroundColor: `var(${hunkContentBGName})` }}
     >
       <td
-        className="diff-line-num diff-line-num-hunk left-[0] text-left select-none w-[1%] min-w-[60px] whitespace-nowrap z-[1]"
+        className="diff-line-num diff-line-num-hunk left-0 text-left select-none w-[1%] min-w-[60px] whitespace-nowrap z-[1]"
         style={{
           position: enableWrap ? "relative" : "sticky",
           backgroundColor: `var(${hunkLineNumberBGName})`,
@@ -88,7 +88,7 @@ const _DiffUnifiedExpandLastLine = ({ diffFile }: { diffFile: DiffFile }) => {
   return (
     <tr data-line="last-hunk" data-state="hunk" className="diff-line diff-line-hunk select-none" style={{ backgroundColor: `var(${hunkContentBGName})` }}>
       <td
-        className="diff-line-num diff-line-num-hunk left-[0] text-left select-none w-[1%] min-w-[60px] whitespace-nowrap"
+        className="diff-line-num diff-line-num-hunk left-0 text-left select-none w-[1%] min-w-[60px] whitespace-nowrap"
         style={{
           position: enableWrap ? "relative" : "sticky",
           backgroundColor: `var(${hunkLineNumberBGName})`,

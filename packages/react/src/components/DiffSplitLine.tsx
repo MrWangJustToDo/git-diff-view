@@ -25,7 +25,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber, side }: { index: number; 
 
   const isDelete = currentItem?.diff?.type === DiffLineType.Delete;
 
-  const { enableWrap, enableHighlight, enableAddWidget } = useDiffViewContext();
+  const { enableWrap, enableHighlight, enableAddWidget, onAddWidgetClick } = useDiffViewContext();
 
   useSyncHeight({
     selector: `tr[data-line="${lineNumber}"]`,
@@ -52,7 +52,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber, side }: { index: number; 
         }}
       >
         <td
-          className="diff-line-num left-[0] pl-[10px] pr-[10px] text-right align-top select-none z-[1]"
+          className="diff-line-num left-0 pl-[10px] pr-[10px] text-right align-top select-none z-[1]"
           style={{
             position: enableWrap ? "relative" : "sticky",
             backgroundColor: lineNumberBG,
@@ -60,7 +60,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber, side }: { index: number; 
           }}
         >
           {hasDiff && enableAddWidget && (
-            <DiffSplitAddWidget index={index} lineNumber={currentItem.lineNumber} side={side} diffFile={diffFile as DiffFileExtends} />
+            <DiffSplitAddWidget index={index} lineNumber={currentItem.lineNumber} side={side} diffFile={diffFile as DiffFileExtends} onWidgetClick={onAddWidgetClick} />
           )}
           <span data-line-num={currentItem.lineNumber} style={{ opacity: hasChange ? undefined : 0.5 }}>
             {currentItem.lineNumber}
@@ -88,7 +88,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber, side }: { index: number; 
         className="diff-line diff-line-empty select-none"
       >
         <td
-          className="diff-line-num diff-line-num-placeholder pl-[10px] pr-[10px] left-[0] z-[1]"
+          className="diff-line-num diff-line-num-placeholder pl-[10px] pr-[10px] left-0 z-[1]"
           style={{
             position: enableWrap ? "relative" : "sticky",
           }}

@@ -15,7 +15,7 @@ export type DiffViewContextProps<T = any> = {
   enableWrap?: boolean;
   enableHighlight: boolean;
   enableAddWidget?: boolean;
-  renderAddWidget?: ({
+  renderWidgetLine?: ({
     diffFile,
     side,
     lineNumber,
@@ -40,6 +40,7 @@ export type DiffViewContextProps<T = any> = {
     diffFile: DiffFileExtends;
     onUpdate: () => void;
   }) => React.ReactNode;
+  onAddWidgetClick?: (lineNumber: number, side: SplitSide) => void;
 };
 
 export const DiffViewContext = createContext<DiffViewContextProps>({

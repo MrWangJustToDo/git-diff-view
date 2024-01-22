@@ -12,7 +12,7 @@ const _DiffUnifiedWidgetLine = ({ index, diffFile }: { index: number; diffFile: 
 
   const newWidget = unifiedItem?.newLineNumber ? diffFile.checkWidgetLine(unifiedItem.newLineNumber, SplitSide.new) : undefined;
 
-  const { renderAddWidget } = useDiffViewContext();
+  const { renderWidgetLine } = useDiffViewContext();
 
   const width = useDomWidth({
     selector: ".unified-diff-table-wrapper",
@@ -25,10 +25,10 @@ const _DiffUnifiedWidgetLine = ({ index, diffFile }: { index: number; diffFile: 
         <div className="diff-line-widget-wrapper sticky left-0" style={{ width }}>
           {width > 0 &&
             oldWidget &&
-            renderAddWidget?.({ diffFile, side: SplitSide.old, lineNumber: unifiedItem.oldLineNumber, onClose: diffFile.onCloseAddWidget })}
+            renderWidgetLine?.({ diffFile, side: SplitSide.old, lineNumber: unifiedItem.oldLineNumber, onClose: diffFile.onCloseAddWidget })}
           {width > 0 &&
             newWidget &&
-            renderAddWidget?.({ diffFile, side: SplitSide.new, lineNumber: unifiedItem.newLineNumber, onClose: diffFile.onCloseAddWidget })}
+            renderWidgetLine?.({ diffFile, side: SplitSide.new, lineNumber: unifiedItem.newLineNumber, onClose: diffFile.onCloseAddWidget })}
         </div>
       </td>
     </tr>

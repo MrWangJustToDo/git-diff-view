@@ -21,7 +21,7 @@ const _DiffSplitWidgetLine = ({ index, diffFile, side, lineNumber }: { index: nu
 
   const currentWidget = side === SplitSide.old ? leftWidget : rightWidget;
 
-  const { renderAddWidget } = useDiffViewContext();
+  const { renderWidgetLine } = useDiffViewContext();
 
   useSyncHeight({
     selector: `tr[data-line="${lineNumber}-widget"]`,
@@ -39,14 +39,14 @@ const _DiffSplitWidgetLine = ({ index, diffFile, side, lineNumber }: { index: nu
       data-line={`${lineNumber}-widget`}
       data-state="widget"
       data-side={side === SplitSide.old ? "left" : "right"}
-      className="diff-line diff-line-widget"
+      className={"diff-line diff-line-widget" + !currentWidget ? " diff-line-widget-empty" : ""}
       style={{
         backgroundColor: !currentWidget ? `var(${emptyBGName})` : undefined,
       }}
     >
       <td className="diff-line-widget-content p-0" colSpan={2}>
         <div className="diff-line-widget-wrapper sticky left-0" style={{ width }}>
-          {width > 0 && currentWidget && renderAddWidget?.({ diffFile, side, lineNumber: currentItem.lineNumber, onClose: diffFile.onCloseAddWidget })}
+          {width > 0 && currentWidget && renderWidgetLine?.({ diffFile, side, lineNumber: currentItem.lineNumber, onClose: diffFile.onCloseAddWidget })}
         </div>
       </td>
     </tr>
