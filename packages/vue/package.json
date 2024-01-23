@@ -1,0 +1,70 @@
+{
+  "name": "@git-diff-view/vue",
+  "description": "@git-diff-view/vue",
+  "author": "MrWangJustToDo",
+  "license": "MIT",
+  "version": "0.0.1",
+  "main": "index.js",
+  "type": "module",
+  "types": "index.d.ts",
+  "files": [
+    "dist",
+    "index.js",
+    "index.d.ts"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MrWangJustToDo/git-diff-view",
+    "directory": "packages/vue"
+  },
+  "scripts": {
+    "build": "vue-tsc --noEmit && vite build"
+  },
+  "homepage": "https://github.com/MrWangJustToDo/git-diff-view",
+  "exports": {
+    ".": {
+      "require": "./index.js",
+      "types": "./index.d.ts",
+      "import": "./dist/vue-git-diff-view.mjs"
+    },
+    "./styles/*": "./dist/css/*",
+    "./package.json": "./package.json"
+  },
+  "buildOptions": [
+    {
+      "input": "./src/index.withStyle.ts",
+      "output": [
+        {
+          "dir": "./dist",
+          "entryFileNames": "esm/index.mjs",
+          "format": "esm",
+          "sourcemap": true
+        }
+      ]
+    }
+  ],
+  "keywords": [
+    "diff component",
+    "vue diff component"
+  ],
+  "dependencies": {
+    "@git-diff-view/core": "^0.0.1",
+    "highlight.js": "^11.9.0",
+    "lowlight": "^3.1.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-typescript": "^11.1.6",
+    "@vitejs/plugin-vue": "^5.0.3",
+    "@vitejs/plugin-vue-jsx": "^3.1.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.33",
+    "tailwindcss": "^3.4.1",
+    "vite": "^5.0.12",
+    "vite-plugin-dts": "^3.7.1",
+    "vue": "^3.4.15",
+    "vue-tsc": "^1.8.27"
+  },
+  "peerDependencies": {
+    "vue": "^3"
+  }
+}

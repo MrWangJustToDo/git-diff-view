@@ -1,15 +1,21 @@
-import { useEffect } from "react";
+import { watchEffect, type Ref } from "vue";
 
-import { useDiffViewContext } from "../components/DiffViewContext";
+import { useId } from "../context";
 
-export const useSyncHeight = ({ selector, side, enable }: { selector: string; side: "left" | "right"; enable: boolean }) => {
-  const { id } = useDiffViewContext();
+import { useIsMounted } from "./useIsMounted";
 
-  useEffect(() => {
-    if (enable) {
-      const container = document.querySelector(`#diff-root${id}`);
+export const useSyncHeight = ({ selector, side, enable }: { selector: Ref<string>; side: Ref<"left" | "right">; enable: Ref<boolean> }) => {
+  const id = useId();
 
-      const elements = Array.from(container?.querySelectorAll(selector));
+  const isMounted = useIsMounted();
+
+  const observeHeight = (onCancel: (cb: () => void) => void) => {
+    if (!isMounted.value) return;
+
+    if (enable.value) {
+      const container = document.querySelector(`#diff-root${id.value}`);
+
+      const elements = Array.from(container?.querySelectorAll(selector.value));
 
       if (elements.length === 2) {
         const ele1 = elements[0] as HTMLElement;
@@ -36,17 +42,14 @@ export const useSyncHeight = ({ selector, side, enable }: { selector: string; si
 
         cb();
 
-        const target = ele1.getAttribute("data-side") === side ? ele1 : ele2;
+        const target = ele1.getAttribute("data-side") === side.value ? ele1 : ele2;
 
         observer.observe(target);
 
-        target.setAttribute("data-observe", "height");
-
-        return () => {
-          observer.disconnect();
-          target?.removeAttribute("data-observe");
-        };
+        onCancel(() => observer.disconnect());
       }
     }
-  }, [selector, enable, side, id]);
+  };
+
+  watchEffect(observeHeight);
 };

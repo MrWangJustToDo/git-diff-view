@@ -7,6 +7,7 @@
   "scripts": {
     "build:packages": "ts-node ./scripts/build.ts",
     "dev:react": "cd ui/react-example && pnpm run dev",
+    "dev:vue": "cd ui/vue-example && pnpm run dev",
     "build:react": "cd ui/react-example && pnpm run build",
     "lint": "eslint --cache --ext ts,tsx .",
     "lint:fix": "pnpm run lint --fix",

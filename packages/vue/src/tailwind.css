@@ -1,0 +1,23 @@
+/* @import "highlight.js/styles/github.css"; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.diff-style-root {
+  --diff-add-content--: #e6ffec;
+  --diff-del-content--: #ffebe9;
+  --diff-add-lineNumber--: #ccffd8;
+  --diff-del-lineNumber--: #ffd7d5;
+  --diff-plain-content--: initial;
+  --diff-expand-content--: #fafafa;
+  --diff-plain-lineNumber--: #fafafa;
+  --diff-plain-lineNumber-color--: #555555;
+  --diff-hunk-content--: #ddf4ff;
+  --diff-hunk-lineNumber--: #c7ecff;
+  --diff-add-content-highlight--: #abf2bc;
+  --diff-del-content-hilight--: #ffb3ad;
+  --diff-add-widget--: #0969d2;
+  --diff-add-widget-color--: white;
+  --diff-empty-content--: #f0f0f0;
+}

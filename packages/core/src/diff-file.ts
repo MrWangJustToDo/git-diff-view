@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable max-lines */
 import { relativeChanges } from "./change-range";
 import { DiffLineType } from "./diff-line";
@@ -6,10 +7,12 @@ import { getFile } from "./file";
 import { numIterator } from "./tool";
 
 import type { DiffLine } from "./diff-line";
-import type { File} from "./file";
+import type { File } from "./file";
 import type { IRawDiff } from "./raw-diff";
 
 export const composeLen = 20;
+
+const idSet = new Set<string>();
 
 interface DiffLineItem extends DiffLine {
   index: number;
@@ -124,6 +127,8 @@ export class DiffFile {
 
   unifiedLineLength: number = 0;
 
+  #id: string = "";
+
   constructor(
     readonly _oldFileName: string,
     _oldFileContent: string,
@@ -156,6 +161,16 @@ export class DiffFile {
     if (!oldContent && !newContent) {
       console.error('should pass "oldFileContent" or "newFileContent" to make the diff work!');
     }
+
+    let id = "--" + Math.random().toString().slice(2);
+
+    while (idSet.has(id)) {
+      id = "--" + Math.random().toString().slice(2);
+    }
+
+    idSet.add(id);
+
+    this.#id = id;
   }
 
   #doDiff() {
@@ -330,6 +345,14 @@ export class DiffFile {
 
   #getNewRawLine(lineNumber: number) {
     return this.#newFileLines?.[lineNumber];
+  }
+
+  getId() {
+    return this.#id;
+  }
+
+  clearId() {
+    idSet.delete(this.#id);
   }
 
   initRaw() {

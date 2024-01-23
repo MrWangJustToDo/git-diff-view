@@ -44,7 +44,9 @@ export class File {
   constructor(
     readonly raw: string,
     readonly lang: string
-  ) {}
+  ) {
+    Object.defineProperty(this, "__v_skip", { value: true });
+  }
 
   doSyntax() {
     if (!this.raw || this.hasDoSyntax) return;
@@ -119,12 +121,13 @@ export class File {
             if (!syntaxObj[lineNumber]) {
               node.startIndex = 0;
               node.endIndex = valueLength - 1;
-              syntaxObj[lineNumber] = {
+              const item = {
                 value: node.value,
                 lineNumber,
                 valueLength,
                 nodeList: [{ node, wrapper }],
               };
+              syntaxObj[lineNumber] = item;
             } else {
               node.startIndex = syntaxObj[lineNumber].valueLength;
               node.endIndex = node.startIndex + valueLength - 1;
@@ -152,12 +155,13 @@ export class File {
             if (!syntaxObj[_lineNumber]) {
               _node.startIndex = 0;
               _node.endIndex = _valueLength - 1;
-              syntaxObj[_lineNumber] = {
+              const item = {
                 value: _value,
                 lineNumber: _lineNumber,
                 valueLength: _valueLength,
                 nodeList: [{ node: _node, wrapper }],
               };
+              syntaxObj[_lineNumber] = item;
             } else {
               _node.startIndex = syntaxObj[_lineNumber].valueLength;
               _node.endIndex = _node.startIndex + _valueLength - 1;

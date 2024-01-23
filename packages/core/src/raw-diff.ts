@@ -1,29 +1,29 @@
-import type { DiffLine } from './diff-line'
+import type { DiffLine } from "./diff-line";
 
 export enum DiffHunkExpansionType {
   /** The hunk header cannot be expanded at all. */
-  None = 'None',
+  None = "None",
 
   /**
    * The hunk header can be expanded up exclusively. Only the first hunk can be
    * expanded up exclusively.
    */
-  Up = 'Up',
+  Up = "Up",
 
   /**
    * The hunk header can be expanded down exclusively. Only the last hunk (if
    * it's the dummy hunk with only one line) can be expanded down exclusively.
    */
-  Down = 'Down',
+  Down = "Down",
 
   /** The hunk header can be expanded both up and down. */
-  Both = 'Both',
+  Both = "Both",
 
   /**
    * The hunk header represents a short gap that, when expanded, will
    * result in merging this hunk and the hunk above.
    */
-  Short = 'Short',
+  Short = "Short",
 }
 
 /** each diff is made up of a number of hunks */
@@ -44,7 +44,7 @@ export class DiffHunk {
 
   public equals(other: DiffHunk) {
     if (this === other) {
-      return true
+      return true;
     }
 
     return (
@@ -54,7 +54,7 @@ export class DiffHunk {
       this.expansionType === other.expansionType &&
       this.lines.length === other.lines.length &&
       this.lines.every((xLine, ix) => xLine.equals(other.lines[ix]))
-    )
+    );
   }
 }
 
@@ -74,7 +74,7 @@ export class DiffHunkHeader {
   ) {}
 
   public toDiffLineRepresentation() {
-    return `@@ -${this.oldStartLine},${this.oldLineCount} +${this.newStartLine},${this.newLineCount} @@`
+    return `@@ -${this.oldStartLine},${this.oldLineCount} +${this.newStartLine},${this.newLineCount} @@`;
   }
 
   public equals(other: DiffHunkHeader) {
@@ -83,7 +83,7 @@ export class DiffHunkHeader {
       this.oldLineCount === other.oldLineCount &&
       this.newStartLine === other.newStartLine &&
       this.oldStartLine === other.oldStartLine
-    )
+    );
   }
 }
 
@@ -95,7 +95,7 @@ export interface IRawDiff {
    * hunk header starts. Note that this does not include a trailing
    * newline.
    */
-  readonly header: string
+  readonly header: string;
 
   /**
    * The plain text contents of the diff. This contains everything
@@ -106,23 +106,23 @@ export interface IRawDiff {
    * no-newline information, consult the DiffLine noTrailingNewLine
    * property.
    */
-  readonly contents: string
+  readonly contents: string;
 
   /**
    * Each hunk in the diff with information about start, and end
    * positions, lines and line statuses.
    */
-  readonly hunks: ReadonlyArray<DiffHunk>
+  readonly hunks: ReadonlyArray<DiffHunk>;
 
   /**
    * Whether or not the unified diff indicates that the contents
    * could not be diffed due to one of the versions being binary.
    */
-  readonly isBinary: boolean
+  readonly isBinary: boolean;
 
   /** The largest line number in the diff */
-  readonly maxLineNumber: number
+  readonly maxLineNumber: number;
 
   /** Whether or not the diff has invisible bidi characters */
-  readonly hasHiddenBidiChars: boolean
+  readonly hasHiddenBidiChars: boolean;
 }

@@ -82,6 +82,7 @@ export class DiffParser {
   private text!: string
 
   public constructor() {
+    Object.defineProperty(this, "__v_skip", { value: true });
     this.reset()
   }
 

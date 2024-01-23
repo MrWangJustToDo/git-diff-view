@@ -17,8 +17,6 @@ import type { CSSProperties } from "react";
 
 const diffFontSizeName = "--diff-font-size--";
 
-const idSet = new Set<string>();
-
 export enum SplitSide {
   old = 1,
   new = 2,
@@ -63,14 +61,7 @@ const InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data
 
   const memoOnAddWidgetClick = useCallbackRef(onAddWidgetClick);
 
-  const id = useMemo(() => {
-    let id = "--" + Math.random().toString().slice(2);
-    while (idSet.has(id)) {
-      id = "--" + Math.random().toString().slice(2);
-    }
-    idSet.add(id);
-    return id;
-  }, [diffFile]);
+  const id = useMemo(() => diffFile.getId(), [diffFile]);
 
   const value = useMemo(
     () =>
@@ -102,7 +93,7 @@ const InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);
 
-  useUnmount(() => idSet.delete(id), [id]);
+  useUnmount(() => diffFile.clearId(), [diffFile]);
 
   return (
     <DiffViewContext.Provider value={value}>
@@ -147,6 +138,7 @@ export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
   useEffect(() => {
     if (props.diffViewHighlight) {
       diffFile.initSyntax();
+      diffFile.notifyAll();
     }
   }, [diffFile, props.diffViewHighlight]);
 

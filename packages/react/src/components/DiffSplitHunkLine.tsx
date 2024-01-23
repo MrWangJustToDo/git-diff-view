@@ -5,7 +5,7 @@ import { useDiffViewContext, SplitSide } from "..";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
 import { hunkContentBGName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
-import { ExpandAll, ExpandDown, ExpandUp } from "./Expand";
+import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 
 const _DiffSplitHunkLine = ({ index, diffFile, side, lineNumber }: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
   const currentHunk = diffFile.getSplitHunkLine(index);

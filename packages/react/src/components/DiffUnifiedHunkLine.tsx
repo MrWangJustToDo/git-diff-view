@@ -4,7 +4,7 @@ import * as React from "react";
 import { useDiffViewContext } from "..";
 
 import { hunkContentBGName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
-import { ExpandAll, ExpandDown, ExpandUp } from "./Expand";
+import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 
 import type { DiffFile } from "@git-diff-view/core";
 

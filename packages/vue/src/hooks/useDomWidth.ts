@@ -1,22 +1,30 @@
-import { useEffect, useState } from "react";
+import { ref, watchEffect } from "vue";
 
-import { useDiffViewContext } from "..";
+import { useId } from "../context";
+
+import { useIsMounted } from "./useIsMounted";
+
+import type { Ref } from "vue";
 
 type ObserveElement = HTMLElement & {
   __observeCallback: Set<() => void>;
   __observeInstance: ResizeObserver;
 };
 
-export const useDomWidth = ({ selector, enable }: { selector: string; enable: boolean }) => {
-  const [width, setWidth] = useState(0);
+export const useDomWidth = ({ selector, enable }: { selector: Ref<string>; enable: Ref<boolean> }) => {
+  const id = useId();
 
-  const { id } = useDiffViewContext();
+  const mounted = useIsMounted();
 
-  useEffect(() => {
-    if (enable) {
-      const container = document.querySelector(`#diff-root${id}`);
+  const width = ref(0);
 
-      const wrapper = container?.querySelector(selector);
+  const observeWidth = (onCancel: (cb: () => void) => void) => {
+    if (!mounted.value) return;
+
+    if (enable.value) {
+      const container = document.querySelector(`#diff-root${id.value}`);
+
+      const wrapper = container?.querySelector(selector.value);
 
       if (!wrapper) return;
 
@@ -24,7 +32,7 @@ export const useDomWidth = ({ selector, enable }: { selector: string; enable: bo
 
       const cb = () => {
         const rect = wrapper?.getBoundingClientRect();
-        setWidth(rect?.width ?? 0);
+        width.value = rect?.width ?? 0;
       };
 
       cb();
@@ -42,7 +50,9 @@ export const useDomWidth = ({ selector, enable }: { selector: string; enable: bo
       if (typedWrapper.__observeCallback) {
         typedWrapper.__observeCallback.add(cb);
 
-        return () => cleanCb();
+        onCancel(() => cleanCb());
+
+        return;
       }
 
       typedWrapper.__observeCallback = new Set();
@@ -57,9 +67,11 @@ export const useDomWidth = ({ selector, enable }: { selector: string; enable: bo
 
       typedWrapper.setAttribute("data-observe", "height");
 
-      return () => cleanCb();
+      onCancel(() => cleanCb());
     }
-  }, [selector, enable, id]);
+  };
+
+  watchEffect((onCancel) => observeWidth(onCancel));
 
   return width;
 };
