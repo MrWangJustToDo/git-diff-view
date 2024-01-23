@@ -33,7 +33,7 @@ function App() {
     <>
       <div className="w-[90%] m-auto mb-[1em] mt-[1em]">
         <h2 className=" text-[24px]">
-          A React component to show the file diff (just like github) <span className="text-red-500"> (🚧 wip) </span>
+          A React (Vue) component to show the file diff (just like github) <span className="text-red-500"> (🚧 wip) </span>
         </h2>
         <br />
         <p>

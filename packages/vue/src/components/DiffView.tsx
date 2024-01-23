@@ -107,7 +107,7 @@ export const DiffView = defineComponent<DiffViewProps<any>, { onAddWidgetClick: 
 
     const initId = (onClean: (cb: () => void) => void) => {
       id.value = diffFile.value.getId();
-      onClean(() => diffFile.value.clearId);
+      onClean(() => diffFile.value.clearId());
     };
 
     watchEffect(() => initDiff());
@@ -138,9 +138,9 @@ export const DiffView = defineComponent<DiffViewProps<any>, { onAddWidgetClick: 
       <div class="diff-style-root" style={{ [diffFontSizeName]: props.diffViewFontSize + "px" }}>
         <div id={`diff-root${id.value}`} class={"diff-view-wrapper" + (props.class ? ` ${props.class}` : "")} style={props.style}>
           {!props.diffViewMode || props.diffViewMode === DiffModeEnum.Split ? (
-            <DiffSplitView diffFile={diffFile.value as DiffFile} />
+            <DiffSplitView key={DiffModeEnum.Split} diffFile={diffFile.value as DiffFile} />
           ) : (
-            <DiffUnifiedView diffFile={diffFile.value as DiffFile} />
+            <DiffUnifiedView key={DiffModeEnum.Unified} diffFile={diffFile.value as DiffFile} />
           )}
         </div>
       </div>
