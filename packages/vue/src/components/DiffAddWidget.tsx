@@ -1,6 +1,6 @@
 import { addWidgetBGName, addWidgetColorName } from "./color";
 
-import type { SplitSide } from "../context";
+import type { SplitSide } from "./DiffView";
 import type { DiffFileExtends } from "../utils/diff-file-extend";
 
 export const DiffSplitAddWidget = ({
@@ -13,7 +13,7 @@ export const DiffSplitAddWidget = ({
   lineNumber: number;
   diffFile: DiffFileExtends;
   side: SplitSide;
-  onWidgetClick?: (lineNumber: number, side: SplitSide) => void;
+  onWidgetClick?: (event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void;
 }) => {
   return (
     <div
@@ -33,7 +33,7 @@ export const DiffSplitAddWidget = ({
         }}
         onClick={() => {
           diffFile.onOpenAddWidget(lineNumber, side);
-          onWidgetClick?.(lineNumber, side);
+          onWidgetClick?.("onAddWidgetClick", lineNumber, side);
         }}
       >
         +

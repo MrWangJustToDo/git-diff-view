@@ -1,4 +1,4 @@
-import { watchEffect, type Ref } from "vue";
+import { type Ref, watchPostEffect } from "vue";
 
 import { useId } from "../context";
 
@@ -51,5 +51,5 @@ export const useSyncHeight = ({ selector, side, enable }: { selector: Ref<string
     }
   };
 
-  watchEffect(observeHeight);
+  watchPostEffect(observeHeight);
 };

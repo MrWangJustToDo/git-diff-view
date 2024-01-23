@@ -1,7 +1,7 @@
 import { DiffLineType, type DiffFile } from "@git-diff-view/core";
 import { computed, defineComponent, ref } from "vue";
 
-import { SplitSide, useEnableAddWidget, useEnableHighlight, useEnableWrap, useOnAddWidgetClick } from "../context";
+import { useEnableAddWidget, useEnableHighlight, useEnableWrap, useOnAddWidgetClick } from "../context";
 import { useForceUpdate } from "../hooks/useForceUpdate";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useSyncHeight } from "../hooks/useSyncHeight";
@@ -9,6 +9,7 @@ import { useSyncHeight } from "../hooks/useSyncHeight";
 import { emptyBGName, getContentBG, getLineNumberBG, plainLineNumberColorName } from "./color";
 import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
+import { SplitSide } from "./DiffView";
 
 import type { DiffFileExtends } from "../utils";
 
@@ -95,7 +96,7 @@ export const DiffSplitLine = defineComponent(
                   lineNumber={currentItem.value.lineNumber}
                   side={props.side}
                   diffFile={props.diffFile as DiffFileExtends}
-                  onWidgetClick={onAddWidgetClick.value}
+                  onWidgetClick={onAddWidgetClick}
                 />
               )}
               <span data-line-num={currentItem.value.lineNumber} style={{ opacity: currentItemHasChange.value ? undefined : 0.5 }}>
@@ -126,7 +127,7 @@ export const DiffSplitLine = defineComponent(
             <td
               class="diff-line-num diff-line-num-placeholder pl-[10px] pr-[10px] left-0 z-[1]"
               style={{
-                position: enableWrap ? "relative" : "sticky",
+                position: enableWrap.value ? "relative" : "sticky",
               }}
             />
             <td class="diff-line-content diff-line-content-placeholder pr-[10px] align-top" />

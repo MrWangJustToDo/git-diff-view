@@ -1,6 +1,6 @@
 import { DiffFile } from "@git-diff-view/core";
 
-import type { SplitSide } from "../context";
+import type { SplitSide } from "..";
 
 export class DiffFileExtends extends DiffFile {
   #widgetSide?: SplitSide;

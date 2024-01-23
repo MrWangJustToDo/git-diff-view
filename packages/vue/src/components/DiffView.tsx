@@ -1,19 +1,15 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { defineComponent, provide, ref, watch, watchEffect, h, Fragment, computed } from "vue";
+import { defineComponent, provide, ref, watch, watchEffect, computed } from "vue";
 
 import {
   idSymbol,
-  type SplitSide,
   modeSymbol,
   fontSizeSymbol,
   enableWrapSymbol,
   enableHighlightSymbol,
   enableAddWidgetSymbol,
-  renderWidgetLineSymbol,
   extendDataSymbol,
-  renderExtendLineSymbol,
+  slotsSymbol,
   onAddWidgetClickSymbol,
-  type DiffModeEnum,
 } from "../context";
 import { useIsMounted } from "../hooks/useIsMounted";
 import { useProvide } from "../hooks/useProvide";
@@ -22,7 +18,17 @@ import { DiffFileExtends } from "../utils";
 import { DiffSplitView } from "./DiffSplitView";
 
 import type { DiffFile, highlighter } from "@git-diff-view/core";
-import type { CSSProperties, VNode } from "vue";
+import type { CSSProperties, SlotsType } from "vue";
+
+export enum DiffModeEnum {
+  Split,
+  Unified,
+}
+
+export enum SplitSide {
+  old = 1,
+  new = 2,
+}
 
 export type DiffViewProps<T> = {
   data?: {
@@ -40,38 +46,18 @@ export type DiffViewProps<T> = {
   diffViewFontSize?: number;
   diffViewHighlight?: boolean;
   diffViewAddWidget?: boolean;
-  renderWidgetLine?: ({
-    diffFile,
-    side,
-    lineNumber,
-    onClose,
-  }: {
-    lineNumber: number;
-    side: SplitSide;
-    diffFile: DiffFileExtends;
-    onClose: () => void;
-  }) => VNode;
-  renderExtendLine?: ({
-    diffFile,
-    side,
-    data,
-    lineNumber,
-    onUpdate,
-  }: {
-    lineNumber: number;
-    side: SplitSide;
-    data: T;
-    diffFile: DiffFileExtends;
-    onUpdate: () => void;
-  }) => VNode;
-  onAddWidgetClick?: (lineNumber: number, side: SplitSide) => void;
 };
 
 const diffFontSizeName = "--diff-font-size--";
 
-export const DiffView = defineComponent(
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-constraint
-  <T extends unknown>(props: DiffViewProps<T>) => {
+type typeSlots = SlotsType<{
+  widget: { lineNumber: number; side: SplitSide; diffFile: DiffFileExtends; onClose: () => void };
+  extend: { lineNumber: number; side: SplitSide; data: any; diffFile: DiffFileExtends; onUpdate: () => void };
+}>;
+
+// vue 组件打包目前无法支持范型
+export const DiffView = defineComponent<DiffViewProps<any>, { onAddWidgetClick: (lineNumber: number, side: SplitSide) => void }, "onAddWidgetClick", typeSlots>(
+  (props, options) => {
     const getInstance = () =>
       props.diffFile ||
       new DiffFileExtends(
@@ -131,6 +117,10 @@ export const DiffView = defineComponent(
 
     provide(idSymbol, id);
 
+    provide(slotsSymbol, options.slots);
+
+    provide(onAddWidgetClickSymbol, options.emit);
+
     useProvide(props, "diffViewMode", modeSymbol);
 
     useProvide(props, "diffViewFontSize", fontSizeSymbol);
@@ -141,13 +131,7 @@ export const DiffView = defineComponent(
 
     useProvide(props, "diffViewAddWidget", enableAddWidgetSymbol);
 
-    useProvide(props, "renderWidgetLine", renderWidgetLineSymbol);
-
-    useProvide(props, "extendData", extendDataSymbol);
-
-    useProvide(props, "renderExtendLine", renderExtendLineSymbol);
-
-    useProvide(props, "onAddWidgetClick", onAddWidgetClickSymbol);
+    useProvide(props, "extendData", extendDataSymbol, true);
 
     return () => (
       <div class="diff-style-root" style={{ [diffFontSizeName]: props.diffViewFontSize + "px" }}>
@@ -169,11 +153,9 @@ export const DiffView = defineComponent(
       "diffViewMode",
       "diffViewWrap",
       "extendData",
-      "onAddWidgetClick",
       "registerHighlight",
-      "renderExtendLine",
-      "renderWidgetLine",
       "style",
     ],
+    slots: Object as typeSlots,
   }
 );

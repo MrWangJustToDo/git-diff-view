@@ -1,6 +1,6 @@
 import { inject } from "vue";
 
-import { enableAddWidgetSymbol, enableHighlightSymbol, enableWrapSymbol, extendDataSymbol, fontSizeSymbol, idSymbol, modeSymbol, onAddWidgetClickSymbol, renderExtendLineSymbol, renderWidgetLineSymbol } from "./provider";
+import { enableAddWidgetSymbol, enableHighlightSymbol, enableWrapSymbol, extendDataSymbol, fontSizeSymbol, idSymbol, modeSymbol, onAddWidgetClickSymbol, slotsSymbol } from "./provider";
 
 export const useId = () => inject(idSymbol);
 
@@ -14,10 +14,8 @@ export const useEnableHighlight = () => inject(enableHighlightSymbol);
 
 export const useEnableAddWidget = () => inject(enableAddWidgetSymbol);
 
-export const useRenderWidgetLine = () => inject(renderWidgetLineSymbol);
-
 export const useExtendData = () => inject(extendDataSymbol);
 
-export const useRenderExtendLine = () => inject(renderExtendLineSymbol);
-
 export const useOnAddWidgetClick = () => inject(onAddWidgetClickSymbol);
+
+export const useSlots = () => inject(slotsSymbol);

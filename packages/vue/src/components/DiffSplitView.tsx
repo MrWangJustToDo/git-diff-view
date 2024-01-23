@@ -1,7 +1,7 @@
 import { numIterator } from "@git-diff-view/core";
-import { Fragment, computed, defineComponent, ref, watchEffect } from "vue";
+import { Fragment, computed, defineComponent, ref, watchPostEffect } from "vue";
 
-import { SplitSide, useEnableWrap } from "../context";
+import { useEnableWrap } from "../context";
 import { useIsMounted } from "../hooks/useIsMounted";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 
@@ -9,6 +9,7 @@ import { DiffSplitExtendLine } from "./DiffSplitExtendLine";
 import { DiffSplitExpandLastLine, DiffSplitHunkLine } from "./DiffSplitHunkLine";
 import { DiffSplitLine } from "./DiffSplitLine";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLine";
+import { SplitSide } from "./DiffView";
 
 import type { DiffFileExtends } from "../utils";
 import type { DiffFile } from "@git-diff-view/core";
@@ -103,7 +104,7 @@ export const DiffSplitView = defineComponent(
       onClean(clean);
     };
 
-    watchEffect(initSyncScroll);
+    watchPostEffect(initSyncScroll);
 
     return () => {
       return (

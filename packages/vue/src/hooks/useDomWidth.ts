@@ -1,4 +1,4 @@
-import { ref, watchEffect } from "vue";
+import { ref, watchPostEffect } from "vue";
 
 import { useId } from "../context";
 
@@ -71,7 +71,7 @@ export const useDomWidth = ({ selector, enable }: { selector: Ref<string>; enabl
     }
   };
 
-  watchEffect((onCancel) => observeWidth(onCancel));
+  watchPostEffect((onCancel) => observeWidth(onCancel));
 
   return width;
 };

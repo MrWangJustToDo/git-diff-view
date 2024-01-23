@@ -1,13 +1,13 @@
 import { composeLen, type DiffFile } from "@git-diff-view/core";
 import { computed, defineComponent, ref } from "vue";
 
-import { SplitSide, useEnableWrap } from "../context";
-import { useForceUpdate } from "../hooks/useForceUpdate";
+import { useEnableWrap } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
 import { hunkContentBGName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
+import { SplitSide } from "./DiffView";
 
 export const DiffSplitHunkLine = defineComponent(
   (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
@@ -26,8 +26,6 @@ export const DiffSplitHunkLine = defineComponent(
     );
 
     const currentIsShow = ref(currentHunk.value && currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex);
-
-    const count = useForceUpdate(props);
 
     useSubscribeDiffFile(props, (diffFile) => (currentHunk.value = diffFile.getSplitHunkLine(props.index)));
 
@@ -50,8 +48,6 @@ export const DiffSplitHunkLine = defineComponent(
     });
 
     return () => {
-      count.value;
-
       if (!currentIsShow.value) return null;
 
       return (
@@ -126,8 +122,6 @@ export const DiffSplitExpandLastLine = defineComponent(
 
     const currentIsShow = ref(props.diffFile.getNeedShowExpandAll("split"));
 
-    const count = useForceUpdate(props);
-
     useSubscribeDiffFile(props, (diffFile) => (currentIsShow.value = diffFile.getNeedShowExpandAll("split")));
 
     useSyncHeight({
@@ -137,8 +131,6 @@ export const DiffSplitExpandLastLine = defineComponent(
     });
 
     return () => {
-      count.value;
-
       if (!currentIsShow.value) return null;
 
       return (
