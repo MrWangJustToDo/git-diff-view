@@ -6,6 +6,8 @@ export const useSubscribeDiffFile = (props: { diffFile: DiffFile }, onUpdate: (i
   const initSubscribe = (onClean: (cb: () => void) => void) => {
     const diffFile = props.diffFile;
 
+    onUpdate(diffFile);
+
     const clean = diffFile.subscribe(() => onUpdate(diffFile));
 
     onClean(clean);

@@ -16,13 +16,14 @@ import { useProvide } from "../hooks/useProvide";
 import { DiffFileExtends } from "../utils";
 
 import { DiffSplitView } from "./DiffSplitView";
+import { DiffUnifiedView } from "./DiffUnifiedView";
 
 import type { DiffFile, highlighter } from "@git-diff-view/core";
 import type { CSSProperties, SlotsType } from "vue";
 
 export enum DiffModeEnum {
-  Split,
-  Unified,
+  Split = 1,
+  Unified = 2,
 }
 
 export enum SplitSide {
@@ -136,7 +137,11 @@ export const DiffView = defineComponent<DiffViewProps<any>, { onAddWidgetClick: 
     return () => (
       <div class="diff-style-root" style={{ [diffFontSizeName]: props.diffViewFontSize + "px" }}>
         <div id={`diff-root${id.value}`} class={"diff-view-wrapper" + (props.class ? ` ${props.class}` : "")} style={props.style}>
-          <DiffSplitView diffFile={diffFile.value as DiffFile} />
+          {!props.diffViewMode || props.diffViewMode === DiffModeEnum.Split ? (
+            <DiffSplitView diffFile={diffFile.value as DiffFile} />
+          ) : (
+            <DiffUnifiedView diffFile={diffFile.value as DiffFile} />
+          )}
         </div>
       </div>
     );

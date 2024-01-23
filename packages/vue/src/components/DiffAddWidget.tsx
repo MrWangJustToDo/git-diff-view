@@ -52,7 +52,7 @@ export const DiffUnifiedAddWidget = ({
   diffFile: DiffFileExtends;
   lineNumber: number;
   side: SplitSide;
-  onWidgetClick?: (lineNumber: number, side: SplitSide) => void;
+  onWidgetClick?: (event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void;
 }) => {
   return (
     <div
@@ -72,7 +72,7 @@ export const DiffUnifiedAddWidget = ({
         }}
         onClick={() => {
           diffFile.onOpenAddWidget(lineNumber, side);
-          onWidgetClick?.(lineNumber, side);
+          onWidgetClick?.("onAddWidgetClick", lineNumber, side);
         }}
       >
         +

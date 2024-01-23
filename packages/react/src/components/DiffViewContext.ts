@@ -4,8 +4,8 @@ import type { DiffViewProps, SplitSide } from "..";
 import type { DiffFileExtends } from "../utils";
 
 export enum DiffModeEnum {
-  Split,
-  Unified,
+  Split = 1,
+  Unified = 2,
 }
 
 export type DiffViewContextProps<T = any> = {

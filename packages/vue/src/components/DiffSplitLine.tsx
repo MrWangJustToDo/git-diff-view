@@ -2,7 +2,6 @@ import { DiffLineType, type DiffFile } from "@git-diff-view/core";
 import { computed, defineComponent, ref } from "vue";
 
 import { useEnableAddWidget, useEnableHighlight, useEnableWrap, useOnAddWidgetClick } from "../context";
-import { useForceUpdate } from "../hooks/useForceUpdate";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
@@ -25,11 +24,17 @@ export const DiffSplitLine = defineComponent(
 
     const currentItem = ref(props.side === SplitSide.old ? props.diffFile.getSplitLeftLine(props.index) : props.diffFile.getSplitRightLine(props.index));
 
-    const currentItemHasDiff = ref(!!currentItem.value.diff);
+    const currentItemHasDiff = ref(!!currentItem.value?.diff);
 
     const currentItemHasChange = ref(currentItem.value?.diff?.isIncludeableLine());
 
-    const currentSyntaxItem = ref(props.side === SplitSide.old ? props.diffFile.getOldSyntaxLine(currentItem.value.lineNumber) : props.diffFile.getNewSyntaxLine(currentItem.value.lineNumber));
+    const currentItemHasHidden = ref(currentItem.value?.isHidden);
+
+    const currentSyntaxItem = ref(
+      props.side === SplitSide.old
+        ? props.diffFile.getOldSyntaxLine(currentItem.value?.lineNumber)
+        : props.diffFile.getNewSyntaxLine(currentItem.value?.lineNumber)
+    );
 
     useSubscribeDiffFile(
       props,
@@ -38,14 +43,16 @@ export const DiffSplitLine = defineComponent(
 
     useSubscribeDiffFile(
       props,
-      (diffFile) => (currentSyntaxItem.value = props.side === SplitSide.old ? diffFile.getOldSyntaxLine(currentItem.value.lineNumber) : diffFile.getNewSyntaxLine(currentItem.value.lineNumber))
+      (diffFile) =>
+        (currentSyntaxItem.value =
+          props.side === SplitSide.old ? diffFile.getOldSyntaxLine(currentItem.value?.lineNumber) : diffFile.getNewSyntaxLine(currentItem.value?.lineNumber))
     );
 
-    useSubscribeDiffFile(props, () => (currentItemHasDiff.value = !!currentItem.value.diff));
+    useSubscribeDiffFile(props, () => (currentItemHasDiff.value = !!currentItem.value?.diff));
 
-    useSubscribeDiffFile(props, () => (currentItemHasChange.value = currentItem.value.diff?.isIncludeableLine()));
+    useSubscribeDiffFile(props, () => (currentItemHasHidden.value = currentItem.value?.isHidden));
 
-    const count = useForceUpdate(props);
+    useSubscribeDiffFile(props, () => (currentItemHasChange.value = currentItem.value?.diff?.isIncludeableLine()));
 
     const lineSelector = computed(() => `tr[data-line="${props.lineNumber}"]`);
 
@@ -58,9 +65,7 @@ export const DiffSplitLine = defineComponent(
     });
 
     return () => {
-      count.value;
-
-      if (currentItem.value?.isHidden) return null;
+      if (currentItemHasHidden.value) return null;
 
       const isAdded = currentItem.value?.diff?.type === DiffLineType.Add;
 
