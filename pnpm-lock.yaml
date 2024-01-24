@@ -209,6 +209,9 @@ importers:
 
   ui/vue-example:
     dependencies:
+      '@git-diff-view/core':
+        specifier: 0.0.1
+        version: link:../../packages/core
       '@git-diff-view/vue':
         specifier: 0.0.1
         version: link:../../packages/vue

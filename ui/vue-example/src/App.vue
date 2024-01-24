@@ -2,10 +2,16 @@
 import { computed, ref, watch } from 'vue';
 import * as data from './data'
 import { DiffModeEnum, DiffView, DiffViewProps, SplitSide } from '@git-diff-view/vue';
+import { MessageData } from './worker';
+import { DiffFile } from '@git-diff-view/core';
+
+const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' });
 
 type Key = 'a' | 'b' | 'c' | 'd' | 'e'
 
 const highlight = ref(true);
+
+const diffFile = ref<DiffFile>();
 
 const wrap = ref(true);
 
@@ -19,6 +25,13 @@ const toggleMode = () => {
   mode.value = mode.value === DiffModeEnum.Split ? DiffModeEnum.Unified : DiffModeEnum.Split
 }
 
+worker.addEventListener('message', (e: MessageEvent<MessageData>) => {
+  console.log(e.data);
+  const { data, bundle } = e.data;
+  const instance = DiffFile.createInstance(data || {}, bundle);
+  diffFile.value = instance;
+})
+
 const k = ref<Key>('a');
 
 const v = ref('');
@@ -30,6 +43,10 @@ const extendData = ref<DiffViewProps<any>['extendData']>({ oldFile: {}, newFile:
 watch(_data, () => {
   extendData.value = { oldFile: {}, newFile: {} };
 });
+
+watch(_data, () => {
+  worker.postMessage({ data: _data.value });
+}, { immediate: true })
 
 const resetV = () => v.value = ''
 </script>
@@ -68,7 +85,7 @@ const resetV = () => v.value = ''
     </div>
   </div>
   <div class="w-[90%] m-auto border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]">
-    <DiffView :data="_data" :diff-view-font-size="14" :diff-view-mode="mode" :diff-view-highlight="highlight"
+    <DiffView :diff-file="diffFile" :diff-view-font-size="14" :diff-view-mode="mode" :diff-view-highlight="highlight"
       :diff-view-add-widget="true" :diff-view-wrap="wrap" @on-add-widget-click="resetV" :extend-data="extendData">
       <template #widget="{ onClose, lineNumber, side }">
         <div class="border flex flex-col w-full px-[4px] py-[8px]">

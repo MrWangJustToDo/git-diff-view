@@ -47,3 +47,8 @@ export class DiffLine {
     );
   }
 }
+
+export const checkDiffLineIncludeChange = (diffLine?: DiffLine) => {
+  if (!diffLine) return false;
+  return diffLine.type === DiffLineType.Add || diffLine.type === DiffLineType.Delete;
+};

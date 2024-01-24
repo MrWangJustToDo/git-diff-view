@@ -116,7 +116,7 @@ export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
   const diffFile = useMemo(() => {
     if (props.diffFile) {
       return props.diffFile;
-    } else {
+    } else if (props.data) {
       return new DiffFile(
         props.data?.oldFile?.fileName || "",
         props.data?.oldFile?.content || "",
@@ -127,20 +127,25 @@ export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
         props.data?.newFile?.fileLang || ""
       );
     }
+    return null;
   }, [props.data, props.diffFile]);
 
   useEffect(() => {
+    if (!diffFile) return;
     diffFile.initRaw();
     diffFile.buildSplitDiffLines();
     diffFile.buildUnifiedDiffLines();
   }, [diffFile]);
 
   useEffect(() => {
+    if (!diffFile) return;
     if (props.diffViewHighlight) {
       diffFile.initSyntax();
       diffFile.notifyAll();
     }
   }, [diffFile, props.diffViewHighlight]);
+
+  if (!diffFile) return null;
 
   return <InternalDiffView {...props} diffFile={diffFile} />;
 };

@@ -58,24 +58,27 @@ type typeSlots = SlotsType<{
   extend: { lineNumber: number; side: SplitSide; data: any; diffFile: DiffFile; onUpdate: () => void };
 }>;
 
-// vue 组件打包目前无法支持范型
+// vue 组件打包目前无法支持范型 也不支持 slots
 export const DiffView = defineComponent<DiffViewProps<any>, { onAddWidgetClick: (lineNumber: number, side: SplitSide) => void }, "onAddWidgetClick", typeSlots>(
   (props, options) => {
-    const getInstance = () =>
-      props.diffFile ||
-      new DiffFile(
-        props.data?.oldFile?.fileName || "",
-        props.data?.oldFile?.content || "",
-        props.data?.newFile?.fileName || "",
-        props.data?.newFile?.content || "",
-        props.data?.hunks || [],
-        props.data?.oldFile?.fileLang || "",
-        props.data?.newFile?.fileLang || ""
-      );
+    const getInstance = () => {
+      if (props.diffFile) return props.diffFile;
+      if (props.data)
+        return new DiffFile(
+          props.data.oldFile?.fileName || "",
+          props.data.oldFile?.content || "",
+          props.data.newFile?.fileName || "",
+          props.data.newFile?.content || "",
+          props.data.hunks || [],
+          props.data.oldFile?.fileLang || "",
+          props.data.newFile?.fileLang || ""
+        );
+      return null;
+    };
 
     const diffFile = ref<DiffFile>(getInstance());
 
-    const id = ref(diffFile.value.getId());
+    const id = ref(diffFile.value?.getId?.());
 
     const widgetState = ref<{ side?: SplitSide; lineNumber?: number }>({});
 
@@ -102,7 +105,7 @@ export const DiffView = defineComponent<DiffViewProps<any>, { onAddWidgetClick: 
     const isMounted = useIsMounted();
 
     const initDiff = () => {
-      if (!isMounted.value) return;
+      if (!isMounted.value || !diffFile.value) return;
       const instance = diffFile.value;
       instance.initRaw();
       instance.buildSplitDiffLines();
@@ -110,13 +113,14 @@ export const DiffView = defineComponent<DiffViewProps<any>, { onAddWidgetClick: 
     };
 
     const initSyntax = () => {
-      if (!isMounted.value || !enableHighlight.value) return;
+      if (!isMounted.value || !enableHighlight.value || !diffFile.value) return;
       const instance = diffFile.value;
       instance.initSyntax();
       instance.notifyAll();
     };
 
     const initId = (onClean: (cb: () => void) => void) => {
+      if (!diffFile.value) return;
       id.value = diffFile.value.getId();
       onClean(() => diffFile.value.clearId());
     };
@@ -149,17 +153,21 @@ export const DiffView = defineComponent<DiffViewProps<any>, { onAddWidgetClick: 
 
     useProvide(props, "extendData", extendDataSymbol, true);
 
-    return () => (
-      <div class="diff-style-root" style={{ [diffFontSizeName]: props.diffViewFontSize + "px" }}>
-        <div id={`diff-root${id.value}`} class={"diff-view-wrapper" + (props.class ? ` ${props.class}` : "")} style={props.style}>
-          {!props.diffViewMode || props.diffViewMode === DiffModeEnum.Split ? (
-            <DiffSplitView key={DiffModeEnum.Split} diffFile={diffFile.value as DiffFile} />
-          ) : (
-            <DiffUnifiedView key={DiffModeEnum.Unified} diffFile={diffFile.value as DiffFile} />
-          )}
+    return () => {
+      if (!diffFile.value) return null;
+
+      return (
+        <div class="diff-style-root" style={{ [diffFontSizeName]: props.diffViewFontSize + "px" }}>
+          <div id={`diff-root${id.value}`} class={"diff-view-wrapper" + (props.class ? ` ${props.class}` : "")} style={props.style}>
+            {!props.diffViewMode || props.diffViewMode === DiffModeEnum.Split ? (
+              <DiffSplitView key={DiffModeEnum.Split} diffFile={diffFile.value as DiffFile} />
+            ) : (
+              <DiffUnifiedView key={DiffModeEnum.Unified} diffFile={diffFile.value as DiffFile} />
+            )}
+          </div>
         </div>
-      </div>
-    );
+      );
+    };
   },
   {
     name: "DiffView",

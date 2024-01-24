@@ -23,6 +23,8 @@
       "types": "./index.d.ts",
       "import": "./dist/esm/index.mjs"
     },
+    "./cjsIndex.js": "./index.js",
+    "./esmIndex.js": "./dist/esm/index.mjs",
     "./package.json": "./package.json"
   },
   "buildOptions": {

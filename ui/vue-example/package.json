@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@git-diff-view/core": "0.0.1",
     "@git-diff-view/vue": "0.0.1",
     "vue": "^3.3.11"
   },

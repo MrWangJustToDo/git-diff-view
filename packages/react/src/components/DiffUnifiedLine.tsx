@@ -1,3 +1,4 @@
+import { type DiffFile, type SyntaxLine, type DiffLine, checkDiffLineIncludeChange } from "@git-diff-view/core";
 import * as React from "react";
 
 import { SplitSide, useDiffViewContext } from "..";
@@ -14,10 +15,11 @@ import {
 } from "./color";
 import { DiffUnifiedAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
+import { useDiffWidgetContext } from "./DiffWidgetContext";
 
+import type { DiffWidgetContextType } from "./DiffWidgetContext";
 import type { DiffViewContextProps } from "..";
-import type { DiffFile, SyntaxLine, DiffLine } from "@git-diff-view/core";
-import { DiffWidgetContextType, useDiffWidgetContext } from "./DiffWidgetContext";
+import type { Dispatch, SetStateAction } from "react";
 
 const DiffUnifiedOldLine = ({
   index,
@@ -40,7 +42,7 @@ const DiffUnifiedOldLine = ({
   enableWrap: boolean;
   enableHighlight: boolean;
   onAddWidgetClick?: DiffViewContextProps["onAddWidgetClick"];
-  setWidget: React.Dispatch<React.SetStateAction<DiffWidgetContextType>>;
+  setWidget: Dispatch<SetStateAction<DiffWidgetContextType>>;
 }) => {
   return (
     <tr data-line={index} data-state="diff" data-mode="del" className="diff-line group" style={{ backgroundColor: `var(${delContentBGName})` }}>
@@ -103,7 +105,7 @@ const DiffUnifiedNewLine = ({
   enableWrap: boolean;
   enableHighlight: boolean;
   onAddWidgetClick?: DiffViewContextProps["onAddWidgetClick"];
-  setWidget: React.Dispatch<React.SetStateAction<DiffWidgetContextType>>;
+  setWidget: Dispatch<SetStateAction<DiffWidgetContextType>>;
 }) => {
   return (
     <tr data-line={index} data-state="diff" data-mode="add" className="diff-line group" style={{ backgroundColor: `var(${addContentBGName})` }}>
@@ -154,7 +156,7 @@ const _DiffUnifiedLine = ({ index, diffFile, lineNumber }: { index: number; diff
 
   const hasDiff = unifiedLine.diff;
 
-  const hasChange = unifiedLine.diff?.isIncludeableLine();
+  const hasChange = checkDiffLineIncludeChange(unifiedLine.diff);
 
   const rawLine = unifiedLine.value || "";
 

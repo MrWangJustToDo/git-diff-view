@@ -1,6 +1,6 @@
 import { DiffFile } from "@git-diff-view/core";
 
-import type { DiffViewProps } from "@git-diff-view/react";
+import type { DiffViewProps } from "@git-diff-view/vue";
 
 export type MessageData = {
   id: number;

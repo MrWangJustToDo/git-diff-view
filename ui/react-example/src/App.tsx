@@ -1,3 +1,4 @@
+import { DiffFile } from "@git-diff-view/core";
 import { DiffModeEnum, DiffView, SplitSide } from "@git-diff-view/react";
 import { useEffect, useState } from "react";
 
@@ -5,12 +6,19 @@ import * as data from "./data";
 import { useDiffConfig } from "./hooks/useDiffConfig";
 import { usePrevious } from "./hooks/usePrevious";
 
+import type { MessageData } from "./worker";
 import type { DiffViewProps } from "@git-diff-view/react";
+
+const worker = new Worker(new URL("./worker.ts", import.meta.url), {
+  type: "module",
+});
 
 type K = "a" | "b" | "c" | "d" | "e";
 
 function App() {
   const [v, setV] = useState<K>("b");
+
+  const [diffFileInstance, setDiffFileInstance] = useState<DiffFile>();
 
   const previous = usePrevious(v);
 
@@ -26,6 +34,21 @@ function App() {
       setExtend({ oldFile: {}, newFile: {} });
     }
   }, [v, previous]);
+
+  useEffect(() => {
+    worker.addEventListener("message", (e: MessageEvent<MessageData>) => {
+      const { data, bundle } = e.data;
+      const instance = DiffFile.createInstance(data || {}, bundle);
+      setDiffFileInstance(instance);
+    });
+  }, []);
+
+  useEffect(() => {
+    const _data = data[v];
+    if (_data) {
+      worker.postMessage({ type: "parse", data: _data });
+    }
+  }, [v]);
 
   const { mode, setMode, highlight, setHighlight, wrap, setWrap, fontsize } = useDiffConfig((s) => ({ ...s }));
 
@@ -69,7 +92,6 @@ function App() {
 
       <div className="w-[90%] m-auto border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]">
         <DiffView<string>
-          data={data[v]}
           renderWidgetLine={({ onClose, side, lineNumber }) => (
             <div className="border flex flex-col w-full px-[4px] py-[8px]">
               <textarea className="w-full border min-h-[80px] p-[2px]" value={val} onChange={(e) => setVal(e.target.value)} />
@@ -105,6 +127,8 @@ function App() {
               </div>
             </div>
           )}
+          // data={data[v]}
+          diffFile={diffFileInstance}
           extendData={extend}
           renderExtendLine={({ data }) => {
             return (

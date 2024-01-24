@@ -2,7 +2,8 @@ import * as React from "react";
 
 import { useDiffViewContext, SplitSide } from "..";
 import { useDomWidth } from "../hooks/useDomWidth";
-import { DiffFile } from "@git-diff-view/core";
+
+import type { DiffFile } from "@git-diff-view/core";
 
 const _DiffUnifiedExtendLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
   const { extendData, renderExtendLine } = useDiffViewContext();

@@ -1,4 +1,4 @@
-import { DiffLineType, type DiffFile } from "@git-diff-view/core";
+import { DiffLineType, type DiffFile, checkDiffLineIncludeChange } from "@git-diff-view/core";
 import { computed, defineComponent, ref } from "vue";
 
 import { useEnableAddWidget, useEnableHighlight, useEnableWrap, useOnAddWidgetClick, useSetWidget } from "../context";
@@ -26,7 +26,7 @@ export const DiffSplitLine = defineComponent(
 
     const currentItemHasDiff = ref(!!currentItem.value?.diff);
 
-    const currentItemHasChange = ref(currentItem.value?.diff?.isIncludeableLine());
+    const currentItemHasChange = ref(checkDiffLineIncludeChange(currentItem.value?.diff));
 
     const currentItemHasHidden = ref(currentItem.value?.isHidden);
 
@@ -52,7 +52,7 @@ export const DiffSplitLine = defineComponent(
 
     useSubscribeDiffFile(props, () => (currentItemHasHidden.value = currentItem.value?.isHidden));
 
-    useSubscribeDiffFile(props, () => (currentItemHasChange.value = currentItem.value?.diff?.isIncludeableLine()));
+    useSubscribeDiffFile(props, () => (currentItemHasChange.value = checkDiffLineIncludeChange(currentItem.value?.diff)));
 
     const lineSelector = computed(() => `tr[data-line="${props.lineNumber}"]`);
 

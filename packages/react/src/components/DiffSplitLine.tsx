@@ -1,4 +1,4 @@
-import { DiffLineType, type DiffFile } from "@git-diff-view/core";
+import { DiffLineType, type DiffFile, checkDiffLineIncludeChange } from "@git-diff-view/core";
 import * as React from "react";
 
 import { useDiffViewContext, SplitSide } from "..";
@@ -18,7 +18,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber, side }: { index: number; 
 
   const hasDiff = !!currentItem?.diff;
 
-  const hasChange = currentItem?.diff?.isIncludeableLine();
+  const hasChange = checkDiffLineIncludeChange(currentItem?.diff);
 
   const isAdded = currentItem?.diff?.type === DiffLineType.Add;
 

@@ -1,3 +1,4 @@
+import { type DiffFile, type SyntaxLine, type DiffLine, checkDiffLineIncludeChange } from "@git-diff-view/core";
 import { defineComponent, ref } from "vue";
 
 import { SplitSide } from "..";
@@ -16,8 +17,6 @@ import {
 } from "./color";
 import { DiffUnifiedAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
-
-import type { DiffFile, SyntaxLine, DiffLine } from "@git-diff-view/core";
 
 const DiffUnifiedOldLine = ({
   index,
@@ -39,7 +38,7 @@ const DiffUnifiedOldLine = ({
   diffFile: DiffFile;
   enableWrap: boolean;
   enableHighlight: boolean;
-  onOpenAddWidget:(lineNumber: number, side: SplitSide) => void;
+  onOpenAddWidget: (lineNumber: number, side: SplitSide) => void;
   onAddWidgetClick?: (event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void;
 }) => {
   return (
@@ -102,7 +101,7 @@ const DiffUnifiedNewLine = ({
   diffFile: DiffFile;
   enableWrap: boolean;
   enableHighlight: boolean;
-  onOpenAddWidget:(lineNumber: number, side: SplitSide) => void;
+  onOpenAddWidget: (lineNumber: number, side: SplitSide) => void;
   onAddWidgetClick?: (event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void;
 }) => {
   return (
@@ -161,7 +160,7 @@ export const DiffUnifiedLine = defineComponent(
 
     const currentItemHasHidden = ref(unifiedItem.value?.isHidden);
 
-    const currentItemHasChange = ref(unifiedItem.value?.diff?.isIncludeableLine());
+    const currentItemHasChange = ref(checkDiffLineIncludeChange(unifiedItem.value?.diff));
 
     const currentSyntaxItem = ref(
       unifiedItem.value?.newLineNumber
@@ -175,7 +174,7 @@ export const DiffUnifiedLine = defineComponent(
 
     useSubscribeDiffFile(props, () => (currentItemHasHidden.value = unifiedItem.value?.isHidden));
 
-    useSubscribeDiffFile(props, () => (currentItemHasChange.value = unifiedItem.value?.diff?.isIncludeableLine()));
+    useSubscribeDiffFile(props, () => (currentItemHasChange.value = checkDiffLineIncludeChange(unifiedItem.value?.diff)));
 
     useSubscribeDiffFile(
       props,
@@ -187,7 +186,7 @@ export const DiffUnifiedLine = defineComponent(
             : undefined)
     );
 
-    const onOpenAddWidget = (lineNumber, side) => setWidget({ side: side, lineNumber: lineNumber })
+    const onOpenAddWidget = (lineNumber, side) => setWidget({ side: side, lineNumber: lineNumber });
 
     return () => {
       if (currentItemHasHidden.value) return null;

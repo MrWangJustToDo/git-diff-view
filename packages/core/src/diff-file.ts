@@ -69,9 +69,9 @@ export class DiffFile {
 
   #newFileLines?: File["rawFile"];
 
-  #oldSyntaxLines?: File["syntaxFile"];
+  #oldFileSyntaxLines?: File["syntaxFile"];
 
-  #newSyntaxLines?: File["syntaxFile"];
+  #newFileSyntaxLines?: File["syntaxFile"];
 
   #splitLeftLines: {
     lineNumber?: number;
@@ -129,6 +129,30 @@ export class DiffFile {
 
   #id: string = "";
 
+  static createInstance(
+    data: {
+      oldFile?: { fileName?: string | null; fileLang?: string | null; content: string | null };
+      newFile?: { fileName?: string | null; fileLang?: string | null; content: string | null };
+      hunks?: string[];
+    },
+    bundle?: ReturnType<DiffFile["getBundle"]>
+  ) {
+    const instance = new DiffFile(
+      data?.oldFile?.fileName || "",
+      data?.oldFile?.content || "",
+      data?.newFile?.fileName || "",
+      data?.newFile?.content || "",
+      data?.hunks || [],
+      data?.oldFile?.fileLang || "",
+      data?.newFile?.fileLang || ""
+    );
+    if (bundle) {
+      instance.mergeBundle(bundle);
+    }
+
+    return instance;
+  }
+
   constructor(
     readonly _oldFileName: string,
     _oldFileContent: string,
@@ -163,15 +187,7 @@ export class DiffFile {
       console.error('should pass "oldFileContent" or "newFileContent" to make the diff work!');
     }
 
-    let id = "--" + Math.random().toString().slice(2);
-
-    while (idSet.has(id)) {
-      id = "--" + Math.random().toString().slice(2);
-    }
-
-    idSet.add(id);
-
-    this.#id = id;
+    this.initId();
   }
 
   #doDiff() {
@@ -323,11 +339,11 @@ export class DiffFile {
   #composeSyntax() {
     this.#oldFileResult?.doSyntax();
 
-    this.#oldSyntaxLines = this.#oldFileResult?.syntaxFile;
+    this.#oldFileSyntaxLines = this.#oldFileResult?.syntaxFile;
 
     this.#newFileResult?.doSyntax();
 
-    this.#newSyntaxLines = this.#newFileResult?.syntaxFile;
+    this.#newFileSyntaxLines = this.#newFileResult?.syntaxFile;
   }
 
   #getOldDiffLine(lineNumber: number | null) {
@@ -346,6 +362,18 @@ export class DiffFile {
 
   #getNewRawLine(lineNumber: number) {
     return this.#newFileLines?.[lineNumber];
+  }
+
+  initId() {
+    let id = "--" + Math.random().toString().slice(2);
+
+    while (idSet.has(id)) {
+      id = "--" + Math.random().toString().slice(2);
+    }
+
+    idSet.add(id);
+
+    this.#id = id;
   }
 
   getId() {
@@ -710,11 +738,11 @@ export class DiffFile {
   };
 
   getOldSyntaxLine = (lineNumber: number) => {
-    return this.#oldSyntaxLines?.[lineNumber];
+    return this.#oldFileSyntaxLines?.[lineNumber];
   };
 
   getNewSyntaxLine = (lineNumber: number) => {
-    return this.#newSyntaxLines?.[lineNumber];
+    return this.#newFileSyntaxLines?.[lineNumber];
   };
 
   subscribe = (listener: () => void) => {
@@ -738,5 +766,73 @@ export class DiffFile {
     } else {
       return this.#unifiedLastStartIndex && Number.isFinite(this.#unifiedLastStartIndex);
     }
+  };
+
+  getBundle = () => {
+    // common
+    const oldFileLines = this.#oldFileLines;
+    const oldFileDiffLines = this.#oldFileDiffLines;
+    const oldFileSyntaxLines = this.#oldFileSyntaxLines;
+    const newFileLines = this.#newFileLines;
+    const newFileDiffLines = this.#newFileDiffLines;
+    const newFileSyntaxLines = this.#newFileSyntaxLines;
+    const lineLength = this.lineLength;
+    const unifiedLineLength = this.unifiedLineLength;
+
+    // split
+    const splitLeftLines = this.#splitLeftLines;
+    const splitRightLines = this.#splitRightLines;
+    const splitHunkLines = this.#splitHunksLines;
+    const splitLastStartIndex = this.#splitLastStartIndex;
+
+    // unified
+    const unifiedLines = this.#unifiedLines;
+    const unifiedHunkLines = this.#unifiedHunksLines;
+    const unifiedLastStartIndex = this.#unifiedLastStartIndex;
+
+    return {
+      oldFileLines,
+      oldFileDiffLines,
+      oldFileSyntaxLines,
+      newFileLines,
+      newFileDiffLines,
+      newFileSyntaxLines,
+      lineLength,
+      unifiedLineLength,
+      splitLeftLines,
+      splitRightLines,
+      splitHunkLines,
+      splitLastStartIndex,
+      unifiedLines,
+      unifiedHunkLines,
+      unifiedLastStartIndex,
+    };
+  };
+
+  mergeBundle = (data: ReturnType<DiffFile["getBundle"]>) => {
+    this.#_hasInitRaw = true;
+    this.#_hasInitSyntax = true;
+    this.#_hasBuildSplit = true;
+    this.#_hasBuildUnified = true;
+
+    this.#oldFileLines = data.oldFileLines;
+    this.#oldFileDiffLines = data.oldFileDiffLines;
+    this.#oldFileSyntaxLines = data.oldFileSyntaxLines;
+    this.#newFileLines = data.newFileLines;
+    this.#newFileDiffLines = data.newFileDiffLines;
+    this.#newFileSyntaxLines = data.newFileSyntaxLines;
+    this.lineLength = data.lineLength;
+    this.unifiedLineLength = data.unifiedLineLength;
+
+    this.#splitLeftLines = data.splitLeftLines;
+    this.#splitRightLines = data.splitRightLines;
+    this.#splitHunksLines = data.splitHunkLines;
+    this.#splitLastStartIndex = data.splitLastStartIndex;
+
+    this.#unifiedLines = data.unifiedLines;
+    this.#unifiedHunksLines = data.unifiedHunkLines;
+    this.#unifiedLastStartIndex = data.unifiedLastStartIndex;
+
+    this.notifyAll();
   };
 }

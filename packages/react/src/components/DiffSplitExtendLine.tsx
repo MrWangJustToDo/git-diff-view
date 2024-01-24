@@ -5,7 +5,8 @@ import { useDomWidth } from "../hooks/useDomWidth";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
 import { emptyBGName } from "./color";
-import { DiffFile } from "@git-diff-view/core";
+
+import type { DiffFile } from "@git-diff-view/core";
 
 const _DiffSplitExtendLine = ({ index, diffFile, side, lineNumber }: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
   const { extendData, renderExtendLine } = useDiffViewContext();
