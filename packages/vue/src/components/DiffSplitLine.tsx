@@ -88,7 +88,7 @@ export const DiffSplitLine = defineComponent(
             }}
           >
             <td
-              class="diff-line-num left-0 pl-[10px] pr-[10px] text-right align-top select-none z-[1]"
+              class="diff-line-num left-0 pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[50px]"
               style={{
                 position: enableWrap.value ? "relative" : "sticky",
                 backgroundColor: lineNumberBG,
@@ -109,7 +109,7 @@ export const DiffSplitLine = defineComponent(
                 {currentItem.value.lineNumber}
               </span>
             </td>
-            <td class="diff-line-content pr-[10px] align-top relative">
+            <td class="diff-line-content pr-[10px] align-top">
               <DiffContent
                 enableWrap={enableWrap.value}
                 diffFile={props.diffFile}
@@ -131,7 +131,7 @@ export const DiffSplitLine = defineComponent(
             class="diff-line diff-line-empty select-none"
           >
             <td
-              class="diff-line-num diff-line-num-placeholder pl-[10px] pr-[10px] left-0 z-[1]"
+              class="diff-line-num diff-line-num-placeholder pl-[10px] pr-[10px] left-0 w-[1%] min-w-[50px]"
               style={{
                 position: enableWrap.value ? "relative" : "sticky",
               }}

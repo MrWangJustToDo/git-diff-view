@@ -16,7 +16,7 @@ const worker = new Worker(new URL("./worker.ts", import.meta.url), {
 type K = "a" | "b" | "c" | "d" | "e";
 
 function App() {
-  const [v, setV] = useState<K>("b");
+  const [v, setV] = useState<K>("e");
 
   const [diffFileInstance, setDiffFileInstance] = useState<DiffFile>();
 
@@ -127,8 +127,8 @@ function App() {
               </div>
             </div>
           )}
-          // data={data[v]}
-          diffFile={diffFileInstance}
+          data={data[v]}
+          // diffFile={diffFileInstance}
           extendData={extend}
           renderExtendLine={({ data }) => {
             return (

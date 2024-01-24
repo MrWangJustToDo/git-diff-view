@@ -5,7 +5,7 @@ import { useEnableWrap } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
-import { hunkContentBGName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
+import { hunkContentBGName, hunkContentColorName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 import { SplitSide } from "./DiffView";
 
@@ -22,10 +22,12 @@ export const DiffSplitHunkLine = defineComponent(
     const currentShowExpand = computed(() => props.side === SplitSide.old);
 
     const currentShowExpandAll = ref(
-      currentHunk.value && currentHunk.value.splitInfo.endHiddenIndex - currentHunk.value.splitInfo.startHiddenIndex < composeLen
+      currentHunk.value && currentHunk.value.splitInfo && currentHunk.value.splitInfo.endHiddenIndex - currentHunk.value.splitInfo.startHiddenIndex < composeLen
     );
 
-    const currentIsShow = ref(currentHunk.value && currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex);
+    const currentIsShow = ref(
+      currentHunk.value && currentHunk.value.splitInfo && currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex
+    );
 
     useSubscribeDiffFile(props, (diffFile) => (currentHunk.value = diffFile.getSplitHunkLine(props.index)));
 
@@ -33,12 +35,16 @@ export const DiffSplitHunkLine = defineComponent(
       props,
       () =>
         (currentShowExpandAll.value =
-          currentHunk.value && currentHunk.value.splitInfo.endHiddenIndex - currentHunk.value.splitInfo.startHiddenIndex < composeLen)
+          currentHunk.value &&
+          currentHunk.value.splitInfo &&
+          currentHunk.value.splitInfo.endHiddenIndex - currentHunk.value.splitInfo.startHiddenIndex < composeLen)
     );
 
     useSubscribeDiffFile(
       props,
-      () => (currentIsShow.value = currentHunk.value && currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex)
+      () =>
+        (currentIsShow.value =
+          currentHunk.value && currentHunk.value.splitInfo && currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex)
     );
 
     useSyncHeight({
@@ -59,7 +65,7 @@ export const DiffSplitHunkLine = defineComponent(
           class="diff-line diff-line-hunk select-none"
         >
           <td
-            class="diff-line-num diff-line-num-hunk left-0 z-[1] p-[1px]"
+            class="diff-line-num diff-line-num-hunk left-0 p-[1px] w-[1%] min-w-[50px]"
             style={{
               position: enableWrap.value ? "relative" : "sticky",
               backgroundColor: props.side === SplitSide.old ? `var(${hunkLineNumberBGName})` : undefined,
@@ -97,10 +103,11 @@ export const DiffSplitHunkLine = defineComponent(
           <td class="diff-line-content diff-line-content-hunk pr-[10px] align-middle">
             {currentShowExpand.value && (
               <div
-                class="opacity-[0.5] pl-[1.5em]"
+                class="pl-[1.5em]"
                 style={{
                   whiteSpace: enableWrap.value ? "pre-wrap" : "pre",
                   wordBreak: enableWrap.value ? "break-all" : "initial",
+                  color: `var(${hunkContentColorName})`,
                 }}
               >
                 {currentHunk.value.splitInfo.plainText}
@@ -142,7 +149,7 @@ export const DiffSplitExpandLastLine = defineComponent(
           class="diff-line diff-line-hunk select-none"
         >
           <td
-            class="diff-line-num diff-line-num-hunk left-0 z-[1] p-[1px]"
+            class="diff-line-num diff-line-num-hunk left-0 p-[1px] w-[1%] min-w-[50px]"
             style={{
               position: enableWrap.value ? "relative" : "sticky",
               backgroundColor: props.side === SplitSide.old ? `var(${hunkLineNumberBGName})` : undefined,

@@ -34,6 +34,10 @@ export const hunkContentBG = "#ddf4ff";
 
 export const hunkContentBGName = "--diff-hunk-content--";
 
+export const hunkContentColor = "#777777";
+
+export const hunkContentColorName = "--diff-hunk-content-color--";
+
 export const hunkLineNumberBG = "#c7ecff";
 
 export const hunkLineNumberBGName = "--diff-hunk-lineNumber--";

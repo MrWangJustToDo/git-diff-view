@@ -82,3 +82,28 @@ export const f = {
     "--- src/apis/modules/catalog/index.ts\n+++ /dev/null\n@@ -1,24 +0,0 @@\n-import request from '@/apis/fetcher';\n-import type { BasicResponse } from '@/apis/fetcher/type';\n-import type { ApplyCataLogItem, CataLogTreeItem } from './module';\n-\n-export const getCataLogTree = (repoId: number) => {\n-  return request<BasicResponse<CataLogTreeItem[]>>(`/api/catalogue/getCatalogTree/${repoId}`, {\n-    method: 'GET',\n-    description: '根据仓库ID获取目录树结构',\n-  });\n-};\n-\n-export const getApplyCataLogById = (applyId: number) => {\n-  return request<BasicResponse<ApplyCataLogItem[]>>(`/api/applyCatalog/getCatalogById/${applyId}`, {\n-    method: 'GET',\n-    description: '根据申请ID获取目录结构',\n-  });\n-};\n-\n-export const getMrApplyCataLogById = (applyId: number) => {\n-  return request<BasicResponse<ApplyCataLogItem[]>>(`/api/mrApplyCatalog/getCatalogById/${applyId}`, {\n-    method: 'GET',\n-    description: '根据ID获取MR目录结构',\n-  });\n-};\n",
   ],
 };
+
+export const g = {
+  oldFile: {
+    fileName: "222.cpp",
+    content: "",
+  },
+  newFile: {
+    fileName: "222.cpp",
+    content:
+      "123\n222.cpp\nqAUTHORS\nCONTRIBUTING.rst\nGruntfile.js\nINSTALL\nLICENSE\nLICENSE.python\nMANIFEST.in\nREADME.md\nbadblocks.c\nbdev.c\nbfq-cgroup.c\nbfq-iosched.c\nbfq-iosched.h\nbfq-wf2q.c\nbio-integrity.c\nbio.c\nblk-cgroup-rwstat.c\nblk-cgroup-rwstat.h\nblk-cgroup-rwstat的副本.h\nblk-cgroup.c\nblk-cgroup的副本.c\nblk-cgroup的副本2.c\nblk-core.c\nblk-crypto-fallback.c\nblk-crypto-internal.h\nblk-crypto-profile.c\nblk-crypto.c\nblk-crypto的副本.c\nblk-flush.c\nblk-flush的副本.c\nblk-ia-ranges.c\ndjango\ndocs\nextras\njs_tests\npackage.json\npyproject.toml\nscripts\nsetup.cfg\nsetup.py\ntests\ntox.ini\n",
+  },
+  hunks: ["--- 222.cpp\n+++ 222.cpp\n@@ -1,6 +1,6 @@\n 123\n 222.cpp\n-AUTHORS\n+qAUTHORS\n CONTRIBUTING.rst\n Gruntfile.js\n INSTALL\n"],
+};
+
+export const h = {
+  oldFile: {
+    fileName: "CYJ.cpp",
+    content: "",
+  },
+  newFile: {
+    fileName: "CYJ.cpp",
+    content: "1\n1\n1\n1\n1\n1\n1\n1\n1\n",
+  },
+  hunks: ["--- CYJ.cpp\n+++ CYJ.cpp\n@@ -5,3 +5,5 @@\n 1\n 1\n 1\n+1\n+1\n"],
+};

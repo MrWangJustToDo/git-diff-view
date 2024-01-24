@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { useDiffViewContext } from "..";
 
-import { hunkContentBGName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
+import { hunkContentBGName, hunkContentColorName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 
 import type { DiffFile } from "@git-diff-view/core";
@@ -13,7 +13,7 @@ const _DiffUnifiedHunkLine = ({ index, diffFile, lineNumber }: { index: number; 
 
   const { enableWrap } = useDiffViewContext();
 
-  const isExpandAll = currentHunk.unifiedInfo.endHiddenIndex - currentHunk.unifiedInfo.startHiddenIndex < composeLen;
+  const isExpandAll = currentHunk.unifiedInfo && currentHunk.unifiedInfo.endHiddenIndex - currentHunk.unifiedInfo.startHiddenIndex < composeLen;
 
   return (
     <tr
@@ -23,7 +23,7 @@ const _DiffUnifiedHunkLine = ({ index, diffFile, lineNumber }: { index: number; 
       style={{ backgroundColor: `var(${hunkContentBGName})` }}
     >
       <td
-        className="diff-line-num diff-line-num-hunk left-0 text-left select-none w-[1%] min-w-[60px] whitespace-nowrap z-[1]"
+        className="diff-line-num diff-line-num-hunk left-0 w-[1%] min-w-[100px]"
         style={{
           position: enableWrap ? "relative" : "sticky",
           backgroundColor: `var(${hunkLineNumberBGName})`,
@@ -59,10 +59,11 @@ const _DiffUnifiedHunkLine = ({ index, diffFile, lineNumber }: { index: number; 
       </td>
       <td className="diff-line-content diff-line-content-hunk pr-[10px] align-middle">
         <div
-          className="opacity-[0.5] pl-[1.5em]"
+          className="pl-[1.5em]"
           style={{
             whiteSpace: enableWrap ? "pre-wrap" : "pre",
             wordBreak: enableWrap ? "break-all" : "initial",
+            color: `var(${hunkContentColorName})`,
           }}
         >
           {currentHunk.unifiedInfo.plainText}
@@ -75,7 +76,7 @@ const _DiffUnifiedHunkLine = ({ index, diffFile, lineNumber }: { index: number; 
 export const DiffUnifiedHunkLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
   const currentHunk = diffFile.getUnifiedHunkLine(index);
 
-  const currentIsShow = currentHunk && currentHunk.unifiedInfo.startHiddenIndex < currentHunk.unifiedInfo.endHiddenIndex;
+  const currentIsShow = currentHunk && currentHunk.unifiedInfo && currentHunk.unifiedInfo.startHiddenIndex < currentHunk.unifiedInfo.endHiddenIndex;
 
   if (!currentIsShow) return null;
 
@@ -88,7 +89,7 @@ const _DiffUnifiedExpandLastLine = ({ diffFile }: { diffFile: DiffFile }) => {
   return (
     <tr data-line="last-hunk" data-state="hunk" className="diff-line diff-line-hunk select-none" style={{ backgroundColor: `var(${hunkContentBGName})` }}>
       <td
-        className="diff-line-num diff-line-num-hunk left-0 text-left select-none w-[1%] min-w-[60px] whitespace-nowrap"
+        className="diff-line-num diff-line-num-hunk left-0 w-[1%] min-w-[100px]"
         style={{
           position: enableWrap ? "relative" : "sticky",
           backgroundColor: `var(${hunkLineNumberBGName})`,

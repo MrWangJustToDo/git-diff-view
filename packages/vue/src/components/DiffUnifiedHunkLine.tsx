@@ -4,7 +4,7 @@ import { defineComponent, ref } from "vue";
 import { useEnableWrap } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 
-import { hunkContentBGName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
+import { hunkContentBGName, hunkContentColorName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 
 import type { DiffFile } from "@git-diff-view/core";
@@ -15,24 +15,32 @@ export const DiffUnifiedHunkLine = defineComponent(
 
     const enableWrap = useEnableWrap();
 
-    const currentIsShow = ref(currentHunk.value && currentHunk.value.unifiedInfo.startHiddenIndex < currentHunk.value.unifiedInfo.endHiddenIndex);
+    const currentIsShow = ref(
+      currentHunk.value && currentHunk.value.unifiedInfo && currentHunk.value.unifiedInfo.startHiddenIndex < currentHunk.value.unifiedInfo.endHiddenIndex
+    );
 
     const currentIsEnableAll = ref(
-      currentHunk.value && currentHunk.value.unifiedInfo.endHiddenIndex - currentHunk.value.unifiedInfo.startHiddenIndex < composeLen
+      currentHunk.value &&
+        currentHunk.value.unifiedInfo &&
+        currentHunk.value.unifiedInfo.endHiddenIndex - currentHunk.value.unifiedInfo.startHiddenIndex < composeLen
     );
 
     useSubscribeDiffFile(props, (diffFile) => (currentHunk.value = diffFile.getUnifiedHunkLine(props.index)));
 
     useSubscribeDiffFile(
       props,
-      () => (currentIsShow.value = currentHunk.value && currentHunk.value.unifiedInfo.startHiddenIndex < currentHunk.value.unifiedInfo.endHiddenIndex)
+      () =>
+        (currentIsShow.value =
+          currentHunk.value && currentHunk.value.unifiedInfo && currentHunk.value.unifiedInfo.startHiddenIndex < currentHunk.value.unifiedInfo.endHiddenIndex)
     );
 
     useSubscribeDiffFile(
       props,
       () =>
         (currentIsEnableAll.value =
-          currentHunk.value && currentHunk.value.unifiedInfo.endHiddenIndex - currentHunk.value.unifiedInfo.startHiddenIndex < composeLen)
+          currentHunk.value &&
+          currentHunk.value.unifiedInfo &&
+          currentHunk.value.unifiedInfo.endHiddenIndex - currentHunk.value.unifiedInfo.startHiddenIndex < composeLen)
     );
 
     return () => {
@@ -46,7 +54,7 @@ export const DiffUnifiedHunkLine = defineComponent(
           style={{ backgroundColor: `var(${hunkContentBGName})` }}
         >
           <td
-            class="diff-line-num diff-line-num-hunk left-0 text-left select-none w-[1%] min-w-[60px] whitespace-nowrap z-[1]"
+            class="diff-line-num diff-line-num-hunk left-0 w-[1%] min-w-[100px]"
             style={{
               position: enableWrap.value ? "relative" : "sticky",
               backgroundColor: `var(${hunkLineNumberBGName})`,
@@ -82,10 +90,11 @@ export const DiffUnifiedHunkLine = defineComponent(
           </td>
           <td class="diff-line-content diff-line-content-hunk pr-[10px] align-middle">
             <div
-              class="opacity-[0.5] pl-[1.5em]"
+              class="pl-[1.5em]"
               style={{
                 whiteSpace: enableWrap.value ? "pre-wrap" : "pre",
                 wordBreak: enableWrap.value ? "break-all" : "initial",
+                color: `var(${hunkContentColorName})`,
               }}
             >
               {currentHunk.value.unifiedInfo.plainText}
@@ -112,7 +121,7 @@ export const DiffUnifiedExpandLastLine = defineComponent(
       return (
         <tr data-line="last-hunk" data-state="hunk" class="diff-line diff-line-hunk select-none" style={{ backgroundColor: `var(${hunkContentBGName})` }}>
           <td
-            class="diff-line-num diff-line-num-hunk left-0 text-left select-none w-[1%] min-w-[60px] whitespace-nowrap"
+            class="diff-line-num diff-line-num-hunk left-0 w-[1%] min-w-[100px]"
             style={{
               position: enableWrap.value ? "relative" : "sticky",
               backgroundColor: `var(${hunkLineNumberBGName})`,

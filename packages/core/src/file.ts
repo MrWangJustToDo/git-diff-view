@@ -51,11 +51,6 @@ export class File {
   doSyntax() {
     if (!this.raw || this.hasDoSyntax) return;
 
-    if (!this.rawLength) {
-      console.error("current file is empty" + this.raw);
-      return;
-    }
-
     if (this.syntaxLength) {
       console.error("current file already doSyntax before!");
       return;
@@ -91,9 +86,9 @@ export class File {
 
     const rawArray = rawString.split("\n");
 
-    this.rawLength = rawArray.length - 1;
+    this.rawLength = rawArray.length;
 
-    this.maxLineNumber = rawArray.length + 1;
+    this.maxLineNumber = rawArray.length;
 
     this.rawFile = rawArray.reduce(
       (p, item, index) => ({
@@ -186,7 +181,7 @@ export class File {
 
     loopAST(ast.children as SyntaxNode[]);
 
-    this.syntaxLength = lineNumber - 1;
+    this.syntaxLength = lineNumber;
   }
 
   #doCheck() {

@@ -25,6 +25,7 @@
     "eslint": "^8.55.0",
     "husky": "^8.0.2",
     "postcss": "^8.4.33",
+    "postcss-prefix-selector": "^1.16.0",
     "prettier": "^3.2.4",
     "project-tool": "https://github.com/MrWangJustToDo/project-tool.git",
     "rollup-plugin-postcss": "^4.0.2",

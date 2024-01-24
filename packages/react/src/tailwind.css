@@ -18,4 +18,5 @@
   --diff-add-widget--: #0969d2;
   --diff-add-widget-color--: white;
   --diff-empty-content--: #f0f0f0;
+  --diff-hunk-content-color--: #777777;
 }

@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { DiffFile } from "@git-diff-view/core";
-import { useEffect, useMemo, useSyncExternalStore } from "react";
+import { useEffect, useMemo } from "react";
 import * as React from "react";
+import { useSyncExternalStore } from "use-sync-external-store/shim";
 
 import { useCallbackRef } from "../hooks/useCallbackRef";
 import { useUnmount } from "../hooks/useUnmount";
@@ -97,15 +98,17 @@ const InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data
 
   return (
     <DiffViewContext.Provider value={value}>
-      <div
-        className="diff-style-root"
-        style={{
-          // @ts-ignore
-          [diffFontSizeName]: diffViewFontSize + "px",
-        }}
-      >
-        <div id={`diff-root${id}`} className={"diff-view-wrapper" + (className ? ` ${className}` : "")} style={style}>
-          {diffViewMode === DiffModeEnum.Split ? <DiffSplitView diffFile={diffFile} /> : <DiffUnifiedView diffFile={diffFile} />}
+      <div className="diff-tailwindcss-wrapper">
+        <div
+          className="diff-style-root"
+          style={{
+            // @ts-ignore
+            [diffFontSizeName]: diffViewFontSize + "px",
+          }}
+        >
+          <div id={`diff-root${id}`} className={"diff-view-wrapper" + (className ? ` ${className}` : "")} style={style}>
+            {diffViewMode === DiffModeEnum.Split ? <DiffSplitView diffFile={diffFile} /> : <DiffUnifiedView diffFile={diffFile} />}
+          </div>
         </div>
       </div>
     </DiffViewContext.Provider>

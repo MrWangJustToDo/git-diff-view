@@ -53,7 +53,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber, side }: { index: number; 
         }}
       >
         <td
-          className="diff-line-num left-0 pl-[10px] pr-[10px] text-right align-top select-none z-[1]"
+          className="diff-line-num left-0 pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[50px]"
           style={{
             position: enableWrap ? "relative" : "sticky",
             backgroundColor: lineNumberBG,
@@ -74,7 +74,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber, side }: { index: number; 
             {currentItem.lineNumber}
           </span>
         </td>
-        <td className="diff-line-content pr-[10px] align-top relative">
+        <td className="diff-line-content pr-[10px] align-top">
           <DiffContent
             enableWrap={enableWrap}
             diffFile={diffFile}
@@ -96,7 +96,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber, side }: { index: number; 
         className="diff-line diff-line-empty select-none"
       >
         <td
-          className="diff-line-num diff-line-num-placeholder pl-[10px] pr-[10px] left-0 z-[1]"
+          className="diff-line-num diff-line-num-placeholder pl-[10px] pr-[10px] left-0 w-[1%] min-w-[50px]"
           style={{
             position: enableWrap ? "relative" : "sticky",
           }}

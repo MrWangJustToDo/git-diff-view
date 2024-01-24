@@ -16,8 +16,8 @@ const start = async () => {
         ...defaultPlugins,
         postcss({
           config: {
-            path: "./postcss.config.js",
-            ctx: "packages/react",
+            path: absolutePath + "/postcss.config.js",
+            ctx: {},
           },
           extract: "css/diff-view.css",
           extensions: [".css"],
@@ -29,8 +29,8 @@ const start = async () => {
         ...defaultPlugins,
         postcss({
           config: {
-            path: "./postcss.config.js",
-            ctx: "packages/react",
+            path: absolutePath + "/postcss.config.js",
+            ctx: {},
           },
           extract: "css/diff-view.css",
           extensions: [".css"],
@@ -42,8 +42,8 @@ const start = async () => {
         ...defaultPlugins,
         postcss({
           config: {
-            path: "./postcss.config.js",
-            ctx: "packages/react",
+            path: absolutePath + "/postcss.config.js",
+            ctx: {},
           },
           extract: "css/diff-view.css",
           extensions: [".css"],

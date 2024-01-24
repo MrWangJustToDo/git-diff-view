@@ -44,7 +44,7 @@ const DiffUnifiedOldLine = ({
   return (
     <tr data-line={index} data-state="diff" data-mode="del" class="diff-line group" style={{ backgroundColor: `var(${delContentBGName})` }}>
       <td
-        class="diff-line-num left-0 pl-[10px] pr-[10px] text-left select-none w-[1%] min-w-[60px] whitespace-nowrap align-top"
+        class="diff-line-num left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
         style={{
           position: enableWrap ? "relative" : "sticky",
           color: `var(${plainLineNumberColorName})`,
@@ -107,7 +107,7 @@ const DiffUnifiedNewLine = ({
   return (
     <tr data-line={index} data-state="diff" data-mode="add" class="diff-line group" style={{ backgroundColor: `var(${addContentBGName})` }}>
       <td
-        class="diff-line-num left-0 pl-[10px] pr-[10px] text-left select-none w-[1%] min-w-[60px] whitespace-nowrap align-top"
+        class="diff-line-num left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
         style={{
           position: enableWrap ? "relative" : "sticky",
           color: `var(${plainLineNumberColorName})`,
@@ -234,7 +234,7 @@ export const DiffUnifiedLine = defineComponent(
             }}
           >
             <td
-              class="diff-line-num left-0 pl-[10px] pr-[10px] text-left select-none w-[1%] min-w-[60px] whitespace-nowrap align-top"
+              class="diff-line-num left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
               style={{
                 position: enableWrap.value ? "relative" : "sticky",
                 color: `var(${plainLineNumberColorName})`,
