@@ -5,10 +5,10 @@ import { useExtendData, useSlots } from "../context";
 import { useDomWidth } from "../hooks/useDomWidth";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 
-import type { DiffFileExtends } from "../utils";
+import type { DiffFile } from "@git-diff-view/core";
 
 export const DiffUnifiedExtendLine = defineComponent(
-  (props: { index: number; diffFile: DiffFileExtends; lineNumber: number }) => {
+  (props: { index: number; diffFile: DiffFile; lineNumber: number }) => {
     const extendData = useExtendData();
 
     const slots = useSlots();

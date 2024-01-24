@@ -6,7 +6,6 @@ import { DiffUnifiedExpandLastLine, DiffUnifiedHunkLine } from "./DiffUnifiedHun
 import { DiffUnifiedLine } from "./DiffUnifiedLine";
 import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
 
-import type { DiffFileExtends } from "../utils";
 import type { DiffFile } from "@git-diff-view/core";
 
 export const DiffUnifiedView = ({ diffFile }: { diffFile: DiffFile }) => {
@@ -37,8 +36,8 @@ export const DiffUnifiedView = ({ diffFile }: { diffFile: DiffFile }) => {
               <Fragment key={index}>
                 <DiffUnifiedHunkLine index={index} lineNumber={index + 1} diffFile={diffFile} />
                 <DiffUnifiedLine index={index} lineNumber={index + 1} diffFile={diffFile} />
-                <DiffUnifiedWidgetLine index={index} lineNumber={index + 1} diffFile={diffFile as DiffFileExtends} />
-                <DiffUnifiedExtendLine index={index} lineNumber={index + 1} diffFile={diffFile as DiffFileExtends} />
+                <DiffUnifiedWidgetLine index={index} lineNumber={index + 1} diffFile={diffFile} />
+                <DiffUnifiedExtendLine index={index} lineNumber={index + 1} diffFile={diffFile} />
               </Fragment>
             ))}
             <DiffUnifiedExpandLastLine diffFile={diffFile} />

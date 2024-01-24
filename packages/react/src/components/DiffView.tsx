@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { DiffFile } from "@git-diff-view/core";
 import { useEffect, useMemo, useSyncExternalStore } from "react";
 import * as React from "react";
 
 import { useCallbackRef } from "../hooks/useCallbackRef";
 import { useUnmount } from "../hooks/useUnmount";
-import { DiffFileExtends } from "../utils";
 
 import { DiffSplitView } from "./DiffSplitView";
 import { DiffUnifiedView } from "./DiffUnifiedView";
@@ -29,7 +29,7 @@ export type DiffViewProps<T> = {
     hunks: string[];
   };
   extendData?: { oldFile?: Record<string, { data: T }>; newFile?: Record<string, { data: T }> };
-  diffFile?: DiffFileExtends;
+  diffFile?: DiffFile;
   className?: string;
   style?: CSSProperties;
   registerHighlight?: typeof highlighter.register;
@@ -117,7 +117,7 @@ export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
     if (props.diffFile) {
       return props.diffFile;
     } else {
-      return new DiffFileExtends(
+      return new DiffFile(
         props.data?.oldFile?.fileName || "",
         props.data?.oldFile?.content || "",
         props.data?.newFile?.fileName || "",

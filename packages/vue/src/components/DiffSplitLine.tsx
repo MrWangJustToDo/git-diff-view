@@ -1,7 +1,7 @@
 import { DiffLineType, type DiffFile } from "@git-diff-view/core";
 import { computed, defineComponent, ref } from "vue";
 
-import { useEnableAddWidget, useEnableHighlight, useEnableWrap, useOnAddWidgetClick } from "../context";
+import { useEnableAddWidget, useEnableHighlight, useEnableWrap, useOnAddWidgetClick, useSetWidget } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
@@ -10,11 +10,11 @@ import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import { SplitSide } from "./DiffView";
 
-import type { DiffFileExtends } from "../utils";
-
 export const DiffSplitLine = defineComponent(
   (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
     const enableWrap = useEnableWrap();
+
+    const setWidget = useSetWidget();
 
     const enableAddWidget = useEnableAddWidget();
 
@@ -100,7 +100,8 @@ export const DiffSplitLine = defineComponent(
                   index={props.index}
                   lineNumber={currentItem.value.lineNumber}
                   side={props.side}
-                  diffFile={props.diffFile as DiffFileExtends}
+                  diffFile={props.diffFile}
+                  onOpenAddWidget={(lineNumber, side) => setWidget({ side: side, lineNumber: lineNumber })}
                   onWidgetClick={onAddWidgetClick}
                 />
               )}

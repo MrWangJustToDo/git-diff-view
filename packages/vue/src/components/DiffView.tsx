@@ -1,3 +1,4 @@
+import { DiffFile } from "@git-diff-view/core";
 import { defineComponent, provide, ref, watch, watchEffect, computed } from "vue";
 
 import {
@@ -10,15 +11,16 @@ import {
   extendDataSymbol,
   slotsSymbol,
   onAddWidgetClickSymbol,
+  widgetStateSymbol,
+  setWidgetStateSymbol,
 } from "../context";
 import { useIsMounted } from "../hooks/useIsMounted";
 import { useProvide } from "../hooks/useProvide";
-import { DiffFileExtends } from "../utils";
 
 import { DiffSplitView } from "./DiffSplitView";
 import { DiffUnifiedView } from "./DiffUnifiedView";
 
-import type { DiffFile, highlighter } from "@git-diff-view/core";
+import type { highlighter } from "@git-diff-view/core";
 import type { CSSProperties, SlotsType } from "vue";
 
 export enum DiffModeEnum {
@@ -38,7 +40,7 @@ export type DiffViewProps<T> = {
     hunks?: string[];
   };
   extendData?: { oldFile?: Record<string, { data: T }>; newFile?: Record<string, { data: T }> };
-  diffFile?: DiffFileExtends;
+  diffFile?: DiffFile;
   class?: string;
   style?: CSSProperties;
   registerHighlight?: typeof highlighter.register;
@@ -52,8 +54,8 @@ export type DiffViewProps<T> = {
 const diffFontSizeName = "--diff-font-size--";
 
 type typeSlots = SlotsType<{
-  widget: { lineNumber: number; side: SplitSide; diffFile: DiffFileExtends; onClose: () => void };
-  extend: { lineNumber: number; side: SplitSide; data: any; diffFile: DiffFileExtends; onUpdate: () => void };
+  widget: { lineNumber: number; side: SplitSide; diffFile: DiffFile; onClose: () => void };
+  extend: { lineNumber: number; side: SplitSide; data: any; diffFile: DiffFile; onUpdate: () => void };
 }>;
 
 // vue 组件打包目前无法支持范型
@@ -61,7 +63,7 @@ export const DiffView = defineComponent<DiffViewProps<any>, { onAddWidgetClick: 
   (props, options) => {
     const getInstance = () =>
       props.diffFile ||
-      new DiffFileExtends(
+      new DiffFile(
         props.data?.oldFile?.fileName || "",
         props.data?.oldFile?.content || "",
         props.data?.newFile?.fileName || "",
@@ -75,6 +77,10 @@ export const DiffView = defineComponent<DiffViewProps<any>, { onAddWidgetClick: 
 
     const id = ref(diffFile.value.getId());
 
+    const widgetState = ref<{ side?: SplitSide; lineNumber?: number }>({});
+
+    const setWidget = (v: { side?: SplitSide; lineNumber?: number }) => (widgetState.value = v);
+
     const enableHighlight = computed(() => props.diffViewHighlight ?? true);
 
     watch(
@@ -86,6 +92,11 @@ export const DiffView = defineComponent<DiffViewProps<any>, { onAddWidgetClick: 
       () => props.data,
       () => (diffFile.value = getInstance()),
       { deep: true }
+    );
+
+    watch(
+      () => diffFile.value,
+      () => (widgetState.value = {})
     );
 
     const isMounted = useIsMounted();
@@ -121,6 +132,10 @@ export const DiffView = defineComponent<DiffViewProps<any>, { onAddWidgetClick: 
     provide(slotsSymbol, options.slots);
 
     provide(onAddWidgetClickSymbol, options.emit);
+
+    provide(widgetStateSymbol, widgetState);
+
+    provide(setWidgetStateSymbol, setWidget);
 
     useProvide(props, "diffViewMode", modeSymbol);
 

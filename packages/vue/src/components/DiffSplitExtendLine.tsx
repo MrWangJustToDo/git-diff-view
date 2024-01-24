@@ -8,10 +8,10 @@ import { useSyncHeight } from "../hooks/useSyncHeight";
 import { emptyBGName } from "./color";
 import { SplitSide } from "./DiffView";
 
-import type { DiffFileExtends } from "../utils";
+import type { DiffFile } from "@git-diff-view/core";
 
 export const DiffSplitExtendLine = defineComponent(
-  (props: { index: number; side: SplitSide; diffFile: DiffFileExtends; lineNumber: number }) => {
+  (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
     const extendData = useExtendData();
 
     const slots = useSlots();

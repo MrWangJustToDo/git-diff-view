@@ -2,10 +2,9 @@ import * as React from "react";
 
 import { useDiffViewContext, SplitSide } from "..";
 import { useDomWidth } from "../hooks/useDomWidth";
+import { DiffFile } from "@git-diff-view/core";
 
-import type { DiffFileExtends } from "../utils";
-
-const _DiffUnifiedExtendLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFileExtends; lineNumber: number }) => {
+const _DiffUnifiedExtendLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
   const { extendData, renderExtendLine } = useDiffViewContext();
 
   const unifiedItem = diffFile.getUnifiedLine(index);
@@ -35,7 +34,7 @@ const _DiffUnifiedExtendLine = ({ index, diffFile, lineNumber }: { index: number
   );
 };
 
-export const DiffUnifiedExtendLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFileExtends; lineNumber: number }) => {
+export const DiffUnifiedExtendLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
   const { extendData } = useDiffViewContext();
 
   const unifiedItem = diffFile.getUnifiedLine(index);

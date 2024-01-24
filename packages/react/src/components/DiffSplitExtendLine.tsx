@@ -5,10 +5,9 @@ import { useDomWidth } from "../hooks/useDomWidth";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
 import { emptyBGName } from "./color";
+import { DiffFile } from "@git-diff-view/core";
 
-import type { DiffFileExtends } from "../utils";
-
-const _DiffSplitExtendLine = ({ index, diffFile, side, lineNumber }: { index: number; side: SplitSide; diffFile: DiffFileExtends; lineNumber: number }) => {
+const _DiffSplitExtendLine = ({ index, diffFile, side, lineNumber }: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
   const { extendData, renderExtendLine } = useDiffViewContext();
 
   const oldItem = diffFile.getSplitLeftLine(index);
@@ -55,17 +54,7 @@ const _DiffSplitExtendLine = ({ index, diffFile, side, lineNumber }: { index: nu
   );
 };
 
-export const DiffSplitExtendLine = ({
-  index,
-  diffFile,
-  side,
-  lineNumber,
-}: {
-  index: number;
-  side: SplitSide;
-  diffFile: DiffFileExtends;
-  lineNumber: number;
-}) => {
+export const DiffSplitExtendLine = ({ index, diffFile, side, lineNumber }: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
   const { extendData } = useDiffViewContext();
 
   const oldItem = diffFile.getSplitLeftLine(index);

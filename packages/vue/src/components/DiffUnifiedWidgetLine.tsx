@@ -1,37 +1,35 @@
 import { computed, defineComponent, ref } from "vue";
 
 import { SplitSide } from "..";
-import { useSlots } from "../context";
+import { useSetWidget, useSlots, useWidget } from "../context";
 import { useDomWidth } from "../hooks/useDomWidth";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 
-import type { DiffFileExtends } from "../utils";
+import type { DiffFile } from "@git-diff-view/core";
 
 export const DiffUnifiedWidgetLine = defineComponent(
-  (props: { index: number; diffFile: DiffFileExtends; lineNumber: number }) => {
+  (props: { index: number; diffFile: DiffFile; lineNumber: number }) => {
     const slots = useSlots();
+
+    const widget = useWidget();
+
+    const setWidget = useSetWidget();
 
     const unifiedItem = ref(props.diffFile.getUnifiedLine(props.index));
 
-    const oldWidget = ref(unifiedItem.value?.oldLineNumber ? props.diffFile.checkWidgetLine(unifiedItem.value.oldLineNumber, SplitSide.old) : undefined);
+    const oldWidget = computed(
+      () => unifiedItem.value?.oldLineNumber && widget.value.side === SplitSide.old && widget.value.lineNumber === unifiedItem.value.oldLineNumber
+    );
 
-    const newWidget = ref(unifiedItem.value?.newLineNumber ? props.diffFile.checkWidgetLine(unifiedItem.value.newLineNumber, SplitSide.new) : undefined);
+    const newWidget = computed(
+      () => unifiedItem.value?.newLineNumber && widget.value.side === SplitSide.new && widget.value.lineNumber === unifiedItem.value.newLineNumber
+    );
 
     useSubscribeDiffFile(props, (diffFile) => (unifiedItem.value = diffFile.getUnifiedLine(props.index)));
 
-    useSubscribeDiffFile(
-      props,
-      (diffFile: DiffFileExtends) =>
-        (oldWidget.value = unifiedItem.value?.oldLineNumber ? diffFile.checkWidgetLine(unifiedItem.value.oldLineNumber, SplitSide.old) : undefined)
-    );
-
-    useSubscribeDiffFile(
-      props,
-      (diffFile: DiffFileExtends) =>
-        (newWidget.value = unifiedItem.value?.newLineNumber ? diffFile.checkWidgetLine(unifiedItem.value.newLineNumber, SplitSide.new) : undefined)
-    );
-
     const currentIsShow = computed(() => oldWidget.value || newWidget.value);
+
+    const onCloseWidget = () => setWidget({});
 
     const width = useDomWidth({
       selector: ref(".unified-diff-table-wrapper"),
@@ -51,7 +49,7 @@ export const DiffUnifiedWidgetLine = defineComponent(
                   diffFile: props.diffFile,
                   side: SplitSide.old,
                   lineNumber: unifiedItem.value.oldLineNumber,
-                  onClose: props.diffFile.onCloseAddWidget,
+                  onClose: onCloseWidget,
                 })}
               {width.value > 0 &&
                 newWidget.value &&
@@ -59,7 +57,7 @@ export const DiffUnifiedWidgetLine = defineComponent(
                   diffFile: props.diffFile,
                   side: SplitSide.new,
                   lineNumber: unifiedItem.value.newLineNumber,
-                  onClose: props.diffFile.onCloseAddWidget,
+                  onClose: onCloseWidget,
                 })}
             </div>
           </td>

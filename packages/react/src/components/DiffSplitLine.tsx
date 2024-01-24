@@ -7,8 +7,7 @@ import { useSyncHeight } from "../hooks/useSyncHeight";
 import { emptyBGName, getContentBG, getLineNumberBG, plainLineNumberColorName } from "./color";
 import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
-
-import type { DiffFileExtends } from "../utils";
+import { useDiffWidgetContext } from "./DiffWidgetContext";
 
 const _DiffSplitLine = ({ index, diffFile, lineNumber, side }: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
   const getCurrentItem = side === SplitSide.old ? diffFile.getSplitLeftLine : diffFile.getSplitRightLine;
@@ -26,6 +25,8 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber, side }: { index: number; 
   const isDelete = currentItem?.diff?.type === DiffLineType.Delete;
 
   const { enableWrap, enableHighlight, enableAddWidget, onAddWidgetClick } = useDiffViewContext();
+
+  const { setWidget } = useDiffWidgetContext();
 
   useSyncHeight({
     selector: `tr[data-line="${lineNumber}"]`,
@@ -60,7 +61,14 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber, side }: { index: number; 
           }}
         >
           {hasDiff && enableAddWidget && (
-            <DiffSplitAddWidget index={index} lineNumber={currentItem.lineNumber} side={side} diffFile={diffFile as DiffFileExtends} onWidgetClick={onAddWidgetClick} />
+            <DiffSplitAddWidget
+              index={index}
+              lineNumber={currentItem.lineNumber}
+              side={side}
+              diffFile={diffFile}
+              onWidgetClick={onAddWidgetClick}
+              onOpenAddWidget={(lineNumber, side) => setWidget({ widgetLineNumber: lineNumber, widgetSide: side })}
+            />
           )}
           <span data-line-num={currentItem.lineNumber} style={{ opacity: hasChange ? undefined : 0.5 }}>
             {currentItem.lineNumber}

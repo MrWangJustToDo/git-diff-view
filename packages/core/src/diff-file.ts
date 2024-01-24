@@ -138,6 +138,7 @@ export class DiffFile {
     _oldFileLang?: string,
     _newFileLang?: string
   ) {
+    Object.defineProperty(this, "__v_skip", { value: true });
     let oldContent = _oldFileContent;
     let newContent = _newFileContent;
     Object.defineProperties(this, {

@@ -1,18 +1,20 @@
+
 import { addWidgetBGName, addWidgetColorName } from "./color";
 
 import type { SplitSide } from "./DiffView";
-import type { DiffFileExtends } from "../utils/diff-file-extend";
+import type { DiffFile } from "@git-diff-view/core";
 
 export const DiffSplitAddWidget = ({
-  diffFile,
   side,
   lineNumber,
   onWidgetClick,
+  onOpenAddWidget,
 }: {
   index: number;
   lineNumber: number;
-  diffFile: DiffFileExtends;
+  diffFile: DiffFile;
   side: SplitSide;
+  onOpenAddWidget: (lineNumber: number, side: SplitSide) => void;
   onWidgetClick?: (event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void;
 }) => {
   return (
@@ -32,7 +34,7 @@ export const DiffSplitAddWidget = ({
           backgroundColor: `var(${addWidgetBGName})`,
         }}
         onClick={() => {
-          diffFile.onOpenAddWidget(lineNumber, side);
+          onOpenAddWidget(lineNumber, side);
           onWidgetClick?.("onAddWidgetClick", lineNumber, side);
         }}
       >
@@ -43,15 +45,16 @@ export const DiffSplitAddWidget = ({
 };
 
 export const DiffUnifiedAddWidget = ({
-  diffFile,
   lineNumber,
   side,
   onWidgetClick,
+  onOpenAddWidget,
 }: {
   index: number;
-  diffFile: DiffFileExtends;
+  diffFile: DiffFile;
   lineNumber: number;
   side: SplitSide;
+  onOpenAddWidget: (lineNumber: number, side: SplitSide) => void;
   onWidgetClick?: (event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void;
 }) => {
   return (
@@ -71,7 +74,7 @@ export const DiffUnifiedAddWidget = ({
           backgroundColor: `var(${addWidgetBGName})`,
         }}
         onClick={() => {
-          diffFile.onOpenAddWidget(lineNumber, side);
+          onOpenAddWidget(lineNumber, side);
           onWidgetClick?.("onAddWidgetClick", lineNumber, side);
         }}
       >

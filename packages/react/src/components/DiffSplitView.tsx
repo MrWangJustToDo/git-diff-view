@@ -1,5 +1,5 @@
 import { numIterator } from "@git-diff-view/core";
-import { Fragment, useEffect, useRef } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import * as React from "react";
 
 import { DiffSplitExtendLine } from "./DiffSplitExtendLine";
@@ -8,8 +8,9 @@ import { DiffSplitLine } from "./DiffSplitLine";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLine";
 import { SplitSide } from "./DiffView";
 import { useDiffViewContext } from "./DiffViewContext";
+import { DiffWidgetContext } from "./DiffWidgetContext";
 
-import type { DiffFileExtends } from "../utils";
+import type { DiffWidgetContextType } from "./DiffWidgetContext";
 import type { DiffFile } from "@git-diff-view/core";
 
 const syncScroll = (left: HTMLElement, right: HTMLElement) => {
@@ -62,8 +63,8 @@ const DiffSplitViewTable = ({ side, lineLength, diffFile }: { side: SplitSide; l
           <Fragment key={index}>
             <DiffSplitHunkLine index={index} side={side} lineNumber={index + 1} diffFile={diffFile} />
             <DiffSplitLine index={index} side={side} lineNumber={index + 1} diffFile={diffFile} />
-            <DiffSplitWidgetLine index={index} side={side} lineNumber={index + 1} diffFile={diffFile as DiffFileExtends} />
-            <DiffSplitExtendLine index={index} side={side} lineNumber={index + 1} diffFile={diffFile as DiffFileExtends} />
+            <DiffSplitWidgetLine index={index} side={side} lineNumber={index + 1} diffFile={diffFile} />
+            <DiffSplitExtendLine index={index} side={side} lineNumber={index + 1} diffFile={diffFile} />
           </Fragment>
         ))}
         <DiffSplitExpandLastLine side={side} key="last" diffFile={diffFile} />
@@ -74,6 +75,10 @@ const DiffSplitViewTable = ({ side, lineLength, diffFile }: { side: SplitSide; l
 
 export const DiffSplitView = ({ diffFile }: { diffFile: DiffFile }) => {
   const { enableWrap } = useDiffViewContext();
+
+  const [widget, setWidget] = useState<DiffWidgetContextType>({});
+
+  const contextValue = useMemo(() => ({ widget, setWidget }), [widget, setWidget]);
 
   const ref1 = useRef<HTMLDivElement>(null);
 
@@ -88,15 +93,21 @@ export const DiffSplitView = ({ diffFile }: { diffFile: DiffFile }) => {
     return syncScroll(left, right);
   }, [enableWrap]);
 
+  useEffect(() => {
+    setWidget({});
+  }, [diffFile]);
+
   return (
-    <div className="split-diff-view w-full flex basis-[50%]">
-      <div className="old-diff-table-wrapper overflow-auto w-full" ref={ref1} style={{ overscrollBehaviorX: "none" }}>
-        <DiffSplitViewTable side={SplitSide.old} lineLength={lineLength} diffFile={diffFile} />
+    <DiffWidgetContext.Provider value={contextValue}>
+      <div className="split-diff-view w-full flex basis-[50%]">
+        <div className="old-diff-table-wrapper overflow-auto w-full" ref={ref1} style={{ overscrollBehaviorX: "none" }}>
+          <DiffSplitViewTable side={SplitSide.old} lineLength={lineLength} diffFile={diffFile} />
+        </div>
+        <div className="diff-split-line w-[1.5px] bg-[grey] opacity-[0.4]" />
+        <div className="new-diff-table-wrapper overflow-auto w-full" ref={ref2} style={{ overscrollBehaviorX: "none" }}>
+          <DiffSplitViewTable side={SplitSide.new} lineLength={lineLength} diffFile={diffFile} />
+        </div>
       </div>
-      <div className="diff-split-line w-[1.5px] bg-[grey] opacity-[0.4]" />
-      <div className="new-diff-table-wrapper overflow-auto w-full" ref={ref2} style={{ overscrollBehaviorX: "none" }}>
-        <DiffSplitViewTable side={SplitSide.new} lineLength={lineLength} diffFile={diffFile} />
-      </div>
-    </div>
+    </DiffWidgetContext.Provider>
   );
 };

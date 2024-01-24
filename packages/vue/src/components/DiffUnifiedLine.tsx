@@ -1,7 +1,7 @@
 import { defineComponent, ref } from "vue";
 
 import { SplitSide } from "..";
-import { useEnableAddWidget, useEnableHighlight, useEnableWrap, useOnAddWidgetClick } from "../context";
+import { useEnableAddWidget, useEnableHighlight, useEnableWrap, useOnAddWidgetClick, useSetWidget } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 
 import {
@@ -17,7 +17,6 @@ import {
 import { DiffUnifiedAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 
-import type { DiffFileExtends } from "../utils";
 import type { DiffFile, SyntaxLine, DiffLine } from "@git-diff-view/core";
 
 const DiffUnifiedOldLine = ({
@@ -29,6 +28,7 @@ const DiffUnifiedOldLine = ({
   diffFile,
   enableWrap,
   enableHighlight,
+  onOpenAddWidget,
   onAddWidgetClick,
 }: {
   index: number;
@@ -39,6 +39,7 @@ const DiffUnifiedOldLine = ({
   diffFile: DiffFile;
   enableWrap: boolean;
   enableHighlight: boolean;
+  onOpenAddWidget:(lineNumber: number, side: SplitSide) => void;
   onAddWidgetClick?: (event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void;
 }) => {
   return (
@@ -54,9 +55,10 @@ const DiffUnifiedOldLine = ({
         <DiffUnifiedAddWidget
           index={index - 1}
           lineNumber={lineNumber}
-          diffFile={diffFile as DiffFileExtends}
+          diffFile={diffFile}
           side={SplitSide.old}
           onWidgetClick={onAddWidgetClick}
+          onOpenAddWidget={onOpenAddWidget}
         />
         <div class="flex">
           <span data-line-num-old={lineNumber} class="inline-block w-[50%]">
@@ -89,6 +91,7 @@ const DiffUnifiedNewLine = ({
   diffFile,
   enableWrap,
   enableHighlight,
+  onOpenAddWidget,
   onAddWidgetClick,
 }: {
   index: number;
@@ -99,6 +102,7 @@ const DiffUnifiedNewLine = ({
   diffFile: DiffFile;
   enableWrap: boolean;
   enableHighlight: boolean;
+  onOpenAddWidget:(lineNumber: number, side: SplitSide) => void;
   onAddWidgetClick?: (event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void;
 }) => {
   return (
@@ -114,9 +118,10 @@ const DiffUnifiedNewLine = ({
         <DiffUnifiedAddWidget
           index={index - 1}
           lineNumber={lineNumber}
-          diffFile={diffFile as DiffFileExtends}
+          diffFile={diffFile}
           side={SplitSide.new}
           onWidgetClick={onAddWidgetClick}
+          onOpenAddWidget={onOpenAddWidget}
         />
         <div class="flex">
           <span class="inline-block w-[50%]" />
@@ -145,6 +150,8 @@ export const DiffUnifiedLine = defineComponent(
     const unifiedItem = ref(props.diffFile.getUnifiedLine(props.index));
 
     const enableWrap = useEnableWrap();
+
+    const setWidget = useSetWidget();
 
     const onAddWidgetClick = useOnAddWidgetClick();
 
@@ -180,6 +187,8 @@ export const DiffUnifiedLine = defineComponent(
             : undefined)
     );
 
+    const onOpenAddWidget = (lineNumber, side) => setWidget({ side: side, lineNumber: lineNumber })
+
     return () => {
       if (currentItemHasHidden.value) return null;
 
@@ -196,6 +205,7 @@ export const DiffUnifiedLine = defineComponent(
               enableHighlight={enableHighlight.value}
               lineNumber={unifiedItem.value.oldLineNumber}
               onAddWidgetClick={onAddWidgetClick}
+              onOpenAddWidget={onOpenAddWidget}
             />
           );
         } else {
@@ -210,6 +220,7 @@ export const DiffUnifiedLine = defineComponent(
               enableHighlight={enableHighlight.value}
               lineNumber={unifiedItem.value.newLineNumber!}
               onAddWidgetClick={onAddWidgetClick}
+              onOpenAddWidget={onOpenAddWidget}
             />
           );
         }
@@ -234,9 +245,10 @@ export const DiffUnifiedLine = defineComponent(
               {enableAddWidget.value && unifiedItem.value.diff && (
                 <DiffUnifiedAddWidget
                   index={props.index}
-                  diffFile={props.diffFile as DiffFileExtends}
+                  diffFile={props.diffFile}
                   lineNumber={unifiedItem.value.newLineNumber}
                   side={SplitSide.new}
+                  onOpenAddWidget={onOpenAddWidget}
                   onWidgetClick={onAddWidgetClick}
                 />
               )}

@@ -11,7 +11,6 @@ import { DiffSplitLine } from "./DiffSplitLine";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLine";
 import { SplitSide } from "./DiffView";
 
-import type { DiffFileExtends } from "../utils";
 import type { DiffFile } from "@git-diff-view/core";
 
 const syncScroll = (left: HTMLElement, right: HTMLElement) => {
@@ -66,8 +65,8 @@ const DiffSplitViewTable = defineComponent(
               <Fragment key={index}>
                 <DiffSplitHunkLine index={index} side={props.side} lineNumber={index + 1} diffFile={props.diffFile} />
                 <DiffSplitLine index={index} side={props.side} lineNumber={index + 1} diffFile={props.diffFile} />
-                <DiffSplitWidgetLine index={index} side={props.side} lineNumber={index + 1} diffFile={props.diffFile as DiffFileExtends} />
-                <DiffSplitExtendLine index={index} side={props.side} lineNumber={index + 1} diffFile={props.diffFile as DiffFileExtends} />
+                <DiffSplitWidgetLine index={index} side={props.side} lineNumber={index + 1} diffFile={props.diffFile} />
+                <DiffSplitExtendLine index={index} side={props.side} lineNumber={index + 1} diffFile={props.diffFile} />
               </Fragment>
             ))}
             <DiffSplitExpandLastLine side={props.side} diffFile={props.diffFile} />

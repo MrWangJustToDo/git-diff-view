@@ -1,7 +1,7 @@
 import { createContext, useContext } from "react";
 
 import type { DiffViewProps, SplitSide } from "..";
-import type { DiffFileExtends } from "../utils";
+import type { DiffFile } from "@git-diff-view/core";
 
 export enum DiffModeEnum {
   Split = 1,
@@ -23,7 +23,7 @@ export type DiffViewContextProps<T = any> = {
   }: {
     lineNumber: number;
     side: SplitSide;
-    diffFile: DiffFileExtends;
+    diffFile: DiffFile;
     onClose: () => void;
   }) => React.ReactNode;
   extendData?: DiffViewProps<T>["extendData"];
@@ -37,7 +37,7 @@ export type DiffViewContextProps<T = any> = {
     lineNumber: number;
     side: SplitSide;
     data: T;
-    diffFile: DiffFileExtends;
+    diffFile: DiffFile;
     onUpdate: () => void;
   }) => React.ReactNode;
   onAddWidgetClick?: (lineNumber: number, side: SplitSide) => void;

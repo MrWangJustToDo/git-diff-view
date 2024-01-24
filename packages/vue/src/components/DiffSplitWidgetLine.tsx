@@ -1,6 +1,6 @@
 import { computed, defineComponent, ref } from "vue";
 
-import { useSlots } from "../context";
+import { useSetWidget, useSlots, useWidget } from "../context";
 import { useDomWidth } from "../hooks/useDomWidth";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useSyncHeight } from "../hooks/useSyncHeight";
@@ -8,35 +8,31 @@ import { useSyncHeight } from "../hooks/useSyncHeight";
 import { emptyBGName } from "./color";
 import { SplitSide } from "./DiffView";
 
-import type { DiffFileExtends } from "../utils";
+import type { DiffFile } from "@git-diff-view/core";
 
 export const DiffSplitWidgetLine = defineComponent(
-  (props: { index: number; side: SplitSide; diffFile: DiffFileExtends; lineNumber: number }) => {
+  (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
     const slots = useSlots();
+
+    const widget = useWidget();
+
+    const setWidget = useSetWidget();
 
     const leftItem = ref(props.diffFile.getSplitLeftLine(props.index));
 
     const rightItem = ref(props.diffFile.getSplitRightLine(props.index));
 
-    const leftWidget = ref(leftItem.value.lineNumber ? props.diffFile.checkWidgetLine(leftItem.value.lineNumber, SplitSide.old) : undefined);
+    const leftWidget = computed(
+      () => leftItem.value.lineNumber && widget.value.side === SplitSide.old && widget.value.lineNumber === leftItem.value.lineNumber
+    );
 
-    const rightWidget = ref(rightItem.value.lineNumber ? props.diffFile.checkWidgetLine(rightItem.value.lineNumber, SplitSide.new) : undefined);
+    const rightWidget = computed(
+      () => rightItem.value.lineNumber && widget.value.side === SplitSide.new && widget.value.lineNumber === rightItem.value.lineNumber
+    );
 
     useSubscribeDiffFile(props, (diffFile) => (leftItem.value = diffFile.getSplitLeftLine(props.index)));
 
     useSubscribeDiffFile(props, (diffFile) => (rightItem.value = diffFile.getSplitRightLine(props.index)));
-
-    useSubscribeDiffFile(
-      props,
-      (diffFile: DiffFileExtends) =>
-        (leftWidget.value = leftItem.value.lineNumber ? diffFile.checkWidgetLine(leftItem.value.lineNumber, SplitSide.old) : undefined)
-    );
-
-    useSubscribeDiffFile(
-      props,
-      (diffFile: DiffFileExtends) =>
-        (rightWidget.value = rightItem.value.lineNumber ? diffFile.checkWidgetLine(rightItem.value.lineNumber, SplitSide.new) : undefined)
-    );
 
     const currentItem = computed(() => (props.side === SplitSide.old ? leftItem.value : rightItem.value));
 
@@ -49,6 +45,8 @@ export const DiffSplitWidgetLine = defineComponent(
     const side = computed(() => (props.side === SplitSide.old ? "left" : "right"));
 
     const currentIsShow = computed(() => !!leftWidget.value || !!rightWidget.value);
+
+    const onCloseWidget = () => setWidget({});
 
     useSyncHeight({
       selector: lineSelector,
@@ -82,7 +80,7 @@ export const DiffSplitWidgetLine = defineComponent(
                   diffFile: props.diffFile,
                   side: props.side,
                   lineNumber: currentItem.value.lineNumber,
-                  onClose: props.diffFile.onCloseAddWidget,
+                  onClose: onCloseWidget,
                 })}
             </div>
           </td>
