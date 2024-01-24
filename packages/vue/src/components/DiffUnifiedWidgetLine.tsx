@@ -18,11 +18,17 @@ export const DiffUnifiedWidgetLine = defineComponent(
     const unifiedItem = ref(props.diffFile.getUnifiedLine(props.index));
 
     const oldWidget = computed(
-      () => unifiedItem.value?.oldLineNumber && widget.value.side === SplitSide.old && widget.value.lineNumber === unifiedItem.value.oldLineNumber
+      () =>
+        unifiedItem.value?.oldLineNumber &&
+        widget.value.side === SplitSide.old &&
+        widget.value.lineNumber === unifiedItem.value.oldLineNumber
     );
 
     const newWidget = computed(
-      () => unifiedItem.value?.newLineNumber && widget.value.side === SplitSide.new && widget.value.lineNumber === unifiedItem.value.newLineNumber
+      () =>
+        unifiedItem.value?.newLineNumber &&
+        widget.value.side === SplitSide.new &&
+        widget.value.lineNumber === unifiedItem.value.newLineNumber
     );
 
     useSubscribeDiffFile(props, (diffFile) => (unifiedItem.value = diffFile.getUnifiedLine(props.index)));

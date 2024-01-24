@@ -20,11 +20,15 @@ export const DiffSplitExtendLine = defineComponent(
 
     const lineSelector = computed(() => `tr[data-line="${props.lineNumber}-extend"]`);
 
-    const wrapperSelector = computed(() => (props.side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper"));
+    const wrapperSelector = computed(() =>
+      props.side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper"
+    );
 
     const oldItem = ref(props.diffFile.getSplitLeftLine(props.index));
 
     const newItem = ref(props.diffFile.getSplitRightLine(props.index));
+
+    const enableExpand = ref(props.diffFile.getExpandEnabled());
 
     const currentItem = computed(() => (props.side === SplitSide.old ? oldItem.value : newItem.value));
 
@@ -32,22 +36,30 @@ export const DiffSplitExtendLine = defineComponent(
 
     const newExtend = ref(extendData.value?.newFile?.[newItem.value.lineNumber]);
 
-    useSubscribeDiffFile(props, (diffFile) => (oldItem.value = diffFile.getSplitLeftLine(props.index)));
+    useSubscribeDiffFile(props, (diffFile) => {
+      oldItem.value = diffFile.getSplitLeftLine(props.index);
 
-    useSubscribeDiffFile(props, (diffFile) => (newItem.value = diffFile.getSplitRightLine(props.index)));
+      newItem.value = diffFile.getSplitRightLine(props.index);
 
-    useSubscribeDiffFile(props, () => (oldExtend.value = extendData.value?.oldFile?.[oldItem.value?.lineNumber]));
+      oldExtend.value = extendData.value?.oldFile?.[oldItem.value?.lineNumber];
 
-    useSubscribeDiffFile(props, () => (newExtend.value = extendData.value?.newFile?.[newItem.value?.lineNumber]));
+      newExtend.value = extendData.value?.newFile?.[newItem.value.lineNumber];
+
+      enableExpand.value = diffFile.getExpandEnabled();
+    });
 
     const currentExtend = computed(() => (props.side === SplitSide.old ? oldExtend.value : newExtend.value));
 
     const currentEnable = computed(() => (props.side === SplitSide.old ? !!oldExtend.value : !!newExtend.value));
 
-    const currentLineNumber = computed(() => (props.side === SplitSide.old ? oldItem.value.lineNumber : newItem.value.lineNumber));
+    const currentLineNumber = computed(() =>
+      props.side === SplitSide.old ? oldItem.value.lineNumber : newItem.value.lineNumber
+    );
 
     const currentIsShow = computed(() =>
-      Boolean((oldExtend.value || newExtend.value) && currentItem.value && !currentItem.value.isHidden && currentItem.value.diff)
+      Boolean(
+        (oldExtend.value || newExtend.value) && currentItem.value && (!currentItem.value.isHidden || enableExpand.value)
+      )
     );
 
     useSyncHeight({
@@ -69,7 +81,7 @@ export const DiffSplitExtendLine = defineComponent(
           data-line={`${props.lineNumber}-extend`}
           data-state="extend"
           data-side={props.side === SplitSide.old ? "left" : "right"}
-          class={"diff-line diff-line-extend" + !currentExtend.value ? " diff-line-extend-empty" : ""}
+          class={"diff-line diff-line-extend" + (!currentExtend.value ? " diff-line-extend-empty" : "")}
           style={{
             backgroundColor: !currentExtend.value ? `var(${emptyBGName})` : undefined,
           }}

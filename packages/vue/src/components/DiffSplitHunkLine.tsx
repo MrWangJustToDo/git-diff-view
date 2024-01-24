@@ -15,6 +15,8 @@ export const DiffSplitHunkLine = defineComponent(
 
     const currentHunk = ref(props.diffFile.getSplitHunkLine(props.index));
 
+    const enableExpand = ref(props.diffFile.getExpandEnabled());
+
     const side = computed(() => (props.side === SplitSide.old ? "left" : "right"));
 
     const lineSelector = computed(() => `tr[data-line="${props.lineNumber}-hunk"]`);
@@ -22,30 +24,32 @@ export const DiffSplitHunkLine = defineComponent(
     const currentShowExpand = computed(() => props.side === SplitSide.old);
 
     const currentShowExpandAll = ref(
-      currentHunk.value && currentHunk.value.splitInfo && currentHunk.value.splitInfo.endHiddenIndex - currentHunk.value.splitInfo.startHiddenIndex < composeLen
+      currentHunk.value &&
+        currentHunk.value.splitInfo &&
+        currentHunk.value.splitInfo.endHiddenIndex - currentHunk.value.splitInfo.startHiddenIndex < composeLen
     );
 
     const currentIsShow = ref(
-      currentHunk.value && currentHunk.value.splitInfo && currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex
+      currentHunk.value &&
+        currentHunk.value.splitInfo &&
+        currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex
     );
 
-    useSubscribeDiffFile(props, (diffFile) => (currentHunk.value = diffFile.getSplitHunkLine(props.index)));
+    useSubscribeDiffFile(props, (diffFile) => {
+      currentHunk.value = diffFile.getSplitHunkLine(props.index);
 
-    useSubscribeDiffFile(
-      props,
-      () =>
-        (currentShowExpandAll.value =
-          currentHunk.value &&
-          currentHunk.value.splitInfo &&
-          currentHunk.value.splitInfo.endHiddenIndex - currentHunk.value.splitInfo.startHiddenIndex < composeLen)
-    );
+      enableExpand.value = diffFile.getExpandEnabled();
 
-    useSubscribeDiffFile(
-      props,
-      () =>
-        (currentIsShow.value =
-          currentHunk.value && currentHunk.value.splitInfo && currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex)
-    );
+      currentShowExpandAll.value =
+        currentHunk.value &&
+        currentHunk.value.splitInfo &&
+        currentHunk.value.splitInfo.endHiddenIndex - currentHunk.value.splitInfo.startHiddenIndex < composeLen;
+
+      currentIsShow.value =
+        currentHunk.value &&
+        currentHunk.value.splitInfo &&
+        currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex;
+    });
 
     useSyncHeight({
       selector: lineSelector,
@@ -72,7 +76,8 @@ export const DiffSplitHunkLine = defineComponent(
               color: `var(${plainLineNumberColorName})`,
             }}
           >
-            {currentShowExpand.value &&
+            {enableExpand.value &&
+              currentShowExpand.value &&
               (currentShowExpandAll.value ? (
                 <button
                   class="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
@@ -127,9 +132,12 @@ export const DiffSplitExpandLastLine = defineComponent(
 
     const side = computed(() => (props.side === SplitSide.old ? "left" : "right"));
 
-    const currentIsShow = ref(props.diffFile.getNeedShowExpandAll("split"));
+    const currentIsShow = ref(props.diffFile.getNeedShowExpandAll("split") && props.diffFile.getExpandEnabled());
 
-    useSubscribeDiffFile(props, (diffFile) => (currentIsShow.value = diffFile.getNeedShowExpandAll("split")));
+    useSubscribeDiffFile(
+      props,
+      (diffFile) => (currentIsShow.value = diffFile.getNeedShowExpandAll("split") && diffFile.getExpandEnabled())
+    );
 
     useSyncHeight({
       selector: ref(`tr[data-line="last-hunk"]`),

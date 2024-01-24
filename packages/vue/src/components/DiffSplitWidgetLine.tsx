@@ -23,16 +23,24 @@ export const DiffSplitWidgetLine = defineComponent(
     const rightItem = ref(props.diffFile.getSplitRightLine(props.index));
 
     const leftWidget = computed(
-      () => leftItem.value.lineNumber && widget.value.side === SplitSide.old && widget.value.lineNumber === leftItem.value.lineNumber
+      () =>
+        leftItem.value.lineNumber &&
+        widget.value.side === SplitSide.old &&
+        widget.value.lineNumber === leftItem.value.lineNumber
     );
 
     const rightWidget = computed(
-      () => rightItem.value.lineNumber && widget.value.side === SplitSide.new && widget.value.lineNumber === rightItem.value.lineNumber
+      () =>
+        rightItem.value.lineNumber &&
+        widget.value.side === SplitSide.new &&
+        widget.value.lineNumber === rightItem.value.lineNumber
     );
 
-    useSubscribeDiffFile(props, (diffFile) => (leftItem.value = diffFile.getSplitLeftLine(props.index)));
+    useSubscribeDiffFile(props, (diffFile) => {
+      leftItem.value = diffFile.getSplitLeftLine(props.index);
 
-    useSubscribeDiffFile(props, (diffFile) => (rightItem.value = diffFile.getSplitRightLine(props.index)));
+      rightItem.value = diffFile.getSplitRightLine(props.index);
+    });
 
     const currentItem = computed(() => (props.side === SplitSide.old ? leftItem.value : rightItem.value));
 
@@ -40,7 +48,9 @@ export const DiffSplitWidgetLine = defineComponent(
 
     const lineSelector = computed(() => `tr[data-line="${props.lineNumber}-widget"]`);
 
-    const wrapperSelector = computed(() => (props.side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper"));
+    const wrapperSelector = computed(() =>
+      props.side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper"
+    );
 
     const side = computed(() => (props.side === SplitSide.old ? "left" : "right"));
 
@@ -67,7 +77,7 @@ export const DiffSplitWidgetLine = defineComponent(
           data-line={`${props.lineNumber}-widget`}
           data-state="widget"
           data-side={props.side === SplitSide.old ? "left" : "right"}
-          class={"diff-line diff-line-widget" + !currentWidget.value ? " diff-line-widget-empty" : ""}
+          class={"diff-line diff-line-widget" + (!currentWidget.value ? " diff-line-widget-empty" : "")}
           style={{
             backgroundColor: !currentWidget.value ? `var(${emptyBGName})` : undefined,
           }}

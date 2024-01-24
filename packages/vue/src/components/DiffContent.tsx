@@ -2,7 +2,15 @@ import { DiffLineType, type DiffFile, type DiffLine, type SyntaxLine } from "@gi
 
 import { addContentHighlightBGName, delContentHighlightBGName } from "./color";
 
-const DiffString = ({ rawLine, diffLine, operator }: { rawLine: string; diffLine?: DiffLine; operator?: "add" | "del" }) => {
+const DiffString = ({
+  rawLine,
+  diffLine,
+  operator,
+}: {
+  rawLine: string;
+  diffLine?: DiffLine;
+  operator?: "add" | "del";
+}) => {
   const range = diffLine?.range;
 
   if (range && range.length > 0 && range.length < rawLine.length) {
@@ -14,7 +22,8 @@ const DiffString = ({ rawLine, diffLine, operator }: { rawLine: string; diffLine
             data-diff-highlight
             class="rounded-[0.2em]"
             style={{
-              backgroundColor: operator === "add" ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`,
+              backgroundColor:
+                operator === "add" ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`,
             }}
           >
             {rawLine.slice(range.location, range.location + range.length)}
@@ -52,7 +61,12 @@ const DiffSyntax = ({
           {syntaxLine.nodeList?.map(({ node, wrapper }, index) => {
             if (node.endIndex < range.location || range.location + range.length < node.startIndex) {
               return (
-                <span key={index} data-start={node.startIndex} data-end={node.endIndex} class={wrapper?.properties?.className?.join(" ")}>
+                <span
+                  key={index}
+                  data-start={node.startIndex}
+                  data-end={node.endIndex}
+                  class={wrapper?.properties?.className?.join(" ")}
+                >
                   {node.value}
                 </span>
               );
@@ -65,12 +79,18 @@ const DiffSyntax = ({
               const isStart = str1.length || range.location === node.startIndex;
               const isEnd = str3.length || node.endIndex === range.location + range.length - 1;
               return (
-                <span key={index} data-start={node.startIndex} data-end={node.endIndex} class={wrapper?.properties?.className?.join(" ")}>
+                <span
+                  key={index}
+                  data-start={node.startIndex}
+                  data-end={node.endIndex}
+                  class={wrapper?.properties?.className?.join(" ")}
+                >
                   {str1}
                   <span
                     data-diff-highlight
                     style={{
-                      backgroundColor: operator === "add" ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`,
+                      backgroundColor:
+                        operator === "add" ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`,
                       borderTopLeftRadius: isStart ? "0.2em" : undefined,
                       borderBottomLeftRadius: isStart ? "0.2em" : undefined,
                       borderTopRightRadius: isEnd ? "0.2em" : undefined,
@@ -92,7 +112,12 @@ const DiffSyntax = ({
   return (
     <span class="diff-line-syntax-raw">
       {syntaxLine?.nodeList?.map(({ node, wrapper }, index) => (
-        <span key={index} data-start={node.startIndex} data-end={node.endIndex} class={wrapper?.properties?.className?.join(" ")}>
+        <span
+          key={index}
+          data-start={node.startIndex}
+          data-end={node.endIndex}
+          class={wrapper?.properties?.className?.join(" ")}
+        >
           {node.value}
         </span>
       ))}
@@ -134,7 +159,12 @@ export const DiffContent = ({
         {isAdded ? "+" : isDelete ? "-" : " "}
       </span>
       {enableHighlight && syntaxLine ? (
-        <DiffSyntax operator={isAdded ? "add" : isDelete ? "del" : undefined} rawLine={rawLine} diffLine={diffLine} syntaxLine={syntaxLine} />
+        <DiffSyntax
+          operator={isAdded ? "add" : isDelete ? "del" : undefined}
+          rawLine={rawLine}
+          diffLine={diffLine}
+          syntaxLine={syntaxLine}
+        />
       ) : (
         <DiffString operator={isAdded ? "add" : isDelete ? "del" : undefined} rawLine={rawLine} diffLine={diffLine} />
       )}

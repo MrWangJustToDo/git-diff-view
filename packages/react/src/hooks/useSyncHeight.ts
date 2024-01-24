@@ -2,7 +2,15 @@ import { useEffect } from "react";
 
 import { useDiffViewContext } from "../components/DiffViewContext";
 
-export const useSyncHeight = ({ selector, side, enable }: { selector: string; side: "left" | "right"; enable: boolean }) => {
+export const useSyncHeight = ({
+  selector,
+  side,
+  enable,
+}: {
+  selector: string;
+  side: "left" | "right";
+  enable: boolean;
+}) => {
   const { id } = useDiffViewContext();
 
   useEffect(() => {

@@ -9,7 +9,17 @@ import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import { useDiffWidgetContext } from "./DiffWidgetContext";
 
-const _DiffSplitLine = ({ index, diffFile, lineNumber, side }: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
+const _DiffSplitLine = ({
+  index,
+  diffFile,
+  lineNumber,
+  side,
+}: {
+  index: number;
+  side: SplitSide;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
   const getCurrentItem = side === SplitSide.old ? diffFile.getSplitLeftLine : diffFile.getSplitRightLine;
 
   const getCurrentSyntaxLine = side === SplitSide.old ? diffFile.getOldSyntaxLine : diffFile.getNewSyntaxLine;
@@ -107,7 +117,17 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber, side }: { index: number; 
   }
 };
 
-export const DiffSplitLine = ({ index, diffFile, lineNumber, side }: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
+export const DiffSplitLine = ({
+  index,
+  diffFile,
+  lineNumber,
+  side,
+}: {
+  index: number;
+  side: SplitSide;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
   const getCurrentItem = side === SplitSide.old ? diffFile.getSplitLeftLine : diffFile.getSplitRightLine;
 
   const currentItem = getCurrentItem(index);

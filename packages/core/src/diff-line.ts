@@ -24,7 +24,14 @@ export class DiffLine {
   ) {}
 
   public withNoTrailingNewLine(noTrailingNewLine: boolean): DiffLine {
-    return new DiffLine(this.text, this.type, this.originalLineNumber, this.oldLineNumber, this.newLineNumber, noTrailingNewLine);
+    return new DiffLine(
+      this.text,
+      this.type,
+      this.originalLineNumber,
+      this.oldLineNumber,
+      this.newLineNumber,
+      noTrailingNewLine
+    );
   }
 
   public isIncludeableLine() {

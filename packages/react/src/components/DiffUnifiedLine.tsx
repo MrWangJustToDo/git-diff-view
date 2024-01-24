@@ -45,7 +45,13 @@ const DiffUnifiedOldLine = ({
   setWidget: Dispatch<SetStateAction<DiffWidgetContextType>>;
 }) => {
   return (
-    <tr data-line={index} data-state="diff" data-mode="del" className="diff-line group" style={{ backgroundColor: `var(${delContentBGName})` }}>
+    <tr
+      data-line={index}
+      data-state="diff"
+      data-mode="del"
+      className="diff-line group"
+      style={{ backgroundColor: `var(${delContentBGName})` }}
+    >
       <td
         className="diff-line-num left-0 pl-[10px] pr-[10px] text-left select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
         style={{
@@ -108,7 +114,13 @@ const DiffUnifiedNewLine = ({
   setWidget: Dispatch<SetStateAction<DiffWidgetContextType>>;
 }) => {
   return (
-    <tr data-line={index} data-state="diff" data-mode="add" className="diff-line group" style={{ backgroundColor: `var(${addContentBGName})` }}>
+    <tr
+      data-line={index}
+      data-state="diff"
+      data-mode="add"
+      className="diff-line group"
+      style={{ backgroundColor: `var(${addContentBGName})` }}
+    >
       <td
         className="diff-line-num left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
         style={{
@@ -147,7 +159,15 @@ const DiffUnifiedNewLine = ({
   );
 };
 
-const _DiffUnifiedLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
+const _DiffUnifiedLine = ({
+  index,
+  diffFile,
+  lineNumber,
+}: {
+  index: number;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
   const unifiedLine = diffFile.getUnifiedLine(index);
 
   const { enableWrap, enableHighlight, enableAddWidget, onAddWidgetClick } = useDiffViewContext();
@@ -166,7 +186,11 @@ const _DiffUnifiedLine = ({ index, diffFile, lineNumber }: { index: number; diff
 
   const oldLinenumber = unifiedLine.oldLineNumber;
 
-  const syntaxLine = newLineNumber ? diffFile.getNewSyntaxLine(newLineNumber) : oldLinenumber ? diffFile.getOldSyntaxLine(oldLinenumber) : undefined;
+  const syntaxLine = newLineNumber
+    ? diffFile.getNewSyntaxLine(newLineNumber)
+    : oldLinenumber
+      ? diffFile.getOldSyntaxLine(oldLinenumber)
+      : undefined;
 
   if (hasChange) {
     if (unifiedLine.oldLineNumber) {
@@ -253,7 +277,15 @@ const _DiffUnifiedLine = ({ index, diffFile, lineNumber }: { index: number; diff
   }
 };
 
-export const DiffUnifiedLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
+export const DiffUnifiedLine = ({
+  index,
+  diffFile,
+  lineNumber,
+}: {
+  index: number;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
   const unifiedLine = diffFile.getUnifiedLine(index);
 
   if (unifiedLine?.isHidden) return null;

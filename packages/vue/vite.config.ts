@@ -12,7 +12,8 @@ export default defineConfig({
       entry: path.resolve(__dirname, "src/index.withStyle.ts"),
       name: "GitDiffView",
       formats: ["es", "cjs"],
-      fileName: (format) => (format === "cjs" ? `vue-git-diff-view.cjs` : format === "es" ? `vue-git-diff-view.mjs` : `vue-git-diff-view.js`),
+      fileName: (format) =>
+        format === "cjs" ? `vue-git-diff-view.cjs` : format === "es" ? `vue-git-diff-view.mjs` : `vue-git-diff-view.js`,
     },
     sourcemap: true,
     rollupOptions: {
@@ -21,7 +22,7 @@ export default defineConfig({
         globals: {
           vue: "Vue",
         },
-        assetFileNames: "css/vue-git-diff-view.css",
+        assetFileNames: "css/diff-view.css",
       },
     },
   },

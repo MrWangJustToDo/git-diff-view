@@ -7,8 +7,20 @@ import { useSyncHeight } from "../hooks/useSyncHeight";
 import { hunkContentBGName, hunkContentColorName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 
-const _DiffSplitHunkLine = ({ index, diffFile, side, lineNumber }: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
+const _DiffSplitHunkLine = ({
+  index,
+  diffFile,
+  side,
+  lineNumber,
+}: {
+  index: number;
+  side: SplitSide;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
   const currentHunk = diffFile.getSplitHunkLine(index);
+
+  const expandEnabled = diffFile.getExpandEnabled();
 
   const { enableWrap } = useDiffViewContext();
 
@@ -20,7 +32,8 @@ const _DiffSplitHunkLine = ({ index, diffFile, side, lineNumber }: { index: numb
 
   const showExpand = side === SplitSide.old;
 
-  const isExpandAll = currentHunk.splitInfo && currentHunk.splitInfo.endHiddenIndex - currentHunk.splitInfo.startHiddenIndex < composeLen;
+  const isExpandAll =
+    currentHunk.splitInfo && currentHunk.splitInfo.endHiddenIndex - currentHunk.splitInfo.startHiddenIndex < composeLen;
 
   return (
     <tr
@@ -38,7 +51,8 @@ const _DiffSplitHunkLine = ({ index, diffFile, side, lineNumber }: { index: numb
           color: `var(${plainLineNumberColorName})`,
         }}
       >
-        {showExpand &&
+        {expandEnabled &&
+          showExpand &&
           (isExpandAll ? (
             <button
               className="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
@@ -84,10 +98,23 @@ const _DiffSplitHunkLine = ({ index, diffFile, side, lineNumber }: { index: numb
   );
 };
 
-export const DiffSplitHunkLine = ({ index, diffFile, side, lineNumber }: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
+export const DiffSplitHunkLine = ({
+  index,
+  diffFile,
+  side,
+  lineNumber,
+}: {
+  index: number;
+  side: SplitSide;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
   const currentHunk = diffFile.getSplitHunkLine(index);
 
-  const currentIsShow = currentHunk && currentHunk.splitInfo && currentHunk.splitInfo.startHiddenIndex < currentHunk.splitInfo.endHiddenIndex;
+  const currentIsShow =
+    currentHunk &&
+    currentHunk.splitInfo &&
+    currentHunk.splitInfo.startHiddenIndex < currentHunk.splitInfo.endHiddenIndex;
 
   if (!currentIsShow) return null;
 
@@ -137,7 +164,9 @@ const _DiffSplitExpandLastLine = ({ diffFile, side }: { side: SplitSide; diffFil
 export const DiffSplitExpandLastLine = ({ diffFile, side }: { side: SplitSide; diffFile: DiffFile }) => {
   const currentIsShow = diffFile.getNeedShowExpandAll("split");
 
-  if (!currentIsShow) return null;
+  const expandEnabled = diffFile.getExpandEnabled();
+
+  if (!currentIsShow || !expandEnabled) return null;
 
   return <_DiffSplitExpandLastLine diffFile={diffFile} side={side} />;
 };

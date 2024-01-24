@@ -53,9 +53,7 @@ export function getHunkHeaderExpansionType(
   const distanceToPrevious =
     previousHunk === null
       ? Infinity
-      : hunkHeader.oldStartLine -
-        previousHunk.header.oldStartLine -
-        previousHunk.header.oldLineCount;
+      : hunkHeader.oldStartLine - previousHunk.header.oldStartLine - previousHunk.header.oldLineCount;
 
   // In order to simplify the whole logic around expansion, only the hunk at the
   // top can be expanded up exclusively, and only the hunk at the bottom (the

@@ -9,16 +9,28 @@ import { useDiffWidgetContext } from "./DiffWidgetContext";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const _DiffSplitWidgetLine = ({ index, diffFile, side, lineNumber }: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
+const _DiffSplitWidgetLine = ({
+  index,
+  diffFile,
+  side,
+  lineNumber,
+}: {
+  index: number;
+  side: SplitSide;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
   const leftItem = diffFile.getSplitLeftLine(index);
 
   const rightItem = diffFile.getSplitRightLine(index);
 
   const { widget, setWidget } = useDiffWidgetContext();
 
-  const leftWidget = leftItem.lineNumber && widget.widgetSide === SplitSide.old && widget.widgetLineNumber === leftItem.lineNumber;
+  const leftWidget =
+    leftItem.lineNumber && widget.widgetSide === SplitSide.old && widget.widgetLineNumber === leftItem.lineNumber;
 
-  const rightWidget = rightItem.lineNumber && widget.widgetSide === SplitSide.new && widget.widgetLineNumber === rightItem.lineNumber;
+  const rightWidget =
+    rightItem.lineNumber && widget.widgetSide === SplitSide.new && widget.widgetLineNumber === rightItem.lineNumber;
 
   const currentItem = side === SplitSide.old ? leftItem : rightItem;
 
@@ -42,7 +54,7 @@ const _DiffSplitWidgetLine = ({ index, diffFile, side, lineNumber }: { index: nu
       data-line={`${lineNumber}-widget`}
       data-state="widget"
       data-side={side === SplitSide.old ? "left" : "right"}
-      className={"diff-line diff-line-widget" + !currentWidget ? " diff-line-widget-empty" : ""}
+      className={"diff-line diff-line-widget" + (!currentWidget ? " diff-line-widget-empty" : "")}
       style={{
         backgroundColor: !currentWidget ? `var(${emptyBGName})` : undefined,
       }}
@@ -63,16 +75,28 @@ const _DiffSplitWidgetLine = ({ index, diffFile, side, lineNumber }: { index: nu
   );
 };
 
-export const DiffSplitWidgetLine = ({ index, diffFile, side, lineNumber }: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
+export const DiffSplitWidgetLine = ({
+  index,
+  diffFile,
+  side,
+  lineNumber,
+}: {
+  index: number;
+  side: SplitSide;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
   const { widget } = useDiffWidgetContext();
 
   const leftItem = diffFile.getSplitLeftLine(index);
 
   const rightItem = diffFile.getSplitRightLine(index);
 
-  const leftWidget = leftItem.lineNumber && widget.widgetSide === SplitSide.old && widget.widgetLineNumber === leftItem.lineNumber;
+  const leftWidget =
+    leftItem.lineNumber && widget.widgetSide === SplitSide.old && widget.widgetLineNumber === leftItem.lineNumber;
 
-  const rightWidget = rightItem.lineNumber && widget.widgetSide === SplitSide.new && widget.widgetLineNumber === rightItem.lineNumber;
+  const rightWidget =
+    rightItem.lineNumber && widget.widgetSide === SplitSide.new && widget.widgetLineNumber === rightItem.lineNumber;
 
   const currentIsShow = leftWidget || rightWidget;
 

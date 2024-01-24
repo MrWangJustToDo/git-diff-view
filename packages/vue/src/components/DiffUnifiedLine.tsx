@@ -42,7 +42,13 @@ const DiffUnifiedOldLine = ({
   onAddWidgetClick?: (event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void;
 }) => {
   return (
-    <tr data-line={index} data-state="diff" data-mode="del" class="diff-line group" style={{ backgroundColor: `var(${delContentBGName})` }}>
+    <tr
+      data-line={index}
+      data-state="diff"
+      data-mode="del"
+      class="diff-line group"
+      style={{ backgroundColor: `var(${delContentBGName})` }}
+    >
       <td
         class="diff-line-num left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
         style={{
@@ -105,7 +111,13 @@ const DiffUnifiedNewLine = ({
   onAddWidgetClick?: (event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void;
 }) => {
   return (
-    <tr data-line={index} data-state="diff" data-mode="add" class="diff-line group" style={{ backgroundColor: `var(${addContentBGName})` }}>
+    <tr
+      data-line={index}
+      data-state="diff"
+      data-mode="add"
+      class="diff-line group"
+      style={{ backgroundColor: `var(${addContentBGName})` }}
+    >
       <td
         class="diff-line-num left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
         style={{
@@ -170,21 +182,19 @@ export const DiffUnifiedLine = defineComponent(
           : undefined
     );
 
-    useSubscribeDiffFile(props, (diffFile) => (unifiedItem.value = diffFile.getUnifiedLine(props.index)));
+    useSubscribeDiffFile(props, (diffFile) => {
+      unifiedItem.value = diffFile.getUnifiedLine(props.index);
 
-    useSubscribeDiffFile(props, () => (currentItemHasHidden.value = unifiedItem.value?.isHidden));
+      currentSyntaxItem.value = unifiedItem.value?.newLineNumber
+        ? diffFile.getNewSyntaxLine(unifiedItem.value.newLineNumber)
+        : unifiedItem.value?.oldLineNumber
+          ? diffFile.getOldSyntaxLine(unifiedItem.value.oldLineNumber)
+          : undefined;
 
-    useSubscribeDiffFile(props, () => (currentItemHasChange.value = checkDiffLineIncludeChange(unifiedItem.value?.diff)));
+      currentItemHasHidden.value = unifiedItem.value?.isHidden;
 
-    useSubscribeDiffFile(
-      props,
-      (diffFile) =>
-        (currentSyntaxItem.value = unifiedItem.value?.newLineNumber
-          ? diffFile.getNewSyntaxLine(unifiedItem.value.newLineNumber)
-          : unifiedItem.value?.oldLineNumber
-            ? diffFile.getOldSyntaxLine(unifiedItem.value.oldLineNumber)
-            : undefined)
-    );
+      currentItemHasChange.value = checkDiffLineIncludeChange(unifiedItem.value?.diff);
+    });
 
     const onOpenAddWidget = (lineNumber, side) => setWidget({ side: side, lineNumber: lineNumber });
 
@@ -238,7 +248,9 @@ export const DiffUnifiedLine = defineComponent(
               style={{
                 position: enableWrap.value ? "relative" : "sticky",
                 color: `var(${plainLineNumberColorName})`,
-                backgroundColor: unifiedItem.value.diff ? `var(${plainLineNumberBGName})` : `var(${expandContentBGName})`,
+                backgroundColor: unifiedItem.value.diff
+                  ? `var(${plainLineNumberBGName})`
+                  : `var(${expandContentBGName})`,
               }}
             >
               {enableAddWidget.value && unifiedItem.value.diff && (

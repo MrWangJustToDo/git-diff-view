@@ -35,7 +35,13 @@ export class TextMeasure {
 
 const measureInstance = new TextMeasure();
 
-export const useTextWidth = ({ text, font }: { text: string; font: { fontFamily?: string; fontStyle?: string; fontSize?: string } }) => {
+export const useTextWidth = ({
+  text,
+  font,
+}: {
+  text: string;
+  font: { fontFamily?: string; fontStyle?: string; fontSize?: string };
+}) => {
   const [width, setWidth] = useState(50);
 
   useEffect(() => {

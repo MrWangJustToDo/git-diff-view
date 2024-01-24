@@ -8,12 +8,24 @@ import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const _DiffUnifiedHunkLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
+const _DiffUnifiedHunkLine = ({
+  index,
+  diffFile,
+  lineNumber,
+}: {
+  index: number;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
   const currentHunk = diffFile.getUnifiedHunkLine(index);
+
+  const expandEnabled = diffFile.getExpandEnabled();
 
   const { enableWrap } = useDiffViewContext();
 
-  const isExpandAll = currentHunk.unifiedInfo && currentHunk.unifiedInfo.endHiddenIndex - currentHunk.unifiedInfo.startHiddenIndex < composeLen;
+  const isExpandAll =
+    currentHunk.unifiedInfo &&
+    currentHunk.unifiedInfo.endHiddenIndex - currentHunk.unifiedInfo.startHiddenIndex < composeLen;
 
   return (
     <tr
@@ -30,32 +42,34 @@ const _DiffUnifiedHunkLine = ({ index, diffFile, lineNumber }: { index: number; 
           color: `var(${plainLineNumberColorName})`,
         }}
       >
-        {isExpandAll ? (
-          <button
-            className="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
-            title="Expand All"
-            onClick={() => diffFile.onUnifiedHunkExpand("all", index)}
-          >
-            <ExpandAll className="fill-current" />
-          </button>
-        ) : (
-          <>
+        {expandEnabled ? (
+          isExpandAll ? (
             <button
-              className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
-              title="Expand Down"
-              onClick={() => diffFile.onUnifiedHunkExpand("down", index)}
+              className="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+              title="Expand All"
+              onClick={() => diffFile.onUnifiedHunkExpand("all", index)}
             >
-              <ExpandDown className="fill-current" />
+              <ExpandAll className="fill-current" />
             </button>
-            <button
-              className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
-              title="Expand Up"
-              onClick={() => diffFile.onUnifiedHunkExpand("up", index)}
-            >
-              <ExpandUp className="fill-current" />
-            </button>
-          </>
-        )}
+          ) : (
+            <>
+              <button
+                className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
+                title="Expand Down"
+                onClick={() => diffFile.onUnifiedHunkExpand("down", index)}
+              >
+                <ExpandDown className="fill-current" />
+              </button>
+              <button
+                className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
+                title="Expand Up"
+                onClick={() => diffFile.onUnifiedHunkExpand("up", index)}
+              >
+                <ExpandUp className="fill-current" />
+              </button>
+            </>
+          )
+        ) : null}
       </td>
       <td className="diff-line-content diff-line-content-hunk pr-[10px] align-middle">
         <div
@@ -73,10 +87,21 @@ const _DiffUnifiedHunkLine = ({ index, diffFile, lineNumber }: { index: number; 
   );
 };
 
-export const DiffUnifiedHunkLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
+export const DiffUnifiedHunkLine = ({
+  index,
+  diffFile,
+  lineNumber,
+}: {
+  index: number;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
   const currentHunk = diffFile.getUnifiedHunkLine(index);
 
-  const currentIsShow = currentHunk && currentHunk.unifiedInfo && currentHunk.unifiedInfo.startHiddenIndex < currentHunk.unifiedInfo.endHiddenIndex;
+  const currentIsShow =
+    currentHunk &&
+    currentHunk.unifiedInfo &&
+    currentHunk.unifiedInfo.startHiddenIndex < currentHunk.unifiedInfo.endHiddenIndex;
 
   if (!currentIsShow) return null;
 
@@ -87,7 +112,12 @@ const _DiffUnifiedExpandLastLine = ({ diffFile }: { diffFile: DiffFile }) => {
   const { enableWrap } = useDiffViewContext();
 
   return (
-    <tr data-line="last-hunk" data-state="hunk" className="diff-line diff-line-hunk select-none" style={{ backgroundColor: `var(${hunkContentBGName})` }}>
+    <tr
+      data-line="last-hunk"
+      data-state="hunk"
+      className="diff-line diff-line-hunk select-none"
+      style={{ backgroundColor: `var(${hunkContentBGName})` }}
+    >
       <td
         className="diff-line-num diff-line-num-hunk left-0 w-[1%] min-w-[100px]"
         style={{
@@ -110,7 +140,11 @@ const _DiffUnifiedExpandLastLine = ({ diffFile }: { diffFile: DiffFile }) => {
 };
 
 export const DiffUnifiedExpandLastLine = ({ diffFile }: { diffFile: DiffFile }) => {
-  if (!diffFile.getNeedShowExpandAll("unified")) return null;
+  const currentIsShow = diffFile.getNeedShowExpandAll("unified");
+
+  const expandEnabled = diffFile.getExpandEnabled();
+
+  if (!currentIsShow || !expandEnabled) return null;
 
   return <_DiffUnifiedExpandLastLine diffFile={diffFile} />;
 };

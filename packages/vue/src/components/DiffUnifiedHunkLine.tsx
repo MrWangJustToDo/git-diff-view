@@ -13,10 +13,14 @@ export const DiffUnifiedHunkLine = defineComponent(
   (props: { index: number; diffFile: DiffFile; lineNumber: number }) => {
     const currentHunk = ref(props.diffFile.getUnifiedHunkLine(props.index));
 
+    const enableExpand = ref(props.diffFile.getExpandEnabled());
+
     const enableWrap = useEnableWrap();
 
     const currentIsShow = ref(
-      currentHunk.value && currentHunk.value.unifiedInfo && currentHunk.value.unifiedInfo.startHiddenIndex < currentHunk.value.unifiedInfo.endHiddenIndex
+      currentHunk.value &&
+        currentHunk.value.unifiedInfo &&
+        currentHunk.value.unifiedInfo.startHiddenIndex < currentHunk.value.unifiedInfo.endHiddenIndex
     );
 
     const currentIsEnableAll = ref(
@@ -25,23 +29,21 @@ export const DiffUnifiedHunkLine = defineComponent(
         currentHunk.value.unifiedInfo.endHiddenIndex - currentHunk.value.unifiedInfo.startHiddenIndex < composeLen
     );
 
-    useSubscribeDiffFile(props, (diffFile) => (currentHunk.value = diffFile.getUnifiedHunkLine(props.index)));
+    useSubscribeDiffFile(props, (diffFile) => {
+      currentHunk.value = diffFile.getUnifiedHunkLine(props.index);
 
-    useSubscribeDiffFile(
-      props,
-      () =>
-        (currentIsShow.value =
-          currentHunk.value && currentHunk.value.unifiedInfo && currentHunk.value.unifiedInfo.startHiddenIndex < currentHunk.value.unifiedInfo.endHiddenIndex)
-    );
+      enableExpand.value = diffFile.getExpandEnabled();
 
-    useSubscribeDiffFile(
-      props,
-      () =>
-        (currentIsEnableAll.value =
-          currentHunk.value &&
-          currentHunk.value.unifiedInfo &&
-          currentHunk.value.unifiedInfo.endHiddenIndex - currentHunk.value.unifiedInfo.startHiddenIndex < composeLen)
-    );
+      currentIsShow.value =
+        currentHunk.value &&
+        currentHunk.value.unifiedInfo &&
+        currentHunk.value.unifiedInfo.startHiddenIndex < currentHunk.value.unifiedInfo.endHiddenIndex;
+
+      currentIsEnableAll.value =
+        currentHunk.value &&
+        currentHunk.value.unifiedInfo &&
+        currentHunk.value.unifiedInfo.endHiddenIndex - currentHunk.value.unifiedInfo.startHiddenIndex < composeLen;
+    });
 
     return () => {
       if (!currentIsShow.value) return null;
@@ -61,32 +63,34 @@ export const DiffUnifiedHunkLine = defineComponent(
               color: `var(${plainLineNumberColorName})`,
             }}
           >
-            {currentIsEnableAll.value ? (
-              <button
-                class="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
-                title="Expand All"
-                onClick={() => props.diffFile.onUnifiedHunkExpand("all", props.index)}
-              >
-                <ExpandAll className="fill-current" />
-              </button>
-            ) : (
-              <>
+            {enableExpand.value ? (
+              currentIsEnableAll.value ? (
                 <button
-                  class="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
-                  title="Expand Down"
-                  onClick={() => props.diffFile.onUnifiedHunkExpand("down", props.index)}
+                  class="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+                  title="Expand All"
+                  onClick={() => props.diffFile.onUnifiedHunkExpand("all", props.index)}
                 >
-                  <ExpandDown className="fill-current" />
+                  <ExpandAll className="fill-current" />
                 </button>
-                <button
-                  class="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
-                  title="Expand Up"
-                  onClick={() => props.diffFile.onUnifiedHunkExpand("up", props.index)}
-                >
-                  <ExpandUp className="fill-current" />
-                </button>
-              </>
-            )}
+              ) : (
+                <>
+                  <button
+                    class="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
+                    title="Expand Down"
+                    onClick={() => props.diffFile.onUnifiedHunkExpand("down", props.index)}
+                  >
+                    <ExpandDown className="fill-current" />
+                  </button>
+                  <button
+                    class="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
+                    title="Expand Up"
+                    onClick={() => props.diffFile.onUnifiedHunkExpand("up", props.index)}
+                  >
+                    <ExpandUp className="fill-current" />
+                  </button>
+                </>
+              )
+            ) : null}
           </td>
           <td class="diff-line-content diff-line-content-hunk pr-[10px] align-middle">
             <div
@@ -109,17 +113,25 @@ export const DiffUnifiedHunkLine = defineComponent(
 
 export const DiffUnifiedExpandLastLine = defineComponent(
   (props: { diffFile: DiffFile }) => {
-    const currentIsShow = ref(props.diffFile.getNeedShowExpandAll("unified"));
+    const currentIsShow = ref(props.diffFile.getNeedShowExpandAll("unified") && props.diffFile.getExpandEnabled());
 
     const enableWrap = useEnableWrap();
 
-    useSubscribeDiffFile(props, (diffFile) => (currentIsShow.value = diffFile.getNeedShowExpandAll("unified")));
+    useSubscribeDiffFile(
+      props,
+      (diffFile) => (currentIsShow.value = diffFile.getNeedShowExpandAll("unified") && diffFile.getExpandEnabled())
+    );
 
     return () => {
       if (!currentIsShow.value) return null;
 
       return (
-        <tr data-line="last-hunk" data-state="hunk" class="diff-line diff-line-hunk select-none" style={{ backgroundColor: `var(${hunkContentBGName})` }}>
+        <tr
+          data-line="last-hunk"
+          data-state="hunk"
+          class="diff-line diff-line-hunk select-none"
+          style={{ backgroundColor: `var(${hunkContentBGName})` }}
+        >
           <td
             class="diff-line-num diff-line-num-hunk left-0 w-[1%] min-w-[100px]"
             style={{

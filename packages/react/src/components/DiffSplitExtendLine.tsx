@@ -8,7 +8,17 @@ import { emptyBGName } from "./color";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const _DiffSplitExtendLine = ({ index, diffFile, side, lineNumber }: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
+const _DiffSplitExtendLine = ({
+  index,
+  diffFile,
+  side,
+  lineNumber,
+}: {
+  index: number;
+  side: SplitSide;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
   const { extendData, renderExtendLine } = useDiffViewContext();
 
   const oldItem = diffFile.getSplitLeftLine(index);
@@ -39,7 +49,7 @@ const _DiffSplitExtendLine = ({ index, diffFile, side, lineNumber }: { index: nu
       data-line={`${lineNumber}-extend`}
       data-state="extend"
       data-side={side === SplitSide.old ? "left" : "right"}
-      className={"diff-line diff-line-extend" + !currentExtend ? " diff-line-extend-empty" : ""}
+      className={"diff-line diff-line-extend" + (!currentExtend ? " diff-line-extend-empty" : "")}
       style={{
         backgroundColor: !currentExtend ? `var(${emptyBGName})` : undefined,
       }}
@@ -48,19 +58,38 @@ const _DiffSplitExtendLine = ({ index, diffFile, side, lineNumber }: { index: nu
         <div className="diff-line-extend-wrapper sticky left-0" style={{ width }}>
           {width > 0 &&
             currentExtend &&
-            renderExtendLine({ diffFile, side, lineNumber: currentLineNumber, data: currentExtend.data, onUpdate: diffFile.notifyAll })}
+            renderExtendLine({
+              diffFile,
+              side,
+              lineNumber: currentLineNumber,
+              data: currentExtend.data,
+              onUpdate: diffFile.notifyAll,
+            })}
         </div>
       </td>
     </tr>
   );
 };
 
-export const DiffSplitExtendLine = ({ index, diffFile, side, lineNumber }: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
+export const DiffSplitExtendLine = ({
+  index,
+  diffFile,
+  side,
+  lineNumber,
+}: {
+  index: number;
+  side: SplitSide;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
   const { extendData } = useDiffViewContext();
 
   const oldItem = diffFile.getSplitLeftLine(index);
 
   const newItem = diffFile.getSplitRightLine(index);
+
+  // if the expand action not enabled, the `isHidden` property will never change
+  const enableExpand = diffFile.getExpandEnabled();
 
   const currentItem = side === SplitSide.old ? oldItem : newItem;
 
@@ -68,7 +97,7 @@ export const DiffSplitExtendLine = ({ index, diffFile, side, lineNumber }: { ind
 
   const newExtend = extendData?.newFile?.[newItem.lineNumber];
 
-  const currentIsShow = (oldExtend || newExtend) && currentItem && !currentItem.isHidden && currentItem.diff;
+  const currentIsShow = (oldExtend || newExtend) && currentItem && (!currentItem.isHidden || !enableExpand);
 
   if (!currentIsShow) return null;
 

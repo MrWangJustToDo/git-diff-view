@@ -56,7 +56,8 @@ function App() {
     <>
       <div className="w-[90%] m-auto mb-[1em] mt-[1em]">
         <h2 className=" text-[24px]">
-          A React (Vue) component to show the file diff (just like github) <span className="text-red-500"> (🚧 wip) </span>
+          A React (Vue) component to show the file diff (just like github){" "}
+          <span className="text-red-500"> (🚧 wip) </span>
         </h2>
         <br />
         <p>
@@ -72,7 +73,10 @@ function App() {
       </div>
       <div className="w-[90%] m-auto mb-[1em] text-right">
         <div className="inline-flex gap-x-4">
-          <button className="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white" onClick={() => setWrap(!wrap)}>
+          <button
+            className="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+            onClick={() => setWrap(!wrap)}
+          >
             {wrap ? "Toggle to nowrap" : "Toggle to wrap"}
           </button>
           <button
@@ -94,7 +98,11 @@ function App() {
         <DiffView<string>
           renderWidgetLine={({ onClose, side, lineNumber }) => (
             <div className="border flex flex-col w-full px-[4px] py-[8px]">
-              <textarea className="w-full border min-h-[80px] p-[2px]" value={val} onChange={(e) => setVal(e.target.value)} />
+              <textarea
+                className="w-full border min-h-[80px] p-[2px]"
+                value={val}
+                onChange={(e) => setVal(e.target.value)}
+              />
               <div className="m-[5px] mt-[0.8em] text-right">
                 <div className="inline-flex gap-x-[12px] justify-end">
                   <button

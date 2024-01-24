@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-types */
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef } from "react";
 
 export const useCallbackRef = <T extends Function>(cb?: T): T => {
   const cbRef = useRef(cb);

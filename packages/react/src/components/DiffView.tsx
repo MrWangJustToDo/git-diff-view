@@ -107,7 +107,11 @@ const InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data
           }}
         >
           <div id={`diff-root${id}`} className={"diff-view-wrapper" + (className ? ` ${className}` : "")} style={style}>
-            {diffViewMode === DiffModeEnum.Split ? <DiffSplitView diffFile={diffFile} /> : <DiffUnifiedView diffFile={diffFile} />}
+            {diffViewMode === DiffModeEnum.Split ? (
+              <DiffSplitView diffFile={diffFile} />
+            ) : (
+              <DiffUnifiedView diffFile={diffFile} />
+            )}
           </div>
         </div>
       </div>

@@ -31,16 +31,14 @@ lowlight.register("vue", function hljsDefineVue(hljs) {
         excludeEnd: true,
       },
       {
-        begin:
-          /^(?:\s*)(?:<style(?:\s+scoped)?\s+lang=(["'])(?:s[ca]ss)\1(?:\s+scoped)?>)/gm,
+        begin: /^(?:\s*)(?:<style(?:\s+scoped)?\s+lang=(["'])(?:s[ca]ss)\1(?:\s+scoped)?>)/gm,
         end: /^(\s*)(<\/style>)/gm,
         subLanguage: "scss",
         excludeBegin: true,
         excludeEnd: true,
       },
       {
-        begin:
-          /^(?:\s*)(?:<style(?:\s+scoped)?\s+lang=(["'])stylus\1(?:\s+scoped)?>)/gm,
+        begin: /^(?:\s*)(?:<style(?:\s+scoped)?\s+lang=(["'])stylus\1(?:\s+scoped)?>)/gm,
         end: /^(\s*)(<\/style>)/gm,
         subLanguage: "stylus",
         excludeBegin: true,
@@ -51,6 +49,5 @@ lowlight.register("vue", function hljsDefineVue(hljs) {
 });
 
 export type ATS = ReturnType<typeof lowlight.highlight>;
-
 
 export const highlighter = lowlight;

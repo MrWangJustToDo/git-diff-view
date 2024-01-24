@@ -4,7 +4,15 @@ import { useId } from "../context";
 
 import { useIsMounted } from "./useIsMounted";
 
-export const useSyncHeight = ({ selector, side, enable }: { selector: Ref<string>; side: Ref<"left" | "right">; enable: Ref<boolean> }) => {
+export const useSyncHeight = ({
+  selector,
+  side,
+  enable,
+}: {
+  selector: Ref<string>;
+  side: Ref<"left" | "right">;
+  enable: Ref<boolean>;
+}) => {
   const id = useId();
 
   const isMounted = useIsMounted();

@@ -19,9 +19,13 @@ export const slotsSymbol: InjectionKey<{
   extend: Slot<{ lineNumber: number; side: SplitSide; data: any; diffFile: DiffFile; onUpdate: () => void }>;
 }> = Symbol();
 
-export const extendDataSymbol: InjectionKey<Ref<{ oldFile?: Record<string, { data: any }>; newFile?: Record<string, { data: any }> }>> = Symbol();
+export const extendDataSymbol: InjectionKey<
+  Ref<{ oldFile?: Record<string, { data: any }>; newFile?: Record<string, { data: any }> }>
+> = Symbol();
 
-export const onAddWidgetClickSymbol: InjectionKey<(event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void> = Symbol();
+export const onAddWidgetClickSymbol: InjectionKey<
+  (event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void
+> = Symbol();
 
 export const widgetStateSymbol: InjectionKey<Ref<{ lineNumber?: number; side?: SplitSide }>> = Symbol();
 

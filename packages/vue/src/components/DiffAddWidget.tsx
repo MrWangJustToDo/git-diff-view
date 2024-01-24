@@ -1,4 +1,3 @@
-
 import { addWidgetBGName, addWidgetColorName } from "./color";
 
 import type { SplitSide } from "./DiffView";

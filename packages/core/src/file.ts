@@ -191,7 +191,9 @@ export class File {
       }
       Object.values(this.syntaxFile).forEach(({ value, lineNumber }) => {
         if (value !== this.rawFile[lineNumber]) {
-          console.log("some line not match:" + value + " __ " + this.rawFile[lineNumber] + " __ at: " + lineNumber + " lineNumber");
+          console.log(
+            "some line not match:" + value + " __ " + this.rawFile[lineNumber] + " __ at: " + lineNumber + " lineNumber"
+          );
         }
       });
     }

@@ -63,7 +63,13 @@ export const emptyBG = "#f0f0f0";
 export const emptyBGName = "--diff-empty-content--";
 
 export const getContentBG = (isAdded: boolean, isDelete: boolean, hasDiff: boolean) => {
-  return isAdded ? `var(${addContentBGName})` : isDelete ? `var(${delContentBGName})` : hasDiff ? `var(${plainContentBGName})` : `var(${expandContentBGName})`;
+  return isAdded
+    ? `var(${addContentBGName})`
+    : isDelete
+      ? `var(${delContentBGName})`
+      : hasDiff
+        ? `var(${plainContentBGName})`
+        : `var(${expandContentBGName})`;
 };
 
 export const getLineNumberBG = (isAdded: boolean, isDelete: boolean, hasDiff: boolean) => {

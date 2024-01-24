@@ -1,4 +1,7 @@
 **/node_modules
 **/dist
 **/dev
+package.json
+tsconfig.json
 pnpm-lock.yaml
+deploy.yml

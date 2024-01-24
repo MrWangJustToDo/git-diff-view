@@ -22,7 +22,11 @@ export const DiffSplitLine = defineComponent(
 
     const onAddWidgetClick = useOnAddWidgetClick();
 
-    const currentItem = ref(props.side === SplitSide.old ? props.diffFile.getSplitLeftLine(props.index) : props.diffFile.getSplitRightLine(props.index));
+    const currentItem = ref(
+      props.side === SplitSide.old
+        ? props.diffFile.getSplitLeftLine(props.index)
+        : props.diffFile.getSplitRightLine(props.index)
+    );
 
     const currentItemHasDiff = ref(!!currentItem.value?.diff);
 
@@ -36,23 +40,23 @@ export const DiffSplitLine = defineComponent(
         : props.diffFile.getNewSyntaxLine(currentItem.value?.lineNumber)
     );
 
-    useSubscribeDiffFile(
-      props,
-      (diffFile) => (currentItem.value = props.side === SplitSide.old ? diffFile.getSplitLeftLine(props.index) : diffFile.getSplitRightLine(props.index))
-    );
+    useSubscribeDiffFile(props, (diffFile) => {
+      currentItem.value =
+        props.side === SplitSide.old
+          ? diffFile.getSplitLeftLine(props.index)
+          : diffFile.getSplitRightLine(props.index);
 
-    useSubscribeDiffFile(
-      props,
-      (diffFile) =>
-        (currentSyntaxItem.value =
-          props.side === SplitSide.old ? diffFile.getOldSyntaxLine(currentItem.value?.lineNumber) : diffFile.getNewSyntaxLine(currentItem.value?.lineNumber))
-    );
+      currentSyntaxItem.value =
+        props.side === SplitSide.old
+          ? diffFile.getOldSyntaxLine(currentItem.value?.lineNumber)
+          : diffFile.getNewSyntaxLine(currentItem.value?.lineNumber);
 
-    useSubscribeDiffFile(props, () => (currentItemHasDiff.value = !!currentItem.value?.diff));
+      currentItemHasDiff.value = !!currentItem.value?.diff;
 
-    useSubscribeDiffFile(props, () => (currentItemHasHidden.value = currentItem.value?.isHidden));
+      currentItemHasChange.value = checkDiffLineIncludeChange(currentItem.value?.diff);
 
-    useSubscribeDiffFile(props, () => (currentItemHasChange.value = checkDiffLineIncludeChange(currentItem.value?.diff)));
+      currentItemHasHidden.value = currentItem.value?.isHidden;
+    })
 
     const lineSelector = computed(() => `tr[data-line="${props.lineNumber}"]`);
 
@@ -105,7 +109,10 @@ export const DiffSplitLine = defineComponent(
                   onWidgetClick={onAddWidgetClick}
                 />
               )}
-              <span data-line-num={currentItem.value.lineNumber} style={{ opacity: currentItemHasChange.value ? undefined : 0.5 }}>
+              <span
+                data-line-num={currentItem.value.lineNumber}
+                style={{ opacity: currentItemHasChange.value ? undefined : 0.5 }}
+              >
                 {currentItem.value.lineNumber}
               </span>
             </td>

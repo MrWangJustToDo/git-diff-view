@@ -1,30 +1,85 @@
-# React + TypeScript + Vite
+## Git Diff Component
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+a React/Vue component to show the `git --diff` result, just like Github code review page.
 
-Currently, two official plugins are available:
+[![Deploy](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml/badge.svg)](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Usage
 
-## Expanding the ESLint configuration
+```tsx
+// React
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+import "@git-diff-view/react/styles/diff-view.css";
+import { DiffFile } from "@git-diff-view/React";
 
-- Configure the top-level `parserOptions` property like this:
+<DiffView
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
+  className
+
+  /* return a valid react element to show the widget, this element will render when you click the `addWidget` button in the diff view */
+
+  renderWidgetLine={({ onClose, side, lineNumber }) => jsx.element}
+
+  /* the diff data need to show, type `{ oldFile: {fileName?: string, content?: string}, newFile: {fileName?: string, content?: string}, hunks: string[] }`, you can only pass hunks data, and the component will generate the oldFile and newFile data automatically */
+
+  data={data[v]}
+
+  /* also support the outside `diffFile` to improve performance, so you can use `webWorker` to generate the diff data first, and then pass it to the component */
+
+  diffFile={diffFileInstance}
+
+  /* a list to store the extend data to show in the `Diff View` */
+  extendData={extend}
+
+  /* used to render extend data */
+
+  renderExtendLine={({ data }) => jsx.element}
+
+  /* diffView fontSize */
+
+  diffViewFontSize={fontSize}
+
+  /* syntax highlight */
+
+  diffViewHighlight={highlight}
+
+  /* diffView mode: SplitView / UnifiedView */
+
+  diffViewMode={mode}
+
+  /* diffView wrap: code line auto wrap */
+
+  diffViewWrap={wrap}
+
+  /* enable `addWidget` button */
+
+  diffViewAddWidget
+
+  /* when the `addWidget` button clicked */
+
+  onAddWidgetClick
+/>;
+
 ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+```tsx
+// Vue
+import "@git-diff-view/vue/styles/diff-view.css";
+import { DiffFile } from "@git-diff-view/Vue";
+
+// the usage just like React side, but the `renderWidgetLine` and `renderExtendLine` props become the `widget` / `extend` slots
+
+```
+
+## Development
+
+```shell
+# clone this project
+
+# pnpm install
+
+# pnpm run build:packages 
+
+# pnpm run dev:react / pnpm run dev:vue
+
+```

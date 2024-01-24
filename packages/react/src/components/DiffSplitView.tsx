@@ -37,7 +37,15 @@ const syncScroll = (left: HTMLElement, right: HTMLElement) => {
   };
 };
 
-const DiffSplitViewTable = ({ side, lineLength, diffFile }: { side: SplitSide; lineLength: number; diffFile: DiffFile }) => {
+const DiffSplitViewTable = ({
+  side,
+  lineLength,
+  diffFile,
+}: {
+  side: SplitSide;
+  lineLength: number;
+  diffFile: DiffFile;
+}) => {
   const className = side === SplitSide.new ? "new-diff-table" : "old-diff-table";
 
   return (

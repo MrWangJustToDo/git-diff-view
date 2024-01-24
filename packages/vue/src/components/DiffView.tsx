@@ -59,7 +59,12 @@ type typeSlots = SlotsType<{
 }>;
 
 // vue 组件打包目前无法支持范型 也不支持 slots
-export const DiffView = defineComponent<DiffViewProps<any>, { onAddWidgetClick: (lineNumber: number, side: SplitSide) => void }, "onAddWidgetClick", typeSlots>(
+export const DiffView = defineComponent<
+  DiffViewProps<any>,
+  { onAddWidgetClick: (lineNumber: number, side: SplitSide) => void },
+  "onAddWidgetClick",
+  typeSlots
+>(
   (props, options) => {
     const getInstance = () => {
       if (props.diffFile) return props.diffFile;
@@ -159,7 +164,11 @@ export const DiffView = defineComponent<DiffViewProps<any>, { onAddWidgetClick: 
       return (
         <div class="diff-tailwindcss-wrapper">
           <div class="diff-style-root" style={{ [diffFontSizeName]: props.diffViewFontSize + "px" }}>
-            <div id={`diff-root${id.value}`} class={"diff-view-wrapper" + (props.class ? ` ${props.class}` : "")} style={props.style}>
+            <div
+              id={`diff-root${id.value}`}
+              class={"diff-view-wrapper" + (props.class ? ` ${props.class}` : "")}
+              style={props.style}
+            >
               {!props.diffViewMode || props.diffViewMode === DiffModeEnum.Split ? (
                 <DiffSplitView key={DiffModeEnum.Split} diffFile={diffFile.value as DiffFile} />
               ) : (
