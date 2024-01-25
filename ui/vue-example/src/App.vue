@@ -40,7 +40,7 @@ const _data = computed(() => data[k.value]);
 
 const extendData = ref<DiffViewProps<any>["extendData"]>({ oldFile: {}, newFile: {} });
 
-watch(_data, () => {
+watch(() => diffFile.value, () => {
   extendData.value = { oldFile: {}, newFile: {} };
 });
 
