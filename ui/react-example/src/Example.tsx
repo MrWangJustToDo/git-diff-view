@@ -30,7 +30,7 @@ export function Example() {
   const [val, setVal] = useState("");
 
   useEffect(() => {
-    if (diffFileInstance !== previous) {
+    if (previous && diffFileInstance !== previous) {
       setExtend({ oldFile: {}, newFile: {} });
     }
   }, [diffFileInstance, previous]);

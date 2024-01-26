@@ -48,26 +48,29 @@ export const PlayGround = () => {
     <div className="w-[90%] m-auto mt-[1em] mb-[1em]">
       <h2 className="text-[24px]">PlayGround -- input a `git --diff` string</h2>
       <div className="flex flex-col gap-y-[10px] mt-[10px]">
+        <span className="border-b p-[3px]">Lang: </span>
         <input
-          className="border p-[4px]"
+          className="border p-[4px] text-[14px]"
           type=""
           placeholder="input syntax lang"
           value={lang}
           onChange={(e) => setLang(e.target.value)}
         />
+        <span className="border-b p-[3px]">`git --diff`: </span>
         <textarea
           cols={10}
           rows={5}
           autoFocus
-          className="border p-[4px]"
+          className="border p-[4px] text-[14px]"
           placeholder="give a `git --diff` output"
           value={diffString}
           onChange={(e) => setDiffString(e.target.value)}
         ></textarea>
+        <span className="border-b p-[3px]">Original file content (optional): </span>
         <textarea
           cols={10}
           rows={5}
-          className="border p-[4px]"
+          className="border p-[4px] text-[14px]"
           placeholder="give a raw file content (optional)"
           value={content}
           onChange={(e) => setContent(e.target.value)}

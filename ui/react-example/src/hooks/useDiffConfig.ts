@@ -41,6 +41,7 @@ export const useDiffConfig = createState(
         },
       };
     },
+    withNamespace: 'diffConfig',
     withDeepSelector: false,
   }
 );
