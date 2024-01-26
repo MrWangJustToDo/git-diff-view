@@ -46,8 +46,8 @@ export const DiffUnifiedWidgetLine = defineComponent(
       if (!currentIsShow.value) return null;
 
       return (
-        <tr data-state="widget" class="diff-line diff-line-widget">
-          <td class="diff-line-widget-content p-0" colspan={4}>
+        <tr data-line={`${props.lineNumber}-widget`} data-state="widget" class="diff-line diff-line-widget">
+          <td class="diff-line-widget-content p-0" colspan={2}>
             <div class="diff-line-widget-wrapper sticky left-0" style={{ width: width.value + "px" }}>
               {width.value > 0 &&
                 oldWidget.value &&

@@ -60,6 +60,7 @@
     "@git-diff-view/core": "^0.0.1",
     "highlight.js": "^11.9.0",
     "lowlight": "^3.1.0",
+    "reactivity-store": "^0.3.1",
     "use-sync-external-store": "^1.2.0"
   },
   "devDependencies": {

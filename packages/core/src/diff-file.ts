@@ -4,7 +4,6 @@ import { relativeChanges } from "./change-range";
 import { DiffLineType } from "./diff-line";
 import { parseInstance } from "./diff-parse";
 import { getFile } from "./file";
-import { numIterator } from "./tool";
 
 import type { DiffLine } from "./diff-line";
 import type { File } from "./file";
@@ -125,9 +124,9 @@ export class DiffFile {
 
   _newFileLang: string = "";
 
-  lineLength: number = 0;
-
   diffLineLength: number = 0;
+
+  splitLineLength: number = 0;
 
   unifiedLineLength: number = 0;
 
@@ -417,11 +416,6 @@ export class DiffFile {
     this.#doFile();
     this.#composeRaw();
     this.#composeFile();
-    this.lineLength = Math.max(
-      this.lineLength,
-      this.#oldFileResult?.rawLength || 0,
-      this.#newFileResult?.rawLength || 0
-    );
     this.#hasInitRaw = true;
   }
 
@@ -437,13 +431,15 @@ export class DiffFile {
   }
 
   buildSplitDiffLines() {
-    if (!this.lineLength || this.#hasBuildSplit) return;
+    if (this.#hasBuildSplit) return;
     let oldFileLineNumber = 1;
     let newFileLineNumber = 1;
     let prevIsHidden = false;
     let hideStart = Infinity;
-    let length = 0;
-    numIterator(this.lineLength, () => {
+    const maxOldFileLineNumber = this.#oldFileResult?.maxLineNumber || 0;
+    const maxNewFileLineNumber = this.#newFileResult?.maxLineNumber || 0;
+
+    while (oldFileLineNumber <= maxOldFileLineNumber || newFileLineNumber <= maxNewFileLineNumber) {
       const oldRawLine = this.#getOldRawLine(oldFileLineNumber);
       const oldDiffLine = this.#getOldDiffLine(oldFileLineNumber);
       const newRawLine = this.#getNewRawLine(newFileLineNumber);
@@ -452,7 +448,7 @@ export class DiffFile {
       const newLineHasChange = newDiffLine?.isIncludeableLine();
       const len = this.#splitRightLines.length;
       const isHidden = !oldDiffLine && !newDiffLine;
-      if (!oldDiffLine && !newRawLine && !oldDiffLine && !newDiffLine) return;
+      if (!oldDiffLine && !newRawLine && !oldDiffLine && !newDiffLine) break;
       if ((oldLineHasChange && newLineHasChange) || (!oldLineHasChange && !newLineHasChange)) {
         this.#splitLeftLines.push({
           lineNumber: oldFileLineNumber++,
@@ -466,7 +462,6 @@ export class DiffFile {
           diff: newDiffLine,
           isHidden,
         });
-        length++;
       } else if (oldLineHasChange) {
         this.#splitLeftLines.push({
           lineNumber: oldFileLineNumber++,
@@ -474,7 +469,6 @@ export class DiffFile {
           diff: oldDiffLine,
         });
         this.#splitRightLines.push({});
-        length++;
       } else if (newLineHasChange) {
         this.#splitLeftLines.push({});
         this.#splitRightLines.push({
@@ -482,7 +476,6 @@ export class DiffFile {
           value: newRawLine,
           diff: newDiffLine,
         });
-        length++;
       }
 
       if (!prevIsHidden && isHidden) {
@@ -511,9 +504,9 @@ export class DiffFile {
           };
         }
       }
-    });
+    }
 
-    this.lineLength = length;
+    this.splitLineLength = this.#splitRightLines.length;
 
     this.#splitLastStartIndex = hideStart;
 
@@ -523,13 +516,14 @@ export class DiffFile {
   }
 
   buildUnifiedDiffLines() {
-    if (!this.lineLength || this.#hasBuildUnified) return;
+    if (this.#hasBuildUnified) return;
     let oldFileLineNumber = 1;
     let newFileLineNumber = 1;
     let prevIsHidden = false;
     let hideStart = Infinity;
     const maxOldFileLineNumber = this.#oldFileResult?.maxLineNumber || 0;
     const maxNewFileLineNumber = this.#newFileResult?.maxLineNumber || 0;
+
     while (oldFileLineNumber <= maxOldFileLineNumber || newFileLineNumber <= maxNewFileLineNumber) {
       const oldRawLine = this.#getOldRawLine(oldFileLineNumber);
       const oldDiffLine = this.#getOldDiffLine(oldFileLineNumber);
@@ -675,7 +669,7 @@ export class DiffFile {
 
     const start = this.#splitLastStartIndex;
 
-    const end = expandAll ? this.lineLength : this.#splitLastStartIndex + composeLen;
+    const end = expandAll ? this.splitLineLength : this.#splitLastStartIndex + composeLen;
 
     for (let i = start; i < end; i++) {
       const leftLine = this.#splitLeftLines[i];
@@ -686,7 +680,7 @@ export class DiffFile {
 
     this.#splitLastStartIndex = end;
 
-    this.#splitLastStartIndex = this.#splitLastStartIndex >= this.lineLength ? Infinity : this.#splitLastStartIndex;
+    this.#splitLastStartIndex = this.#splitLastStartIndex >= this.splitLineLength ? Infinity : this.#splitLastStartIndex;
 
     this.notifyAll();
   };
@@ -815,7 +809,7 @@ export class DiffFile {
     const newFileLines = this.#newFileLines;
     const newFileDiffLines = this.#newFileDiffLines;
     const newFileSyntaxLines = this.#newFileSyntaxLines;
-    const lineLength = this.lineLength;
+    const splitLineLength = this.splitLineLength;
     const unifiedLineLength = this.unifiedLineLength;
     const composeByDiff = this.#composeByDiff;
 
@@ -837,7 +831,7 @@ export class DiffFile {
       newFileLines,
       newFileDiffLines,
       newFileSyntaxLines,
-      lineLength,
+      splitLineLength,
       unifiedLineLength,
       splitLeftLines,
       splitRightLines,
@@ -864,7 +858,7 @@ export class DiffFile {
     this.#newFileLines = data.newFileLines;
     this.#newFileDiffLines = data.newFileDiffLines;
     this.#newFileSyntaxLines = data.newFileSyntaxLines;
-    this.lineLength = data.lineLength;
+    this.splitLineLength = data.splitLineLength;
     this.unifiedLineLength = data.unifiedLineLength;
 
     this.#splitLeftLines = data.splitLeftLines;

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useCallback } from "react";
 
 import { useDiffViewContext } from "../components/DiffViewContext";
 
@@ -8,16 +8,18 @@ export const useSyncHeight = ({
   enable,
 }: {
   selector: string;
-  side: "left" | "right";
+  side: string;
   enable: boolean;
 }) => {
-  const { id } = useDiffViewContext();
+  const { useDiffContext } = useDiffViewContext();
+
+  const id = useDiffContext(useCallback((s) => s.id, []));
 
   useEffect(() => {
     if (enable) {
       const container = document.querySelector(`#diff-root${id}`);
 
-      const elements = Array.from(container?.querySelectorAll(selector));
+      const elements = Array.from(container?.querySelectorAll(selector) || []);
 
       if (elements.length === 2) {
         const ele1 = elements[0] as HTMLElement;
@@ -40,9 +42,9 @@ export const useSyncHeight = ({
           }
         };
 
-        const observer = new ResizeObserver(cb);
-
         cb();
+
+        const observer = new ResizeObserver(cb);
 
         const target = ele1.getAttribute("data-side") === side ? ele1 : ele2;
 

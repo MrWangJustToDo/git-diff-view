@@ -42,17 +42,10 @@ const DiffUnifiedOldLine = ({
   onAddWidgetClick?: (event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void;
 }) => {
   return (
-    <tr
-      data-line={index}
-      data-state="diff"
-      data-mode="del"
-      class="diff-line group"
-      style={{ backgroundColor: `var(${delContentBGName})` }}
-    >
+    <tr data-line={index} data-state="diff" class="diff-line group">
       <td
-        class="diff-line-num left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
+        class="diff-line-num sticky left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
         style={{
-          position: enableWrap ? "relative" : "sticky",
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${delLineNumberBGName})`,
         }}
@@ -66,14 +59,14 @@ const DiffUnifiedOldLine = ({
           onOpenAddWidget={onOpenAddWidget}
         />
         <div class="flex">
-          <span data-line-num-old={lineNumber} class="inline-block w-[50%]">
+          <span data-line-old-num={lineNumber} class="inline-block w-[50%]">
             {lineNumber}
           </span>
           <span class="w-[10px] shrink-0" />
           <span class="inline-block w-[50%]" />
         </div>
       </td>
-      <td class="diff-line-content pr-[10px] align-top">
+      <td class="diff-line-content pr-[10px] align-top" style={{ backgroundColor: `var(${delContentBGName})` }}>
         <DiffContent
           enableWrap={enableWrap}
           diffFile={diffFile}
@@ -111,17 +104,10 @@ const DiffUnifiedNewLine = ({
   onAddWidgetClick?: (event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void;
 }) => {
   return (
-    <tr
-      data-line={index}
-      data-state="diff"
-      data-mode="add"
-      class="diff-line group"
-      style={{ backgroundColor: `var(${addContentBGName})` }}
-    >
+    <tr data-line={index} data-state="diff" class="diff-line group">
       <td
-        class="diff-line-num left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
+        class="diff-line-num sticky left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
         style={{
-          position: enableWrap ? "relative" : "sticky",
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${addLineNumberBGName})`,
         }}
@@ -137,12 +123,12 @@ const DiffUnifiedNewLine = ({
         <div class="flex">
           <span class="inline-block w-[50%]" />
           <span class="shrink-0 w-[10px]" />
-          <span data-line-num-new={lineNumber} class="inline-block w-[50%]">
+          <span data-line-new-num={lineNumber} class="inline-block w-[50%]">
             {lineNumber}
           </span>
         </div>
       </td>
-      <td class="diff-line-content pr-[10px] align-top">
+      <td class="diff-line-content pr-[10px] align-top" style={{ backgroundColor: `var(${addContentBGName})` }}>
         <DiffContent
           enableWrap={enableWrap}
           diffFile={diffFile}
@@ -239,14 +225,10 @@ export const DiffUnifiedLine = defineComponent(
             data-line={props.lineNumber}
             data-state={unifiedItem.value.diff ? "diff" : "plain"}
             class="diff-line group"
-            style={{
-              backgroundColor: unifiedItem.value.diff ? `var(${plainContentBGName})` : `var(${expandContentBGName})`,
-            }}
           >
             <td
-              class="diff-line-num left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
+              class="diff-line-num sticky left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
               style={{
-                position: enableWrap.value ? "relative" : "sticky",
                 color: `var(${plainLineNumberColorName})`,
                 backgroundColor: unifiedItem.value.diff
                   ? `var(${plainLineNumberBGName})`
@@ -264,16 +246,21 @@ export const DiffUnifiedLine = defineComponent(
                 />
               )}
               <div class="flex opacity-[0.5]">
-                <span data-line-num-old={unifiedItem.value.oldLineNumber} class="inline-block w-[50%]">
+                <span data-line-old-num={unifiedItem.value.oldLineNumber} class="inline-block w-[50%]">
                   {unifiedItem.value.oldLineNumber}
                 </span>
                 <span class="w-[10px] shrink-0" />
-                <span data-line-num-new={unifiedItem.value.newLineNumber} class="inline-block w-[50%]">
+                <span data-line-new-num={unifiedItem.value.newLineNumber} class="inline-block w-[50%]">
                   {unifiedItem.value.newLineNumber}
                 </span>
               </div>
             </td>
-            <td class="diff-line-content pr-[10px] align-top">
+            <td
+              class="diff-line-content pr-[10px] align-top"
+              style={{
+                backgroundColor: unifiedItem.value.diff ? `var(${plainContentBGName})` : `var(${expandContentBGName})`,
+              }}
+            >
               <DiffContent
                 enableWrap={enableWrap.value}
                 diffFile={props.diffFile}

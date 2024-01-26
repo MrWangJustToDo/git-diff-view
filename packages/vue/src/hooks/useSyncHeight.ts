@@ -10,7 +10,7 @@ export const useSyncHeight = ({
   enable,
 }: {
   selector: Ref<string>;
-  side: Ref<"left" | "right">;
+  side: Ref<string>;
   enable: Ref<boolean>;
 }) => {
   const id = useId();

@@ -2,7 +2,7 @@ import { numIterator } from "@git-diff-view/core";
 import { Fragment } from "vue";
 
 import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
-import { DiffUnifiedExpandLastLine, DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
+import { DiffUnifiedLastHunkLine, DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
 import { DiffUnifiedLine } from "./DiffUnifiedLine";
 import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
 
@@ -26,7 +26,7 @@ export const DiffUnifiedView = ({ diffFile }: { diffFile: DiffFile }) => {
             </tr>
           </thead>
           <tbody
-            class="leading-[1.4]"
+            class="diff-table-body leading-[1.4]"
             style={{
               fontFamily: "Menlo, Consolas, monospace",
               fontSize: "var(--diff-font-size--)",
@@ -40,7 +40,7 @@ export const DiffUnifiedView = ({ diffFile }: { diffFile: DiffFile }) => {
                 <DiffUnifiedExtendLine index={index} lineNumber={index + 1} diffFile={diffFile} />
               </Fragment>
             ))}
-            <DiffUnifiedExpandLastLine diffFile={diffFile} />
+            <DiffUnifiedLastHunkLine diffFile={diffFile} />
           </tbody>
         </table>
       </div>

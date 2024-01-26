@@ -5,11 +5,13 @@ import type { DiffFile } from "@git-diff-view/core";
 
 export const DiffSplitAddWidget = ({
   side,
+  className,
   lineNumber,
   onWidgetClick,
   onOpenAddWidget,
 }: {
   index: number;
+  className?: string;
   lineNumber: number;
   diffFile: DiffFile;
   side: SplitSide;
@@ -18,14 +20,14 @@ export const DiffSplitAddWidget = ({
 }) => {
   return (
     <div
-      class="diff-add-widget-wrapper absolute left-[100%] top-[1px] translate-x-[-50%]"
+      class={"diff-add-widget-wrapper" + (className ? " " + className : "")}
       style={{
         width: "calc(var(--diff-font-size--) * 1.4)",
         height: "calc(var(--diff-font-size--) * 1.4)",
       }}
     >
       <button
-        class="diff-add-widget absolute overflow-hidden cursor-pointer rounded-md w-0 h-0 left-0 top-0 flex items-center justify-center transition-transform origin-center group-hover:w-full group-hover:h-full hover:scale-110"
+        class="diff-add-widget overflow-hidden cursor-pointer rounded-md w-0 h-0 flex items-center justify-center transition-transform origin-center group-hover:w-full group-hover:h-full hover:scale-110"
         style={{
           color: `var(${addWidgetColorName})`,
           zIndex: 1,
@@ -65,7 +67,7 @@ export const DiffUnifiedAddWidget = ({
       }}
     >
       <button
-        class="diff-add-widget absolute overflow-hidden cursor-pointer rounded-md w-0 h-0 left-0 top-0 flex items-center justify-center transition-transform origin-center group-hover:w-full group-hover:h-full hover:scale-110"
+        class="diff-add-widget overflow-hidden cursor-pointer rounded-md w-0 h-0 flex items-center justify-center transition-transform origin-center group-hover:w-full group-hover:h-full hover:scale-110"
         style={{
           color: `var(${addWidgetColorName})`,
           zIndex: 1,

@@ -1,0 +1,123 @@
+import * as React from "react";
+
+import { useDiffViewContext, SplitSide } from "..";
+import { useDomWidth } from "../hooks/useDomWidth";
+import { useSyncHeight } from "../hooks/useSyncHeight";
+
+import { emptyBGName } from "./color";
+import { useDiffWidgetContext } from "./DiffWidgetContext";
+
+import type { DiffFile } from "@git-diff-view/core";
+
+const _DiffSplitWidgetLine = ({
+  index,
+  diffFile,
+  side,
+  lineNumber,
+}: {
+  index: number;
+  side: SplitSide;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
+  const oldLine = diffFile.getSplitLeftLine(index);
+
+  const newLine = diffFile.getSplitRightLine(index);
+
+  const { useWidget } = useDiffWidgetContext();
+
+  const { widgetSide, widgetLineNumber, setWidget } = useWidget(
+    React.useCallback(
+      (s) => ({ widgetLineNumber: s.widgetLineNumber, widgetSide: s.widgetSide, setWidget: s.setWidget }),
+      []
+    )
+  );
+
+  const oldLineWidget = oldLine.lineNumber && widgetSide === SplitSide.old && widgetLineNumber === oldLine.lineNumber;
+
+  const newLineWidget = newLine.lineNumber && widgetSide === SplitSide.new && widgetLineNumber === newLine.lineNumber;
+
+  const currentLine = side === SplitSide.old ? oldLine : newLine;
+
+  const currentWidget = side === SplitSide.old ? oldLineWidget : newLineWidget;
+
+  const otherSide = side === SplitSide.old ? SplitSide.new : SplitSide.old;
+
+  const { useDiffContext } = useDiffViewContext();
+
+  const renderWidgetLine = useDiffContext(React.useCallback((s) => s.renderWidgetLine, []));
+
+  useSyncHeight({
+    selector: `tr[data-line="${lineNumber}-widget"]`,
+    side: currentWidget ? SplitSide[side] : SplitSide[otherSide],
+    enable: side === SplitSide.new,
+  });
+
+  const width = useDomWidth({
+    selector: side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper",
+    enable: !!currentWidget,
+  });
+
+  return (
+    <tr
+      data-line={`${lineNumber}-widget`}
+      data-state="widget"
+      data-side={SplitSide[side]}
+      className="diff-line diff-line-widget"
+    >
+      {currentWidget ? (
+        <td className={`diff-line-widget-${SplitSide[side]}-content p-0`} colSpan={2}>
+          <div className="diff-line-widget-wrapper sticky left-0" style={{ width }}>
+            {width > 0 &&
+              renderWidgetLine?.({
+                diffFile,
+                side,
+                lineNumber: currentLine.lineNumber,
+                onClose: () => setWidget({}),
+              })}
+          </div>
+        </td>
+      ) : (
+        <td
+          className={`diff-line-widget-${SplitSide[side]}-placeholder p-0`}
+          style={{ backgroundColor: `var(${emptyBGName})` }}
+          colSpan={2}
+        >
+          <span>&ensp;</span>
+        </td>
+      )}
+    </tr>
+  );
+};
+
+export const DiffSplitWidgetLine = ({
+  index,
+  diffFile,
+  side,
+  lineNumber,
+}: {
+  index: number;
+  side: SplitSide;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
+  const { useWidget } = useDiffWidgetContext();
+
+  const { widgetLineNumber, widgetSide } = useWidget(
+    React.useCallback((s) => ({ widgetLineNumber: s.widgetLineNumber, widgetSide: s.widgetSide }), [])
+  );
+
+  const oldLine = diffFile.getSplitLeftLine(index);
+
+  const newLine = diffFile.getSplitRightLine(index);
+
+  const oldLineWidget = oldLine.lineNumber && widgetSide === SplitSide.old && widgetLineNumber === oldLine.lineNumber;
+
+  const newLineWidget = newLine.lineNumber && widgetSide === SplitSide.new && widgetLineNumber === newLine.lineNumber;
+
+  const currentIsShow = oldLineWidget || newLineWidget;
+
+  if (!currentIsShow) return null;
+
+  return <_DiffSplitWidgetLine index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
+};

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useDiffViewContext } from "..";
 
@@ -10,7 +10,9 @@ type ObserveElement = HTMLElement & {
 export const useDomWidth = ({ selector, enable }: { selector: string; enable: boolean }) => {
   const [width, setWidth] = useState(0);
 
-  const { id } = useDiffViewContext();
+  const { useDiffContext } = useDiffViewContext();
+
+  const id = useDiffContext(useCallback((s) => s.id, []));
 
   useEffect(() => {
     if (enable) {

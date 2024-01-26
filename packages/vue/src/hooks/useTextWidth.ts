@@ -1,4 +1,8 @@
-import { useLayoutEffect, useState } from "react";
+import { ref, watchPostEffect } from "vue";
+
+import { useIsMounted } from "./useIsMounted";
+
+import type { Ref} from "vue";
 
 let canvasCtx: CanvasRenderingContext2D | null = null;
 
@@ -39,16 +43,19 @@ export const useTextWidth = ({
   text,
   font,
 }: {
-  text: string;
-  font: { fontFamily?: string; fontStyle?: string; fontSize?: string };
+  text: Ref<string>;
+  font: Ref<{ fontFamily?: string; fontStyle?: string; fontSize?: string }>;
 }) => {
-  const [width, setWidth] = useState(0);
+  const isMounted = useIsMounted();
 
-  useLayoutEffect(() => {
-    const width = measureInstance.measure(text, font);
+  const width = ref(0);
 
-    setWidth(width);
-  }, [text, font]);
+  const measureText = () => {
+    if (!isMounted.value) return;
+    width.value = measureInstance.measure(text.value, font.value);
+  };
+
+  watchPostEffect(measureText);
 
   return width;
 };

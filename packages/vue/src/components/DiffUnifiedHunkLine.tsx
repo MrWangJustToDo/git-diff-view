@@ -49,16 +49,10 @@ export const DiffUnifiedHunkLine = defineComponent(
       if (!currentIsShow.value) return null;
 
       return (
-        <tr
-          data-line={`${props.lineNumber}-hunk`}
-          data-state="hunk"
-          class="diff-line diff-line-hunk select-none"
-          style={{ backgroundColor: `var(${hunkContentBGName})` }}
-        >
+        <tr data-line={`${props.lineNumber}-hunk`} data-state="hunk" class="diff-line diff-line-hunk select-none">
           <td
-            class="diff-line-num diff-line-num-hunk left-0 w-[1%] min-w-[100px]"
+            class="diff-line-hunk-action sticky left-0 w-[1%] min-w-[100px]"
             style={{
-              position: enableWrap.value ? "relative" : "sticky",
               backgroundColor: `var(${hunkLineNumberBGName})`,
               color: `var(${plainLineNumberColorName})`,
             }}
@@ -92,7 +86,10 @@ export const DiffUnifiedHunkLine = defineComponent(
               )
             ) : null}
           </td>
-          <td class="diff-line-content diff-line-content-hunk pr-[10px] align-middle">
+          <td
+            class="diff-line-hunk-content pr-[10px] align-middle"
+            style={{ backgroundColor: `var(${hunkContentBGName})` }}
+          >
             <div
               class="pl-[1.5em]"
               style={{
@@ -111,7 +108,7 @@ export const DiffUnifiedHunkLine = defineComponent(
   { name: "DiffUnifiedHunkLine", props: ["index", "diffFile", "lineNumber"] }
 );
 
-export const DiffUnifiedExpandLastLine = defineComponent(
+export const DiffUnifiedLastHunkLine = defineComponent(
   (props: { diffFile: DiffFile }) => {
     const currentIsShow = ref(props.diffFile.getNeedShowExpandAll("unified") && props.diffFile.getExpandEnabled());
 
@@ -126,14 +123,9 @@ export const DiffUnifiedExpandLastLine = defineComponent(
       if (!currentIsShow.value) return null;
 
       return (
-        <tr
-          data-line="last-hunk"
-          data-state="hunk"
-          class="diff-line diff-line-hunk select-none"
-          style={{ backgroundColor: `var(${hunkContentBGName})` }}
-        >
+        <tr data-line="last-hunk" data-state="hunk" class="diff-line diff-line-hunk select-none">
           <td
-            class="diff-line-num diff-line-num-hunk left-0 w-[1%] min-w-[100px]"
+            class="diff-line-hunk-action sticky left-0 w-[1%] min-w-[100px]"
             style={{
               position: enableWrap.value ? "relative" : "sticky",
               backgroundColor: `var(${hunkLineNumberBGName})`,
@@ -148,10 +140,15 @@ export const DiffUnifiedExpandLastLine = defineComponent(
               <ExpandDown className="fill-current" />
             </button>
           </td>
-          <td class="diff-line-content diff-line-content-hunk pr-[10px] align-middle" />
+          <td
+            class="diff-line-hunk-content pr-[10px] align-middle"
+            style={{ backgroundColor: `var(${hunkContentBGName})` }}
+          >
+            <span>&ensp;</span>
+          </td>
         </tr>
       );
     };
   },
-  { name: "DiffUnifiedExpandLastLine", props: ["diffFile"] }
+  { name: "DiffUnifiedLastHunkLine", props: ["diffFile"] }
 );

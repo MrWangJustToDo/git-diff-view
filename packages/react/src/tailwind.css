@@ -7,7 +7,7 @@
   --diff-del-content--: #ffebe9;
   --diff-add-lineNumber--: #ccffd8;
   --diff-del-lineNumber--: #ffd7d5;
-  --diff-plain-content--: initial;
+  --diff-plain-content--: #ffffff;
   --diff-expand-content--: #fafafa;
   --diff-plain-lineNumber--: #fafafa;
   --diff-plain-lineNumber-color--: #555555;
@@ -16,7 +16,7 @@
   --diff-add-content-highlight--: #abf2bc;
   --diff-del-content-highlight--: #ffb3ad;
   --diff-add-widget--: #0969d2;
-  --diff-add-widget-color--: white;
+  --diff-add-widget-color--: #ffffff;
   --diff-empty-content--: #f0f0f0;
   --diff-hunk-content-color--: #777777;
 }

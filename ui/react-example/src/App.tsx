@@ -13,7 +13,7 @@ const worker = new Worker(new URL("./worker.ts", import.meta.url), {
   type: "module",
 });
 
-type K = "a" | "b" | "c" | "d" | "e";
+type K = "a" | "b" | "c" | "d" | "e" | "j";
 
 function App() {
   const [v, setV] = useState<K>("b");
@@ -40,12 +40,14 @@ function App() {
       const { data, bundle } = e.data;
       const instance = DiffFile.createInstance(data || {}, bundle);
       setDiffFileInstance(instance);
+      console.timeEnd("parse");
     });
   }, []);
 
   useEffect(() => {
     const _data = data[v];
     if (_data) {
+      console.time("parse");
       worker.postMessage({ type: "parse", data: _data });
     }
   }, [v]);
@@ -68,6 +70,7 @@ function App() {
             <option value="c">diff 3</option>
             <option value="d">diff 4</option>
             <option value="e">diff 5</option>
+            <option value="j">large file</option>
           </select>
         </p>
       </div>

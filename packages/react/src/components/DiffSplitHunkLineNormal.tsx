@@ -1,15 +1,10 @@
-import { composeLen } from "@git-diff-view/core";
+import { composeLen, type DiffFile } from "@git-diff-view/core";
 import * as React from "react";
-import { useCallback } from "react";
-
-import { useDiffViewContext } from "..";
 
 import { hunkContentBGName, hunkContentColorName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 
-import type { DiffFile } from "@git-diff-view/core";
-
-const _DiffUnifiedHunkLine = ({
+const _DiffSplitHunkLine = ({
   index,
   diffFile,
   lineNumber,
@@ -18,33 +13,28 @@ const _DiffUnifiedHunkLine = ({
   diffFile: DiffFile;
   lineNumber: number;
 }) => {
-  const currentHunk = diffFile.getUnifiedHunkLine(index);
+  const currentHunk = diffFile.getSplitHunkLine(index);
 
   const expandEnabled = diffFile.getExpandEnabled();
 
-  const { useDiffContext } = useDiffViewContext();
-
-  const enableWrap = useDiffContext(useCallback((s) => s.enableWrap, []));
-
   const isExpandAll =
-    currentHunk.unifiedInfo &&
-    currentHunk.unifiedInfo.endHiddenIndex - currentHunk.unifiedInfo.startHiddenIndex < composeLen;
+    currentHunk.splitInfo && currentHunk.splitInfo.endHiddenIndex - currentHunk.splitInfo.startHiddenIndex < composeLen;
 
   return (
     <tr data-line={`${lineNumber}-hunk`} data-state="hunk" className="diff-line diff-line-hunk select-none">
       <td
-        className="diff-line-hunk-action sticky left-0 p-[1px] w-[1%] min-w-[100px]"
+        className="diff-line-hunk-action p-[1px] w-[1%] min-w-[40px]"
         style={{
           backgroundColor: `var(${hunkLineNumberBGName})`,
           color: `var(${plainLineNumberColorName})`,
         }}
       >
-        {expandEnabled ? (
-          isExpandAll ? (
+        {expandEnabled &&
+          (isExpandAll ? (
             <button
               className="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
               title="Expand All"
-              onClick={() => diffFile.onUnifiedHunkExpand("all", index)}
+              onClick={() => diffFile.onSplitHunkExpand("all", index)}
             >
               <ExpandAll className="fill-current" />
             </button>
@@ -53,41 +43,39 @@ const _DiffUnifiedHunkLine = ({
               <button
                 className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
                 title="Expand Down"
-                onClick={() => diffFile.onUnifiedHunkExpand("down", index)}
+                onClick={() => diffFile.onSplitHunkExpand("down", index)}
               >
                 <ExpandDown className="fill-current" />
               </button>
               <button
                 className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
                 title="Expand Up"
-                onClick={() => diffFile.onUnifiedHunkExpand("up", index)}
+                onClick={() => diffFile.onSplitHunkExpand("up", index)}
               >
                 <ExpandUp className="fill-current" />
               </button>
             </>
-          )
-        ) : null}
+          ))}
       </td>
       <td
         className="diff-line-hunk-content pr-[10px] align-middle"
         style={{ backgroundColor: `var(${hunkContentBGName})` }}
+        colSpan={3}
       >
         <div
           className="pl-[1.5em]"
           style={{
-            whiteSpace: enableWrap ? "pre-wrap" : "pre",
-            wordBreak: enableWrap ? "break-all" : "initial",
             color: `var(${hunkContentColorName})`,
           }}
         >
-          {currentHunk.unifiedInfo.plainText}
+          {currentHunk.splitInfo.plainText}
         </div>
       </td>
     </tr>
   );
 };
 
-export const DiffUnifiedHunkLine = ({
+export const DiffSplitHunkLine = ({
   index,
   diffFile,
   lineNumber,
@@ -96,23 +84,29 @@ export const DiffUnifiedHunkLine = ({
   diffFile: DiffFile;
   lineNumber: number;
 }) => {
-  const currentHunk = diffFile.getUnifiedHunkLine(index);
+  const currentHunk = diffFile.getSplitHunkLine(index);
 
   const currentIsShow =
     currentHunk &&
-    currentHunk.unifiedInfo &&
-    currentHunk.unifiedInfo.startHiddenIndex < currentHunk.unifiedInfo.endHiddenIndex;
+    currentHunk.splitInfo &&
+    currentHunk.splitInfo.startHiddenIndex < currentHunk.splitInfo.endHiddenIndex;
 
   if (!currentIsShow) return null;
 
-  return <_DiffUnifiedHunkLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
+  return <_DiffSplitHunkLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
 };
 
-const _DiffUnifiedLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
+export const DiffSplitLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
+  const currentIsShow = diffFile.getNeedShowExpandAll("split");
+
+  const expandEnabled = diffFile.getExpandEnabled();
+
+  if (!currentIsShow || !expandEnabled) return null;
+
   return (
     <tr data-line="last-hunk" data-state="hunk" className="diff-line diff-line-hunk select-none">
       <td
-        className="diff-line-hunk-action sticky left-0 w-[1%] min-w-[100px]"
+        className="diff-line-hunk-action p-[1px] w-[1%] min-w-[40px]"
         style={{
           backgroundColor: `var(${hunkLineNumberBGName})`,
           color: `var(${plainLineNumberColorName})`,
@@ -121,27 +115,18 @@ const _DiffUnifiedLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
         <button
           className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
           title="Expand Down"
-          onClick={() => diffFile.onUnifiedLastExpand()}
+          onClick={() => diffFile.onSplitLastExpand()}
         >
           <ExpandDown className="fill-current" />
         </button>
       </td>
       <td
         className="diff-line-hunk-content pr-[10px] align-middle"
+        colSpan={3}
         style={{ backgroundColor: `var(${hunkContentBGName})` }}
       >
         <span>&ensp;</span>
       </td>
     </tr>
   );
-};
-
-export const DiffUnifiedLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
-  const currentIsShow = diffFile.getNeedShowExpandAll("unified");
-
-  const expandEnabled = diffFile.getExpandEnabled();
-
-  if (!currentIsShow || !expandEnabled) return null;
-
-  return <_DiffUnifiedLastHunkLine diffFile={diffFile} />;
 };

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useCallback } from "react";
 
 import { useDiffViewContext, SplitSide } from "..";
 import { useDomWidth } from "../hooks/useDomWidth";
@@ -7,24 +8,37 @@ import { useDiffWidgetContext } from "./DiffWidgetContext";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const _DiffUnifiedWidgetLine = ({ index, diffFile }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
+const _DiffUnifiedWidgetLine = ({
+  index,
+  diffFile,
+  lineNumber,
+}: {
+  index: number;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
   const unifiedItem = diffFile.getUnifiedLine(index);
 
-  const { widget, setWidget } = useDiffWidgetContext();
+  const { useWidget } = useDiffWidgetContext();
+
+  const { widgetSide, widgetLineNumber, setWidget } = useWidget(
+    React.useCallback(
+      (s) => ({ widgetLineNumber: s.widgetLineNumber, widgetSide: s.widgetSide, setWidget: s.setWidget }),
+      []
+    )
+  );
 
   const oldWidget =
-    unifiedItem.oldLineNumber &&
-    widget.widgetSide === SplitSide.old &&
-    widget.widgetLineNumber === unifiedItem.oldLineNumber;
+    unifiedItem.oldLineNumber && widgetSide === SplitSide.old && widgetLineNumber === unifiedItem.oldLineNumber;
 
   const newWidget =
-    unifiedItem.newLineNumber &&
-    widget.widgetSide === SplitSide.new &&
-    widget.widgetLineNumber === unifiedItem.newLineNumber;
+    unifiedItem.newLineNumber && widgetSide === SplitSide.new && widgetLineNumber === unifiedItem.newLineNumber;
 
   const onClose = () => setWidget({});
 
-  const { renderWidgetLine } = useDiffViewContext();
+  const { useDiffContext } = useDiffViewContext();
+
+  const renderWidgetLine = useDiffContext(useCallback((s) => s.renderWidgetLine, []));
 
   const width = useDomWidth({
     selector: ".unified-diff-table-wrapper",
@@ -32,8 +46,8 @@ const _DiffUnifiedWidgetLine = ({ index, diffFile }: { index: number; diffFile: 
   });
 
   return (
-    <tr data-state="widget" className="diff-line diff-line-widget">
-      <td className="diff-line-widget-content p-0" colSpan={4}>
+    <tr data-line={`${lineNumber}-widget`} data-state="widget" className="diff-line diff-line-widget">
+      <td className="diff-line-widget-content p-0" colSpan={2}>
         <div className="diff-line-widget-wrapper sticky left-0" style={{ width }}>
           {width > 0 &&
             oldWidget &&
@@ -56,19 +70,19 @@ export const DiffUnifiedWidgetLine = ({
   diffFile: DiffFile;
   lineNumber: number;
 }) => {
-  const { widget } = useDiffWidgetContext();
+  const { useWidget } = useDiffWidgetContext();
+
+  const { widgetSide, widgetLineNumber } = useWidget(
+    React.useCallback((s) => ({ widgetLineNumber: s.widgetLineNumber, widgetSide: s.widgetSide }), [])
+  );
 
   const unifiedItem = diffFile.getUnifiedLine(index);
 
   const oldWidget =
-    unifiedItem.oldLineNumber &&
-    widget.widgetSide === SplitSide.old &&
-    widget.widgetLineNumber === unifiedItem.oldLineNumber;
+    unifiedItem.oldLineNumber && widgetSide === SplitSide.old && widgetLineNumber === unifiedItem.oldLineNumber;
 
   const newWidget =
-    unifiedItem.newLineNumber &&
-    widget.widgetSide === SplitSide.new &&
-    widget.widgetLineNumber === unifiedItem.newLineNumber;
+    unifiedItem.newLineNumber && widgetSide === SplitSide.new && widgetLineNumber === unifiedItem.newLineNumber;
 
   const currentIsShow = oldWidget || newWidget;
 
