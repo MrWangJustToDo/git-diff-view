@@ -72,7 +72,7 @@ export const DiffSplitWidgetLine = defineComponent(
     });
 
     return () => {
-      if (!currentIsShow.value) return null;
+      if (!currentIsShow.value || !slots.widget) return null;
 
       return (
         <tr

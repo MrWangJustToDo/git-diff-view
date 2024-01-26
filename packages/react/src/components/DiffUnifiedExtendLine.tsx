@@ -34,6 +34,8 @@ const _DiffUnifiedExtendLine = ({
     enable: true,
   });
 
+  if (!renderExtendLine) return null;
+
   return (
     <tr data-line={`${lineNumber}-extend`} data-state="extend" className="diff-line diff-line-extend">
       <td className="diff-line-extend-content align-top p-0" colSpan={2}>

@@ -31,7 +31,9 @@ const _DiffSplitHunkLine = ({
   const enableHunkAction = side === SplitSide.old;
 
   const isExpandAll =
-    currentHunk.splitInfo && currentHunk.splitInfo.endHiddenIndex - currentHunk.splitInfo.startHiddenIndex < composeLen;
+    currentHunk &&
+    currentHunk.splitInfo &&
+    currentHunk.splitInfo.endHiddenIndex - currentHunk.splitInfo.startHiddenIndex < composeLen;
 
   return (
     <tr
@@ -126,14 +128,16 @@ export const DiffSplitHunkLine = ({
   return <_DiffSplitHunkLine index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
 };
 
-const _DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; diffFile: DiffFile }) => {
-  // useSyncHeight({
-  //   selector: `tr[data-line="last-hunk"]`,
-  //   side: SplitSide[SplitSide.old],
-  //   enable: side === SplitSide.new,
-  // });
+export const DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; diffFile: DiffFile }) => {
+  const currentIsShow = diffFile.getNeedShowExpandAll("split");
+
+  const expandEnabled = diffFile.getExpandEnabled();
+
+  const countRef = React.useRef(0);
 
   const enableHunkAction = side === SplitSide.old;
+
+  if (!currentIsShow || !expandEnabled) return null;
 
   return (
     <tr
@@ -154,7 +158,10 @@ const _DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; diffFile:
             <button
               className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
               title="Expand Down"
-              onClick={() => diffFile.onSplitLastExpand()}
+              onClick={() => {
+                countRef.current++;
+                diffFile.onSplitLastExpand(countRef.current >= 3);
+              }}
             >
               <ExpandDown className="fill-current" />
             </button>
@@ -173,14 +180,4 @@ const _DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; diffFile:
       )}
     </tr>
   );
-};
-
-export const DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; diffFile: DiffFile }) => {
-  const currentIsShow = diffFile.getNeedShowExpandAll("split");
-
-  const expandEnabled = diffFile.getExpandEnabled();
-
-  if (!currentIsShow || !expandEnabled) return null;
-
-  return <_DiffSplitLastHunkLine diffFile={diffFile} side={side} />;
 };

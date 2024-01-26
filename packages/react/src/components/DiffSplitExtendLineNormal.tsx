@@ -17,9 +17,11 @@ const _DiffSplitExtendLine = ({
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
+  // 需要显示的时候才进行方法订阅，可以大幅度提高性能
   const { extendData, renderExtendLine } = useDiffContext(
     React.useCallback((s) => ({ extendData: s.extendData, renderExtendLine: s.renderExtendLine }), [])
   );
+
   const oldLine = diffFile.getSplitLeftLine(index);
 
   const newLine = diffFile.getSplitRightLine(index);
@@ -27,6 +29,8 @@ const _DiffSplitExtendLine = ({
   const oldLineExtend = extendData?.oldFile?.[oldLine?.lineNumber];
 
   const newLineExtend = extendData?.newFile?.[newLine?.lineNumber];
+
+  if (!renderExtendLine) return null;
 
   return (
     <tr data-line={`${lineNumber}-extend`} data-state="extend" className="diff-line diff-line-extend">
@@ -87,21 +91,21 @@ export const DiffSplitExtendLine = ({
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
-  const extendData = useDiffContext(React.useCallback((s) => s.extendData, []));
-
   const oldLine = diffFile.getSplitLeftLine(index);
 
   const newLine = diffFile.getSplitRightLine(index);
 
+  const hasExtend = useDiffContext(
+    React.useCallback(
+      (s) => s.extendData?.oldFile?.[oldLine?.lineNumber] || s.extendData?.newFile?.[newLine?.lineNumber],
+      [oldLine?.lineNumber, newLine?.lineNumber]
+    )
+  );
+
   // if the expand action not enabled, the `isHidden` property will never change
   const enableExpand = diffFile.getExpandEnabled();
 
-  const oldLineExtend = extendData?.oldFile?.[oldLine?.lineNumber];
-
-  const newLineExtend = extendData?.newFile?.[newLine?.lineNumber];
-
-  const currentIsShow =
-    (oldLineExtend || newLineExtend) && ((!oldLine?.isHidden && !newLine?.isHidden) || !enableExpand);
+  const currentIsShow = hasExtend && ((!oldLine?.isHidden && !newLine?.isHidden) || !enableExpand);
 
   if (!currentIsShow) return null;
 

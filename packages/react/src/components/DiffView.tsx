@@ -5,7 +5,6 @@ import { memo, useEffect, useMemo } from "react";
 import * as React from "react";
 import { createStore, ref } from "reactivity-store";
 
-import { useCallbackRef } from "../hooks/useCallbackRef";
 import { useUnmount } from "../hooks/useUnmount";
 
 import { DiffSplitView } from "./DiffSplitView";
@@ -80,8 +79,6 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
     diffViewAddWidget,
     onAddWidgetClick,
   } = props;
-
-  const memoOnAddWidgetClick = useCallbackRef(onAddWidgetClick);
 
   const diffFileId = useMemo(() => diffFile.getId(), [diffFile]);
 
@@ -197,14 +194,14 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
       setRenderWidgetLine,
     } = useDiffContext.getReadonlyState();
 
-    setId(diffFileId);
-    setMode(diffViewMode);
+    diffFileId && setId(diffFileId);
+    diffViewMode && setMode(diffViewMode);
     setEnableAddWidget(diffViewAddWidget);
     setEnableHighlight(diffViewHighlight);
     setEnableWrap(diffViewWrap);
-    setExtendData(extendData);
-    setFontSize(diffViewFontSize);
-    setOnAddWidgetClick(memoOnAddWidgetClick);
+    extendData && setExtendData(extendData);
+    diffViewFontSize && setFontSize(diffViewFontSize);
+    setOnAddWidgetClick(onAddWidgetClick);
     setRenderExtendLine(renderExtendLine);
     setRenderWidgetLine(renderWidgetLine);
   }, [
@@ -218,7 +215,7 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
     renderWidgetLine,
     renderExtendLine,
     extendData,
-    memoOnAddWidgetClick,
+    onAddWidgetClick,
   ]);
 
   useUnmount(() => diffFile.clearId(), [diffFile]);

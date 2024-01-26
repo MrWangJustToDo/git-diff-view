@@ -45,7 +45,7 @@ export const DiffSplitWidgetLine = defineComponent(
     const onCloseWidget = () => setWidget({});
 
     return () => {
-      if (!currentIsShow.value) return null;
+      if (!currentIsShow.value || !slots.widget) return null;
 
       return (
         <tr data-line={`${props.lineNumber}-widget`} data-state="widget" class="diff-line diff-line-widget">

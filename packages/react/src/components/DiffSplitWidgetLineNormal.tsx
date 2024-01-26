@@ -16,26 +16,28 @@ const _DiffSplitWidgetLine = ({
   diffFile: DiffFile;
   lineNumber: number;
 }) => {
-  const oldLine = diffFile.getSplitLeftLine(index);
-
-  const newLine = diffFile.getSplitRightLine(index);
-
   const { useWidget } = useDiffWidgetContext();
 
-  const { widgetSide, widgetLineNumber, setWidget } = useWidget(
+  const { widgetLineNumber, widgetSide, setWidget } = useWidget(
     React.useCallback(
       (s) => ({ widgetLineNumber: s.widgetLineNumber, widgetSide: s.widgetSide, setWidget: s.setWidget }),
       []
     )
   );
 
+  const { useDiffContext } = useDiffViewContext();
+
+  const renderWidgetLine = useDiffContext(React.useCallback((s) => s.renderWidgetLine, []));
+
+  const oldLine = diffFile.getSplitLeftLine(index);
+
+  const newLine = diffFile.getSplitRightLine(index);
+
   const oldLineWidget = oldLine.lineNumber && widgetSide === SplitSide.old && widgetLineNumber === oldLine.lineNumber;
 
   const newLineWidget = newLine.lineNumber && widgetSide === SplitSide.new && widgetLineNumber === newLine.lineNumber;
 
-  const { useDiffContext } = useDiffViewContext();
-
-  const renderWidgetLine = useDiffContext(React.useCallback((s) => s.renderWidgetLine, []));
+  if (!renderWidgetLine) return null;
 
   return (
     <tr data-line={`${lineNumber}-widget`} data-state="widget" className="diff-line diff-line-widget">

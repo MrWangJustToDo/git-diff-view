@@ -4,7 +4,7 @@ import * as React from "react";
 import { hunkContentBGName, hunkContentColorName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 
-const _DiffSplitHunkLine = ({
+export const DiffSplitHunkLine = ({
   index,
   diffFile,
   lineNumber,
@@ -18,7 +18,16 @@ const _DiffSplitHunkLine = ({
   const expandEnabled = diffFile.getExpandEnabled();
 
   const isExpandAll =
-    currentHunk.splitInfo && currentHunk.splitInfo.endHiddenIndex - currentHunk.splitInfo.startHiddenIndex < composeLen;
+    currentHunk &&
+    currentHunk.splitInfo &&
+    currentHunk.splitInfo.endHiddenIndex - currentHunk.splitInfo.startHiddenIndex < composeLen;
+
+  const currentIsShow =
+    currentHunk &&
+    currentHunk.splitInfo &&
+    currentHunk.splitInfo.startHiddenIndex < currentHunk.splitInfo.endHiddenIndex;
+
+  if (!currentIsShow) return null;
 
   return (
     <tr data-line={`${lineNumber}-hunk`} data-state="hunk" className="diff-line diff-line-hunk select-none">
@@ -75,31 +84,12 @@ const _DiffSplitHunkLine = ({
   );
 };
 
-export const DiffSplitHunkLine = ({
-  index,
-  diffFile,
-  lineNumber,
-}: {
-  index: number;
-  diffFile: DiffFile;
-  lineNumber: number;
-}) => {
-  const currentHunk = diffFile.getSplitHunkLine(index);
-
-  const currentIsShow =
-    currentHunk &&
-    currentHunk.splitInfo &&
-    currentHunk.splitInfo.startHiddenIndex < currentHunk.splitInfo.endHiddenIndex;
-
-  if (!currentIsShow) return null;
-
-  return <_DiffSplitHunkLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
-};
-
 export const DiffSplitLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
   const currentIsShow = diffFile.getNeedShowExpandAll("split");
 
   const expandEnabled = diffFile.getExpandEnabled();
+
+  const countRef = React.useRef(0);
 
   if (!currentIsShow || !expandEnabled) return null;
 
@@ -115,7 +105,10 @@ export const DiffSplitLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
         <button
           className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
           title="Expand Down"
-          onClick={() => diffFile.onSplitLastExpand()}
+          onClick={() => {
+            countRef.current++;
+            diffFile.onSplitLastExpand(countRef.current >= 3);
+          }}
         >
           <ExpandDown className="fill-current" />
         </button>

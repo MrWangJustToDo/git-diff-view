@@ -27,6 +27,7 @@ const _DiffUnifiedHunkLine = ({
   const enableWrap = useDiffContext(useCallback((s) => s.enableWrap, []));
 
   const isExpandAll =
+    currentHunk &&
     currentHunk.unifiedInfo &&
     currentHunk.unifiedInfo.endHiddenIndex - currentHunk.unifiedInfo.startHiddenIndex < composeLen;
 
@@ -108,7 +109,13 @@ export const DiffUnifiedHunkLine = ({
   return <_DiffUnifiedHunkLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
 };
 
-const _DiffUnifiedLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
+export const DiffUnifiedLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
+  const currentIsShow = diffFile.getNeedShowExpandAll("unified");
+
+  const expandEnabled = diffFile.getExpandEnabled();
+
+  if (!currentIsShow || !expandEnabled) return null;
+
   return (
     <tr data-line="last-hunk" data-state="hunk" className="diff-line diff-line-hunk select-none">
       <td
@@ -134,14 +141,4 @@ const _DiffUnifiedLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
       </td>
     </tr>
   );
-};
-
-export const DiffUnifiedLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
-  const currentIsShow = diffFile.getNeedShowExpandAll("unified");
-
-  const expandEnabled = diffFile.getExpandEnabled();
-
-  if (!currentIsShow || !expandEnabled) return null;
-
-  return <_DiffUnifiedLastHunkLine diffFile={diffFile} />;
 };

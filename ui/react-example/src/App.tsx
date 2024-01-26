@@ -71,6 +71,7 @@ function App() {
             <option value="d">diff 4</option>
             <option value="e">diff 5</option>
             <option value="j">large file</option>
+            <option value="k">large file</option>
           </select>
         </p>
       </div>

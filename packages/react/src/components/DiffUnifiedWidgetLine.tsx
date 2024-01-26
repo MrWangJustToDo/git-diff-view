@@ -11,39 +11,33 @@ import type { DiffFile } from "@git-diff-view/core";
 const _DiffUnifiedWidgetLine = ({
   index,
   diffFile,
+  oldWidget,
+  newWidget,
   lineNumber,
+  setWidget,
 }: {
   index: number;
   diffFile: DiffFile;
+  oldWidget: boolean;
+  newWidget: boolean;
   lineNumber: number;
+  setWidget: (props: { side?: SplitSide; lineNumber?: number }) => void;
 }) => {
   const unifiedItem = diffFile.getUnifiedLine(index);
-
-  const { useWidget } = useDiffWidgetContext();
-
-  const { widgetSide, widgetLineNumber, setWidget } = useWidget(
-    React.useCallback(
-      (s) => ({ widgetLineNumber: s.widgetLineNumber, widgetSide: s.widgetSide, setWidget: s.setWidget }),
-      []
-    )
-  );
-
-  const oldWidget =
-    unifiedItem.oldLineNumber && widgetSide === SplitSide.old && widgetLineNumber === unifiedItem.oldLineNumber;
-
-  const newWidget =
-    unifiedItem.newLineNumber && widgetSide === SplitSide.new && widgetLineNumber === unifiedItem.newLineNumber;
 
   const onClose = () => setWidget({});
 
   const { useDiffContext } = useDiffViewContext();
 
+  // 需要显示的时候才进行方法订阅，可以大幅度提高性能
   const renderWidgetLine = useDiffContext(useCallback((s) => s.renderWidgetLine, []));
 
   const width = useDomWidth({
     selector: ".unified-diff-table-wrapper",
     enable: true,
   });
+
+  if (!renderWidgetLine) return null;
 
   return (
     <tr data-line={`${lineNumber}-widget`} data-state="widget" className="diff-line diff-line-widget">
@@ -72,8 +66,11 @@ export const DiffUnifiedWidgetLine = ({
 }) => {
   const { useWidget } = useDiffWidgetContext();
 
-  const { widgetSide, widgetLineNumber } = useWidget(
-    React.useCallback((s) => ({ widgetLineNumber: s.widgetLineNumber, widgetSide: s.widgetSide }), [])
+  const { widgetSide, widgetLineNumber, setWidget } = useWidget(
+    React.useCallback(
+      (s) => ({ widgetLineNumber: s.widgetLineNumber, widgetSide: s.widgetSide, setWidget: s.setWidget }),
+      []
+    )
   );
 
   const unifiedItem = diffFile.getUnifiedLine(index);
@@ -88,5 +85,14 @@ export const DiffUnifiedWidgetLine = ({
 
   if (!currentIsShow) return null;
 
-  return <_DiffUnifiedWidgetLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
+  return (
+    <_DiffUnifiedWidgetLine
+      index={index}
+      diffFile={diffFile}
+      lineNumber={lineNumber}
+      oldWidget={oldWidget}
+      newWidget={newWidget}
+      setWidget={setWidget}
+    />
+  );
 };
