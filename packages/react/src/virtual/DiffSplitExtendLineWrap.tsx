@@ -6,15 +6,7 @@ import { emptyBGName } from "./color";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const _DiffSplitExtendLine = ({
-  index,
-  diffFile,
-  lineNumber,
-}: {
-  index: number;
-  diffFile: DiffFile;
-  lineNumber: number;
-}) => {
+export const DiffSplitExtendLine = ({ index, diffFile }: { index: number; diffFile: DiffFile }) => {
   const { useDiffContext } = useDiffViewContext();
 
   // 需要显示的时候才进行方法订阅，可以大幅度提高性能
@@ -30,10 +22,8 @@ const _DiffSplitExtendLine = ({
 
   const newLineExtend = extendData?.newFile?.[newLine?.lineNumber];
 
-  if (!renderExtendLine) return null;
-
   return (
-    <tr data-line={`${lineNumber}-extend`} data-state="extend" className="diff-line diff-line-extend">
+    <>
       {oldLineExtend ? (
         <td className="diff-line-extend-old-content p-0" colSpan={2}>
           <div className="diff-line-extend-wrapper">
@@ -76,38 +66,6 @@ const _DiffSplitExtendLine = ({
           <span>&ensp;</span>
         </td>
       )}
-    </tr>
+    </>
   );
-};
-
-export const DiffSplitExtendLine = ({
-  index,
-  diffFile,
-  lineNumber,
-}: {
-  index: number;
-  diffFile: DiffFile;
-  lineNumber: number;
-}) => {
-  const { useDiffContext } = useDiffViewContext();
-
-  const oldLine = diffFile.getSplitLeftLine(index);
-
-  const newLine = diffFile.getSplitRightLine(index);
-
-  const hasExtend = useDiffContext(
-    React.useCallback(
-      (s) => s.extendData?.oldFile?.[oldLine?.lineNumber] || s.extendData?.newFile?.[newLine?.lineNumber],
-      [oldLine?.lineNumber, newLine?.lineNumber]
-    )
-  );
-
-  // if the expand action not enabled, the `isHidden` property will never change
-  const enableExpand = diffFile.getExpandEnabled();
-
-  const currentIsShow = hasExtend && ((!oldLine?.isHidden && !newLine?.isHidden) || !enableExpand);
-
-  if (!currentIsShow) return null;
-
-  return <_DiffSplitExtendLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
 };

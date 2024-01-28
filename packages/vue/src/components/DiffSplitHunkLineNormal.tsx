@@ -123,7 +123,7 @@ export const DiffSplitLastHunkLine = defineComponent(
             }}
           >
             <button
-              class="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
+              class="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
               title="Expand Down"
               onClick={() => props.diffFile.onSplitLastExpand()}
             >

@@ -13,11 +13,26 @@ export const composeLen = 20;
 
 const idSet = new Set<string>();
 
-interface DiffLineItem extends DiffLine {
+export interface SplitLineItem {
+  lineNumber?: number;
+  value?: string;
+  diff?: DiffLineItem;
+  isHidden?: boolean;
+}
+
+export interface UnifiedLineItem {
+  oldLineNumber?: number;
+  newLineNumber?: number;
+  value?: string;
+  diff?: DiffLineItem;
+  isHidden?: boolean;
+}
+
+export interface DiffLineItem extends DiffLine {
   index: number;
 }
 
-interface DiffHunkItem extends DiffLineItem {
+export interface DiffHunkItem extends DiffLineItem {
   isAppendLast: boolean;
   hunkInfo: {
     oldStartIndex: number;
@@ -72,31 +87,15 @@ export class DiffFile {
 
   #newFileSyntaxLines?: File["syntaxFile"];
 
-  #splitLeftLines: {
-    lineNumber?: number;
-    value?: string;
-    diff?: DiffLineItem;
-    isHidden?: boolean;
-  }[] = [];
+  #splitLeftLines: SplitLineItem[] = [];
 
-  #splitRightLines: {
-    lineNumber?: number;
-    value?: string;
-    diff?: DiffLineItem;
-    isHidden?: boolean;
-  }[] = [];
+  #splitRightLines: SplitLineItem[] = [];
 
   #splitHunksLines?: Record<string, DiffHunkItem>;
 
   #splitLastStartIndex?: number;
 
-  #unifiedLines: {
-    oldLineNumber?: number;
-    newLineNumber?: number;
-    value?: string;
-    diff?: DiffLineItem;
-    isHidden?: boolean;
-  }[] = [];
+  #unifiedLines: UnifiedLineItem[] = [];
 
   #unifiedHunksLines?: Record<string, DiffHunkItem>;
 

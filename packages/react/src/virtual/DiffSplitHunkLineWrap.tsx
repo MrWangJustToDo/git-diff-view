@@ -4,15 +4,7 @@ import * as React from "react";
 import { hunkContentBGName, hunkContentColorName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 
-export const DiffSplitHunkLine = ({
-  index,
-  diffFile,
-  lineNumber,
-}: {
-  index: number;
-  diffFile: DiffFile;
-  lineNumber: number;
-}) => {
+export const DiffSplitHunkLine = ({ index, diffFile }: { index: number; diffFile: DiffFile }) => {
   const currentHunk = diffFile.getSplitHunkLine(index);
 
   const expandEnabled = diffFile.getExpandEnabled();
@@ -22,15 +14,8 @@ export const DiffSplitHunkLine = ({
     currentHunk.splitInfo &&
     currentHunk.splitInfo.endHiddenIndex - currentHunk.splitInfo.startHiddenIndex < composeLen;
 
-  const currentIsShow =
-    currentHunk &&
-    currentHunk.splitInfo &&
-    currentHunk.splitInfo.startHiddenIndex < currentHunk.splitInfo.endHiddenIndex;
-
-  if (!currentIsShow) return null;
-
   return (
-    <tr data-line={`${lineNumber}-hunk`} data-state="hunk" className="diff-line diff-line-hunk select-none">
+    <>
       <td
         className="diff-line-hunk-action p-[1px] w-[1%] min-w-[40px]"
         style={{
@@ -80,21 +65,15 @@ export const DiffSplitHunkLine = ({
           {currentHunk.splitInfo.plainText}
         </div>
       </td>
-    </tr>
+    </>
   );
 };
 
 export const DiffSplitLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
-  const currentIsShow = diffFile.getNeedShowExpandAll("split");
-
-  const expandEnabled = diffFile.getExpandEnabled();
-
   const countRef = React.useRef(0);
 
-  if (!currentIsShow || !expandEnabled) return null;
-
   return (
-    <tr data-line="last-hunk" data-state="hunk" className="diff-line diff-line-hunk select-none">
+    <>
       <td
         className="diff-line-hunk-action p-[1px] w-[1%] min-w-[40px]"
         style={{
@@ -103,7 +82,7 @@ export const DiffSplitLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
         }}
       >
         <button
-          className="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+          className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
           title="Expand Down"
           onClick={() => {
             countRef.current++;
@@ -120,6 +99,6 @@ export const DiffSplitLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
       >
         <span>&ensp;</span>
       </td>
-    </tr>
+    </>
   );
 };

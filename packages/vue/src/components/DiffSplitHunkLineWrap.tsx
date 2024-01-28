@@ -137,12 +137,24 @@ export const DiffSplitLastHunkLine = defineComponent(
   (props: { side: SplitSide; diffFile: DiffFile }) => {
     const enableHunkAction = computed(() => props.side === SplitSide.old);
 
+    const lineSelector = computed(() => `tr[data-line="last-hunk"]`);
+
+    const currentSyncHeightSide = computed(() => SplitSide[SplitSide.old]);
+
+    const currentEnableSyncHeight = computed(() => props.side === SplitSide.new);
+
     const currentIsShow = ref(props.diffFile.getNeedShowExpandAll("split") && props.diffFile.getExpandEnabled());
 
     useSubscribeDiffFile(
       props,
       (diffFile) => (currentIsShow.value = diffFile.getNeedShowExpandAll("split") && diffFile.getExpandEnabled())
     );
+
+    useSyncHeight({
+      selector: lineSelector,
+      side: currentSyncHeightSide,
+      enable: currentEnableSyncHeight,
+    });
 
     return () => {
       if (!currentIsShow.value) return null;
@@ -164,7 +176,7 @@ export const DiffSplitLastHunkLine = defineComponent(
                 }}
               >
                 <button
-                  class="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
+                  class="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
                   title="Expand Down"
                   onClick={() => props.diffFile.onSplitLastExpand()}
                 >

@@ -20,3 +20,7 @@
   --diff-empty-content--: #f0f0f0;
   --diff-hunk-content-color--: #777777;
 }
+
+.diff-style-root tr {
+  content-visibility: auto;
+}

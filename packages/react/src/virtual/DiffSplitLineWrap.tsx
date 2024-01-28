@@ -8,7 +8,7 @@ import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import { useDiffWidgetContext } from "./DiffWidgetContext";
 
-const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
+export const DiffSplitLine = ({ index, diffFile }: { index: number; diffFile: DiffFile }) => {
   const oldLine = diffFile.getSplitLeftLine(index);
 
   const newLine = diffFile.getSplitRightLine(index);
@@ -55,7 +55,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
   const newLineNumberBG = getLineNumberBG(newLineIsAdded, false, hasDiff);
 
   return (
-    <tr data-line={lineNumber} data-state={hasDiff ? "diff" : "plain"} className="diff-line">
+    <>
       {hasOldLine ? (
         <>
           <td
@@ -162,24 +162,6 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
           <span>&ensp;</span>
         </td>
       )}
-    </tr>
+    </>
   );
-};
-
-export const DiffSplitLine = ({
-  index,
-  diffFile,
-  lineNumber,
-}: {
-  index: number;
-  diffFile: DiffFile;
-  lineNumber: number;
-}) => {
-  const oldLine = diffFile.getSplitLeftLine(index);
-
-  const newLine = diffFile.getSplitRightLine(index);
-
-  if (oldLine?.isHidden && newLine?.isHidden) return null;
-
-  return <_DiffSplitLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
 };

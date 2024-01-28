@@ -137,12 +137,6 @@ export const DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; dif
 
   const enableHunkAction = side === SplitSide.old;
 
-  useSyncHeight({
-    selector: `tr[data-line="last-hunk"]`,
-    side: SplitSide[SplitSide.old],
-    enable: side === SplitSide.new,
-  });
-
   if (!currentIsShow || !expandEnabled) return null;
 
   return (
@@ -162,7 +156,7 @@ export const DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; dif
             }}
           >
             <button
-              className="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+              className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
               title="Expand Down"
               onClick={() => {
                 countRef.current++;

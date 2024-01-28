@@ -1,7 +1,6 @@
 import { memo, useEffect, useMemo } from "react";
 import * as React from "react";
 import { createStore, ref } from "reactivity-store";
-import { useSyncExternalStore } from "use-sync-external-store/shim";
 
 import { DiffSplitViewNormal } from "./DiffSplitViewNormal";
 import { DiffSplitViewWrap } from "./DiffSplitViewWrap";
@@ -35,8 +34,6 @@ export const DiffSplitView = memo(({ diffFile }: { diffFile: DiffFile }) => {
   );
 
   const contextValue = useMemo(() => ({ useWidget }), [useWidget]);
-
-  useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);
 
   useEffect(() => {
     const { setWidget } = useWidget.getReadonlyState();
