@@ -12,4 +12,6 @@ export const DiffWidgetContext = createContext<{
   }>;
 }>(null);
 
+DiffWidgetContext.displayName = "DiffWidgetContext";
+
 export const useDiffWidgetContext = () => useContext(DiffWidgetContext);

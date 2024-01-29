@@ -41,12 +41,12 @@ const _DiffSplitExtendLine = ({
   useSyncHeight({
     selector: `tr[data-line="${lineNumber}-extend"]`,
     side: currentExtend ? SplitSide[side] : SplitSide[otherSide],
-    enable: side === SplitSide.new,
+    enable: side === SplitSide.new && typeof renderExtendLine === "function",
   });
 
   const width = useDomWidth({
     selector: side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper",
-    enable: !!currentExtend,
+    enable: !!currentExtend && typeof renderExtendLine === "function",
   });
 
   if (!renderExtendLine) return null;
@@ -117,12 +117,5 @@ export const DiffSplitExtendLine = ({
 
   if (!currentIsShow) return null;
 
-  return (
-    <_DiffSplitExtendLine
-      index={index}
-      diffFile={diffFile}
-      side={side}
-      lineNumber={lineNumber}
-    />
-  );
+  return <_DiffSplitExtendLine index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
 };

@@ -10,7 +10,7 @@ import { DiffContent } from "./DiffContent";
 import { SplitSide } from "./DiffView";
 
 export const DiffSplitLine = defineComponent(
-  (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
+  (props: { index: number; diffFile: DiffFile; lineNumber: number }) => {
     const setWidget = useSetWidget();
 
     const enableAddWidget = useEnableAddWidget();
@@ -19,106 +19,164 @@ export const DiffSplitLine = defineComponent(
 
     const onAddWidgetClick = useOnAddWidgetClick();
 
-    const currentLine = ref(
-      props.side === SplitSide.old
-        ? props.diffFile.getSplitLeftLine(props.index)
-        : props.diffFile.getSplitRightLine(props.index)
+    const oldLine = ref(props.diffFile.getSplitLeftLine(props.index));
+
+    const newLine = ref(props.diffFile.getSplitRightLine(props.index));
+
+    const oldSyntaxLine = ref(props.diffFile.getOldSyntaxLine(oldLine.value?.lineNumber));
+
+    const newSyntaxLine = ref(props.diffFile.getNewSyntaxLine(newLine.value?.lineNumber));
+
+    const hasDiff = ref(!!oldLine.value?.diff || !!newLine.value?.diff);
+
+    const hasChange = ref(
+      checkDiffLineIncludeChange(oldLine.value?.diff) || checkDiffLineIncludeChange(newLine.value?.diff)
     );
 
-    const currentLineHasDiff = ref(!!currentLine.value?.diff);
+    const hasHidden = ref(oldLine.value?.isHidden && newLine.value?.isHidden);
 
-    const currentLineHasChange = ref(checkDiffLineIncludeChange(currentLine.value?.diff));
+    const oldLineIsDelete = ref(oldLine.value?.diff?.type === DiffLineType.Delete);
 
-    const currentLineHasHidden = ref(currentLine.value?.isHidden);
-
-    const currentLineHasContent = ref(currentLine.value.lineNumber);
-
-    const currentSyntaxLine = ref(
-      props.side === SplitSide.old
-        ? props.diffFile.getOldSyntaxLine(currentLine.value?.lineNumber)
-        : props.diffFile.getNewSyntaxLine(currentLine.value?.lineNumber)
-    );
+    const newLineIsAdded = ref(newLine.value?.diff?.type === DiffLineType.Add);
 
     useSubscribeDiffFile(props, (diffFile) => {
-      currentLine.value =
-        props.side === SplitSide.old ? diffFile.getSplitLeftLine(props.index) : diffFile.getSplitRightLine(props.index);
+      oldLine.value = diffFile.getSplitLeftLine(props.index);
 
-      currentSyntaxLine.value =
-        props.side === SplitSide.old
-          ? diffFile.getOldSyntaxLine(currentLine.value?.lineNumber)
-          : diffFile.getNewSyntaxLine(currentLine.value?.lineNumber);
+      newLine.value = diffFile.getSplitRightLine(props.index);
 
-      currentLineHasDiff.value = !!currentLine.value?.diff;
+      oldSyntaxLine.value = diffFile.getOldSyntaxLine(oldLine.value?.lineNumber);
 
-      currentLineHasChange.value = checkDiffLineIncludeChange(currentLine.value?.diff);
+      newSyntaxLine.value = diffFile.getNewSyntaxLine(newLine.value?.lineNumber);
 
-      currentLineHasHidden.value = currentLine.value?.isHidden;
+      hasDiff.value = !!oldLine.value?.diff || !!newLine.value?.diff;
 
-      currentLineHasContent.value = currentLine.value.lineNumber;
+      hasChange.value =
+        checkDiffLineIncludeChange(oldLine.value?.diff) || checkDiffLineIncludeChange(newLine.value?.diff);
+
+      hasHidden.value = oldLine.value?.isHidden && newLine.value?.isHidden;
+
+      oldLineIsDelete.value = oldLine.value?.diff?.type === DiffLineType.Delete;
+
+      newLineIsAdded.value = newLine.value?.diff?.type === DiffLineType.Add;
     });
 
     return () => {
-      if (currentLineHasHidden.value) return null;
+      if (hasHidden.value) return null;
 
-      const isAdded = currentLine.value?.diff?.type === DiffLineType.Add;
+      const hasOldLine = !!oldLine.value?.lineNumber;
 
-      const isDelete = currentLine.value?.diff?.type === DiffLineType.Delete;
+      const hasNewLine = !!newLine.value?.lineNumber;
 
-      const contentBG = getContentBG(isAdded, isDelete, currentLineHasDiff.value);
+      const oldLineContentBG = getContentBG(false, oldLineIsDelete.value, hasDiff.value);
 
-      const lineNumberBG = getLineNumberBG(isAdded, isDelete, currentLineHasDiff.value);
+      const oldLineNumberBG = getLineNumberBG(false, oldLineIsDelete.value, hasDiff.value);
+
+      const newLineContentBG = getContentBG(newLineIsAdded.value, false, hasDiff.value);
+
+      const newLineNumberBG = getLineNumberBG(newLineIsAdded.value, false, hasDiff.value);
 
       return (
-        <tr
-          data-line={props.lineNumber}
-          data-state={currentLineHasDiff.value || !currentLineHasContent.value ? "diff" : "plain"}
-          data-side={SplitSide[props.side]}
-          class={"diff-line" + (currentLineHasContent.value ? " group" : "")}
-        >
-          {currentLineHasContent.value ? (
+        <tr data-line={props.lineNumber} data-state={hasDiff.value ? "diff" : "plain"} class="diff-line">
+          {hasOldLine ? (
             <>
               <td
-                class={`diff-line-${SplitSide[props.side]}-num sticky left-0 pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px]`}
-                style={{
-                  backgroundColor: lineNumberBG,
-                  color: `var(${plainLineNumberColorName})`,
-                }}
+                class="diff-line-old-num group relative pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px]"
+                style={{ backgroundColor: oldLineNumberBG, color: `var(${plainLineNumberColorName})` }}
               >
-                {currentLineHasDiff.value && enableAddWidget && (
+                {hasDiff && enableAddWidget && (
                   <DiffSplitAddWidget
                     index={props.index}
-                    lineNumber={currentLine.value.lineNumber}
-                    side={props.side}
+                    lineNumber={oldLine.value.lineNumber}
+                    side={SplitSide.old}
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
                     className="absolute left-[100%] translate-x-[-50%] z-[1]"
                     onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
                   />
                 )}
-                <span
-                  data-line-num={currentLine.value.lineNumber}
-                  style={{ opacity: currentLineHasChange.value ? undefined : 0.5 }}
-                >
-                  {currentLine.value.lineNumber}
+                <span data-line-num={oldLine.value.lineNumber} style={{ opacity: hasChange ? undefined : 0.5 }}>
+                  {oldLine.value.lineNumber}
                 </span>
               </td>
               <td
-                class={`diff-line-${SplitSide[props.side]}-content pr-[10px] align-top`}
-                style={{ backgroundColor: contentBG }}
+                class="diff-line-old-content group relative pr-[10px] align-top"
+                style={{ backgroundColor: oldLineContentBG }}
               >
+                {hasDiff && enableAddWidget && (
+                  <DiffSplitAddWidget
+                    index={props.index}
+                    lineNumber={oldLine.value.lineNumber}
+                    side={SplitSide.old}
+                    diffFile={props.diffFile}
+                    onWidgetClick={onAddWidgetClick}
+                    className="absolute right-[100%] translate-x-[50%] z-[1]"
+                    onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
+                  />
+                )}
                 <DiffContent
-                  enableWrap={false}
+                  enableWrap={true}
                   diffFile={props.diffFile}
-                  rawLine={currentLine.value.value}
-                  diffLine={currentLine.value.diff}
-                  syntaxLine={currentSyntaxLine.value}
+                  rawLine={oldLine.value.value}
+                  diffLine={oldLine.value.diff}
+                  syntaxLine={oldSyntaxLine.value}
+                  enableHighlight={enableHighlight.value}
+                />
+              </td>
+            </>
+          ) : (
+            <td class="diff-line-old-placeholder" style={{ backgroundColor: `var(${emptyBGName})` }} colspan={2}>
+              <span>&ensp;</span>
+            </td>
+          )}
+          {hasNewLine ? (
+            <>
+              <td
+                class="diff-line-new-num group relative pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px] border-l-[1px] border-l-[#ccc]"
+                style={{ backgroundColor: newLineNumberBG, color: `var(${plainLineNumberColorName})` }}
+              >
+                {hasDiff && enableAddWidget && (
+                  <DiffSplitAddWidget
+                    index={props.index}
+                    lineNumber={newLine.value.lineNumber}
+                    side={SplitSide.new}
+                    diffFile={props.diffFile}
+                    onWidgetClick={onAddWidgetClick}
+                    className="absolute left-[100%] translate-x-[-50%] z-[1]"
+                    onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
+                  />
+                )}
+                <span data-line-num={newLine.value.lineNumber} style={{ opacity: hasChange ? undefined : 0.5 }}>
+                  {newLine.value.lineNumber}
+                </span>
+              </td>
+              <td
+                class="diff-line-new-content group relative pr-[10px] align-top"
+                style={{ backgroundColor: newLineContentBG }}
+              >
+                {hasDiff && enableAddWidget && (
+                  <DiffSplitAddWidget
+                    index={props.index}
+                    lineNumber={newLine.value.lineNumber}
+                    side={SplitSide.new}
+                    diffFile={props.diffFile}
+                    onWidgetClick={onAddWidgetClick}
+                    className="absolute right-[100%] translate-x-[50%] z-[1]"
+                    onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
+                  />
+                )}
+                <DiffContent
+                  enableWrap={true}
+                  diffFile={props.diffFile}
+                  rawLine={newLine.value.value || ""}
+                  diffLine={newLine.value.diff}
+                  syntaxLine={newSyntaxLine.value}
                   enableHighlight={enableHighlight.value}
                 />
               </td>
             </>
           ) : (
             <td
-              class={`diff-line-${SplitSide[props.side]}-placeholder`}
+              class="diff-line-new-placeholder border-l-[1px] border-l-[#ccc]"
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >
@@ -129,5 +187,5 @@ export const DiffSplitLine = defineComponent(
       );
     };
   },
-  { name: "DiffSplitLine", props: ["diffFile", "index", "lineNumber", "side"] }
+  { name: "DiffSplitLine", props: ["diffFile", "index", "lineNumber"] }
 );

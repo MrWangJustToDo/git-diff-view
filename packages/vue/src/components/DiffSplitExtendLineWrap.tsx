@@ -1,9 +1,7 @@
 import { computed, defineComponent, ref } from "vue";
 
 import { useExtendData, useSlots } from "../context";
-import { useDomWidth } from "../hooks/useDomWidth";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
-import { useSyncHeight } from "../hooks/useSyncHeight";
 
 import { emptyBGName } from "./color";
 import { SplitSide } from "./DiffView";
@@ -11,24 +9,10 @@ import { SplitSide } from "./DiffView";
 import type { DiffFile } from "@git-diff-view/core";
 
 export const DiffSplitExtendLine = defineComponent(
-  (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
+  (props: { index: number; diffFile: DiffFile; lineNumber: number }) => {
     const extendData = useExtendData();
 
     const slots = useSlots();
-
-    const currentSide = computed(() => SplitSide[props.side]);
-
-    const currentSideIsNew = computed(() => props.side === SplitSide.new);
-
-    const otherSide = computed(() =>
-      props.side === SplitSide.old ? SplitSide[SplitSide.new] : SplitSide[SplitSide.old]
-    );
-
-    const lineSelector = computed(() => `tr[data-line="${props.lineNumber}-extend"]`);
-
-    const wrapperSelector = computed(() =>
-      props.side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper"
-    );
 
     const oldLine = ref(props.diffFile.getSplitLeftLine(props.index));
 
@@ -39,8 +23,6 @@ export const DiffSplitExtendLine = defineComponent(
     const oldLineExtend = ref(extendData.value?.oldFile?.[oldLine.value?.lineNumber]);
 
     const newLineExtend = ref(extendData.value?.newFile?.[newLine.value.lineNumber]);
-
-    const currentItem = computed(() => (props.side === SplitSide.old ? oldLine.value : newLine.value));
 
     useSubscribeDiffFile(props, (diffFile) => {
       oldLine.value = diffFile.getSplitLeftLine(props.index);
@@ -54,57 +36,54 @@ export const DiffSplitExtendLine = defineComponent(
       enableExpand.value = diffFile.getExpandEnabled();
     });
 
-    const currentExtend = computed(() => (props.side === SplitSide.old ? oldLineExtend.value : newLineExtend.value));
-
-    const currentEnable = computed(() =>
-      props.side === SplitSide.old ? !!oldLineExtend.value : !!newLineExtend.value
-    );
-
-    const currentLineNumber = computed(() =>
-      props.side === SplitSide.old ? oldLine.value.lineNumber : newLine.value.lineNumber
-    );
-
     const currentIsShow = computed(() =>
-      Boolean((oldLineExtend.value || newLineExtend.value) && (!currentItem.value.isHidden || enableExpand.value))
+      Boolean(
+        (oldLineExtend.value || newLineExtend.value) &&
+          ((!oldLine.value?.isHidden && !newLine.value?.isHidden) || enableExpand.value)
+      )
     );
-
-    useSyncHeight({
-      selector: lineSelector,
-      side: currentExtend.value ? currentSide : otherSide,
-      enable: currentSideIsNew,
-    });
-
-    const width = useDomWidth({
-      selector: wrapperSelector,
-      enable: currentEnable,
-    });
 
     return () => {
       if (!currentIsShow.value) return null;
 
       return (
-        <tr
-          data-line={`${props.lineNumber}-extend`}
-          data-state="extend"
-          data-side={SplitSide[props.side]}
-          class="diff-line diff-line-extend"
-        >
-          {currentExtend.value ? (
-            <td class={`diff-line-extend-${SplitSide[props.side]}-content p-0`} colspan={2}>
-              <div class="diff-line-extend-wrapper sticky left-0" style={{ width: width.value + "px" }}>
-                {width.value > 0 &&
-                  slots.extend?.({
-                    diffFile: props.diffFile,
-                    side: props.side,
-                    lineNumber: currentLineNumber.value,
-                    data: currentExtend.value.data,
-                    onUpdate: props.diffFile.notifyAll,
-                  })}
+        <tr data-line={`${props.lineNumber}-extend`} data-state="extend" class="diff-line diff-line-extend">
+          {oldLineExtend.value ? (
+            <td class="diff-line-extend-old-content p-0" colspan={2}>
+              <div class="diff-line-extend-wrapper">
+                {slots.extend?.({
+                  diffFile: props.diffFile,
+                  side: SplitSide.old,
+                  lineNumber: oldLine.value.lineNumber,
+                  data: oldLineExtend.value.data,
+                  onUpdate: props.diffFile.notifyAll,
+                })}
               </div>
             </td>
           ) : (
             <td
-              class={`diff-line-extend-${SplitSide[props.side]}-placeholder p-0`}
+              class="diff-line-extend-old-placeholder p-0"
+              style={{ backgroundColor: `var(${emptyBGName})` }}
+              colspan={2}
+            >
+              <span>&ensp;</span>
+            </td>
+          )}
+          {newLineExtend.value ? (
+            <td class="diff-line-extend-new-content p-0 border-l-[1px] border-l-[#ccc]" colspan={2}>
+              <div class="diff-line-extend-wrapper">
+                {slots.extend?.({
+                  diffFile: props.diffFile,
+                  side: SplitSide.new,
+                  lineNumber: newLine.value.lineNumber,
+                  data: newLineExtend.value.data,
+                  onUpdate: props.diffFile.notifyAll,
+                })}
+              </div>
+            </td>
+          ) : (
+            <td
+              class="diff-line-extend-new-placeholder p-0 border-l-[1px] border-l-[#ccc]"
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >
@@ -115,5 +94,5 @@ export const DiffSplitExtendLine = defineComponent(
       );
     };
   },
-  { name: "DiffSplitExtendLine", props: ["index", "diffFile", "lineNumber", "side"] }
+  { name: "DiffSplitExtendLine", props: ["index", "diffFile", "lineNumber"] }
 );

@@ -23,8 +23,8 @@ export enum SplitSide {
 
 export type DiffViewProps<T> = {
   data?: {
-    oldFile?: { fileName?: string | null; fileLang?: string | null; content: string | null };
-    newFile?: { fileName?: string | null; fileLang?: string | null; content: string | null };
+    oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+    newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
     hunks: string[];
   };
   extendData?: { oldFile?: Record<string, { data: T }>; newFile?: Record<string, { data: T }> };
@@ -288,3 +288,5 @@ export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
 
   return <InternalDiffView key={diffFile.getId()} {...props} diffFile={diffFile} />;
 };
+
+export const version = __VERSION__;

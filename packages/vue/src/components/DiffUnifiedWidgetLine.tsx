@@ -33,7 +33,7 @@ export const DiffUnifiedWidgetLine = defineComponent(
 
     useSubscribeDiffFile(props, (diffFile) => (unifiedItem.value = diffFile.getUnifiedLine(props.index)));
 
-    const currentIsShow = computed(() => oldWidget.value || newWidget.value);
+    const currentIsShow = computed(() => (oldWidget.value || newWidget.value) && !!slots.widget);
 
     const onCloseWidget = () => setWidget({});
 
@@ -43,7 +43,7 @@ export const DiffUnifiedWidgetLine = defineComponent(
     });
 
     return () => {
-      if (!currentIsShow.value || !slots.widget) return null;
+      if (!currentIsShow.value) return null;
 
       return (
         <tr data-line={`${props.lineNumber}-widget`} data-state="widget" class="diff-line diff-line-widget">

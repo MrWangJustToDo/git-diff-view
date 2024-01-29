@@ -128,11 +128,7 @@ export const DiffSplitHunkLine = ({
   return <_DiffSplitHunkLine index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
 };
 
-export const DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; diffFile: DiffFile }) => {
-  const currentIsShow = diffFile.getNeedShowExpandAll("split");
-
-  const expandEnabled = diffFile.getExpandEnabled();
-
+const _DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; diffFile: DiffFile }) => {
   const countRef = React.useRef(0);
 
   const enableHunkAction = side === SplitSide.old;
@@ -142,8 +138,6 @@ export const DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; dif
     side: SplitSide[SplitSide.old],
     enable: side === SplitSide.new,
   });
-
-  if (!currentIsShow || !expandEnabled) return null;
 
   return (
     <tr
@@ -187,3 +181,14 @@ export const DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; dif
     </tr>
   );
 };
+
+export const DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; diffFile: DiffFile }) => {
+  const currentIsShow = diffFile.getNeedShowExpandAll("split");
+
+  const expandEnabled = diffFile.getExpandEnabled();
+  
+  if (!currentIsShow || !expandEnabled) return null;
+
+  return <_DiffSplitLastHunkLine diffFile={diffFile} side={side} />
+
+}

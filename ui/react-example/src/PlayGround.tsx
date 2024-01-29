@@ -50,7 +50,7 @@ export const PlayGround = () => {
       <div className="flex flex-col gap-y-[10px] mt-[10px]">
         <span className="border-b p-[3px]">Lang: </span>
         <input
-          className="border p-[4px] text-[14px]"
+          className="border-2 border-[#888] p-[4px] text-[14px] rounded-[4px]"
           type=""
           placeholder="input syntax lang"
           value={lang}
@@ -61,7 +61,7 @@ export const PlayGround = () => {
           cols={10}
           rows={5}
           autoFocus
-          className="border p-[4px] text-[14px]"
+          className="border-2 border-[#888] p-[4px] text-[14px] rounded-[4px]"
           placeholder="give a `git --diff` output"
           value={diffString}
           onChange={(e) => setDiffString(e.target.value)}
@@ -70,7 +70,7 @@ export const PlayGround = () => {
         <textarea
           cols={10}
           rows={5}
-          className="border p-[4px] text-[14px]"
+          className="border-2 border-[#888] p-[4px] text-[14px] rounded-[4px]"
           placeholder="give a raw file content (optional)"
           value={content}
           onChange={(e) => setContent(e.target.value)}

@@ -1,6 +1,7 @@
 import { numIterator, type DiffFile } from "@git-diff-view/core";
 import * as React from "react";
 import { Fragment, memo } from "react";
+import { useSyncExternalStore } from "use-sync-external-store/shim";
 
 import { useDiffViewContext } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";
@@ -16,6 +17,8 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
   const { useDiffContext } = useDiffViewContext();
 
   const fontSize = useDiffContext(React.useCallback((s) => s.fontSize, []));
+
+  useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);
 
   const width = useTextWidth({
     text: splitLineLength.toString(),

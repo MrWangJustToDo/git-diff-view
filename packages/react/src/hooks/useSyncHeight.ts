@@ -1,6 +1,8 @@
-import { useEffect, useCallback } from "react";
+import { useCallback } from "react";
 
 import { useDiffViewContext } from "../components/DiffViewContext";
+
+import { useSafeLayout } from "./useSafeLayout";
 
 export const useSyncHeight = ({
   selector,
@@ -15,7 +17,7 @@ export const useSyncHeight = ({
 
   const id = useDiffContext(useCallback((s) => s.id, []));
 
-  useEffect(() => {
+  useSafeLayout(() => {
     if (enable) {
       const container = document.querySelector(`#diff-root${id}`);
 

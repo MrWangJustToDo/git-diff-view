@@ -1,4 +1,6 @@
-import { useLayoutEffect, useState } from "react";
+import { useState } from "react";
+
+import { useSafeLayout } from "./useSafeLayout";
 
 let canvasCtx: CanvasRenderingContext2D | null = null;
 
@@ -44,7 +46,7 @@ export const useTextWidth = ({
 }) => {
   const [width, setWidth] = useState(0);
 
-  useLayoutEffect(() => {
+  useSafeLayout(() => {
     const width = measureInstance.measure(text, font);
 
     setWidth(width);

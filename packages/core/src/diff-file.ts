@@ -133,8 +133,8 @@ export class DiffFile {
 
   static createInstance(
     data: {
-      oldFile?: { fileName?: string | null; fileLang?: string | null; content: string | null };
-      newFile?: { fileName?: string | null; fileLang?: string | null; content: string | null };
+      oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+      newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
       hunks?: string[];
     },
     bundle?: ReturnType<DiffFile["getBundle"]>
