@@ -50,4 +50,19 @@ lowlight.register("vue", function hljsDefineVue(hljs) {
 
 export type ATS = ReturnType<typeof lowlight.highlight>;
 
-export const highlighter = lowlight;
+export const highlighter = lowlight as typeof lowlight & {
+  maxLineToIgnoreSyntax: number;
+  setMaxLineToIgnoreSyntax: (v: number) => void;
+};
+
+let _maxLineToIgnoreSyntax = 2000;
+
+Object.defineProperty(highlighter, "maxLineToIgnoreSyntax", {
+  get: () => _maxLineToIgnoreSyntax,
+});
+
+Object.defineProperty(highlighter, "setMaxLineToIgnoreSyntax", {
+  value: (v: number) => {
+    _maxLineToIgnoreSyntax = v;
+  },
+});

@@ -5,8 +5,6 @@ import type { ATS } from "./highlighter";
 // TODO LRU Cache
 const map = {} as Record<string, File>;
 
-const maxLengthToIgnoreSyntax = 5000;
-
 export type SyntaxNode = {
   type: string;
   value: string;
@@ -61,7 +59,7 @@ export class File {
       return;
     }
 
-    if (this.rawLength > maxLengthToIgnoreSyntax) {
+    if (this.rawLength > highlighter.maxLineToIgnoreSyntax) {
       console.warn(`ignore syntax for current file, because the rawLength is too long: ${this.rawLength}`);
       return;
     }
