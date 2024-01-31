@@ -1,4 +1,4 @@
-import { numIterator, type DiffFile } from "@git-diff-view/core";
+import { type DiffFile, getSplitContentLines } from "@git-diff-view/core";
 import * as React from "react";
 import { Fragment, memo } from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
@@ -25,6 +25,8 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
     font: { fontSize: fontSize + "px", fontFamily: "Menlo, Consolas, monospace" },
   });
 
+  const lines = getSplitContentLines(diffFile);
+
   return (
     <div className="split-diff-view split-diff-view-normal w-full">
       <div
@@ -50,12 +52,12 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
             </tr>
           </thead>
           <tbody className="diff-table-body leading-[1.4]">
-            {numIterator(splitLineLength, (index) => (
-              <Fragment key={index}>
-                <DiffSplitHunkLine index={index} lineNumber={index + 1} diffFile={diffFile} />
-                <DiffSplitLine index={index} lineNumber={index + 1} diffFile={diffFile} />
-                <DiffSplitWidgetLine index={index} lineNumber={index + 1} diffFile={diffFile} />
-                <DiffSplitExtendLine index={index} lineNumber={index + 1} diffFile={diffFile} />
+            {lines.map((line) => (
+              <Fragment key={line.index}>
+                <DiffSplitHunkLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
+                <DiffSplitLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
+                <DiffSplitWidgetLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
+                <DiffSplitExtendLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
               </Fragment>
             ))}
             <DiffSplitLastHunkLine diffFile={diffFile} />

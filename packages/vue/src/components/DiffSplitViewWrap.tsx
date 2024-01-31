@@ -1,4 +1,4 @@
-import { numIterator } from "@git-diff-view/core";
+import { getSplitContentLines } from "@git-diff-view/core";
 import { Fragment, computed, defineComponent, ref } from "vue";
 
 import { useFontSize } from "../context";
@@ -14,7 +14,7 @@ import type { DiffFile } from "@git-diff-view/core";
 
 export const DiffSplitViewWrap = defineComponent(
   (props: { diffFile: DiffFile }) => {
-    const lineLength = ref(props.diffFile.splitLineLength);
+    const lines = ref(getSplitContentLines(props.diffFile));
 
     const maxText = ref(props.diffFile.splitLineLength.toString());
 
@@ -23,7 +23,7 @@ export const DiffSplitViewWrap = defineComponent(
     const font = computed(() => ({ fontSize: fontSize.value + "px", fontFamily: "Menlo, Consolas, monospace" }));
 
     useSubscribeDiffFile(props, (diffFile) => {
-      lineLength.value = diffFile.splitLineLength;
+      lines.value = getSplitContentLines(diffFile);
     });
 
     const width = useTextWidth({ text: maxText, font });
@@ -54,12 +54,12 @@ export const DiffSplitViewWrap = defineComponent(
                 </tr>
               </thead>
               <tbody class="diff-table-body leading-[1.4]">
-                {numIterator(lineLength.value, (index) => (
-                  <Fragment key={index}>
-                    <DiffSplitHunkLine index={index} lineNumber={index + 1} diffFile={props.diffFile} />
-                    <DiffSplitLine index={index} lineNumber={index + 1} diffFile={props.diffFile} />
-                    <DiffSplitWidgetLine index={index} lineNumber={index + 1} diffFile={props.diffFile} />
-                    <DiffSplitExtendLine index={index} lineNumber={index + 1} diffFile={props.diffFile} />
+                {lines.value.map((item) => (
+                  <Fragment key={item.index}>
+                    <DiffSplitHunkLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
+                    <DiffSplitLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
+                    <DiffSplitWidgetLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
+                    <DiffSplitExtendLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
                   </Fragment>
                 ))}
                 <DiffSplitLastHunkLine diffFile={props.diffFile} />

@@ -1,4 +1,4 @@
-import { numIterator } from "@git-diff-view/core";
+import { getUnifiedContentLine } from "@git-diff-view/core";
 import { Fragment } from "vue";
 
 import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
@@ -9,7 +9,7 @@ import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
 import type { DiffFile } from "@git-diff-view/core";
 
 export const DiffUnifiedView = ({ diffFile }: { diffFile: DiffFile }) => {
-  const unifiedLineLength = diffFile.unifiedLineLength;
+  const lines = getUnifiedContentLine(diffFile);
 
   return (
     <div class="unified-diff-view w-full">
@@ -32,12 +32,12 @@ export const DiffUnifiedView = ({ diffFile }: { diffFile: DiffFile }) => {
               fontSize: "var(--diff-font-size--)",
             }}
           >
-            {numIterator(unifiedLineLength, (index) => (
-              <Fragment key={index}>
-                <DiffUnifiedHunkLine index={index} lineNumber={index + 1} diffFile={diffFile} />
-                <DiffUnifiedLine index={index} lineNumber={index + 1} diffFile={diffFile} />
-                <DiffUnifiedWidgetLine index={index} lineNumber={index + 1} diffFile={diffFile} />
-                <DiffUnifiedExtendLine index={index} lineNumber={index + 1} diffFile={diffFile} />
+            {lines.map((item) => (
+              <Fragment key={item.index}>
+                <DiffUnifiedHunkLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
+                <DiffUnifiedLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
+                <DiffUnifiedWidgetLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
+                <DiffUnifiedExtendLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
               </Fragment>
             ))}
             <DiffUnifiedLastHunkLine diffFile={diffFile} />

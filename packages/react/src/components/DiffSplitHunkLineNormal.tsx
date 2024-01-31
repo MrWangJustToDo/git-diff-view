@@ -40,12 +40,12 @@ const _DiffSplitHunkLine = ({
       data-line={`${lineNumber}-hunk`}
       data-state="hunk"
       data-side={SplitSide[side]}
-      className="diff-line diff-line-hunk select-none"
+      className="diff-line diff-line-hunk"
     >
       {enableHunkAction ? (
         <>
           <td
-            className="diff-line-hunk-action sticky left-0 p-[1px] w-[1%] min-w-[40px]"
+            className="diff-line-hunk-action sticky left-0 p-[1px] w-[1%] min-w-[40px] select-none"
             style={{
               backgroundColor: `var(${hunkLineNumberBGName})`,
               color: `var(${plainLineNumberColorName})`,
@@ -140,23 +140,18 @@ const _DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; diffFile:
   });
 
   return (
-    <tr
-      data-line="last-hunk"
-      data-state="hunk"
-      data-side={SplitSide[side]}
-      className="diff-line diff-line-hunk select-none"
-    >
+    <tr data-line="last-hunk" data-state="hunk" data-side={SplitSide[side]} className="diff-line diff-line-hunk">
       {enableHunkAction ? (
         <>
           <td
-            className="diff-line-hunk-action sticky left-0 p-[1px] w-[1%] min-w-[40px]"
+            className="diff-line-hunk-action sticky left-0 p-[1px] w-[1%] min-w-[40px] select-none"
             style={{
               backgroundColor: `var(${hunkLineNumberBGName})`,
               color: `var(${plainLineNumberColorName})`,
             }}
           >
             <button
-              className="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+              className="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px] relative"
               title="Expand Down"
               onClick={() => {
                 countRef.current++;
@@ -186,9 +181,8 @@ export const DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; dif
   const currentIsShow = diffFile.getNeedShowExpandAll("split");
 
   const expandEnabled = diffFile.getExpandEnabled();
-  
+
   if (!currentIsShow || !expandEnabled) return null;
 
-  return <_DiffSplitLastHunkLine diffFile={diffFile} side={side} />
-
-}
+  return <_DiffSplitLastHunkLine diffFile={diffFile} side={side} />;
+};

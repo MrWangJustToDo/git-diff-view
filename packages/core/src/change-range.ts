@@ -41,6 +41,17 @@ export function relativeChanges(stringA: string, stringB: string): { stringARang
   let bRange = { location: 0, length: stringB.length };
   let aRange = { location: 0, length: stringA.length };
 
+  const _stringA = stringA.trimEnd();
+
+  const _stringB = stringB.trimEnd();
+
+  if (_stringA === _stringB) {
+    return {
+      stringARange: { location: _stringA.length, length: stringA.length - _stringA.length },
+      stringBRange: { location: _stringB.length, length: stringB.length - _stringB.length },
+    };
+  }
+
   if (isInValidString(stringA) || isInValidString(stringB)) {
     aRange.length = 0;
     bRange.length = 0;

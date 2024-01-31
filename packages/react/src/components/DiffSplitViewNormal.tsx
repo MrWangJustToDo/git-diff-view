@@ -1,4 +1,4 @@
-import { numIterator } from "@git-diff-view/core";
+import { getSplitContentLines } from "@git-diff-view/core";
 import { Fragment, memo, useEffect, useRef } from "react";
 import * as React from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
@@ -38,7 +38,7 @@ const syncScroll = (left: HTMLElement, right: HTMLElement) => {
 const DiffSplitViewTable = ({ side, diffFile }: { side: SplitSide; diffFile: DiffFile }) => {
   const className = side === SplitSide.new ? "new-diff-table" : "old-diff-table";
 
-  const splitLineLength = diffFile.splitLineLength;
+  const lines = getSplitContentLines(diffFile);
 
   return (
     <table className={className + " border-collapse w-full"} data-mode={SplitSide[side]}>
@@ -59,12 +59,12 @@ const DiffSplitViewTable = ({ side, diffFile }: { side: SplitSide; diffFile: Dif
           fontSize: "var(--diff-font-size--)",
         }}
       >
-        {numIterator(splitLineLength, (index) => (
-          <Fragment key={index}>
-            <DiffSplitHunkLine index={index} side={side} lineNumber={index + 1} diffFile={diffFile} />
-            <DiffSplitLine index={index} side={side} lineNumber={index + 1} diffFile={diffFile} />
-            <DiffSplitWidgetLine index={index} side={side} lineNumber={index + 1} diffFile={diffFile} />
-            <DiffSplitExtendLine index={index} side={side} lineNumber={index + 1} diffFile={diffFile} />
+        {lines.map((line) => (
+          <Fragment key={line.index}>
+            <DiffSplitHunkLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
+            <DiffSplitLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
+            <DiffSplitWidgetLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
+            <DiffSplitExtendLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
           </Fragment>
         ))}
         <DiffSplitLastHunkLine side={side} diffFile={diffFile} />

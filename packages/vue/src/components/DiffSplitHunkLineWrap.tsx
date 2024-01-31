@@ -114,9 +114,9 @@ export const DiffSplitLastHunkLine = defineComponent(
       if (!currentIsShow.value) return null;
 
       return (
-        <tr data-line="last-hunk" data-state="hunk" class="diff-line diff-line-hunk select-none">
+        <tr data-line="last-hunk" data-state="hunk" class="diff-line diff-line-hunk">
           <td
-            class="diff-line-hunk-action p-[1px] w-[1%] min-w-[40px]"
+            class="diff-line-hunk-action p-[1px] w-[1%] min-w-[40px] select-none"
             style={{
               backgroundColor: `var(${hunkLineNumberBGName})`,
               color: `var(${plainLineNumberColorName})`,

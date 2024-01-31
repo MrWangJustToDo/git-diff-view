@@ -1,4 +1,4 @@
-import { numIterator } from "@git-diff-view/core";
+import { getSplitContentLines } from "@git-diff-view/core";
 import { Fragment, computed, defineComponent, ref, watchPostEffect } from "vue";
 
 import { useIsMounted } from "../hooks/useIsMounted";
@@ -40,6 +40,12 @@ const DiffSplitViewTable = defineComponent(
   (props: { side: SplitSide; lineLength: number; diffFile: DiffFile }) => {
     const className = computed(() => (props.side === SplitSide.new ? "new-diff-table" : "old-diff-table"));
 
+    const lines = ref(getSplitContentLines(props.diffFile));
+
+    useSubscribeDiffFile(props, (diffFile) => {
+      lines.value = getSplitContentLines(diffFile);
+    });
+
     return () => {
       return (
         <table class={className.value + " border-collapse w-full"} data-mode={SplitSide[props.side]}>
@@ -60,12 +66,32 @@ const DiffSplitViewTable = defineComponent(
               fontSize: "var(--diff-font-size--)",
             }}
           >
-            {numIterator(props.lineLength, (index) => (
-              <Fragment key={index}>
-                <DiffSplitHunkLine index={index} side={props.side} lineNumber={index + 1} diffFile={props.diffFile} />
-                <DiffSplitLine index={index} side={props.side} lineNumber={index + 1} diffFile={props.diffFile} />
-                <DiffSplitWidgetLine index={index} side={props.side} lineNumber={index + 1} diffFile={props.diffFile} />
-                <DiffSplitExtendLine index={index} side={props.side} lineNumber={index + 1} diffFile={props.diffFile} />
+            {lines.value.map((item) => (
+              <Fragment key={item.index}>
+                <DiffSplitHunkLine
+                  index={item.index}
+                  side={props.side}
+                  lineNumber={item.lineNumber}
+                  diffFile={props.diffFile}
+                />
+                <DiffSplitLine
+                  index={item.index}
+                  side={props.side}
+                  lineNumber={item.lineNumber}
+                  diffFile={props.diffFile}
+                />
+                <DiffSplitWidgetLine
+                  index={item.index}
+                  side={props.side}
+                  lineNumber={item.lineNumber}
+                  diffFile={props.diffFile}
+                />
+                <DiffSplitExtendLine
+                  index={item.index}
+                  side={props.side}
+                  lineNumber={item.lineNumber}
+                  diffFile={props.diffFile}
+                />
               </Fragment>
             ))}
             <DiffSplitLastHunkLine side={props.side} diffFile={props.diffFile} />

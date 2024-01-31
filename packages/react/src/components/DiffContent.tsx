@@ -15,10 +15,13 @@ const DiffString = ({
   const range = diffLine?.range;
 
   if (range && range.length > 0 && range.length < rawLine.length) {
+    const str1 = rawLine.slice(0, range.location);
+    const str2 = rawLine.slice(range.location, range.location + range.length);
+    const str3 = rawLine.slice(range.location + range.length);
     return (
       <span className="diff-line-content-raw">
         <span data-range-start={range.location} data-range-end={range.location + range.length}>
-          {rawLine.slice(0, range.location)}
+          {str1}
           <span
             data-diff-highlight
             className="rounded-[0.2em]"
@@ -27,9 +30,9 @@ const DiffString = ({
                 operator === "add" ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`,
             }}
           >
-            {rawLine.slice(range.location, range.location + range.length)}
+            {str2 === "\r" ? "␍" : str2 === "\n" ? "␊" : str2 === "\r\n" ? "␍␊" : str2}
           </span>
-          {rawLine.slice(range.location + range.length)}
+          {str3}
         </span>
       </span>
     );
@@ -98,7 +101,7 @@ const DiffSyntax = ({
                       borderBottomRightRadius: isEnd ? "0.2em" : undefined,
                     }}
                   >
-                    {str2}
+                    {str2 === "\r" ? "␍" : str2 === "\n" ? "␊" : str2 === "\r\n" ? "␍␊" : str2}
                   </span>
                   {str3}
                 </span>

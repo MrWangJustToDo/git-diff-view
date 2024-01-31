@@ -1,4 +1,4 @@
-import { numIterator } from "@git-diff-view/core";
+import { getUnifiedContentLine } from "@git-diff-view/core";
 import * as React from "react";
 import { Fragment, memo, useEffect, useMemo } from "react";
 import { createStore, ref } from "reactivity-store";
@@ -14,8 +14,6 @@ import type { SplitSide } from "..";
 import type { DiffFile } from "@git-diff-view/core";
 
 export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
-  const unifiedLineLength = diffFile.unifiedLineLength;
-
   // performance optimization
   const useWidget = useMemo(
     () =>
@@ -42,8 +40,9 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
     const { setWidget } = useWidget.getReadonlyState();
 
     setWidget({});
-
   }, [diffFile, useWidget]);
+
+  const lines = getUnifiedContentLine(diffFile);
 
   return (
     <DiffWidgetContext.Provider value={contextValue}>
@@ -67,12 +66,12 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
                 fontSize: "var(--diff-font-size--)",
               }}
             >
-              {numIterator(unifiedLineLength, (index) => (
-                <Fragment key={index}>
-                  <DiffUnifiedHunkLine index={index} lineNumber={index + 1} diffFile={diffFile} />
-                  <DiffUnifiedLine index={index} lineNumber={index + 1} diffFile={diffFile} />
-                  <DiffUnifiedWidgetLine index={index} lineNumber={index + 1} diffFile={diffFile} />
-                  <DiffUnifiedExtendLine index={index} lineNumber={index + 1} diffFile={diffFile} />
+              {lines.map((item) => (
+                <Fragment key={item.index}>
+                  <DiffUnifiedHunkLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
+                  <DiffUnifiedLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
+                  <DiffUnifiedWidgetLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
+                  <DiffUnifiedExtendLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
                 </Fragment>
               ))}
               <DiffUnifiedLastHunkLine diffFile={diffFile} />

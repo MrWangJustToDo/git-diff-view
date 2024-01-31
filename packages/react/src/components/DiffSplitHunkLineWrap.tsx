@@ -30,9 +30,9 @@ export const DiffSplitHunkLine = ({
   if (!currentIsShow) return null;
 
   return (
-    <tr data-line={`${lineNumber}-hunk`} data-state="hunk" className="diff-line diff-line-hunk select-none">
+    <tr data-line={`${lineNumber}-hunk`} data-state="hunk" className="diff-line diff-line-hunk">
       <td
-        className="diff-line-hunk-action p-[1px] w-[1%] min-w-[40px]"
+        className="diff-line-hunk-action p-[1px] w-[1%] min-w-[40px] select-none"
         style={{
           backgroundColor: `var(${hunkLineNumberBGName})`,
           color: `var(${plainLineNumberColorName})`,
@@ -94,9 +94,9 @@ export const DiffSplitLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
   if (!currentIsShow || !expandEnabled) return null;
 
   return (
-    <tr data-line="last-hunk" data-state="hunk" className="diff-line diff-line-hunk select-none">
+    <tr data-line="last-hunk" data-state="hunk" className="diff-line diff-line-hunk">
       <td
-        className="diff-line-hunk-action p-[1px] w-[1%] min-w-[40px]"
+        className="diff-line-hunk-action p-[1px] w-[1%] min-w-[40px] select-none"
         style={{
           backgroundColor: `var(${hunkLineNumberBGName})`,
           color: `var(${plainLineNumberColorName})`,

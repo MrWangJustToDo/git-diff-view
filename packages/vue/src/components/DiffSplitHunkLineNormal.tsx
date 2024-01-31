@@ -65,12 +65,12 @@ export const DiffSplitHunkLine = defineComponent(
           data-state="hunk"
           data-side={SplitSide[props.side]}
           style={{ backgroundColor: `var(${hunkContentBGName})` }}
-          class="diff-line diff-line-hunk select-none"
+          class="diff-line diff-line-hunk"
         >
           {currentShowExpand.value ? (
             <>
               <td
-                class="diff-line-hunk-action sticky left-0 p-[1px] w-[1%] min-w-[40px]"
+                class="diff-line-hunk-action sticky left-0 p-[1px] w-[1%] min-w-[40px] select-none"
                 style={{
                   backgroundColor: `var(${hunkLineNumberBGName})`,
                   color: `var(${plainLineNumberColorName})`,
@@ -165,12 +165,12 @@ export const DiffSplitLastHunkLine = defineComponent(
           data-line="last-hunk"
           data-state="hunk"
           data-side={SplitSide[props.side]}
-          class="diff-line diff-line-hunk select-none"
+          class="diff-line diff-line-hunk"
         >
           {enableHunkAction.value ? (
             <>
               <td
-                class="diff-line-hunk-action sticky left-0 p-[1px] w-[1%] min-w-[40px]"
+                class="diff-line-hunk-action sticky left-0 p-[1px] w-[1%] min-w-[40px] select-none"
                 style={{
                   backgroundColor: `var(${hunkLineNumberBGName})`,
                   color: `var(${plainLineNumberColorName})`,

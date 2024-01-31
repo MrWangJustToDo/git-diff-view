@@ -49,9 +49,9 @@ export const DiffUnifiedHunkLine = defineComponent(
       if (!currentIsShow.value) return null;
 
       return (
-        <tr data-line={`${props.lineNumber}-hunk`} data-state="hunk" class="diff-line diff-line-hunk select-none">
+        <tr data-line={`${props.lineNumber}-hunk`} data-state="hunk" class="diff-line diff-line-hunk">
           <td
-            class="diff-line-hunk-action sticky left-0 w-[1%] min-w-[100px]"
+            class="diff-line-hunk-action sticky left-0 w-[1%] min-w-[100px] select-none"
             style={{
               backgroundColor: `var(${hunkLineNumberBGName})`,
               color: `var(${plainLineNumberColorName})`,
@@ -123,9 +123,9 @@ export const DiffUnifiedLastHunkLine = defineComponent(
       if (!currentIsShow.value) return null;
 
       return (
-        <tr data-line="last-hunk" data-state="hunk" class="diff-line diff-line-hunk select-none">
+        <tr data-line="last-hunk" data-state="hunk" class="diff-line diff-line-hunk">
           <td
-            class="diff-line-hunk-action sticky left-0 w-[1%] min-w-[100px]"
+            class="diff-line-hunk-action sticky left-0 w-[1%] min-w-[100px] select-none"
             style={{
               position: enableWrap.value ? "relative" : "sticky",
               backgroundColor: `var(${hunkLineNumberBGName})`,

@@ -10,6 +10,20 @@ export enum DiffFileLineType {
   lastHunk = 5,
 }
 
+export type DiffSplitContentLineItem = {
+  type: DiffFileLineType.content;
+  index: number;
+  lineNumber: number;
+  splitLine: { left: SplitLineItem; right: SplitLineItem };
+};
+
+export type DiffUnifiedContentLineItem = {
+  type: DiffFileLineType.content;
+  index: number;
+  lineNumber: number;
+  unifiedLine: UnifiedLineItem;
+};
+
 export type DiffSplitLineItem = {
   type: DiffFileLineType;
   index: number;
@@ -84,6 +98,12 @@ export const getSplitLines = (diffFile: DiffFile, options: Options): DiffSplitLi
   return splitLines;
 };
 
+export const getSplitContentLines = (diffFile: DiffFile): DiffSplitContentLineItem[] => {
+  const lines = getSplitLines(diffFile, {});
+
+  return lines.filter((line) => line.type === DiffFileLineType.content) as DiffSplitContentLineItem[];
+};
+
 export const getUnifiedLines = (diffFile: DiffFile, options: Options): DiffUnifiedLineItem[] => {
   const unifiedLineLength = diffFile.unifiedLineLength;
 
@@ -109,7 +129,7 @@ export const getUnifiedLines = (diffFile: DiffFile, options: Options): DiffUnifi
       unifiedLines.push({ type: DiffFileLineType.extend, index, lineNumber: index + 1, extendLine: extendLine });
   });
 
-  const lastHunkLine = diffFile.getNeedShowExpandAll('unified');
+  const lastHunkLine = diffFile.getNeedShowExpandAll("unified");
 
   const expandEnabled = diffFile.getExpandEnabled();
 
@@ -122,4 +142,10 @@ export const getUnifiedLines = (diffFile: DiffFile, options: Options): DiffUnifi
   }
 
   return unifiedLines;
+};
+
+export const getUnifiedContentLine = (diffFile: DiffFile): DiffUnifiedContentLineItem[] => {
+  const lines = getUnifiedLines(diffFile, {});
+
+  return lines.filter((line) => line.type === DiffFileLineType.content) as DiffUnifiedContentLineItem[];
 };
