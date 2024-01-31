@@ -360,12 +360,12 @@ export class DiffFile {
     }, {});
   }
 
-  #composeSyntax() {
-    this.#oldFileResult?.doSyntax();
+  #composeSyntax(autoLang?: boolean) {
+    this.#oldFileResult?.doSyntax(autoLang);
 
     this.#oldFileSyntaxLines = this.#oldFileResult?.syntaxFile;
 
-    this.#newFileResult?.doSyntax();
+    this.#newFileResult?.doSyntax(autoLang);
 
     this.#newFileSyntaxLines = this.#newFileResult?.syntaxFile;
   }
@@ -418,9 +418,9 @@ export class DiffFile {
     this.#hasInitRaw = true;
   }
 
-  initSyntax() {
+  initSyntax(autoLang?: boolean) {
     if (this.#hasInitSyntax) return;
-    this.#composeSyntax();
+    this.#composeSyntax(autoLang);
     this.#hasInitSyntax = true;
   }
 

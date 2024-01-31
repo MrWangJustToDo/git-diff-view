@@ -46,8 +46,10 @@ export class File {
     Object.defineProperty(this, "__v_skip", { value: true });
   }
 
-  doSyntax() {
+  doSyntax(autoLang?: boolean) {
     if (!this.raw || this.hasDoSyntax) return;
+
+    let hasRegisteredLang = true;
 
     if (this.syntaxLength) {
       console.error("current file already doSyntax before!");
@@ -55,8 +57,11 @@ export class File {
     }
 
     if (!highlighter.registered(this.lang)) {
-      console.warn(`not support current lang: ${this.lang} yet`);
-      return;
+      hasRegisteredLang = false;
+      if (!autoLang) {
+        console.warn(`not support current lang: ${this.lang} yet`);
+        return;
+      }
     }
 
     if (this.rawLength > highlighter.maxLineToIgnoreSyntax) {
@@ -64,9 +69,11 @@ export class File {
       return;
     }
 
-    const ast = highlighter.highlight(this.lang, this.raw);
-
-    this.ast = ast;
+    if (hasRegisteredLang) {
+      this.ast = highlighter.highlight(this.lang, this.raw);
+    } else {
+      this.ast = highlighter.highlightAuto(this.raw);
+    }
 
     this.#doAST();
 
