@@ -29,6 +29,7 @@ const DiffUnifiedOldLine = ({
   diffFile,
   setWidget,
   enableWrap,
+  enableAddWidget,
   enableHighlight,
   onAddWidgetClick,
 }: {
@@ -39,6 +40,7 @@ const DiffUnifiedOldLine = ({
   diffLine?: DiffLine;
   diffFile: DiffFile;
   enableWrap: boolean;
+  enableAddWidget: boolean;
   enableHighlight: boolean;
   onAddWidgetClick?: DiffViewProps<any>["onAddWidgetClick"];
   setWidget: (props: { side?: SplitSide; lineNumber?: number }) => void;
@@ -52,14 +54,16 @@ const DiffUnifiedOldLine = ({
           backgroundColor: `var(${delLineNumberBGName})`,
         }}
       >
-        <DiffUnifiedAddWidget
-          index={index - 1}
-          lineNumber={lineNumber}
-          diffFile={diffFile}
-          side={SplitSide.old}
-          onWidgetClick={onAddWidgetClick}
-          onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber, side })}
-        />
+        {enableAddWidget && (
+          <DiffUnifiedAddWidget
+            index={index - 1}
+            lineNumber={lineNumber}
+            diffFile={diffFile}
+            side={SplitSide.old}
+            onWidgetClick={onAddWidgetClick}
+            onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber, side })}
+          />
+        )}
         <div className="flex">
           <span data-line-old-num={lineNumber} className="inline-block w-[50%]">
             {lineNumber}
@@ -91,6 +95,7 @@ const DiffUnifiedNewLine = ({
   diffFile,
   setWidget,
   enableWrap,
+  enableAddWidget,
   enableHighlight,
   onAddWidgetClick,
 }: {
@@ -101,6 +106,7 @@ const DiffUnifiedNewLine = ({
   diffLine?: DiffLine;
   diffFile: DiffFile;
   enableWrap: boolean;
+  enableAddWidget: boolean;
   enableHighlight: boolean;
   onAddWidgetClick?: DiffViewProps<any>["onAddWidgetClick"];
   setWidget: (props: { side?: SplitSide; lineNumber?: number }) => void;
@@ -114,14 +120,16 @@ const DiffUnifiedNewLine = ({
           backgroundColor: `var(${addLineNumberBGName})`,
         }}
       >
-        <DiffUnifiedAddWidget
-          index={index - 1}
-          lineNumber={lineNumber}
-          diffFile={diffFile}
-          side={SplitSide.new}
-          onWidgetClick={onAddWidgetClick}
-          onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber, side })}
-        />
+        {enableAddWidget && (
+          <DiffUnifiedAddWidget
+            index={index - 1}
+            lineNumber={lineNumber}
+            diffFile={diffFile}
+            side={SplitSide.new}
+            onWidgetClick={onAddWidgetClick}
+            onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber, side })}
+          />
+        )}
         <div className="flex">
           <span className="inline-block w-[50%]" />
           <span className="shrink-0 w-[10px]" />
@@ -196,8 +204,9 @@ const _DiffUnifiedLine = memo(
             setWidget={setWidget}
             syntaxLine={syntaxLine}
             enableHighlight={enableHighlight}
-            lineNumber={unifiedLine.oldLineNumber}
+            enableAddWidget={enableAddWidget}
             onAddWidgetClick={onAddWidgetClick}
+            lineNumber={unifiedLine.oldLineNumber}
           />
         );
       } else {
@@ -211,8 +220,9 @@ const _DiffUnifiedLine = memo(
             setWidget={setWidget}
             syntaxLine={syntaxLine}
             enableHighlight={enableHighlight}
-            lineNumber={unifiedLine.newLineNumber!}
+            enableAddWidget={enableAddWidget}
             onAddWidgetClick={onAddWidgetClick}
+            lineNumber={unifiedLine.newLineNumber!}
           />
         );
       }

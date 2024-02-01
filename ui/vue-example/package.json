@@ -9,8 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@git-diff-view/core": "0.0.1",
-    "@git-diff-view/vue": "0.0.1",
+    "@git-diff-view/core": "workspace:*",
+    "@git-diff-view/vue": "workspace:*",
     "vue": "^3.3.11"
   },
   "devDependencies": {

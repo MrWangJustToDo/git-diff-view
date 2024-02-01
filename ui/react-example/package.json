@@ -11,8 +11,8 @@
   },
   "packageManager": "pnpm@8.9.0",
   "dependencies": {
-    "@git-diff-view/core": "0.0.1",
-    "@git-diff-view/react": "0.0.1",
+    "@git-diff-view/core": "workspace:*",
+    "@git-diff-view/react": "workspace:*",
     "@my-react/react": "0.3.0",
     "@my-react/react-dom": "0.3.0",
     "lodash": "^4.17.21",

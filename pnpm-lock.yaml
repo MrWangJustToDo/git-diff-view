@@ -146,10 +146,10 @@ importers:
   ui/react-example:
     dependencies:
       '@git-diff-view/core':
-        specifier: 0.0.1
+        specifier: workspace:*
         version: link:../../packages/core
       '@git-diff-view/react':
-        specifier: 0.0.1
+        specifier: workspace:*
         version: link:../../packages/react
       '@my-react/react':
         specifier: 0.3.0
@@ -222,10 +222,10 @@ importers:
   ui/vue-example:
     dependencies:
       '@git-diff-view/core':
-        specifier: 0.0.1
+        specifier: workspace:*
         version: link:../../packages/core
       '@git-diff-view/vue':
-        specifier: 0.0.1
+        specifier: workspace:*
         version: link:../../packages/vue
       vue:
         specifier: ^3.3.11

@@ -41,8 +41,9 @@ export const DiffSplitHunkLine = ({
         {expandEnabled &&
           (isExpandAll ? (
             <button
-              className="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+              className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
               title="Expand All"
+              data-title="Expand All"
               onClick={() => diffFile.onSplitHunkExpand("all", index)}
             >
               <ExpandAll className="fill-current" />
@@ -50,15 +51,17 @@ export const DiffSplitHunkLine = ({
           ) : (
             <>
               <button
-                className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
+                className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
                 title="Expand Down"
+                data-title="Expand Down"
                 onClick={() => diffFile.onSplitHunkExpand("down", index)}
               >
                 <ExpandDown className="fill-current" />
               </button>
               <button
-                className="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
+                className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
                 title="Expand Up"
+                data-title="Expand Up"
                 onClick={() => diffFile.onSplitHunkExpand("up", index)}
               >
                 <ExpandUp className="fill-current" />
@@ -103,8 +106,9 @@ export const DiffSplitLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
         }}
       >
         <button
-          className="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+          className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
           title="Expand Down"
+          data-title="Expand Down"
           onClick={() => {
             countRef.current++;
             diffFile.onSplitLastExpand(countRef.current >= 3);

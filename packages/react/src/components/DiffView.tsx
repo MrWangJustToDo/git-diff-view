@@ -182,28 +182,37 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
 
   useEffect(() => {
     const {
+      id,
       setId,
+      mode,
       setMode,
+      enableAddWidget,
       setEnableAddWidget,
+      enableHighlight,
       setEnableHighlight,
+      enableWrap,
       setEnableWrap,
       setExtendData,
+      fontSize,
       setFontSize,
+      onAddWidgetClick: _onAddWidgetClick,
       setOnAddWidgetClick,
+      renderExtendLine: _renderExtendLine,
       setRenderExtendLine,
+      renderWidgetLine: _renderWidgetLine,
       setRenderWidgetLine,
     } = useDiffContext.getReadonlyState();
 
-    diffFileId && setId(diffFileId);
-    diffViewMode && setMode(diffViewMode);
-    setEnableAddWidget(diffViewAddWidget);
-    setEnableHighlight(diffViewHighlight);
-    setEnableWrap(diffViewWrap);
+    diffFileId && diffFileId !== id && setId(diffFileId);
+    diffViewMode && diffViewMode !== mode && setMode(diffViewMode);
+    diffViewAddWidget !== enableAddWidget && setEnableAddWidget(diffViewAddWidget);
+    diffViewHighlight !== enableHighlight && setEnableHighlight(diffViewHighlight);
+    diffViewWrap !== enableWrap && setEnableWrap(diffViewWrap);
     extendData && setExtendData(extendData);
-    diffViewFontSize && setFontSize(diffViewFontSize);
-    setOnAddWidgetClick(onAddWidgetClick);
-    setRenderExtendLine(renderExtendLine);
-    setRenderWidgetLine(renderWidgetLine);
+    diffViewFontSize && diffViewFontSize !== fontSize && setFontSize(diffViewFontSize);
+    onAddWidgetClick !== _onAddWidgetClick && setOnAddWidgetClick(onAddWidgetClick);
+    renderExtendLine !== _renderExtendLine && setRenderExtendLine(renderExtendLine);
+    renderWidgetLine !== _renderWidgetLine && setRenderWidgetLine(renderWidgetLine);
   }, [
     useDiffContext,
     diffViewFontSize,
@@ -286,7 +295,14 @@ export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
 
   if (!diffFile) return null;
 
-  return <InternalDiffView key={diffFile.getId()} {...props} diffFile={diffFile} />;
+  return (
+    <InternalDiffView
+      key={diffFile.getId()}
+      {...props}
+      diffFile={diffFile}
+      diffViewFontSize={props.diffViewFontSize || 14}
+    />
+  );
 };
 
 export const version = __VERSION__;

@@ -24,3 +24,44 @@
 .diff-style-root tr {
   content-visibility: auto;
 }
+
+.diff-widget-tooltip {
+  position: relative;
+}
+
+.diff-widget-tooltip::after {
+  display: none;
+  box-sizing: border-box;
+  background-color: #555555;
+  position: absolute;
+  content: attr(data-title);
+  font-size: 11px;
+  padding: 1px 2px;
+  border-radius: 4px;
+  overflow: hidden;
+  top: 50%;
+  white-space: nowrap;
+  transform: translateY(-50%);
+  left: calc(100% + 8px);
+  color: #ffffff;
+}
+
+.diff-widget-tooltip::before {
+  display: none;
+  box-sizing: border-box;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: calc(100% - 2px);
+  transform: translateY(-50%);
+  border: 6px solid transparent;
+  border-right-color: #555555;
+}
+
+.diff-widget-tooltip:hover::before {
+  display: block;
+}
+
+.diff-widget-tooltip:hover::after {
+  display: block;
+}
