@@ -4,6 +4,30 @@ a React/Vue component to show the `git --diff` result, just like Github code rev
 
 [![Deploy](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml/badge.svg)](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml)
 
+## Packages
+
+| Package                                                           | Version                                                                                                                                      |
+| :---------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`@git-diff-view/core`](packages/core)                             | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/core)](https://www.npmjs.com/package/@git-diff-view/core)                             |
+| [`@git-diff-view/react`](packages/react)                     | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/react)](https://www.npmjs.com/package/@git-diff-view/react)                     |
+| [`@git-diff-view/vue`](packages/vue)                     | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/vue)](https://www.npmjs.com/package/@git-diff-view/vue)                     |
+   
+
+## Screen Shot
+![Screenshot]('./example.png')
+
+## Install
+
+```shell
+# In React Project
+pnpm add @git-diff-view/react
+
+# In Vue Project
+pnpm add @git-diff-view/vue
+
+
+```
+
 ## Usage
 
 ```tsx
