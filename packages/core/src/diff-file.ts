@@ -7,9 +7,10 @@ import { getFile } from "./file";
 
 import type { DiffLine } from "./diff-line";
 import type { File } from "./file";
+import type { highlighter } from "./highlighter";
 import type { IRawDiff } from "./raw-diff";
 
-export const composeLen = 20;
+export const composeLen = 40;
 
 const idSet = new Set<string>();
 
@@ -360,12 +361,18 @@ export class DiffFile {
     }, {});
   }
 
-  #composeSyntax(autoLang?: boolean) {
-    this.#oldFileResult?.doSyntax(autoLang);
+  #composeSyntax({
+    autoDetectLang,
+    registerHighlighter,
+  }: {
+    autoDetectLang?: boolean;
+    registerHighlighter?: typeof highlighter;
+  }) {
+    this.#oldFileResult?.doSyntax({ autoDetectLang, registerHighlighter });
 
     this.#oldFileSyntaxLines = this.#oldFileResult?.syntaxFile;
 
-    this.#newFileResult?.doSyntax(autoLang);
+    this.#newFileResult?.doSyntax({ autoDetectLang, registerHighlighter });
 
     this.#newFileSyntaxLines = this.#newFileResult?.syntaxFile;
   }
@@ -418,9 +425,12 @@ export class DiffFile {
     this.#hasInitRaw = true;
   }
 
-  initSyntax(autoLang?: boolean) {
+  initSyntax({
+    autoDetectLang,
+    registerHighlighter,
+  }: { autoDetectLang?: boolean; registerHighlighter?: typeof highlighter } = {}) {
     if (this.#hasInitSyntax) return;
-    this.#composeSyntax(autoLang);
+    this.#composeSyntax({ registerHighlighter, autoDetectLang });
     this.#hasInitSyntax = true;
   }
 
@@ -679,7 +689,8 @@ export class DiffFile {
 
     this.#splitLastStartIndex = end;
 
-    this.#splitLastStartIndex = this.#splitLastStartIndex >= this.splitLineLength ? Infinity : this.#splitLastStartIndex;
+    this.#splitLastStartIndex =
+      this.#splitLastStartIndex >= this.splitLineLength ? Infinity : this.#splitLastStartIndex;
 
     this.notifyAll();
   };

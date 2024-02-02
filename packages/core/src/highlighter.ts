@@ -52,8 +52,12 @@ export type ATS = ReturnType<typeof lowlight.highlight>;
 
 export const highlighter = lowlight as typeof lowlight & {
   maxLineToIgnoreSyntax: number;
+  autoDetectLang: boolean;
   setMaxLineToIgnoreSyntax: (v: number) => void;
+  setAutoDetectLang: (v: boolean) => void;
 };
+
+let _autoDetectLang = true;
 
 let _maxLineToIgnoreSyntax = 2000;
 
@@ -64,5 +68,15 @@ Object.defineProperty(highlighter, "maxLineToIgnoreSyntax", {
 Object.defineProperty(highlighter, "setMaxLineToIgnoreSyntax", {
   value: (v: number) => {
     _maxLineToIgnoreSyntax = v;
+  },
+});
+
+Object.defineProperty(highlighter, "autoDetectLang", {
+  get: () => _autoDetectLang,
+});
+
+Object.defineProperty(highlighter, "setAutoDetectLang", {
+  value: (v: boolean) => {
+    _autoDetectLang = v;
   },
 });

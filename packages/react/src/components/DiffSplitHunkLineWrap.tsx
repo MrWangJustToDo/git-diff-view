@@ -92,8 +92,6 @@ export const DiffSplitLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
 
   const expandEnabled = diffFile.getExpandEnabled();
 
-  const countRef = React.useRef(0);
-
   if (!currentIsShow || !expandEnabled) return null;
 
   return (
@@ -110,8 +108,7 @@ export const DiffSplitLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
           title="Expand Down"
           data-title="Expand Down"
           onClick={() => {
-            countRef.current++;
-            diffFile.onSplitLastExpand(countRef.current >= 3);
+            diffFile.onSplitLastExpand();
           }}
         >
           <ExpandDown className="fill-current" />

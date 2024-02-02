@@ -132,8 +132,6 @@ export const DiffSplitHunkLine = ({
 };
 
 const _DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; diffFile: DiffFile }) => {
-  const countRef = React.useRef(0);
-
   const enableHunkAction = side === SplitSide.old;
 
   useSyncHeight({
@@ -158,8 +156,7 @@ const _DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; diffFile:
               title="Expand Down"
               data-title="Expand Down"
               onClick={() => {
-                countRef.current++;
-                diffFile.onSplitLastExpand(countRef.current >= 3);
+                diffFile.onSplitLastExpand();
               }}
             >
               <ExpandDown className="fill-current" />

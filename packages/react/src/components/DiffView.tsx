@@ -31,7 +31,13 @@ export type DiffViewProps<T> = {
   diffFile?: DiffFile;
   className?: string;
   style?: CSSProperties;
-  registerHighlight?: typeof highlighter.register;
+  // enable auto detect language by highlight.js
+  autoDetectLang?: boolean;
+  /**
+   * provide a custom highlighter
+   * eg: lowlight, refractor, starry-night, shiki
+   */
+  registerHighlighter?: typeof highlighter;
   diffViewMode?: DiffModeEnum;
   diffViewWrap?: boolean;
   diffViewFontSize?: number;
@@ -64,7 +70,9 @@ export type DiffViewProps<T> = {
   onAddWidgetClick?: (lineNumber: number, side: SplitSide) => void;
 };
 
-const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data" | "registerHighlight">) => {
+const _InternalDiffView = <T extends unknown>(
+  props: Omit<DiffViewProps<T>, "data" | "registerHighlighter" | "autoDetectLang">
+) => {
   const {
     diffFile,
     className,
@@ -261,22 +269,24 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
 const InternalDiffView = memo(_InternalDiffView);
 
 export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
+  const { registerHighlighter, autoDetectLang, data, diffFile: _diffFile, ...restProps } = props;
+
   const diffFile = useMemo(() => {
-    if (props.diffFile) {
-      return props.diffFile;
-    } else if (props.data) {
+    if (_diffFile) {
+      return _diffFile;
+    } else if (data) {
       return new DiffFile(
-        props.data?.oldFile?.fileName || "",
-        props.data?.oldFile?.content || "",
-        props.data?.newFile?.fileName || "",
-        props.data?.newFile?.content || "",
-        props.data?.hunks || [],
-        props.data?.oldFile?.fileLang || "",
-        props.data?.newFile?.fileLang || ""
+        data?.oldFile?.fileName || "",
+        data?.oldFile?.content || "",
+        data?.newFile?.fileName || "",
+        data?.newFile?.content || "",
+        data?.hunks || [],
+        data?.oldFile?.fileLang || "",
+        data?.newFile?.fileLang || ""
       );
     }
     return null;
-  }, [props.data, props.diffFile]);
+  }, [data, _diffFile]);
 
   useEffect(() => {
     if (!diffFile) return;
@@ -288,19 +298,19 @@ export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
   useEffect(() => {
     if (!diffFile) return;
     if (props.diffViewHighlight) {
-      diffFile.initSyntax();
+      diffFile.initSyntax({ autoDetectLang, registerHighlighter });
       diffFile.notifyAll();
     }
-  }, [diffFile, props.diffViewHighlight]);
+  }, [diffFile, props.diffViewHighlight, autoDetectLang, registerHighlighter]);
 
   if (!diffFile) return null;
 
   return (
     <InternalDiffView
       key={diffFile.getId()}
-      {...props}
+      {...restProps}
       diffFile={diffFile}
-      diffViewFontSize={props.diffViewFontSize || 14}
+      diffViewFontSize={restProps.diffViewFontSize || 14}
     />
   );
 };

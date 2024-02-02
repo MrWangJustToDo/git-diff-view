@@ -43,7 +43,8 @@ export type DiffViewProps<T> = {
   diffFile?: DiffFile;
   class?: string;
   style?: CSSProperties;
-  registerHighlight?: typeof highlighter.register;
+  autoDetectLang?: boolean;
+  registerHighlighter?: typeof highlighter;
   diffViewMode?: DiffModeEnum;
   diffViewWrap?: boolean;
   diffViewFontSize?: number;
@@ -120,7 +121,7 @@ export const DiffView = defineComponent<
     const initSyntax = () => {
       if (!isMounted.value || !enableHighlight.value || !diffFile.value) return;
       const instance = diffFile.value;
-      instance.initSyntax();
+      instance.initSyntax({ autoDetectLang: props.autoDetectLang, registerHighlighter: props.registerHighlighter });
       instance.notifyAll();
     };
 
@@ -192,7 +193,8 @@ export const DiffView = defineComponent<
       "diffViewMode",
       "diffViewWrap",
       "extendData",
-      "registerHighlight",
+      "autoDetectLang",
+      "registerHighlighter",
       "style",
     ],
     slots: Object as typeSlots,

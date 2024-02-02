@@ -46,33 +46,35 @@ export class File {
     Object.defineProperty(this, "__v_skip", { value: true });
   }
 
-  doSyntax(autoLang?: boolean) {
+  doSyntax({ autoDetectLang, registerHighlighter }: { autoDetectLang?: boolean; registerHighlighter?: typeof highlighter }) {
     if (!this.raw || this.hasDoSyntax) return;
 
     let hasRegisteredLang = true;
+
+    const _highlighter = registerHighlighter || highlighter;
 
     if (this.syntaxLength) {
       console.error("current file already doSyntax before!");
       return;
     }
 
-    if (!highlighter.registered(this.lang)) {
+    if (!_highlighter.registered(this.lang)) {
       hasRegisteredLang = false;
-      if (!autoLang) {
+      if (!autoDetectLang) {
         console.warn(`not support current lang: ${this.lang} yet`);
         return;
       }
     }
 
-    if (this.rawLength > highlighter.maxLineToIgnoreSyntax) {
+    if (this.rawLength > _highlighter.maxLineToIgnoreSyntax) {
       console.warn(`ignore syntax for current file, because the rawLength is too long: ${this.rawLength}`);
       return;
     }
 
     if (hasRegisteredLang) {
-      this.ast = highlighter.highlight(this.lang, this.raw);
+      this.ast = _highlighter.highlight(this.lang, this.raw);
     } else {
-      this.ast = highlighter.highlightAuto(this.raw);
+      this.ast = _highlighter.highlightAuto(this.raw);
     }
 
     this.#doAST();
