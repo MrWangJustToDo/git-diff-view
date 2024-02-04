@@ -163,6 +163,9 @@ importers:
       '@git-diff-view/react':
         specifier: workspace:*
         version: link:../../packages/react
+      '@git-diff-view/vue':
+        specifier: workspace:*
+        version: link:../../packages/vue
       '@my-react/react':
         specifier: 0.3.0
         version: 0.3.0
@@ -181,6 +184,9 @@ importers:
       reactivity-store:
         specifier: ^0.3.1
         version: 0.3.1(react-dom@18.2.0)(react@18.2.0)
+      vue:
+        specifier: ^3.3.11
+        version: 3.4.15(typescript@5.3.3)
     devDependencies:
       '@my-react/react-refresh':
         specifier: 0.3.0

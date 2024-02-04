@@ -1,6 +1,9 @@
 import { DiffFile } from "@git-diff-view/core";
-import { DiffModeEnum, DiffView, SplitSide } from "@git-diff-view/react";
-import { useEffect, useState } from "react";
+import { DiffModeEnum, DiffView as DiffViewReact, SplitSide } from "@git-diff-view/react";
+import { DiffView as DiffViewVue } from "@git-diff-view/vue";
+import { useEffect, useRef, useState } from "react";
+import { createRoot } from "react-dom/client";
+import { createApp, h } from "vue";
 
 import * as data from "./data";
 import { useDiffConfig } from "./hooks/useDiffConfig";
@@ -17,6 +20,14 @@ type K = "a" | "b" | "c" | "d" | "e" | "j";
 
 export function Example() {
   const [v, setV] = useState<K>("b");
+
+  const reactRoot = useRef<HTMLDivElement>(null);
+
+  const vueRef = useRef<HTMLDivElement>(null);
+
+  const reactApp = useRef();
+
+  const vueApp = useRef();
 
   const [diffFileInstance, setDiffFileInstance] = useState<DiffFile>();
 
@@ -45,6 +56,10 @@ export function Example() {
   }, []);
 
   useEffect(() => {
+    reactApp.current = reactApp.current || createRoot(reactRoot.current!);
+  }, []);
+
+  useEffect(() => {
     const _data = data[v];
     if (_data) {
       console.time("parse");
@@ -54,13 +69,145 @@ export function Example() {
 
   const { mode, setMode, highlight, setHighlight, wrap, setWrap, fontsize } = useDiffConfig((s) => ({ ...s }));
 
+  const reactElement = (
+    <DiffViewReact<string>
+      renderWidgetLine={({ onClose, side, lineNumber }) => (
+        <div className="border flex flex-col w-full px-[4px] py-[8px]">
+          <textarea
+            className="w-full border min-h-[80px] p-[2px]"
+            value={val}
+            onChange={(e) => setVal(e.target.value)}
+          />
+          <div className="m-[5px] mt-[0.8em] text-right">
+            <div className="inline-flex gap-x-[12px] justify-end">
+              <button
+                className="border px-[12px] py-[6px] rounded-[4px]"
+                onClick={() => {
+                  onClose();
+                  setVal("");
+                }}
+              >
+                cancel
+              </button>
+              <button
+                className="border px-[12px] py-[6px] rounded-[4px]"
+                onClick={() => {
+                  onClose();
+                  if (val) {
+                    const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
+                    setExtend((prev) => {
+                      const res = { ...prev };
+                      res[sideKey] = { ...res[sideKey], [lineNumber]: { lineNumber, data: val } };
+                      return res;
+                    });
+                    setVal("");
+                  }
+                }}
+              >
+                submit
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      // data={data[v]}
+      diffFile={diffFileInstance}
+      extendData={extend}
+      renderExtendLine={({ data }) => {
+        return (
+          <div className="border flex px-[10px] py-[8px] bg-slate-400">
+            <h2 className="text-[20px]">
+              {">> "}
+              {data}
+            </h2>
+          </div>
+        );
+      }}
+      diffViewFontSize={fontsize}
+      diffViewHighlight={highlight}
+      diffViewMode={mode}
+      diffViewWrap={wrap}
+      diffViewAddWidget
+    />
+  );
+
+  const vueElement = h(
+    DiffViewVue,
+    {
+      diffFile: diffFileInstance,
+      extendData: extend,
+      diffViewFontSize: fontsize,
+      diffViewHighlight: highlight,
+      diffViewMode: mode,
+      diffViewWrap: wrap,
+      diffViewAddWidget: true,
+    },
+    {
+      widget: ({ onClose, side, lineNumber }) =>
+        h("div", { class: "border flex flex-col w-full px-[4px] py-[8px]" }, [
+          h("textarea", {
+            class: "w-full border min-h-[80px] p-[2px]",
+            value: val,
+            onInput: (e: InputEvent) => setVal((e.target as HTMLTextAreaElement).value),
+          }),
+          h("div", { class: "m-[5px] mt-[0.8em] text-right" }, [
+            h("div", { class: "inline-flex gap-x-[12px] justify-end" }, [
+              h(
+                "button",
+                {
+                  class: "border px-[12px] py-[6px] rounded-[4px]",
+                  onClick: () => {
+                    onClose();
+                    setVal("");
+                  },
+                },
+                "cancel"
+              ),
+              h(
+                "button",
+                {
+                  class: "border px-[12px] py-[6px] rounded-[4px]",
+                  onClick: () => {
+                    onClose();
+                    if (val) {
+                      const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
+                      setExtend((prev) => {
+                        const res = { ...prev };
+                        res[sideKey] = { ...res[sideKey], [lineNumber]: { lineNumber, data: val } };
+                        return res;
+                      });
+                      setVal("");
+                    }
+                  },
+                },
+                "submit"
+              ),
+            ]),
+          ]),
+        ]),
+      extend: ({ data }) =>
+        h("div", { class: "border flex px-[10px] py-[8px] bg-slate-400" }, [
+          h("h2", { class: "text-[20px]" }, [">> ", data]),
+        ]),
+    }
+  );
+
+  useEffect(() => {
+    if (diffFileInstance) {
+      // mount react
+      delete reactRoot.current.__fiber__;
+      reactApp.current?.render?.(reactElement);
+      // mount vue
+      // vueApp.current?.unmount?.();
+      // vueApp.current = createApp(vueElement);
+      // vueApp.current.mount(vueRef.current!);
+    }
+  }, [diffFileInstance, reactElement]);
+
   return (
     <>
       <div className="w-[90%] m-auto mb-[1em] mt-[1em]">
-        <h2 className=" text-[24px]">
-          A React (Vue) component to show the file diff (just like github){" "}
-          <span className="text-red-500"> (🚧 wip) </span>
-        </h2>
+        <h2 className=" text-[24px]">A <code className=" bg-slate-100 px-[4px] rounded-sm">React</code> / <code className="bg-slate-100 px-[4px] rounded-sm">Vue</code> component to show the file diff (like Github)</h2>
         <br />
         <p>
           Select a file to show the diff: &nbsp;
@@ -98,66 +245,22 @@ export function Example() {
         </div>
       </div>
 
-      <div className="w-[90%] m-auto border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]">
-        <DiffView<string>
-          renderWidgetLine={({ onClose, side, lineNumber }) => (
-            <div className="border flex flex-col w-full px-[4px] py-[8px]">
-              <textarea
-                className="w-full border min-h-[80px] p-[2px]"
-                value={val}
-                onChange={(e) => setVal(e.target.value)}
-              />
-              <div className="m-[5px] mt-[0.8em] text-right">
-                <div className="inline-flex gap-x-[12px] justify-end">
-                  <button
-                    className="border px-[12px] py-[6px] rounded-[4px]"
-                    onClick={() => {
-                      onClose();
-                      setVal("");
-                    }}
-                  >
-                    cancel
-                  </button>
-                  <button
-                    className="border px-[12px] py-[6px] rounded-[4px]"
-                    onClick={() => {
-                      onClose();
-                      if (val) {
-                        const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
-                        setExtend((prev) => {
-                          const res = { ...prev };
-                          res[sideKey] = { ...res[sideKey], [lineNumber]: { lineNumber, data: val } };
-                          return res;
-                        });
-                        setVal("");
-                      }
-                    }}
-                  >
-                    submit
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-          // data={data[v]}
-          diffFile={diffFileInstance}
-          extendData={extend}
-          renderExtendLine={({ data }) => {
-            return (
-              <div className="border flex px-[10px] py-[8px] bg-slate-400">
-                <h2 className="text-[20px]">
-                  {">> "}
-                  {data}
-                </h2>
-              </div>
-            );
-          }}
-          diffViewFontSize={fontsize}
-          diffViewHighlight={highlight}
-          diffViewMode={mode}
-          diffViewWrap={wrap}
-          diffViewAddWidget
-        />
+      <div className="flex w-[95%] m-auto mb-2">
+        <div className="w-full">React Example: </div>
+        {/* <div className="w-full">Vue Example: </div> */}
+      </div>
+
+      <div className="flex items-start w-[95%] gap-x-1 m-auto">
+        <div
+          id="react"
+          ref={reactRoot}
+          className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]"
+        ></div>
+        {/* <div
+          id="vue"
+          ref={vueRef}
+          className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]"
+        ></div> */}
       </div>
     </>
   );

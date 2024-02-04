@@ -58,7 +58,7 @@ const resetV = () => (v.value = "");
 <template>
   <div class="w-[90%] m-auto mb-[1em] mt-[1em]">
     <h2 class="text-[24px]">
-      A Vue component to show the file diff (just like github) <span class="text-red-500"> (🚧 wip) </span>
+      A Vue component to show the file diff (just like github)
     </h2>
     <br />
     <p>

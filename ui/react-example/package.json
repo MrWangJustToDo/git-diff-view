@@ -13,12 +13,14 @@
   "dependencies": {
     "@git-diff-view/core": "workspace:*",
     "@git-diff-view/react": "workspace:*",
+    "@git-diff-view/vue": "workspace:*",
     "@my-react/react": "0.3.0",
     "@my-react/react-dom": "0.3.0",
     "lodash": "^4.17.21",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "reactivity-store": "^0.3.1"
+    "reactivity-store": "^0.3.1",
+    "vue": "^3.3.11"
   },
   "devDependencies": {
     "@my-react/react-refresh": "0.3.0",
