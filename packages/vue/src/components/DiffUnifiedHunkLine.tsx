@@ -141,7 +141,7 @@ export const DiffUnifiedLastHunkLine = defineComponent(
             </button>
           </td>
           <td
-            class="diff-line-hunk-content pr-[10px] align-middle"
+            class="diff-line-hunk-content pr-[10px] align-middle select-none"
             style={{ backgroundColor: `var(${hunkContentBGName})` }}
           >
             <span>&ensp;</span>

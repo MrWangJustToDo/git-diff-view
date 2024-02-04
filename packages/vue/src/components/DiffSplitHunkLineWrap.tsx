@@ -46,7 +46,7 @@ export const DiffSplitHunkLine = defineComponent(
       return (
         <tr data-line={`${props.lineNumber}-hunk`} data-state="hunk" class="diff-line diff-line-hunk select-none">
           <td
-            class="diff-line-hunk-action p-[1px] w-[1%] min-w-[40px]"
+            class="diff-line-hunk-action p-[1px] w-[1%] min-w-[40px] select-none"
             style={{
               backgroundColor: `var(${hunkLineNumberBGName})`,
               color: `var(${plainLineNumberColorName})`,
@@ -131,7 +131,7 @@ export const DiffSplitLastHunkLine = defineComponent(
             </button>
           </td>
           <td
-            class="diff-line-hunk-content pr-[10px] align-middle"
+            class="diff-line-hunk-content pr-[10px] align-middle select-none"
             colspan={3}
             style={{ backgroundColor: `var(${hunkContentBGName})` }}
           >

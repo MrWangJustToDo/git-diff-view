@@ -62,7 +62,7 @@ export const DiffSplitWidgetLine = defineComponent(
             </td>
           ) : (
             <td
-              class="diff-line-widget-old-placeholder p-0"
+              class="diff-line-widget-old-placeholder p-0 select-none"
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >
@@ -82,7 +82,7 @@ export const DiffSplitWidgetLine = defineComponent(
             </td>
           ) : (
             <td
-              class="diff-line-widget-new-placeholder p-0 border-l-[1px] border-l-[#ccc]"
+              class="diff-line-widget-new-placeholder p-0 border-l-[1px] border-l-[#ccc] select-none"
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >

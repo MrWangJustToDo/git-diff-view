@@ -8,31 +8,19 @@ import { DiffSplitLastHunkLine, DiffSplitHunkLine } from "./DiffSplitHunkLineNor
 import { DiffSplitLine } from "./DiffSplitLineNormal";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
 import { SplitSide } from "./DiffView";
+import { removeAllSelection, syncScroll } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
+import type { MouseEventHandler } from "react";
 
-const syncScroll = (left: HTMLElement, right: HTMLElement) => {
-  const onScroll = function (event: Event) {
-    if (event === null || event.target === null) return;
-    if (event.target === left) {
-      right.scrollTop = left.scrollTop;
-      right.scrollLeft = left.scrollLeft;
-    } else {
-      left.scrollTop = right.scrollTop;
-      left.scrollLeft = right.scrollLeft;
-    }
-  };
-  if (!left.onscroll) {
-    left.onscroll = onScroll;
-  }
-  if (!right.onscroll) {
-    right.onscroll = onScroll;
-  }
+const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
+  const ele = e.target;
 
-  return () => {
-    left.onscroll = null;
-    right.onscroll = null;
-  };
+  // need remove all the selection
+  if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
+    removeAllSelection();
+    return;
+  }
 };
 
 const DiffSplitViewTable = ({ side, diffFile }: { side: SplitSide; diffFile: DiffFile }) => {
@@ -52,13 +40,7 @@ const DiffSplitViewTable = ({ side, diffFile }: { side: SplitSide; diffFile: Dif
           <th scope="col">{SplitSide[side]} line content</th>
         </tr>
       </thead>
-      <tbody
-        className="diff-table-body leading-[1.4]"
-        style={{
-          fontFamily: "Menlo, Consolas, monospace",
-          fontSize: "var(--diff-font-size--)",
-        }}
-      >
+      <tbody className="diff-table-body leading-[1.4]" onMouseDownCapture={onMouseDown}>
         {lines.map((line) => (
           <Fragment key={line.index}>
             <DiffSplitHunkLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
@@ -89,11 +71,27 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
 
   return (
     <div className="split-diff-view split-diff-view-wrap w-full flex basis-[50%]">
-      <div className="old-diff-table-wrapper overflow-auto w-full" ref={ref1} style={{ overscrollBehaviorX: "none" }}>
+      <div
+        className="old-diff-table-wrapper overflow-auto w-full"
+        ref={ref1}
+        style={{
+          overscrollBehaviorX: "none",
+          fontFamily: "Menlo, Consolas, monospace",
+          fontSize: "var(--diff-font-size--)",
+        }}
+      >
         <DiffSplitViewTable side={SplitSide.old} diffFile={diffFile} />
       </div>
       <div className="diff-split-line w-[1.5px] bg-[#ccc]" />
-      <div className="new-diff-table-wrapper overflow-auto w-full" ref={ref2} style={{ overscrollBehaviorX: "none" }}>
+      <div
+        className="new-diff-table-wrapper overflow-auto w-full"
+        ref={ref2}
+        style={{
+          overscrollBehaviorX: "none",
+          fontFamily: "Menlo, Consolas, monospace",
+          fontSize: "var(--diff-font-size--)",
+        }}
+      >
         <DiffSplitViewTable side={SplitSide.new} diffFile={diffFile} />
       </div>
     </div>

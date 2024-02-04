@@ -101,6 +101,7 @@ export const DiffSplitLine = defineComponent(
               <td
                 class="diff-line-old-content group relative pr-[10px] align-top"
                 style={{ backgroundColor: oldLineContentBG }}
+                data-side={SplitSide[SplitSide.old]}
               >
                 {hasDiff && enableAddWidget && (
                   <DiffSplitAddWidget
@@ -109,7 +110,7 @@ export const DiffSplitLine = defineComponent(
                     side={SplitSide.old}
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
-                    className="absolute right-[100%] translate-x-[50%] z-[1]"
+                    className="absolute right-[100%] translate-x-[50%] z-[1] select-none"
                     onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
                   />
                 )}
@@ -124,7 +125,11 @@ export const DiffSplitLine = defineComponent(
               </td>
             </>
           ) : (
-            <td class="diff-line-old-placeholder" style={{ backgroundColor: `var(${emptyBGName})` }} colspan={2}>
+            <td
+              class="diff-line-old-placeholder select-none"
+              style={{ backgroundColor: `var(${emptyBGName})` }}
+              colspan={2}
+            >
               <span>&ensp;</span>
             </td>
           )}
@@ -152,6 +157,7 @@ export const DiffSplitLine = defineComponent(
               <td
                 class="diff-line-new-content group relative pr-[10px] align-top"
                 style={{ backgroundColor: newLineContentBG }}
+                data-side={SplitSide[SplitSide.new]}
               >
                 {hasDiff && enableAddWidget && (
                   <DiffSplitAddWidget
@@ -160,7 +166,7 @@ export const DiffSplitLine = defineComponent(
                     side={SplitSide.new}
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
-                    className="absolute right-[100%] translate-x-[50%] z-[1]"
+                    className="absolute right-[100%] translate-x-[50%] z-[1] select-none"
                     onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
                   />
                 )}
@@ -176,7 +182,7 @@ export const DiffSplitLine = defineComponent(
             </>
           ) : (
             <td
-              class="diff-line-new-placeholder border-l-[1px] border-l-[#ccc]"
+              class="diff-line-new-placeholder border-l-[1px] border-l-[#ccc] select-none"
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >

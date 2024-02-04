@@ -1,7 +1,9 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import { type DiffFile, getSplitContentLines } from "@git-diff-view/core";
-import { Fragment, memo, useState, useCallback } from "react";
+import { Fragment, memo, useCallback, useMemo } from "react";
 import * as React from "react";
+import { flushSync } from "react-dom";
+import { createStore, ref } from "reactivity-store";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
 
 import { useDiffViewContext, SplitSide } from "..";
@@ -11,14 +13,24 @@ import { DiffSplitExtendLine } from "./DiffSplitExtendLineWrap";
 import { DiffSplitLastHunkLine, DiffSplitHunkLine } from "./DiffSplitHunkLineWrap";
 import { DiffSplitLine } from "./DiffSplitLineWrap";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineWrap";
+import { removeAllSelection } from "./tools";
 
 import type { MouseEventHandler } from "react";
+import type { Ref, UseSelectorWithStore } from "reactivity-store";
 
-const removeAllSelection = () => {
-  const selection = window.getSelection();
-  for (let i = 0; i < selection.rangeCount; i++) {
-    selection.removeRange(selection.getRangeAt(i));
-  }
+
+const Style = ({ useSelector }: { useSelector: UseSelectorWithStore<{ splitRef: Ref<SplitSide> }> }) => {
+  const splitRef = useSelector((s) => s.splitRef);
+
+  return (
+    <style>
+      {splitRef === SplitSide.old
+        ? `td[data-side="${SplitSide[SplitSide.new]}"] {user-select: none}`
+        : splitRef === SplitSide.new
+          ? `td[data-side="${SplitSide[SplitSide.old]}"] {user-select: none}`
+          : ""}
+    </style>
+  );
 };
 
 export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => {
@@ -26,33 +38,52 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
 
   const { useDiffContext } = useDiffViewContext();
 
-  const [selectSide, setSelectSide] = useState<SplitSide>();
+  const splitSideInfo = useMemo(
+    () =>
+      createStore(() => {
+        const splitRef = ref<SplitSide>(undefined);
+
+        const setSplit = (side: SplitSide | undefined) => {
+          flushSync(() => {
+            splitRef.value = side;
+          });
+        };
+
+        return { splitRef, setSplit };
+      }),
+    []
+  );
+
+  const setSelectSide = splitSideInfo.getReadonlyState().setSplit;
 
   const fontSize = useDiffContext(useCallback((s) => s.fontSize, []));
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);
 
-  const onMouseDown = useCallback<MouseEventHandler<HTMLTableSectionElement>>((e) => {
-    let ele = e.target;
+  const onMouseDown = useCallback<MouseEventHandler<HTMLTableSectionElement>>(
+    (e) => {
+      let ele = e.target;
 
-    // need remove all the selection
-    if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
-      removeAllSelection();
-      return;
-    }
-
-    while (ele && ele instanceof HTMLElement && ele.nodeName !== "TD") {
-      ele = ele.parentElement;
-    }
-
-    if (ele instanceof HTMLElement) {
-      const side = ele.getAttribute("data-side");
-      if (side) {
-        setSelectSide(SplitSide[side]);
+      // need remove all the selection
+      if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
         removeAllSelection();
+        return;
       }
-    }
-  }, []);
+
+      while (ele && ele instanceof HTMLElement && ele.nodeName !== "TD") {
+        ele = ele.parentElement;
+      }
+
+      if (ele instanceof HTMLElement) {
+        const side = ele.getAttribute("data-side");
+        if (side) {
+          setSelectSide(SplitSide[side]);
+          removeAllSelection();
+        }
+      }
+    },
+    [setSelectSide]
+  );
 
   const width = useTextWidth({
     text: splitLineLength.toString(),
@@ -70,13 +101,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
           fontSize: "var(--diff-font-size--)",
         }}
       >
-        <style>
-          {selectSide === SplitSide.old
-            ? `td[data-side="${SplitSide[SplitSide.new]}"] {user-select: none}`
-            : selectSide === SplitSide.new
-              ? `td[data-side="${SplitSide[SplitSide.old]}"] {user-select: none}`
-              : ""}
-        </style>
+        <Style useSelector={splitSideInfo} />
         <table className="diff-table border-collapse table-fixed w-full">
           <colgroup>
             <col className="diff-table-old-num-col" width={Math.round(width) + 25} />

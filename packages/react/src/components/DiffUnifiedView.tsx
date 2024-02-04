@@ -9,9 +9,21 @@ import { DiffUnifiedHunkLine, DiffUnifiedLastHunkLine } from "./DiffUnifiedHunkL
 import { DiffUnifiedLine } from "./DiffUnifiedLine";
 import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
 import { DiffWidgetContext } from "./DiffWidgetContext";
+import { removeAllSelection } from "./tools";
 
 import type { SplitSide } from "..";
 import type { DiffFile } from "@git-diff-view/core";
+import type { MouseEventHandler} from "react";
+
+const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
+  const ele = e.target;
+
+  // need remove all the selection
+  if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
+    removeAllSelection();
+    return;
+  }
+};
 
 export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
   // performance optimization
@@ -47,7 +59,10 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
   return (
     <DiffWidgetContext.Provider value={contextValue}>
       <div className="unified-diff-view w-full">
-        <div className="unified-diff-table-wrapper overflow-auto w-full">
+        <div
+          className="unified-diff-table-wrapper overflow-auto w-full"
+          style={{ fontFamily: "Menlo, Consolas, monospace", fontSize: "var(--diff-font-size--)" }}
+        >
           <table className="unified-diff-table border-collapse w-full">
             <colgroup>
               <col className="unified-diff-table-num-col" />
@@ -59,13 +74,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
                 <th scope="col">line content</th>
               </tr>
             </thead>
-            <tbody
-              className="diff-table-body  leading-[1.4]"
-              style={{
-                fontFamily: "Menlo, Consolas, monospace",
-                fontSize: "var(--diff-font-size--)",
-              }}
-            >
+            <tbody className="diff-table-body  leading-[1.4]" onMouseDownCapture={onMouseDown}>
               {lines.map((item) => (
                 <Fragment key={item.index}>
                   <DiffUnifiedHunkLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />

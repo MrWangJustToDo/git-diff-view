@@ -9,32 +9,9 @@ import { DiffSplitLastHunkLine, DiffSplitHunkLine } from "./DiffSplitHunkLineNor
 import { DiffSplitLine } from "./DiffSplitLineNormal";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
 import { SplitSide } from "./DiffView";
+import { removeAllSelection, syncScroll } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
-
-const syncScroll = (left: HTMLElement, right: HTMLElement) => {
-  const onScroll = function (event: Event) {
-    if (event === null || event.target === null) return;
-    if (event.target === left) {
-      right.scrollTop = left.scrollTop;
-      right.scrollLeft = left.scrollLeft;
-    } else {
-      left.scrollTop = right.scrollTop;
-      left.scrollLeft = right.scrollLeft;
-    }
-  };
-  if (!left.onscroll) {
-    left.onscroll = onScroll;
-  }
-  if (!right.onscroll) {
-    right.onscroll = onScroll;
-  }
-
-  return () => {
-    left.onscroll = null;
-    right.onscroll = null;
-  };
-};
 
 const DiffSplitViewTable = defineComponent(
   (props: { side: SplitSide; lineLength: number; diffFile: DiffFile }) => {
@@ -45,6 +22,16 @@ const DiffSplitViewTable = defineComponent(
     useSubscribeDiffFile(props, (diffFile) => {
       lines.value = getSplitContentLines(diffFile);
     });
+
+    const onMouseDown = (e: MouseEvent) => {
+      const ele = e.target;
+
+      // need remove all the selection
+      if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
+        removeAllSelection();
+        return;
+      }
+    };
 
     return () => {
       return (
@@ -59,13 +46,7 @@ const DiffSplitViewTable = defineComponent(
               <th scope="col">{SplitSide[props.side]} line content</th>
             </tr>
           </thead>
-          <tbody
-            class="diff-table-body leading-[1.4]"
-            style={{
-              fontFamily: "Menlo, Consolas, monospace",
-              fontSize: "var(--diff-font-size--)",
-            }}
-          >
+          <tbody class="diff-table-body leading-[1.4]" onMousedown={onMouseDown}>
             {lines.value.map((item) => (
               <Fragment key={item.index}>
                 <DiffSplitHunkLine
@@ -131,11 +112,27 @@ export const DiffSplitViewNormal = defineComponent(
     return () => {
       return (
         <div class="split-diff-view split-diff-view-wrap w-full flex basis-[50%]">
-          <div class="old-diff-table-wrapper overflow-auto w-full" ref={ref1} style={{ overscrollBehaviorX: "none" }}>
+          <div
+            class="old-diff-table-wrapper overflow-auto w-full"
+            ref={ref1}
+            style={{
+              overscrollBehaviorX: "none",
+              fontFamily: "Menlo, Consolas, monospace",
+              fontSize: "var(--diff-font-size--)",
+            }}
+          >
             <DiffSplitViewTable side={SplitSide.old} lineLength={lineLength.value} diffFile={props.diffFile} />
           </div>
           <div class="diff-split-line w-[1.5px] bg-[#ccc]" />
-          <div class="new-diff-table-wrapper overflow-auto w-full" ref={ref2} style={{ overscrollBehaviorX: "none" }}>
+          <div
+            class="new-diff-table-wrapper overflow-auto w-full"
+            ref={ref2}
+            style={{
+              overscrollBehaviorX: "none",
+              fontFamily: "Menlo, Consolas, monospace",
+              fontSize: "var(--diff-font-size--)",
+            }}
+          >
             <DiffSplitViewTable side={SplitSide.new} lineLength={lineLength.value} diffFile={props.diffFile} />
           </div>
         </div>
