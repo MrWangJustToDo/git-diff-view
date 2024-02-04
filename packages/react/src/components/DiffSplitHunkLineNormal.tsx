@@ -100,7 +100,7 @@ const _DiffSplitHunkLine = ({
           </td>
         </>
       ) : (
-        <td className="diff-line-hunk-placeholder" colSpan={2} style={{ backgroundColor: `var(${hunkContentBGName})` }}>
+        <td className="diff-line-hunk-placeholder select-none" colSpan={2} style={{ backgroundColor: `var(${hunkContentBGName})` }}>
           <span>&ensp;</span>
         </td>
       )}
@@ -163,14 +163,14 @@ const _DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; diffFile:
             </button>
           </td>
           <td
-            className="diff-line-hunk-content pr-[10px] align-middle"
+            className="diff-line-hunk-content pr-[10px] align-middle select-none"
             style={{ backgroundColor: `var(${hunkContentBGName})` }}
           >
             <span>&ensp;</span>
           </td>
         </>
       ) : (
-        <td className="diff-line-hunk-placeholder" colSpan={2} style={{ backgroundColor: `var(${hunkContentBGName})` }}>
+        <td className="diff-line-hunk-placeholder select-none" colSpan={2} style={{ backgroundColor: `var(${hunkContentBGName})` }}>
           <span>&ensp;</span>
         </td>
       )}

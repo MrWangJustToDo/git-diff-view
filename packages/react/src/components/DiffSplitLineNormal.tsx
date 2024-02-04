@@ -107,7 +107,7 @@ const _DiffSplitLine = ({
         </>
       ) : (
         <td
-          className={`diff-line-${SplitSide[side]}-placeholder`}
+          className={`diff-line-${SplitSide[side]}-placeholder select-none`}
           style={{ backgroundColor: `var(${emptyBGName})` }}
           colSpan={2}
         >

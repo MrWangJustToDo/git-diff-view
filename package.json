@@ -5,6 +5,7 @@
   "author": "MrWangJustToDo",
   "version": "0.0.1",
   "scripts": {
+    "dev:packages": "ts-node ./scripts/dev.ts",
     "build:packages": "ts-node ./scripts/build.ts",
     "dev:react": "cd ui/react-example && pnpm run dev",
     "dev:vue": "cd ui/vue-example && pnpm run dev",

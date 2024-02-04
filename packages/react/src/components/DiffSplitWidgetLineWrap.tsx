@@ -54,7 +54,7 @@ const _DiffSplitWidgetLine = ({
         </td>
       ) : (
         <td
-          className="diff-line-widget-old-placeholder p-0"
+          className="diff-line-widget-old-placeholder p-0 select-none"
           style={{ backgroundColor: `var(${emptyBGName})` }}
           colSpan={2}
         >
@@ -74,7 +74,7 @@ const _DiffSplitWidgetLine = ({
         </td>
       ) : (
         <td
-          className="diff-line-widget-new-placeholder p-0 border-l-[1px] border-l-[#ccc]"
+          className="diff-line-widget-new-placeholder p-0 border-l-[1px] border-l-[#ccc] select-none"
           style={{ backgroundColor: `var(${emptyBGName})` }}
           colSpan={2}
         >

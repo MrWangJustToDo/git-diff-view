@@ -60,6 +60,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
         <>
           <td
             className="diff-line-old-num group relative pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px]"
+            data-side={SplitSide[SplitSide.old]}
             style={{ backgroundColor: oldLineNumberBG, color: `var(${plainLineNumberColorName})` }}
           >
             {hasDiff && enableAddWidget && (
@@ -79,6 +80,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
           </td>
           <td
             className="diff-line-old-content group relative pr-[10px] align-top"
+            data-side={SplitSide[SplitSide.old]}
             style={{ backgroundColor: oldLineContentBG }}
           >
             {hasDiff && enableAddWidget && (
@@ -88,7 +90,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 side={SplitSide.old}
                 diffFile={diffFile}
                 onWidgetClick={onAddWidgetClick}
-                className="absolute right-[100%] translate-x-[50%] z-[1]"
+                className="absolute right-[100%] translate-x-[50%] z-[1] select-none"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
             )}
@@ -103,7 +105,12 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
           </td>
         </>
       ) : (
-        <td className="diff-line-old-placeholder" style={{ backgroundColor: `var(${emptyBGName})` }} colSpan={2}>
+        <td
+          className="diff-line-old-placeholder select-none"
+          data-side={SplitSide[SplitSide.old]}
+          style={{ backgroundColor: `var(${emptyBGName})` }}
+          colSpan={2}
+        >
           <span>&ensp;</span>
         </td>
       )}
@@ -111,6 +118,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
         <>
           <td
             className="diff-line-new-num group relative pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px] border-l-[1px] border-l-[#ccc]"
+            data-side={SplitSide[SplitSide.new]}
             style={{ backgroundColor: newLineNumberBG, color: `var(${plainLineNumberColorName})` }}
           >
             {hasDiff && enableAddWidget && (
@@ -130,6 +138,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
           </td>
           <td
             className="diff-line-new-content group relative pr-[10px] align-top"
+            data-side={SplitSide[SplitSide.new]}
             style={{ backgroundColor: newLineContentBG }}
           >
             {hasDiff && enableAddWidget && (
@@ -139,7 +148,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 side={SplitSide.new}
                 diffFile={diffFile}
                 onWidgetClick={onAddWidgetClick}
-                className="absolute right-[100%] translate-x-[50%] z-[1]"
+                className="absolute right-[100%] translate-x-[50%] z-[1] select-none"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
             )}
@@ -155,8 +164,9 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
         </>
       ) : (
         <td
-          className="diff-line-new-placeholder border-l-[1px] border-l-[#ccc]"
+          className="diff-line-new-placeholder select-none border-l-[1px] border-l-[#ccc]"
           style={{ backgroundColor: `var(${emptyBGName})` }}
+          data-side={SplitSide[SplitSide.new]}
           colSpan={2}
         >
           <span>&ensp;</span>

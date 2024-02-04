@@ -115,7 +115,7 @@ export const DiffSplitLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
         </button>
       </td>
       <td
-        className="diff-line-hunk-content pr-[10px] align-middle"
+        className="diff-line-hunk-content pr-[10px] align-middle select-none"
         colSpan={3}
         style={{ backgroundColor: `var(${hunkContentBGName})` }}
       >
