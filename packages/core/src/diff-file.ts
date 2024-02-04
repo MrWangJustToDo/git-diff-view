@@ -813,6 +813,10 @@ export class DiffFile {
 
   getBundle = () => {
     // common
+    const hasInitRaw = this.#hasInitRaw;
+    const hasInitSyntax = this.#hasInitSyntax;
+    const hasBuildSplit = this.#hasBuildSplit;
+    const hasBuildUnified = this.#hasBuildUnified;
     const oldFileLines = this.#oldFileLines;
     const oldFileDiffLines = this.#oldFileDiffLines;
     const oldFileSyntaxLines = this.#oldFileSyntaxLines;
@@ -835,6 +839,10 @@ export class DiffFile {
     const unifiedLastStartIndex = this.#unifiedLastStartIndex;
 
     return {
+      hasInitRaw,
+      hasInitSyntax,
+      hasBuildSplit,
+      hasBuildUnified,
       oldFileLines,
       oldFileDiffLines,
       oldFileSyntaxLines,
@@ -856,10 +864,10 @@ export class DiffFile {
   };
 
   mergeBundle = (data: ReturnType<DiffFile["getBundle"]>) => {
-    this.#hasInitRaw = true;
-    this.#hasInitSyntax = true;
-    this.#hasBuildSplit = true;
-    this.#hasBuildUnified = true;
+    this.#hasInitRaw = data.hasInitRaw;
+    this.#hasInitSyntax = data.hasInitSyntax;
+    this.#hasBuildSplit = data.hasBuildSplit;
+    this.#hasBuildUnified = data.hasBuildUnified;
     this.#composeByDiff = data.composeByDiff;
 
     this.#oldFileLines = data.oldFileLines;
@@ -881,5 +889,29 @@ export class DiffFile {
     this.#unifiedLastStartIndex = data.unifiedLastStartIndex;
 
     this.notifyAll();
+  };
+
+  _getFullBundle = () => {
+    const bundle = this.getBundle();
+    const oldFileResult = this.#oldFileResult;
+    const newFileResult = this.#newFileResult;
+    const diffLines = this.#diffLines;
+    const diffListResults = this.#diffListResults;
+
+    return {
+      ...bundle,
+      oldFileResult,
+      newFileResult,
+      diffLines,
+      diffListResults,
+    };
+  };
+
+  _mergeFullBundle = (data: ReturnType<DiffFile["_getFullBundle"]>) => {
+    this.mergeBundle(data);
+    this.#oldFileResult = data.oldFileResult;
+    this.#newFileResult = data.newFileResult;
+    this.#diffLines = data.diffLines;
+    this.#diffListResults = data.diffListResults;
   };
 }

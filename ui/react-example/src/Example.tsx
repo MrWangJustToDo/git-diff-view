@@ -200,9 +200,10 @@ export function Example() {
       delete (reactRoot.current as any)?.__fiber__;
       reactApp.current?.render?.(reactElement);
       // mount vue
-      vueApp.current?.unmount?.();
       vueApp.current = createApp(vueElement);
       vueApp.current.mount(vueRef.current!);
+
+      return () => vueApp.current?.unmount?.();
     }
   }, [diffFileInstance, reactElement]);
 
