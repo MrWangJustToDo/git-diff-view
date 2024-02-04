@@ -15,6 +15,8 @@ a React/Vue component to show the `git --diff` result, just like Github code rev
 
 ## Screen Shot
 ![Screenshot](example.png)
+![Screenshot](2.png)
+![Screenshot](3.png)
 
 ## Install
 
