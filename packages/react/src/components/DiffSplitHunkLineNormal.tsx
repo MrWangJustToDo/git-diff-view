@@ -35,6 +35,8 @@ const _DiffSplitHunkLine = ({
     currentHunk.splitInfo &&
     currentHunk.splitInfo.endHiddenIndex - currentHunk.splitInfo.startHiddenIndex < composeLen;
 
+  const isFirstLine = currentHunk && currentHunk.index === 0;
+
   return (
     <tr
       data-line={`${lineNumber}-hunk`}
@@ -52,7 +54,16 @@ const _DiffSplitHunkLine = ({
             }}
           >
             {expandEnabled ? (
-              isExpandAll ? (
+              isFirstLine ? (
+                <button
+                  className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+                  title="Expand Up"
+                  data-title="Expand Up"
+                  onClick={() => diffFile.onSplitHunkExpand("up", index)}
+                >
+                  <ExpandUp className="fill-current" />
+                </button>
+              ) : isExpandAll ? (
                 <button
                   className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
                   title="Expand All"
@@ -100,7 +111,11 @@ const _DiffSplitHunkLine = ({
           </td>
         </>
       ) : (
-        <td className="diff-line-hunk-placeholder select-none" colSpan={2} style={{ backgroundColor: `var(${hunkContentBGName})` }}>
+        <td
+          className="diff-line-hunk-placeholder select-none"
+          colSpan={2}
+          style={{ backgroundColor: `var(${hunkContentBGName})` }}
+        >
           <span>&ensp;</span>
         </td>
       )}
@@ -170,7 +185,11 @@ const _DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; diffFile:
           </td>
         </>
       ) : (
-        <td className="diff-line-hunk-placeholder select-none" colSpan={2} style={{ backgroundColor: `var(${hunkContentBGName})` }}>
+        <td
+          className="diff-line-hunk-placeholder select-none"
+          colSpan={2}
+          style={{ backgroundColor: `var(${hunkContentBGName})` }}
+        >
           <span>&ensp;</span>
         </td>
       )}

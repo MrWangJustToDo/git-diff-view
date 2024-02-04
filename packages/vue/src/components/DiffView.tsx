@@ -68,7 +68,11 @@ export const DiffView = defineComponent<
 >(
   (props, options) => {
     const getInstance = () => {
-      if (props.diffFile) return props.diffFile;
+      if (props.diffFile) {
+        const diffFile = DiffFile.createInstance({});
+        diffFile.mergeBundle(props.diffFile.getBundle());
+        return diffFile;
+      }
       if (props.data)
         return new DiffFile(
           props.data.oldFile?.fileName || "",

@@ -18,16 +18,21 @@ import { removeAllSelection } from "./tools";
 import type { MouseEventHandler } from "react";
 import type { Ref, UseSelectorWithStore } from "reactivity-store";
 
-
-const Style = ({ useSelector }: { useSelector: UseSelectorWithStore<{ splitRef: Ref<SplitSide> }> }) => {
+const Style = ({
+  useSelector,
+  id,
+}: {
+  useSelector: UseSelectorWithStore<{ splitRef: Ref<SplitSide> }>;
+  id: string;
+}) => {
   const splitRef = useSelector((s) => s.splitRef);
 
   return (
     <style>
       {splitRef === SplitSide.old
-        ? `td[data-side="${SplitSide[SplitSide.new]}"] {user-select: none}`
+        ? `#${id} td[data-side="${SplitSide[SplitSide.new]}"] {user-select: none}`
         : splitRef === SplitSide.new
-          ? `td[data-side="${SplitSide[SplitSide.old]}"] {user-select: none}`
+          ? `#${id} td[data-side="${SplitSide[SplitSide.old]}"] {user-select: none}`
           : ""}
     </style>
   );
@@ -101,7 +106,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
           fontSize: "var(--diff-font-size--)",
         }}
       >
-        <Style useSelector={splitSideInfo} />
+        <Style useSelector={splitSideInfo} id={`diff-root${diffFile.getId()}`} />
         <table className="diff-table border-collapse table-fixed w-full">
           <colgroup>
             <col className="diff-table-old-num-col" width={Math.round(width) + 25} />

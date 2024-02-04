@@ -31,6 +31,8 @@ const _DiffUnifiedHunkLine = ({
     currentHunk.unifiedInfo &&
     currentHunk.unifiedInfo.endHiddenIndex - currentHunk.unifiedInfo.startHiddenIndex < composeLen;
 
+  const isFirstLine = currentHunk && currentHunk.index === 0;
+
   return (
     <tr data-line={`${lineNumber}-hunk`} data-state="hunk" className="diff-line diff-line-hunk">
       <td
@@ -41,7 +43,16 @@ const _DiffUnifiedHunkLine = ({
         }}
       >
         {expandEnabled ? (
-          isExpandAll ? (
+          isFirstLine ? (
+            <button
+              className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+              title="Expand Up"
+              data-title="Expand Up"
+              onClick={() => diffFile.onUnifiedHunkExpand("up", index)}
+            >
+              <ExpandUp className="fill-current" />
+            </button>
+          ) : isExpandAll ? (
             <button
               className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
               title="Expand All"

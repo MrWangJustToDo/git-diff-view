@@ -273,7 +273,9 @@ export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
 
   const diffFile = useMemo(() => {
     if (_diffFile) {
-      return _diffFile;
+      const diffFile = DiffFile.createInstance({});
+      diffFile.mergeBundle(_diffFile.getBundle());
+      return diffFile;
     } else if (data) {
       return new DiffFile(
         data?.oldFile?.fileName || "",

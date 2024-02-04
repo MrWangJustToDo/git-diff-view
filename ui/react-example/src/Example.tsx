@@ -198,9 +198,9 @@ export function Example() {
       delete reactRoot.current.__fiber__;
       reactApp.current?.render?.(reactElement);
       // mount vue
-      // vueApp.current?.unmount?.();
-      // vueApp.current = createApp(vueElement);
-      // vueApp.current.mount(vueRef.current!);
+      vueApp.current?.unmount?.();
+      vueApp.current = createApp(vueElement);
+      vueApp.current.mount(vueRef.current!);
     }
   }, [diffFileInstance, reactElement]);
 
@@ -247,7 +247,7 @@ export function Example() {
 
       <div className="flex w-[95%] m-auto mb-2">
         <div className="w-full">React Example: </div>
-        {/* <div className="w-full">Vue Example: </div> */}
+        <div className="w-full">Vue Example: </div>
       </div>
 
       <div className="flex items-start w-[95%] gap-x-1 m-auto">
@@ -256,11 +256,11 @@ export function Example() {
           ref={reactRoot}
           className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]"
         ></div>
-        {/* <div
+        <div
           id="vue"
           ref={vueRef}
           className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]"
-        ></div> */}
+        ></div>
       </div>
     </>
   );

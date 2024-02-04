@@ -26,6 +26,8 @@ export const DiffSplitHunkLine = defineComponent(
         currentHunk.value.splitInfo.endHiddenIndex - currentHunk.value.splitInfo.startHiddenIndex < composeLen
     );
 
+    const currentIsFirstLine = ref(currentHunk.value && currentHunk.value.index === 0);
+
     const currentIsShow = ref(
       currentHunk.value &&
         currentHunk.value.splitInfo &&
@@ -46,6 +48,8 @@ export const DiffSplitHunkLine = defineComponent(
         currentHunk.value &&
         currentHunk.value.splitInfo &&
         currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex;
+
+      currentIsFirstLine.value = currentHunk.value && currentHunk.value.index === 0;
     });
 
     const currentEnableSyncHeight = computed(() => props.side === SplitSide.new && currentIsShow.value);
@@ -77,7 +81,15 @@ export const DiffSplitHunkLine = defineComponent(
                 }}
               >
                 {enableExpand.value ? (
-                  currentShowExpandAll.value ? (
+                  currentIsFirstLine.value ? (
+                    <button
+                      class="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+                      title="Expand Up"
+                      onClick={() => props.diffFile.onSplitHunkExpand("up", props.index)}
+                    >
+                      <ExpandUp className="fill-current" />
+                    </button>
+                  ) : currentShowExpandAll.value ? (
                     <button
                       class="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
                       title="Expand All"
@@ -122,7 +134,11 @@ export const DiffSplitHunkLine = defineComponent(
               </td>
             </>
           ) : (
-            <td class="diff-line-hunk-placeholder select-none" colspan={2} style={{ backgroundColor: `var(${hunkContentBGName})` }}>
+            <td
+              class="diff-line-hunk-placeholder select-none"
+              colspan={2}
+              style={{ backgroundColor: `var(${hunkContentBGName})` }}
+            >
               <span>&ensp;</span>
             </td>
           )}
@@ -140,7 +156,6 @@ export const DiffSplitLastHunkLine = defineComponent(
     const lineSelector = computed(() => `tr[data-line="last-hunk"]`);
 
     const currentSyncHeightSide = computed(() => SplitSide[SplitSide.old]);
-
 
     const currentIsShow = ref(props.diffFile.getNeedShowExpandAll("split") && props.diffFile.getExpandEnabled());
 
@@ -161,12 +176,7 @@ export const DiffSplitLastHunkLine = defineComponent(
       if (!currentIsShow.value) return null;
 
       return (
-        <tr
-          data-line="last-hunk"
-          data-state="hunk"
-          data-side={SplitSide[props.side]}
-          class="diff-line diff-line-hunk"
-        >
+        <tr data-line="last-hunk" data-state="hunk" data-side={SplitSide[props.side]} class="diff-line diff-line-hunk">
           {enableHunkAction.value ? (
             <>
               <td
@@ -192,7 +202,11 @@ export const DiffSplitLastHunkLine = defineComponent(
               </td>
             </>
           ) : (
-            <td class="diff-line-hunk-placeholder select-none" colspan={2} style={{ backgroundColor: `var(${hunkContentBGName})` }}>
+            <td
+              class="diff-line-hunk-placeholder select-none"
+              colspan={2}
+              style={{ backgroundColor: `var(${hunkContentBGName})` }}
+            >
               <span>&ensp;</span>
             </td>
           )}

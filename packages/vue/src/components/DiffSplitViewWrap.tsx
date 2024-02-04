@@ -14,13 +14,13 @@ import { removeAllSelection } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const Style = ({ splitSideInfo }: { splitSideInfo: { side: SplitSide } }) => {
+const Style = ({ splitSideInfo, id }: { splitSideInfo: { side: SplitSide }; id: string }) => {
   return (
     <style>
       {splitSideInfo.side === SplitSide.old
-        ? `td[data-side="${SplitSide[SplitSide.new]}"] {user-select: none}`
+        ? `#${id} td[data-side="${SplitSide[SplitSide.new]}"] {user-select: none}`
         : splitSideInfo.side === SplitSide.new
-          ? `td[data-side="${SplitSide[SplitSide.old]}"] {user-select: none}`
+          ? `#${id} td[data-side="${SplitSide[SplitSide.old]}"] {user-select: none}`
           : ""}
     </style>
   );
@@ -76,7 +76,7 @@ export const DiffSplitViewWrap = defineComponent(
               fontSize: "var(--diff-font-size--)",
             }}
           >
-            <Style splitSideInfo={splitSideInfo.value} />
+            <Style splitSideInfo={splitSideInfo.value} id={`diff-root${props.diffFile.getId()}`} />
             <table class="diff-table border-collapse table-fixed w-full">
               <colgroup>
                 <col class="diff-table-old-num-col" width={Math.round(width.value) + 25} />
