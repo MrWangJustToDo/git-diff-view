@@ -11,6 +11,8 @@ import { usePrevious } from "./hooks/usePrevious";
 
 import type { MessageData } from "./worker";
 import type { DiffViewProps } from "@git-diff-view/react";
+import type { Root } from "react-dom/client";
+import type { App } from "vue";
 
 const worker = new Worker(new URL("./worker.ts", import.meta.url), {
   type: "module",
@@ -25,9 +27,9 @@ export function Example() {
 
   const vueRef = useRef<HTMLDivElement>(null);
 
-  const reactApp = useRef();
+  const reactApp = useRef<Root>();
 
-  const vueApp = useRef();
+  const vueApp = useRef<App>();
 
   const [diffFileInstance, setDiffFileInstance] = useState<DiffFile>();
 
@@ -143,7 +145,7 @@ export function Example() {
       diffViewAddWidget: true,
     },
     {
-      widget: ({ onClose, side, lineNumber }) =>
+      widget: ({ onClose, side, lineNumber }: { onClose: () => void; side: SplitSide; lineNumber: number }) =>
         h("div", { class: "border flex flex-col w-full px-[4px] py-[8px]" }, [
           h("textarea", {
             class: "w-full border min-h-[80px] p-[2px]",
@@ -185,7 +187,7 @@ export function Example() {
             ]),
           ]),
         ]),
-      extend: ({ data }) =>
+      extend: ({ data }: { data: string }) =>
         h("div", { class: "border flex px-[10px] py-[8px] bg-slate-400" }, [
           h("h2", { class: "text-[20px]" }, [">> ", data]),
         ]),
@@ -195,7 +197,7 @@ export function Example() {
   useEffect(() => {
     if (diffFileInstance) {
       // mount react
-      delete reactRoot.current.__fiber__;
+      delete (reactRoot.current as any)?.__fiber__;
       reactApp.current?.render?.(reactElement);
       // mount vue
       vueApp.current?.unmount?.();
@@ -207,7 +209,10 @@ export function Example() {
   return (
     <>
       <div className="w-[90%] m-auto mb-[1em] mt-[1em]">
-        <h2 className=" text-[24px]">A <code className=" bg-slate-100 px-[4px] rounded-sm">React</code> / <code className="bg-slate-100 px-[4px] rounded-sm">Vue</code> component to show the file diff (like Github)</h2>
+        <h2 className=" text-[24px]">
+          A <code className=" bg-slate-100 px-[4px] rounded-sm">React</code> /{" "}
+          <code className="bg-slate-100 px-[4px] rounded-sm">Vue</code> component to show the file diff (like Github)
+        </h2>
         <br />
         <p>
           Select a file to show the diff: &nbsp;
