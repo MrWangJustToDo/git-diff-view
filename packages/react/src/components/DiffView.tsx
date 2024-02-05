@@ -235,8 +235,6 @@ const _InternalDiffView = <T extends unknown>(
     onAddWidgetClick,
   ]);
 
-  useUnmount(() => diffFile.clearId(), [diffFile]);
-
   const value = useMemo(() => ({ useDiffContext }), [useDiffContext]);
 
   return (
@@ -304,6 +302,17 @@ export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
       diffFile.notifyAll();
     }
   }, [diffFile, props.diffViewHighlight, autoDetectLang, registerHighlighter]);
+
+  useEffect(() => {
+    if (_diffFile && diffFile) {
+      _diffFile._addClonedInstance(diffFile);
+      return () => {
+        _diffFile._delClonedInstance(diffFile);
+      };
+    }
+  }, [diffFile, _diffFile]);
+
+  useUnmount(() => diffFile._destroy(), [diffFile]);
 
   if (!diffFile) return null;
 

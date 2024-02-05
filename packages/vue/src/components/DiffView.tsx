@@ -1,5 +1,5 @@
 import { DiffFile } from "@git-diff-view/core";
-import { defineComponent, provide, ref, watch, watchEffect, computed } from "vue";
+import { defineComponent, provide, ref, watch, watchEffect, computed, onUnmounted } from "vue";
 
 import {
   idSymbol,
@@ -98,13 +98,20 @@ export const DiffView = defineComponent<
 
     watch(
       () => props.diffFile,
-      () => (diffFile.value = getInstance())
+      () => {
+        diffFile.value._destroy?.();
+        diffFile.value = getInstance();
+      },
+      { immediate: true }
     );
 
     watch(
       () => props.data,
-      () => (diffFile.value = getInstance()),
-      { deep: true }
+      () => {
+        diffFile.value._destroy?.();
+        diffFile.value = getInstance();
+      },
+      { immediate: true, deep: true }
     );
 
     watch(
@@ -113,6 +120,13 @@ export const DiffView = defineComponent<
     );
 
     const isMounted = useIsMounted();
+
+    const initSubscribe = (onClean: (cb: () => void) => void) => {
+      if (!isMounted.value || !diffFile.value || !props.diffFile) return;
+      const instance = diffFile.value as DiffFile;
+      props.diffFile._addClonedInstance(instance);
+      onClean(() => props.diffFile._delClonedInstance(instance));
+    };
 
     const initDiff = () => {
       if (!isMounted.value || !diffFile.value) return;
@@ -131,8 +145,9 @@ export const DiffView = defineComponent<
 
     const initId = (onClean: (cb: () => void) => void) => {
       if (!diffFile.value) return;
-      id.value = diffFile.value.getId();
-      onClean(() => diffFile.value.clearId());
+      const instance = diffFile.value;
+      id.value = instance.getId();
+      onClean(() => instance.clearId());
     };
 
     watchEffect(() => initDiff());
@@ -140,6 +155,8 @@ export const DiffView = defineComponent<
     watchEffect(() => initSyntax());
 
     watchEffect((onClean) => initId(onClean));
+
+    watchEffect((onClean) => initSubscribe(onClean));
 
     provide(idSymbol, id);
 
@@ -162,6 +179,8 @@ export const DiffView = defineComponent<
     useProvide(props, "diffViewAddWidget", enableAddWidgetSymbol);
 
     useProvide(props, "extendData", extendDataSymbol, true);
+
+    onUnmounted(() => diffFile.value._destroy?.());
 
     return () => {
       if (!diffFile.value) return null;

@@ -64,16 +64,18 @@ export const DiffUnifiedHunkLine = defineComponent(
             {enableExpand.value ? (
               currentIsFirstLine.value ? (
                 <button
-                  class="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+                  class="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
                   title="Expand Up"
+                  data-title="Expand Up"
                   onClick={() => props.diffFile.onUnifiedHunkExpand("up", props.index)}
                 >
                   <ExpandUp className="fill-current" />
                 </button>
               ) : currentIsEnableAll.value ? (
                 <button
-                  class="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+                  class="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
                   title="Expand All"
+                  data-title="Expand All"
                   onClick={() => props.diffFile.onUnifiedHunkExpand("all", props.index)}
                 >
                   <ExpandAll className="fill-current" />
@@ -81,15 +83,17 @@ export const DiffUnifiedHunkLine = defineComponent(
               ) : (
                 <>
                   <button
-                    class="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
+                    class="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
                     title="Expand Down"
+                    data-title="Expand Down"
                     onClick={() => props.diffFile.onUnifiedHunkExpand("down", props.index)}
                   >
                     <ExpandDown className="fill-current" />
                   </button>
                   <button
-                    class="w-full hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
+                    class="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
                     title="Expand Up"
+                    data-title="Expand Up"
                     onClick={() => props.diffFile.onUnifiedHunkExpand("up", props.index)}
                   >
                     <ExpandUp className="fill-current" />
@@ -145,8 +149,9 @@ export const DiffUnifiedLastHunkLine = defineComponent(
             }}
           >
             <button
-              class="w-full hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+              class="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
               title="Expand Down"
+              data-title="Expand Down"
               onClick={() => props.diffFile.onUnifiedLastExpand()}
             >
               <ExpandDown className="fill-current" />

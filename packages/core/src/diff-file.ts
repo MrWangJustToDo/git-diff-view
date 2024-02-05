@@ -102,7 +102,7 @@ export class DiffFile {
 
   #unifiedLastStartIndex?: number;
 
-  #listeners: (() => void)[] = [];
+  #listeners: ((() => void) & { isSyncExternal?: boolean })[] = [];
 
   #hasInitRaw: boolean = false;
 
@@ -131,6 +131,8 @@ export class DiffFile {
   unifiedLineLength: number = 0;
 
   #id: string = "";
+
+  #clonedInstance = new Map<DiffFile, () => void>();
 
   static createInstance(
     data: {
@@ -786,7 +788,7 @@ export class DiffFile {
     return this.#newFileSyntaxLines?.[lineNumber];
   };
 
-  subscribe = (listener: () => void) => {
+  subscribe = (listener: (() => void) & { isSyncExternal?: boolean }) => {
     this.#listeners.push(listener);
 
     return () => {
@@ -794,18 +796,32 @@ export class DiffFile {
     };
   };
 
-  notifyAll = () => {
+  notifyAll = (skipSyncExternal?: boolean) => {
     this.#updateCount++;
-    this.#listeners.forEach((f) => f());
+    this.#listeners.forEach((f) => {
+      if (skipSyncExternal && f.isSyncExternal) {
+        return;
+      }
+      f();
+    });
   };
 
   getUpdateCount = () => this.#updateCount;
 
   getNeedShowExpandAll = (mode: "split" | "unified") => {
     if (mode === "split") {
-      return this.#splitLastStartIndex && Number.isFinite(this.#splitLastStartIndex);
+      return (
+        this.#splitLastStartIndex &&
+        Number.isFinite(this.#splitLastStartIndex) &&
+        (this.getSplitLeftLine(this.splitLineLength - 1)?.isHidden ||
+          this.getSplitRightLine(this.splitLineLength - 1)?.isHidden)
+      );
     } else {
-      return this.#unifiedLastStartIndex && Number.isFinite(this.#unifiedLastStartIndex);
+      return (
+        this.#unifiedLastStartIndex &&
+        Number.isFinite(this.#unifiedLastStartIndex) &&
+        this.getUnifiedLine(this.unifiedLineLength - 1)?.isHidden
+      );
     }
   };
 
@@ -891,6 +907,34 @@ export class DiffFile {
     this.notifyAll();
   };
 
+  _addClonedInstance = (instance: DiffFile) => {
+    const updateFunc = () => {
+      this._notifyOthers(instance);
+    };
+
+    updateFunc.isSyncExternal = true;
+
+    const unsubscribe = instance.subscribe(updateFunc);
+
+    this.#clonedInstance.set(instance, unsubscribe);
+  };
+
+  _notifyOthers = (instance: DiffFile) => {
+    this.#clonedInstance.forEach((_, i) => {
+      if (i !== instance) {
+        i.notifyAll(true);
+      }
+    });
+  };
+
+  _delClonedInstance = (instance: DiffFile) => {
+    const unsubscribe = this.#clonedInstance.get(instance);
+
+    unsubscribe && unsubscribe();
+
+    this.#clonedInstance.delete(instance);
+  };
+
   _getFullBundle = () => {
     const bundle = this.getBundle();
     const oldFileResult = this.#oldFileResult;
@@ -913,5 +957,12 @@ export class DiffFile {
     this.#newFileResult = data.newFileResult;
     this.#diffLines = data.diffLines;
     this.#diffListResults = data.diffListResults;
+  };
+
+  _destroy = () => {
+    this.clearId();
+    this.#listeners.splice(0, this.#listeners.length);
+    this.#clonedInstance.forEach((v) => v());
+    this.#clonedInstance.clear();
   };
 }
