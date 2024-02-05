@@ -112,8 +112,9 @@ export function Example() {
           </div>
         </div>
       )}
-      // data={data[v]}
-      diffFile={diffFileInstance}
+      // use data
+      data={data[v]}
+      // diffFile={diffFileInstance}
       extendData={extend}
       renderExtendLine={({ data }) => {
         return (
@@ -136,6 +137,7 @@ export function Example() {
   const vueElement = h(
     DiffViewVue,
     {
+      // use worker
       diffFile: diffFileInstance,
       extendData: extend,
       diffViewFontSize: fontsize,
