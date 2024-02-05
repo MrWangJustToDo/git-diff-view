@@ -60,7 +60,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
     <DiffWidgetContext.Provider value={contextValue}>
       <div className="unified-diff-view w-full">
         <div
-          className="unified-diff-table-wrapper overflow-auto w-full"
+          className="unified-diff-table-wrapper overflow-auto w-full scrollbar-hide scrollbar-disable"
           style={{ fontFamily: "Menlo, Consolas, monospace", fontSize: "var(--diff-font-size--)" }}
         >
           <table className="unified-diff-table border-collapse w-full">

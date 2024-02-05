@@ -58,6 +58,7 @@
     "@vitejs/plugin-vue-jsx": "^3.1.0",
     "autoprefixer": "^10.4.16",
     "postcss": "^8.4.33",
+    "tailwind-scrollbar-hide": "^1.1.7",
     "tailwindcss": "^3.4.1",
     "vite": "^5.0.12",
     "vite-plugin-dts": "^3.7.1",

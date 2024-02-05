@@ -19,7 +19,12 @@ const start = async () => {
           },
           extract: "css/diff-view.css",
           extensions: [".css"],
-          plugins: [tailwindcss({ content: [`${absolutePath}/src/**/*.{js,ts,jsx,tsx}`] })],
+          plugins: [
+            tailwindcss({
+              content: [`${absolutePath}/src/**/*.{js,ts,jsx,tsx}`],
+              plugins: [require("tailwind-scrollbar-hide")],
+            }),
+          ],
           minimize: true,
         }),
       ],
@@ -32,7 +37,12 @@ const start = async () => {
           },
           extract: "css/diff-view.css",
           extensions: [".css"],
-          plugins: [tailwindcss({ content: [`${absolutePath}/src/**/*.{js,ts,jsx,tsx}`] })],
+          plugins: [
+            tailwindcss({
+              content: [`${absolutePath}/src/**/*.{js,ts,jsx,tsx}`],
+              plugins: [require("tailwind-scrollbar-hide")],
+            }),
+          ],
           minimize: true,
         }),
       ],
@@ -45,7 +55,12 @@ const start = async () => {
           },
           extract: "css/diff-view.css",
           extensions: [".css"],
-          plugins: [tailwindcss({ content: [`${absolutePath}/src/**/*.{js,ts,jsx,tsx}`] })],
+          plugins: [
+            tailwindcss({
+              content: [`${absolutePath}/src/**/*.{js,ts,jsx,tsx}`],
+              plugins: [require("tailwind-scrollbar-hide")],
+            }),
+          ],
           minimize: true,
         }),
       ],

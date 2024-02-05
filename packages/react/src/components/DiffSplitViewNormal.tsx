@@ -72,7 +72,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
   return (
     <div className="split-diff-view split-diff-view-wrap w-full flex basis-[50%]">
       <div
-        className="old-diff-table-wrapper overflow-auto w-full"
+        className="old-diff-table-wrapper overflow-auto w-full scrollbar-hide scrollbar-disable"
         ref={ref1}
         style={{
           overscrollBehaviorX: "none",
@@ -84,7 +84,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
       </div>
       <div className="diff-split-line w-[1.5px] bg-[#ccc]" />
       <div
-        className="new-diff-table-wrapper overflow-auto w-full"
+        className="new-diff-table-wrapper overflow-auto w-full scrollbar-hide scrollbar-disable"
         ref={ref2}
         style={{
           overscrollBehaviorX: "none",

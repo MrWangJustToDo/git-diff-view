@@ -25,7 +25,7 @@ export const DiffUnifiedView = ({ diffFile }: { diffFile: DiffFile }) => {
   return (
     <div class="unified-diff-view w-full">
       <div
-        class="unified-diff-table-wrapper overflow-auto w-full"
+        class="unified-diff-table-wrapper overflow-auto w-full scrollbar-hide"
         style={{ fontFamily: "Menlo, Consolas, monospace", fontSize: "var(--diff-font-size--)" }}
       >
         <table class="unified-diff-table border-collapse w-full">
