@@ -3,7 +3,7 @@
   "description": "@git-diff-view/react",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
@@ -59,7 +59,7 @@
   "dependencies": {
     "highlight.js": "^11.9.0",
     "lowlight": "^3.1.0",
-    "reactivity-store": "^0.3.1",
+    "reactivity-store": "^0.3.2",
     "use-sync-external-store": "^1.2.0"
   },
   "devDependencies": {

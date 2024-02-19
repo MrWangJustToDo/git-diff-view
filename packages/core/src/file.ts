@@ -1,9 +1,10 @@
+import { LRUCache } from "lru-cache";
+
 import { highlighter } from "./highlighter";
 
 import type { ATS } from "./highlighter";
 
-// TODO LRU Cache
-const map = {} as Record<string, File>;
+const map = new LRUCache<string, File>({ max: 50 });
 
 export type SyntaxNode = {
   type: string;
@@ -46,7 +47,13 @@ export class File {
     Object.defineProperty(this, "__v_skip", { value: true });
   }
 
-  doSyntax({ autoDetectLang, registerHighlighter }: { autoDetectLang?: boolean; registerHighlighter?: typeof highlighter }) {
+  doSyntax({
+    autoDetectLang,
+    registerHighlighter,
+  }: {
+    autoDetectLang?: boolean;
+    registerHighlighter?: typeof highlighter;
+  }) {
     if (!this.raw || this.hasDoSyntax) return;
 
     let hasRegisteredLang = true;
@@ -210,11 +217,11 @@ export class File {
 export const getFile = (raw: string, lang: string) => {
   const key = raw + "--" + __VERSION__ + "--" + lang;
 
-  if (map[key]) return map[key];
+  if (map.has(key)) return map.get(key);
 
   const file = new File(raw, lang);
 
-  map[key] = file;
+  map.set(key, file);
 
   return file;
 };

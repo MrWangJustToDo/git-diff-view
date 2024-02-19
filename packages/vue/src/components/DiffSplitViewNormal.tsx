@@ -1,8 +1,10 @@
 import { getSplitContentLines } from "@git-diff-view/core";
 import { Fragment, computed, defineComponent, ref, watchPostEffect } from "vue";
 
+import { useFontSize } from "../context";
 import { useIsMounted } from "../hooks/useIsMounted";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
+import { useTextWidth } from "../hooks/useTextWidth";
 
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal";
 import { DiffSplitLastHunkLine, DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
@@ -14,7 +16,7 @@ import { removeAllSelection, syncScroll } from "./tools";
 import type { DiffFile } from "@git-diff-view/core";
 
 const DiffSplitViewTable = defineComponent(
-  (props: { side: SplitSide; lineLength: number; diffFile: DiffFile }) => {
+  (props: { side: SplitSide; diffFile: DiffFile; width: number }) => {
     const className = computed(() => (props.side === SplitSide.new ? "new-diff-table" : "old-diff-table"));
 
     const lines = ref(getSplitContentLines(props.diffFile));
@@ -37,7 +39,10 @@ const DiffSplitViewTable = defineComponent(
       return (
         <table class={className.value + " border-collapse w-full"} data-mode={SplitSide[props.side]}>
           <colgroup>
-            <col class={`diff-table-${SplitSide[props.side]}-num-col`} />
+            <col
+              class={`diff-table-${SplitSide[props.side]}-num-col`}
+              style={{ minWidth: Math.round(props.width) + 25 + "px" }}
+            />
             <col class={`diff-table-${SplitSide[props.side]}-content-col`} />
           </colgroup>
           <thead class="hidden">
@@ -81,7 +86,7 @@ const DiffSplitViewTable = defineComponent(
       );
     };
   },
-  { name: "DiffSplitViewTable", props: ["diffFile", "lineLength", "side"] }
+  { name: "DiffSplitViewTable", props: ["diffFile", "side", "width"] }
 );
 
 export const DiffSplitViewNormal = defineComponent(
@@ -92,10 +97,10 @@ export const DiffSplitViewNormal = defineComponent(
 
     const ref2 = ref<HTMLDivElement>();
 
-    const lineLength = ref(props.diffFile.splitLineLength);
+    const maxText = ref(props.diffFile.splitLineLength.toString());
 
     useSubscribeDiffFile(props, (diffFile) => {
-      lineLength.value = diffFile.splitLineLength;
+      maxText.value = diffFile.splitLineLength.toString();
     });
 
     const initSyncScroll = (onClean: (cb: () => void) => void) => {
@@ -109,6 +114,12 @@ export const DiffSplitViewNormal = defineComponent(
 
     watchPostEffect(initSyncScroll);
 
+    const fontSize = useFontSize();
+
+    const font = computed(() => ({ fontSize: fontSize.value + "px", fontFamily: "Menlo, Consolas, monospace" }));
+
+    const width = useTextWidth({ text: maxText, font });
+
     return () => {
       return (
         <div class="split-diff-view split-diff-view-wrap w-full flex basis-[50%]">
@@ -121,7 +132,7 @@ export const DiffSplitViewNormal = defineComponent(
               fontSize: "var(--diff-font-size--)",
             }}
           >
-            <DiffSplitViewTable side={SplitSide.old} lineLength={lineLength.value} diffFile={props.diffFile} />
+            <DiffSplitViewTable side={SplitSide.old} width={width.value} diffFile={props.diffFile} />
           </div>
           <div class="diff-split-line w-[1.5px] bg-[#ccc]" />
           <div
@@ -133,7 +144,7 @@ export const DiffSplitViewNormal = defineComponent(
               fontSize: "var(--diff-font-size--)",
             }}
           >
-            <DiffSplitViewTable side={SplitSide.new} lineLength={lineLength.value} diffFile={props.diffFile} />
+            <DiffSplitViewTable side={SplitSide.new} width={width.value} diffFile={props.diffFile} />
           </div>
         </div>
       );

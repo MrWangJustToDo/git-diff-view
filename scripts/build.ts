@@ -3,10 +3,13 @@ import { rollupBuild } from "project-tool/rollup";
 import postcss from "rollup-plugin-postcss";
 import tailwindcss from "tailwindcss";
 
+const externalCorePackage = (id: string) =>
+  id.includes("node_modules") && !id.includes("tslib") && !id.includes("lru-cache");
+
 const external = (id: string) => id.includes("node_modules") && !id.includes("tslib") && !id.endsWith(".css");
 
 const start = async () => {
-  await rollupBuild({ packageName: "core", packageScope: "packages", external: external });
+  await rollupBuild({ packageName: "core", packageScope: "packages", external: externalCorePackage });
   await rollupBuild({
     packageName: "react",
     packageScope: "packages",

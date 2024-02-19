@@ -77,6 +77,10 @@ importers:
       lowlight:
         specifier: ^3.1.0
         version: 3.1.0
+    devDependencies:
+      lru-cache:
+        specifier: ^10.2.0
+        version: 10.2.0
 
   packages/react:
     dependencies:
@@ -90,8 +94,8 @@ importers:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0
         version: 18.2.0(react@18.2.0)
       reactivity-store:
-        specifier: ^0.3.1
-        version: 0.3.1(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.3.2
+        version: 0.3.2(react-dom@18.2.0)(react@18.2.0)
       use-sync-external-store:
         specifier: ^1.2.0
         version: 1.2.0(react@18.2.0)
@@ -5023,6 +5027,19 @@ packages:
 
   /reactivity-store@0.3.1(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-TSrfmKhY+7pCc42qnpaeEKICLlEtl07uEA31LsRGez/UMbLyUdfhRzcBE1w7vzPnc79CWRzEsTanGypflsEE+g==}
+    peerDependencies:
+      react: ^17.0.2 || ^18.2.0
+      react-dom: ^17.0.2 || ^18.2.0
+    dependencies:
+      '@vue/reactivity': 3.4.15
+      '@vue/shared': 3.4.15
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
+  /reactivity-store@0.3.2(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-1J7Ecq0klCiQ7pQeKHCbmBRRzJV5W8R8gluc9AL8B6L9+H5RN6FOfoDPMWKXn9ZWH5XB2hAvGQ8mPdroyC5y4g==}
     peerDependencies:
       react: ^17.0.2 || ^18.2.0
       react-dom: ^17.0.2 || ^18.2.0

@@ -3,7 +3,7 @@
   "description": "@git-diff-view/core",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.3",
+  "version": "0.0.5",
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
@@ -52,5 +52,8 @@
   ],
   "dependencies": {
     "lowlight": "^3.1.0"
+  },
+  "devDependencies": {
+    "lru-cache": "^10.2.0"
   }
 }

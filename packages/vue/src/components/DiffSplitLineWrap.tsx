@@ -94,7 +94,7 @@ export const DiffSplitLine = defineComponent(
                     onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
                   />
                 )}
-                <span data-line-num={oldLine.value.lineNumber} style={{ opacity: hasChange ? undefined : 0.5 }}>
+                <span data-line-num={oldLine.value.lineNumber} style={{ opacity: hasChange.value ? undefined : 0.5 }}>
                   {oldLine.value.lineNumber}
                 </span>
               </td>
@@ -150,7 +150,7 @@ export const DiffSplitLine = defineComponent(
                     onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
                   />
                 )}
-                <span data-line-num={newLine.value.lineNumber} style={{ opacity: hasChange ? undefined : 0.5 }}>
+                <span data-line-num={newLine.value.lineNumber} style={{ opacity: hasChange.value ? undefined : 0.5 }}>
                   {newLine.value.lineNumber}
                 </span>
               </td>
