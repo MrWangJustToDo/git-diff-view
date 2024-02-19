@@ -1,6 +1,8 @@
+import { relativeChanges } from "./change-range";
 import { DiffLineType } from "./diff-line";
 import { DiffHunkExpansionType } from "./raw-diff";
 
+import type { DiffLine} from "./diff-line";
 import type { DiffHunk, DiffHunkHeader } from "./raw-diff";
 
 /** How many new lines will be added to a diff hunk by default. */
@@ -81,4 +83,25 @@ export const numIterator = <T>(num: number, cb: (index: number) => T): T[] => {
     re.push(cb(i));
   }
   return re;
+};
+
+export const getLang = (fileName: string) => {
+  const dotIndex = fileName.lastIndexOf(".");
+  const extension = fileName.slice(dotIndex + 1);
+  return extension;
+};
+
+export const getDiffRange = (additions: DiffLine[], deletions: DiffLine[]) => {
+  if (additions.length === deletions.length) {
+    const len = additions.length;
+    for (let i = 0; i < len; i++) {
+      const addition = additions[i];
+      const deletion = deletions[i];
+      const { stringARange, stringBRange } = relativeChanges(addition.text, deletion.text);
+      addition.needRematch = true;
+      addition.range = stringARange;
+      deletion.needRematch = true;
+      deletion.range = stringBRange;
+    }
+  }
 };

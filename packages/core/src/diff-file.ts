@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable max-lines */
-import { relativeChanges } from "./change-range";
 import { DiffLineType } from "./diff-line";
 import { parseInstance } from "./diff-parse";
 import { getFile } from "./file";
+import { getDiffRange, getLang } from "./tool";
 
 import type { DiffLine } from "./diff-line";
 import type { File } from "./file";
@@ -60,12 +60,6 @@ export interface DiffHunkItem extends DiffLineItem {
     newLength: number;
   };
 }
-
-const getLang = (fileName: string) => {
-  const dotIndex = fileName.lastIndexOf(".");
-  const extension = fileName.slice(dotIndex + 1);
-  return extension;
-};
 
 export class DiffFile {
   #oldFileResult?: File;
@@ -303,22 +297,12 @@ export class DiffFile {
           } else if (line.type === DiffLineType.Delete) {
             deletions.push(line);
           } else {
-            if (additions.length === deletions.length) {
-              const len = additions.length;
-              for (let i = 0; i < len; i++) {
-                const addition = additions[i];
-                const deletion = deletions[i];
-                const { stringARange, stringBRange } = relativeChanges(addition.text, deletion.text);
-                addition.needRematch = true;
-                addition.range = stringARange;
-                deletion.needRematch = true;
-                deletion.range = stringBRange;
-              }
-            }
+            getDiffRange(additions, deletions);
             additions = [];
             deletions = [];
           }
         });
+        getDiffRange(additions, deletions);
       });
     });
 
