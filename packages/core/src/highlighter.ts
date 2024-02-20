@@ -48,7 +48,7 @@ lowlight.register("vue", function hljsDefineVue(hljs) {
   };
 });
 
-export type ATS = ReturnType<typeof lowlight.highlight>;
+export type AST = ReturnType<typeof lowlight.highlight>;
 
 export const highlighter = lowlight as typeof lowlight & {
   maxLineToIgnoreSyntax: number;

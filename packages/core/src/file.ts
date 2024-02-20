@@ -2,9 +2,9 @@ import { LRUCache } from "lru-cache";
 
 import { highlighter } from "./highlighter";
 
-import type { ATS } from "./highlighter";
+import type { AST } from "./highlighter";
 
-const map = new LRUCache<string, File>({ max: 50 });
+const map = new LRUCache<string, File>({ max: 30 });
 
 export type SyntaxNode = {
   type: string;
@@ -24,7 +24,7 @@ export type SyntaxLine = {
 };
 
 export class File {
-  ast?: ATS;
+  ast?: AST;
 
   rawFile: Record<number, string> = {};
 
