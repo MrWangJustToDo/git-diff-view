@@ -99,7 +99,7 @@ export const DiffView = defineComponent<
     watch(
       () => props.diffFile,
       () => {
-        diffFile.value._destroy?.();
+        diffFile.value?._destroy?.();
         diffFile.value = getInstance();
       },
       { immediate: true }
@@ -108,7 +108,7 @@ export const DiffView = defineComponent<
     watch(
       () => props.data,
       () => {
-        diffFile.value._destroy?.();
+        diffFile.value?._destroy?.();
         diffFile.value = getInstance();
       },
       { immediate: true, deep: true }
