@@ -949,4 +949,23 @@ export class DiffFile {
     this.#clonedInstance.forEach((v) => v());
     this.#clonedInstance.clear();
   };
+
+  clear = () => {
+    this._destroy();
+    this.#oldFileResult = null;
+    this.#newFileResult = null;
+    this.#diffLines = null;
+    this.#diffListResults = null;
+    this.#newFileDiffLines = null;
+    this.#oldFileDiffLines = null;
+    this.#newFileLines = null;
+    this.#oldFileLines = null;
+    this.#newFileSyntaxLines = null;
+    this.#oldFileSyntaxLines = null;
+    this.#splitHunksLines = null;
+    this.#splitLeftLines = null;
+    this.#splitRightLines = null;
+    this.#unifiedHunksLines = null;
+    this.#unifiedLines = null;
+  };
 }

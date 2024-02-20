@@ -3,7 +3,7 @@ import { DiffModeEnum, DiffView as DiffViewReact, SplitSide } from "@git-diff-vi
 import { DiffView as DiffViewVue } from "@git-diff-view/vue";
 import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { createApp, h } from "vue";
+import { createApp, h, ref } from "vue";
 
 import * as data from "./data";
 import { useDiffConfig } from "./hooks/useDiffConfig";
@@ -19,6 +19,20 @@ const worker = new Worker(new URL("./worker.ts", import.meta.url), {
 });
 
 type K = "a" | "b" | "c" | "d" | "e" | "j";
+
+const TextArea = ({ onChange }: { onChange: (v: string) => void }) => {
+  const [val, setVal] = useState("");
+
+  useEffect(() => {
+    onChange(val);
+  }, [val]);
+
+  return (
+    <textarea className="w-full border min-h-[80px] p-[2px]" value={val} onChange={(e) => setVal(e.target.value)} />
+  );
+};
+
+const vRef = ref("");
 
 export function Example() {
   const [v, setV] = useState<K>("b");
@@ -40,7 +54,7 @@ export function Example() {
     newFile: { "87": { data: "line have been changed!" } },
   });
 
-  const [val, setVal] = useState("");
+  const valRef = useRef("");
 
   useEffect(() => {
     if (previous && diffFileInstance !== previous) {
@@ -75,18 +89,19 @@ export function Example() {
     <DiffViewReact<string>
       renderWidgetLine={({ onClose, side, lineNumber }) => (
         <div className="border flex flex-col w-full px-[4px] py-[8px]">
-          <textarea
+          <TextArea onChange={(v) => (valRef.current = v)} />
+          {/* <textarea
             className="w-full border min-h-[80px] p-[2px]"
             value={val}
             onChange={(e) => setVal(e.target.value)}
-          />
+          /> */}
           <div className="m-[5px] mt-[0.8em] text-right">
             <div className="inline-flex gap-x-[12px] justify-end">
               <button
                 className="border px-[12px] py-[6px] rounded-[4px]"
                 onClick={() => {
                   onClose();
-                  setVal("");
+                  valRef.current = "";
                 }}
               >
                 cancel
@@ -95,14 +110,16 @@ export function Example() {
                 className="border px-[12px] py-[6px] rounded-[4px]"
                 onClick={() => {
                   onClose();
-                  if (val) {
+                  if (valRef.current) {
                     const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
                     setExtend((prev) => {
                       const res = { ...prev };
-                      res[sideKey] = { ...res[sideKey], [lineNumber]: { lineNumber, data: val } };
+                      res[sideKey] = { ...res[sideKey], [lineNumber]: { lineNumber, data: valRef.current } };
                       return res;
                     });
-                    setVal("");
+                    setTimeout(() => {
+                      valRef.current = "";
+                    });
                   }
                 }}
               >
@@ -151,8 +168,8 @@ export function Example() {
         h("div", { class: "border flex flex-col w-full px-[4px] py-[8px]" }, [
           h("textarea", {
             class: "w-full border min-h-[80px] p-[2px]",
-            value: val,
-            onInput: (e: InputEvent) => setVal((e.target as HTMLTextAreaElement).value),
+            value: vRef.value,
+            onChange: (e: InputEvent) => (vRef.value = (e.target as HTMLTextAreaElement).value),
           }),
           h("div", { class: "m-[5px] mt-[0.8em] text-right" }, [
             h("div", { class: "inline-flex gap-x-[12px] justify-end" }, [
@@ -162,7 +179,7 @@ export function Example() {
                   class: "border px-[12px] py-[6px] rounded-[4px]",
                   onClick: () => {
                     onClose();
-                    setVal("");
+                    vRef.value = "";
                   },
                 },
                 "cancel"
@@ -173,14 +190,16 @@ export function Example() {
                   class: "border px-[12px] py-[6px] rounded-[4px]",
                   onClick: () => {
                     onClose();
-                    if (val) {
+                    if (vRef.value) {
                       const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
                       setExtend((prev) => {
                         const res = { ...prev };
-                        res[sideKey] = { ...res[sideKey], [lineNumber]: { lineNumber, data: val } };
+                        res[sideKey] = { ...res[sideKey], [lineNumber]: { lineNumber, data: vRef.value } };
                         return res;
                       });
-                      setVal("");
+                      setTimeout(() => {
+                        vRef.value = "";
+                      });
                     }
                   },
                 },

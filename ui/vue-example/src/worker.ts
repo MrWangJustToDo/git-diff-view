@@ -37,5 +37,7 @@ onmessage = (event: MessageEvent<MessageData>) => {
     bundle: file.getBundle(),
   };
 
+  file.clear();
+
   post(res);
 };
