@@ -147,6 +147,8 @@ export const DiffContent = ({
 
   const isDelete = diffLine?.type === DiffLineType.Delete;
 
+  const isMaxLineLengthToIgnoreSyntax = syntaxLine?.nodeList?.length > 150;
+
   return (
     <div
       className="diff-line-content-item pl-[2.0em]"
@@ -162,7 +164,7 @@ export const DiffContent = ({
       >
         {isAdded ? "+" : isDelete ? "-" : " "}
       </span>
-      {enableHighlight && syntaxLine ? (
+      {enableHighlight && syntaxLine && !isMaxLineLengthToIgnoreSyntax ? (
         <DiffSyntax
           operator={isAdded ? "add" : isDelete ? "del" : undefined}
           rawLine={rawLine}
