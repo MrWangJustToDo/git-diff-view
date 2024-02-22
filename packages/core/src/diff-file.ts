@@ -435,14 +435,21 @@ export class DiffFile {
     const maxNewFileLineNumber = this.#newFileResult?.maxLineNumber || 0;
 
     while (oldFileLineNumber <= maxOldFileLineNumber || newFileLineNumber <= maxNewFileLineNumber) {
-      const oldRawLine = this.#getOldRawLine(oldFileLineNumber);
       const oldDiffLine = this.#getOldDiffLine(oldFileLineNumber);
-      const newRawLine = this.#getNewRawLine(newFileLineNumber);
       const newDiffLine = this.#getNewDiffLine(newFileLineNumber);
+      const oldRawLine = this.#getOldRawLine(oldFileLineNumber);
+      const newRawLine = this.#getNewRawLine(newFileLineNumber);
       const oldLineHasChange = oldDiffLine?.isIncludeableLine();
       const newLineHasChange = newDiffLine?.isIncludeableLine();
       const len = this.#splitRightLines.length;
       const isHidden = !oldDiffLine && !newDiffLine;
+      if ((oldDiffLine && !newDiffLine) || (!oldDiffLine && newDiffLine)) {
+        if (this.#composeByDiff) {
+          oldDiffLine && newFileLineNumber++;
+          newDiffLine && oldFileLineNumber++;
+          continue;
+        }
+      }
       if (!oldDiffLine && !newRawLine && !oldDiffLine && !newDiffLine) break;
       if ((oldLineHasChange && newLineHasChange) || (!oldLineHasChange && !newLineHasChange)) {
         this.#splitLeftLines.push({

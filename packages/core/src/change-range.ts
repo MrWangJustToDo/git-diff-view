@@ -4,6 +4,8 @@ export interface IRange {
 
   /** The length of the range. */
   readonly length: number;
+
+  readonly isNewLineSymbolChanged?: boolean;
 }
 
 const maxLength = 1000;
@@ -45,10 +47,22 @@ export function relativeChanges(stringA: string, stringB: string): { stringARang
 
   const _stringB = stringB.trimEnd();
 
-  if (_stringA === _stringB) {
+  const aEndStr = stringA.slice(-2);
+
+  const bEndStr = stringB.slice(-2);
+
+  if (_stringA === _stringB && aEndStr !== bEndStr && (aEndStr === "\r\n" || bEndStr === "\r\n")) {
     return {
-      stringARange: { location: _stringA.length, length: stringA.length - _stringA.length },
-      stringBRange: { location: _stringB.length, length: stringB.length - _stringB.length },
+      stringARange: {
+        location: _stringA.length,
+        length: stringA.length - _stringA.length,
+        isNewLineSymbolChanged: true,
+      },
+      stringBRange: {
+        location: _stringB.length,
+        length: stringB.length - _stringB.length,
+        isNewLineSymbolChanged: true,
+      },
     };
   }
 

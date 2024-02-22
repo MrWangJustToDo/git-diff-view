@@ -17,6 +17,7 @@ const DiffString = ({
     const str1 = rawLine.slice(0, range.location);
     const str2 = rawLine.slice(range.location, range.location + range.length);
     const str3 = rawLine.slice(range.location + range.length);
+    const isNewLineSymbolChanged = range.isNewLineSymbolChanged;
     return (
       <span class="diff-line-content-raw">
         <span data-range-start={range.location} data-range-end={range.location + range.length}>
@@ -29,7 +30,15 @@ const DiffString = ({
                 operator === "add" ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`,
             }}
           >
-            {str2 === "\r" ? "␍" : str2 === "\n" ? "␊" : str2 === "\r\n" ? "␍␊" : str2}
+            {isNewLineSymbolChanged
+              ? str2 === "\r"
+                ? "␍"
+                : str2 === "\n"
+                  ? "␊"
+                  : str2 === "\r\n"
+                    ? "␍␊"
+                    : str2
+              : str2}
           </span>
           {str3}
         </span>
@@ -81,6 +90,7 @@ const DiffSyntax = ({
               const str3 = node.value.slice(index1 + range.length);
               const isStart = str1.length || range.location === node.startIndex;
               const isEnd = str3.length || node.endIndex === range.location + range.length - 1;
+              const isNewLineSymbolChanged = range.isNewLineSymbolChanged;
               return (
                 <span
                   key={index}
@@ -100,7 +110,15 @@ const DiffSyntax = ({
                       borderBottomRightRadius: isEnd ? "0.2em" : undefined,
                     }}
                   >
-                    {str2 === "\r" ? "␍" : str2 === "\n" ? "␊" : str2 === "\r\n" ? "␍␊" : str2}
+                    {isNewLineSymbolChanged
+                      ? str2 === "\r"
+                        ? "␍"
+                        : str2 === "\n"
+                          ? "␊"
+                          : str2 === "\r\n"
+                            ? "␍␊"
+                            : str2
+                      : str2}
                   </span>
                   {str3}
                 </span>
