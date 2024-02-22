@@ -1,4 +1,4 @@
-import { DiffFile } from "@git-diff-view/core";
+import { DiffFile, highlighter } from "@git-diff-view/core";
 
 import type { DiffViewProps } from "@git-diff-view/react";
 
@@ -9,6 +9,8 @@ export type MessageData = {
 };
 
 const post = (d: MessageData) => postMessage(d);
+
+highlighter.setMaxLineToIgnoreSyntax(60000);
 
 onmessage = (event: MessageEvent<MessageData>) => {
   const _data = event.data;

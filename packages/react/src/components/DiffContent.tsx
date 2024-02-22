@@ -14,7 +14,7 @@ const DiffString = ({
 }) => {
   const range = diffLine?.range;
 
-  if (range && range.length > 0 && range.length < rawLine.length) {
+  if (range) {
     const str1 = rawLine.slice(0, range.location);
     const str2 = rawLine.slice(range.location, range.location + range.length);
     const str3 = rawLine.slice(range.location + range.length);
@@ -67,7 +67,7 @@ const DiffSyntax = ({
 
   const range = diffLine?.range;
 
-  if (range && range.length > 0 && range.length < syntaxLine.valueLength) {
+  if (range) {
     return (
       <span className="diff-line-syntax-raw">
         <span data-range-start={range.location} data-range-end={range.location + range.length}>

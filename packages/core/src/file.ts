@@ -104,13 +104,20 @@ export class File {
 
     this.maxLineNumber = rawArray.length;
 
-    this.rawFile = rawArray.reduce(
-      (p, item, index) => ({
-        ...p,
-        [index + 1]: index < rawArray.length - 1 ? item + "\n" : item,
-      }),
-      {}
-    );
+    this.rawFile = {};
+
+    for (let i = 0; i < rawArray.length; i++) {
+      this.rawFile[i + 1] = i < rawArray.length - 1 ? rawArray[i] + '\n' : rawArray[i];
+    }
+
+    // reduce 对于大数组性能很差
+    // this.rawFile = rawArray.reduce(
+    //   (p, item, index) => ({
+    //     ...p,
+    //     [index + 1]: index < rawArray.length - 1 ? item + "\n" : item,
+    //   }),
+    //   {}
+    // );
 
     this.hasDoRaw = true;
   }

@@ -306,45 +306,77 @@ export class DiffFile {
       });
     });
 
-    this.#diffLines = this.#diffListResults
-      .reduce<DiffLine[]>((p, c) => p.concat(...c.hunks.reduce<DiffLine[]>((_p, _c) => _p.concat(..._c.lines), [])), [])
-      .map<DiffLineItem>((i, index) => {
-        const typedI = i as DiffLineItem;
-        typedI.index = index;
-        if (typedI.type === DiffLineType.Hunk) {
-          const numInfo = typedI.text.split("@@")?.[1].split(" ").filter(Boolean);
-          const oldNumInfo = numInfo?.[0] || "";
-          const newNumInfo = numInfo?.[1] || "";
-          const [oldNumStartIndex, oldNumLength] = oldNumInfo.split(",");
-          const [newNumStartIndex, newNumLength] = newNumInfo.split(",");
-          const typedTypeI = typedI as DiffHunkItem;
-          typedTypeI.hunkInfo = {
-            oldStartIndex: -Number(oldNumStartIndex),
-            oldLength: Number(oldNumLength),
-            newStartIndex: +Number(newNumStartIndex),
-            newLength: Number(newNumLength),
-          };
-        }
-        return typedI;
+    this.#diffLines = [];
+
+    const tmp: DiffLine[] = [];
+
+    this.#diffListResults.forEach((item) => {
+      item.hunks.forEach((_item) => {
+        tmp.push(..._item.lines);
       });
+    });
 
-    this.#oldFileDiffLines = this.#diffLines.reduce((p, c) => {
-      if (c.oldLineNumber) {
-        this.diffLineLength = Math.max(this.diffLineLength, c.oldLineNumber);
-        return { ...p, [c.oldLineNumber]: c };
-      } else {
-        return p;
+    this.#diffLines = tmp.map<DiffLineItem>((i, index) => {
+      const typedI = i as DiffLineItem;
+      typedI.index = index;
+      if (typedI.type === DiffLineType.Hunk) {
+        const numInfo = typedI.text.split("@@")?.[1].split(" ").filter(Boolean);
+        const oldNumInfo = numInfo?.[0] || "";
+        const newNumInfo = numInfo?.[1] || "";
+        const [oldNumStartIndex, oldNumLength] = oldNumInfo.split(",");
+        const [newNumStartIndex, newNumLength] = newNumInfo.split(",");
+        const typedTypeI = typedI as DiffHunkItem;
+        typedTypeI.hunkInfo = {
+          oldStartIndex: -Number(oldNumStartIndex),
+          oldLength: Number(oldNumLength),
+          newStartIndex: +Number(newNumStartIndex),
+          newLength: Number(newNumLength),
+        };
       }
-    }, {});
+      return typedI;
+    });
 
-    this.#newFileDiffLines = this.#diffLines.reduce((p, c) => {
-      if (c.newLineNumber) {
-        this.diffLineLength = Math.max(this.diffLineLength, c.newLineNumber);
-        return { ...p, [c.newLineNumber]: c };
-      } else {
-        return p;
+    // this.#diffLines = this.#diffListResults
+    //   .reduce<DiffLine[]>((p, c) => p.concat(...c.hunks.reduce<DiffLine[]>((_p, _c) => _p.concat(..._c.lines), [])), [])
+    //   .map<DiffLineItem>((i, index) => {
+    //     const typedI = i as DiffLineItem;
+    //     typedI.index = index;
+    //     if (typedI.type === DiffLineType.Hunk) {
+    //       const numInfo = typedI.text.split("@@")?.[1].split(" ").filter(Boolean);
+    //       const oldNumInfo = numInfo?.[0] || "";
+    //       const newNumInfo = numInfo?.[1] || "";
+    //       const [oldNumStartIndex, oldNumLength] = oldNumInfo.split(",");
+    //       const [newNumStartIndex, newNumLength] = newNumInfo.split(",");
+    //       const typedTypeI = typedI as DiffHunkItem;
+    //       typedTypeI.hunkInfo = {
+    //         oldStartIndex: -Number(oldNumStartIndex),
+    //         oldLength: Number(oldNumLength),
+    //         newStartIndex: +Number(newNumStartIndex),
+    //         newLength: Number(newNumLength),
+    //       };
+    //     }
+    //     return typedI;
+    //   });
+
+    this.#oldFileDiffLines = {};
+
+    this.#diffLines.forEach((item) => {
+      if (item.oldLineNumber) {
+        this.diffLineLength = Math.max(this.diffLineLength, item.oldLineNumber);
+
+        this.#oldFileDiffLines[item.oldLineNumber] = item;
       }
-    }, {});
+    });
+
+    this.#newFileDiffLines = {};
+
+    this.#diffLines.forEach((item) => {
+      if (item.newLineNumber) {
+        this.diffLineLength = Math.max(this.diffLineLength, item.newLineNumber);
+
+        this.#newFileDiffLines[item.newLineNumber] = item;
+      }
+    });
   }
 
   #composeSyntax({

@@ -89,3 +89,19 @@ export function relativeChanges(stringA: string, stringB: string): { stringARang
 
   return { stringARange: aRange, stringBRange: bRange };
 }
+
+/** Check two string have a diff range */
+export function hasRelativeChange(stringA: string, stringB: string): boolean {
+  const _stringA = stringA.trim();
+
+  const _stringB = stringB.trim();
+
+  const { stringARange, stringBRange } = relativeChanges(_stringA, _stringB);
+
+  return (
+    stringARange.location > 0 ||
+    stringBRange.location > 0 ||
+    stringARange.length < _stringA.length ||
+    stringBRange.length < _stringB.length
+  );
+}
