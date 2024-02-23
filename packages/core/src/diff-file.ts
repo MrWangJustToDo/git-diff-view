@@ -475,11 +475,18 @@ export class DiffFile {
       const newLineHasChange = newDiffLine?.isIncludeableLine();
       const len = this.#splitRightLines.length;
       const isHidden = !oldDiffLine && !newDiffLine;
-      if ((oldDiffLine && !newDiffLine) || (!oldDiffLine && newDiffLine)) {
+      if (
+        (oldDiffLine && !newDiffLine && oldDiffLine.newLineNumber && oldDiffLine.newLineNumber > newFileLineNumber) ||
+        (!oldDiffLine && newDiffLine && newDiffLine.oldLineNumber && newDiffLine.oldLineNumber > oldFileLineNumber)
+      ) {
         if (this.#composeByDiff) {
           oldDiffLine && newFileLineNumber++;
           newDiffLine && oldFileLineNumber++;
           continue;
+        } else {
+          if (__DEV__) {
+            console.error("some error happen for generate diff line!");
+          }
         }
       }
       if (!oldDiffLine && !newRawLine && !oldDiffLine && !newDiffLine) break;
@@ -567,6 +574,20 @@ export class DiffFile {
       const newLineHasChange = newDiffLine?.isIncludeableLine();
       const len = this.#unifiedLines.length;
       const isHidden = !oldDiffLine && !newDiffLine;
+      if (
+        (oldDiffLine && !newDiffLine && oldDiffLine.newLineNumber && oldDiffLine.newLineNumber > newFileLineNumber) ||
+        (!oldDiffLine && newDiffLine && newDiffLine.oldLineNumber && newDiffLine.oldLineNumber > oldFileLineNumber)
+      ) {
+        if (this.#composeByDiff) {
+          oldDiffLine && newFileLineNumber++;
+          newDiffLine && oldFileLineNumber++;
+          continue;
+        } else {
+          if (__DEV__) {
+            console.error("some error happen for generate diff line!");
+          }
+        }
+      }
       if (!oldRawLine && !newRawLine && !newDiffLine && !oldDiffLine) break;
       if (!oldLineHasChange && !newLineHasChange) {
         this.#unifiedLines.push({
