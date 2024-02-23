@@ -12,6 +12,8 @@ const post = (d: MessageData) => postMessage(d);
 
 highlighter.setMaxLineToIgnoreSyntax(60000);
 
+// highlighter.setIgnoreSyntaxHighlightList([/.vue$/])
+
 onmessage = (event: MessageEvent<MessageData>) => {
   const _data = event.data;
 

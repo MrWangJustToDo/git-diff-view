@@ -42,7 +42,8 @@ export class File {
 
   constructor(
     readonly raw: string,
-    readonly lang: string
+    readonly lang: string,
+    readonly fileName?: string
   ) {
     Object.defineProperty(this, "__v_skip", { value: true });
   }
@@ -61,20 +62,33 @@ export class File {
     const _highlighter = registerHighlighter || highlighter;
 
     if (this.syntaxLength) {
-      console.error("current file already doSyntax before!");
+      __DEV__ && console.error("current file already doSyntax before!");
       return;
     }
 
     if (!_highlighter.registered(this.lang)) {
       hasRegisteredLang = false;
       if (!autoDetectLang) {
-        console.warn(`not support current lang: ${this.lang} yet`);
+        __DEV__ && console.warn(`not support current lang: ${this.lang} yet`);
         return;
       }
     }
 
     if (this.rawLength > _highlighter.maxLineToIgnoreSyntax) {
-      console.warn(`ignore syntax for current file, because the rawLength is too long: ${this.rawLength}`);
+      __DEV__ && console.warn(`ignore syntax for current file, because the rawLength is too long: ${this.rawLength}`);
+      return;
+    }
+
+    if (
+      this.fileName &&
+      _highlighter.ignoreSyntaxHighlightList.some((item) =>
+        item instanceof RegExp ? item.test(this.fileName) : this.fileName === item
+      )
+    ) {
+      __DEV__ &&
+        console.warn(
+          `ignore syntax for current file, because the fileName is in the ignoreSyntaxHighlightList: ${this.fileName}`
+        );
       return;
     }
 
@@ -107,7 +121,7 @@ export class File {
     this.rawFile = {};
 
     for (let i = 0; i < rawArray.length; i++) {
-      this.rawFile[i + 1] = i < rawArray.length - 1 ? rawArray[i] + '\n' : rawArray[i];
+      this.rawFile[i + 1] = i < rawArray.length - 1 ? rawArray[i] + "\n" : rawArray[i];
     }
 
     // reduce 对于大数组性能很差
@@ -221,12 +235,12 @@ export class File {
   }
 }
 
-export const getFile = (raw: string, lang: string) => {
+export const getFile = (raw: string, lang: string, fileName?: string) => {
   const key = raw + "--" + __VERSION__ + "--" + lang;
 
   if (map.has(key)) return map.get(key);
 
-  const file = new File(raw, lang);
+  const file = new File(raw, lang, fileName);
 
   map.set(key, file);
 

@@ -55,11 +55,15 @@ export const highlighter = lowlight as typeof lowlight & {
   autoDetectLang: boolean;
   setMaxLineToIgnoreSyntax: (v: number) => void;
   setAutoDetectLang: (v: boolean) => void;
+  ignoreSyntaxHighlightList: (string | RegExp)[];
+  setIgnoreSyntaxHighlightList: (v: (string | RegExp)[]) => void;
 };
 
 let _autoDetectLang = true;
 
 let _maxLineToIgnoreSyntax = 2000;
+
+const _ignoreSyntaxHighlightList: (string | RegExp)[] = [];
 
 Object.defineProperty(highlighter, "maxLineToIgnoreSyntax", {
   get: () => _maxLineToIgnoreSyntax,
@@ -78,5 +82,16 @@ Object.defineProperty(highlighter, "autoDetectLang", {
 Object.defineProperty(highlighter, "setAutoDetectLang", {
   value: (v: boolean) => {
     _autoDetectLang = v;
+  },
+});
+
+Object.defineProperty(highlighter, "ignoreSyntaxHighlightList", {
+  get: () => _ignoreSyntaxHighlightList,
+});
+
+Object.defineProperty(highlighter, "setIgnoreSyntaxHighlightList", {
+  value: (v: (string | RegExp)[]) => {
+    _ignoreSyntaxHighlightList.length = 0;
+    _ignoreSyntaxHighlightList.push(...v);
   },
 });

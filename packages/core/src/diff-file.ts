@@ -194,11 +194,11 @@ export class DiffFile {
     if (!this._oldFileContent && !this._newFileContent) return;
 
     if (this._oldFileContent) {
-      this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang);
+      this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang, this._oldFileName);
     }
 
     if (this._newFileContent) {
-      this.#newFileResult = getFile(this._newFileContent, this._newFileLang);
+      this.#newFileResult = getFile(this._newFileContent, this._newFileLang, this._newFileName);
     }
   }
 
@@ -242,8 +242,8 @@ export class DiffFile {
       if (oldFileContent === newFileContent) return;
       this._oldFileContent = oldFileContent;
       this._newFileContent = newFileContent;
-      this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang);
-      this.#newFileResult = getFile(this._newFileContent, this._newFileLang);
+      this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang, this._oldFileName);
+      this.#newFileResult = getFile(this._newFileContent, this._newFileLang, this._newFileName);
       // all of the file just compose by diff, so we can not do the expand action
       this.#composeByDiff = true;
     } else if (this.#oldFileResult) {
@@ -261,7 +261,7 @@ export class DiffFile {
       }
       if (newFileContent === this._oldFileContent) return;
       this._newFileContent = newFileContent;
-      this.#newFileResult = getFile(this._newFileContent, this._newFileLang);
+      this.#newFileResult = getFile(this._newFileContent, this._newFileLang, this._newFileName);
     } else if (this.#newFileResult) {
       let oldLineNumber = 1;
       let newLineNumber = 1;
@@ -277,7 +277,7 @@ export class DiffFile {
       }
       if (oldFileContent === this._newFileContent) return;
       this._oldFileContent = oldFileContent;
-      this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang);
+      this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang, this._oldFileName);
     }
 
     this.#composeRaw();
