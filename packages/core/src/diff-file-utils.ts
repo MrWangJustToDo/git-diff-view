@@ -7,7 +7,6 @@ export enum DiffFileLineType {
   content = 2,
   widget = 3,
   extend = 4,
-  lastHunk = 5,
 }
 
 export type DiffSplitContentLineItem = {
@@ -83,18 +82,6 @@ export const getSplitLines = (diffFile: DiffFile, options: Options): DiffSplitLi
       splitLines.push({ type: DiffFileLineType.extend, index, lineNumber: index + 1, extendLine: extendLine });
   });
 
-  const lastHunkLine = diffFile.getNeedShowExpandAll("split");
-
-  const expandEnabled = diffFile.getExpandEnabled();
-
-  if (lastHunkLine && expandEnabled) {
-    splitLines.push({
-      type: DiffFileLineType.lastHunk,
-      index: splitLineLength,
-      lineNumber: splitLineLength + 1,
-    });
-  }
-
   return splitLines;
 };
 
@@ -128,18 +115,6 @@ export const getUnifiedLines = (diffFile: DiffFile, options: Options): DiffUnifi
     extendLine &&
       unifiedLines.push({ type: DiffFileLineType.extend, index, lineNumber: index + 1, extendLine: extendLine });
   });
-
-  const lastHunkLine = diffFile.getNeedShowExpandAll("unified");
-
-  const expandEnabled = diffFile.getExpandEnabled();
-
-  if (lastHunkLine && expandEnabled) {
-    unifiedLines.push({
-      type: DiffFileLineType.lastHunk,
-      index: unifiedLineLength,
-      lineNumber: unifiedLineLength + 1,
-    });
-  }
 
   return unifiedLines;
 };

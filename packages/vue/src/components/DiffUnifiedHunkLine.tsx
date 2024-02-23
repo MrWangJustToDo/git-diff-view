@@ -31,6 +31,8 @@ export const DiffUnifiedHunkLine = defineComponent(
 
     const currentIsFirstLine = ref(currentHunk.value && currentHunk.value.index === 0);
 
+    const currentIsLastLine = ref(currentHunk.value && currentHunk.value.isLast);
+
     useSubscribeDiffFile(props, (diffFile) => {
       currentHunk.value = diffFile.getUnifiedHunkLine(props.index);
 
@@ -47,6 +49,8 @@ export const DiffUnifiedHunkLine = defineComponent(
         currentHunk.value.unifiedInfo.endHiddenIndex - currentHunk.value.unifiedInfo.startHiddenIndex < composeLen;
 
       currentIsFirstLine.value = currentHunk.value && currentHunk.value.index === 0;
+
+      currentIsLastLine.value = currentHunk.value && currentHunk.value.isLast;
     });
 
     return () => {
@@ -70,6 +74,15 @@ export const DiffUnifiedHunkLine = defineComponent(
                   onClick={() => props.diffFile.onUnifiedHunkExpand("up", props.index)}
                 >
                   <ExpandUp className="fill-current" />
+                </button>
+              ) : currentIsLastLine.value ? (
+                <button
+                  class="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+                  title="Expand Down"
+                  data-title="Expand Down"
+                  onClick={() => props.diffFile.onUnifiedHunkExpand("down", props.index)}
+                >
+                  <ExpandDown className="fill-current" />
                 </button>
               ) : currentIsEnableAll.value ? (
                 <button
@@ -122,50 +135,4 @@ export const DiffUnifiedHunkLine = defineComponent(
     };
   },
   { name: "DiffUnifiedHunkLine", props: ["index", "diffFile", "lineNumber"] }
-);
-
-export const DiffUnifiedLastHunkLine = defineComponent(
-  (props: { diffFile: DiffFile }) => {
-    const currentIsShow = ref(props.diffFile.getNeedShowExpandAll("unified") && props.diffFile.getExpandEnabled());
-
-    const enableWrap = useEnableWrap();
-
-    useSubscribeDiffFile(
-      props,
-      (diffFile) => (currentIsShow.value = diffFile.getNeedShowExpandAll("unified") && diffFile.getExpandEnabled())
-    );
-
-    return () => {
-      if (!currentIsShow.value) return null;
-
-      return (
-        <tr data-line="last-hunk" data-state="hunk" class="diff-line diff-line-hunk">
-          <td
-            class="diff-line-hunk-action sticky left-0 w-[1%] min-w-[100px] select-none"
-            style={{
-              position: enableWrap.value ? "relative" : "sticky",
-              backgroundColor: `var(${hunkLineNumberBGName})`,
-              color: `var(${plainLineNumberColorName})`,
-            }}
-          >
-            <button
-              class="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
-              title="Expand Down"
-              data-title="Expand Down"
-              onClick={() => props.diffFile.onUnifiedLastExpand()}
-            >
-              <ExpandDown className="fill-current" />
-            </button>
-          </td>
-          <td
-            class="diff-line-hunk-content pr-[10px] align-middle select-none"
-            style={{ backgroundColor: `var(${hunkContentBGName})` }}
-          >
-            <span>&ensp;</span>
-          </td>
-        </tr>
-      );
-    };
-  },
-  { name: "DiffUnifiedLastHunkLine", props: ["diffFile"] }
 );

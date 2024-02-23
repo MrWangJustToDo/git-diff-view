@@ -4,7 +4,7 @@ import { Fragment, defineComponent, ref } from "vue";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 
 import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
-import { DiffUnifiedLastHunkLine, DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
+import { DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
 import { DiffUnifiedLine } from "./DiffUnifiedLine";
 import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
 import { removeAllSelection } from "./tools";
@@ -55,7 +55,11 @@ export const DiffUnifiedView = defineComponent(
                   <DiffUnifiedExtendLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
                 </Fragment>
               ))}
-              <DiffUnifiedLastHunkLine diffFile={props.diffFile} />
+              <DiffUnifiedHunkLine
+                index={props.diffFile.unifiedLineLength}
+                lineNumber={props.diffFile.unifiedLineLength}
+                diffFile={props.diffFile}
+              />
             </tbody>
           </table>
         </div>

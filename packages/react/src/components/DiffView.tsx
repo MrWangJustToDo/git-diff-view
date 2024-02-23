@@ -239,7 +239,7 @@ const _InternalDiffView = <T extends unknown>(
 
   return (
     <DiffViewContext.Provider value={value}>
-      <div className="diff-tailwindcss-wrapper">
+      <div className="diff-tailwindcss-wrapper" data-component="git-diff-view" data-version={`${__VERSION__}`}>
         <div
           className="diff-style-root"
           style={{

@@ -37,6 +37,8 @@ const _DiffSplitHunkLine = ({
 
   const isFirstLine = currentHunk && currentHunk.index === 0;
 
+  const isLastLine = currentHunk && currentHunk.isLast;
+
   return (
     <tr
       data-line={`${lineNumber}-hunk`}
@@ -62,6 +64,17 @@ const _DiffSplitHunkLine = ({
                   onClick={() => diffFile.onSplitHunkExpand("up", index)}
                 >
                   <ExpandUp className="fill-current" />
+                </button>
+              ) : isLastLine ? (
+                <button
+                  className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px] relative"
+                  title="Expand Down"
+                  data-title="Expand Down"
+                  onClick={() => {
+                    diffFile.onSplitHunkExpand("down", index);
+                  }}
+                >
+                  <ExpandDown className="fill-current" />
                 </button>
               ) : isExpandAll ? (
                 <button
@@ -144,65 +157,4 @@ export const DiffSplitHunkLine = ({
   if (!currentIsShow) return null;
 
   return <_DiffSplitHunkLine index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
-};
-
-const _DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; diffFile: DiffFile }) => {
-  const enableHunkAction = side === SplitSide.old;
-
-  useSyncHeight({
-    selector: `tr[data-line="last-hunk"]`,
-    side: SplitSide[SplitSide.old],
-    enable: side === SplitSide.new,
-  });
-
-  return (
-    <tr data-line="last-hunk" data-state="hunk" data-side={SplitSide[side]} className="diff-line diff-line-hunk">
-      {enableHunkAction ? (
-        <>
-          <td
-            className="diff-line-hunk-action sticky left-0 p-[1px] w-[1%] min-w-[40px] select-none"
-            style={{
-              backgroundColor: `var(${hunkLineNumberBGName})`,
-              color: `var(${plainLineNumberColorName})`,
-            }}
-          >
-            <button
-              className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px] relative"
-              title="Expand Down"
-              data-title="Expand Down"
-              onClick={() => {
-                diffFile.onSplitLastExpand();
-              }}
-            >
-              <ExpandDown className="fill-current" />
-            </button>
-          </td>
-          <td
-            className="diff-line-hunk-content pr-[10px] align-middle select-none"
-            style={{ backgroundColor: `var(${hunkContentBGName})` }}
-          >
-            <span>&ensp;</span>
-          </td>
-        </>
-      ) : (
-        <td
-          className="diff-line-hunk-placeholder select-none"
-          colSpan={2}
-          style={{ backgroundColor: `var(${hunkContentBGName})` }}
-        >
-          <span>&ensp;</span>
-        </td>
-      )}
-    </tr>
-  );
-};
-
-export const DiffSplitLastHunkLine = ({ diffFile, side }: { side: SplitSide; diffFile: DiffFile }) => {
-  const currentIsShow = diffFile.getNeedShowExpandAll("split");
-
-  const expandEnabled = diffFile.getExpandEnabled();
-
-  if (!currentIsShow || !expandEnabled) return null;
-
-  return <_DiffSplitLastHunkLine diffFile={diffFile} side={side} />;
 };

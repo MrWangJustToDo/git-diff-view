@@ -33,6 +33,8 @@ const _DiffUnifiedHunkLine = ({
 
   const isFirstLine = currentHunk && currentHunk.index === 0;
 
+  const isLastLine = currentHunk && currentHunk.isLast;
+
   return (
     <tr data-line={`${lineNumber}-hunk`} data-state="hunk" className="diff-line diff-line-hunk">
       <td
@@ -51,6 +53,15 @@ const _DiffUnifiedHunkLine = ({
               onClick={() => diffFile.onUnifiedHunkExpand("up", index)}
             >
               <ExpandUp className="fill-current" />
+            </button>
+          ) : isLastLine ? (
+            <button
+              className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+              title="Expand Down"
+              data-title="Expand Down"
+              onClick={() => diffFile.onUnifiedHunkExpand("down", index)}
+            >
+              <ExpandDown className="fill-current" />
             </button>
           ) : isExpandAll ? (
             <button
@@ -121,39 +132,4 @@ export const DiffUnifiedHunkLine = ({
   if (!currentIsShow) return null;
 
   return <_DiffUnifiedHunkLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
-};
-
-export const DiffUnifiedLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
-  const currentIsShow = diffFile.getNeedShowExpandAll("unified");
-
-  const expandEnabled = diffFile.getExpandEnabled();
-
-  if (!currentIsShow || !expandEnabled) return null;
-
-  return (
-    <tr data-line="last-hunk" data-state="hunk" className="diff-line diff-line-hunk">
-      <td
-        className="diff-line-hunk-action sticky left-0 w-[1%] min-w-[100px] select-none"
-        style={{
-          backgroundColor: `var(${hunkLineNumberBGName})`,
-          color: `var(${plainLineNumberColorName})`,
-        }}
-      >
-        <button
-          className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
-          title="Expand Down"
-          data-title="Expand Down"
-          onClick={() => diffFile.onUnifiedLastExpand()}
-        >
-          <ExpandDown className="fill-current" />
-        </button>
-      </td>
-      <td
-        className="diff-line-hunk-content pr-[10px] align-middle"
-        style={{ backgroundColor: `var(${hunkContentBGName})` }}
-      >
-        <span>&ensp;</span>
-      </td>
-    </tr>
-  );
 };

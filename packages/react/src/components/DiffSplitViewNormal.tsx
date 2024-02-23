@@ -1,4 +1,4 @@
-import { getSplitContentLines } from "@git-diff-view/core";
+import { getSplitContentLines, type DiffFile } from "@git-diff-view/core";
 import { Fragment, memo, useCallback, useEffect, useRef } from "react";
 import * as React from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
@@ -7,13 +7,12 @@ import { useDiffViewContext } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";
 
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal";
-import { DiffSplitLastHunkLine, DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
+import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
 import { DiffSplitLine } from "./DiffSplitLineNormal";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
 import { SplitSide } from "./DiffView";
 import { removeAllSelection, syncScroll } from "./tools";
 
-import type { DiffFile } from "@git-diff-view/core";
 import type { MouseEventHandler } from "react";
 
 const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
@@ -52,7 +51,12 @@ const DiffSplitViewTable = ({ side, diffFile, width }: { side: SplitSide; diffFi
             <DiffSplitExtendLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
           </Fragment>
         ))}
-        <DiffSplitLastHunkLine side={side} diffFile={diffFile} />
+        <DiffSplitHunkLine
+          side={side}
+          index={diffFile.splitLineLength}
+          lineNumber={diffFile.splitLineLength}
+          diffFile={diffFile}
+        />
       </tbody>
     </table>
   );

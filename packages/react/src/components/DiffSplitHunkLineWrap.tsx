@@ -29,6 +29,8 @@ export const DiffSplitHunkLine = ({
 
   const isFirstLine = currentHunk && currentHunk.index === 0;
 
+  const isLastLine = currentHunk && currentHunk.isLast;
+
   if (!currentIsShow) return null;
 
   return (
@@ -49,6 +51,15 @@ export const DiffSplitHunkLine = ({
               onClick={() => diffFile.onSplitHunkExpand("up", index)}
             >
               <ExpandUp className="fill-current" />
+            </button>
+          ) : isLastLine ? (
+            <button
+              className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+              title="Expand Down"
+              data-title="Expand Down"
+              onClick={() => diffFile.onSplitHunkExpand("down", index)}
+            >
+              <ExpandDown className="fill-current" />
             </button>
           ) : isExpandAll ? (
             <button
@@ -93,44 +104,6 @@ export const DiffSplitHunkLine = ({
         >
           {currentHunk.splitInfo.plainText}
         </div>
-      </td>
-    </tr>
-  );
-};
-
-export const DiffSplitLastHunkLine = ({ diffFile }: { diffFile: DiffFile }) => {
-  const currentIsShow = diffFile.getNeedShowExpandAll("split");
-
-  const expandEnabled = diffFile.getExpandEnabled();
-
-  if (!currentIsShow || !expandEnabled) return null;
-
-  return (
-    <tr data-line="last-hunk" data-state="hunk" className="diff-line diff-line-hunk">
-      <td
-        className="diff-line-hunk-action p-[1px] w-[1%] min-w-[40px] select-none"
-        style={{
-          backgroundColor: `var(${hunkLineNumberBGName})`,
-          color: `var(${plainLineNumberColorName})`,
-        }}
-      >
-        <button
-          className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
-          title="Expand Down"
-          data-title="Expand Down"
-          onClick={() => {
-            diffFile.onSplitLastExpand();
-          }}
-        >
-          <ExpandDown className="fill-current" />
-        </button>
-      </td>
-      <td
-        className="diff-line-hunk-content pr-[10px] align-middle select-none"
-        colSpan={3}
-        style={{ backgroundColor: `var(${hunkContentBGName})` }}
-      >
-        <span>&ensp;</span>
       </td>
     </tr>
   );

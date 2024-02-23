@@ -5,7 +5,7 @@ import { createStore, ref } from "reactivity-store";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
 
 import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
-import { DiffUnifiedHunkLine, DiffUnifiedLastHunkLine } from "./DiffUnifiedHunkLine";
+import { DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
 import { DiffUnifiedLine } from "./DiffUnifiedLine";
 import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
 import { DiffWidgetContext } from "./DiffWidgetContext";
@@ -13,7 +13,7 @@ import { removeAllSelection } from "./tools";
 
 import type { SplitSide } from "..";
 import type { DiffFile } from "@git-diff-view/core";
-import type { MouseEventHandler} from "react";
+import type { MouseEventHandler } from "react";
 
 const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
   const ele = e.target;
@@ -83,7 +83,11 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
                   <DiffUnifiedExtendLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
                 </Fragment>
               ))}
-              <DiffUnifiedLastHunkLine diffFile={diffFile} />
+              <DiffUnifiedHunkLine
+                index={diffFile.unifiedLineLength}
+                lineNumber={diffFile.unifiedLineLength}
+                diffFile={diffFile}
+              />
             </tbody>
           </table>
         </div>

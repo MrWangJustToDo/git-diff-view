@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable max-lines */
-import { DiffLineType } from "./diff-line";
+import { DiffLineType, DiffLine } from "./diff-line";
 import { parseInstance } from "./diff-parse";
 import { getFile } from "./file";
 import { getDiffRange, getLang } from "./tool";
 
-import type { DiffLine } from "./diff-line";
 import type { File } from "./file";
 import type { highlighter } from "./highlighter";
 import type { IRawDiff } from "./raw-diff";
@@ -34,7 +33,7 @@ export interface DiffLineItem extends DiffLine {
 }
 
 export interface DiffHunkItem extends DiffLineItem {
-  isAppendLast: boolean;
+  isLast: boolean;
   hunkInfo: {
     oldStartIndex: number;
     newStartIndex: number;
@@ -88,13 +87,9 @@ export class DiffFile {
 
   #splitHunksLines?: Record<string, DiffHunkItem>;
 
-  #splitLastStartIndex?: number;
-
   #unifiedLines: UnifiedLineItem[] = [];
 
   #unifiedHunksLines?: Record<string, DiffHunkItem>;
-
-  #unifiedLastStartIndex?: number;
 
   #listeners: ((() => void) & { isSyncExternal?: boolean })[] = [];
 
@@ -547,9 +542,29 @@ export class DiffFile {
       }
     }
 
-    this.splitLineLength = this.#splitRightLines.length;
+    // have last hunk
+    if (Number.isFinite(hideStart)) {
+      const lastDiff = new DiffLine("", DiffLineType.Hunk, null, null, null);
+      const lastHunk = lastDiff as DiffHunkItem;
+      lastHunk.isLast = true;
+      lastHunk.splitInfo = {
+        startHiddenIndex: hideStart,
+        endHiddenIndex: this.#splitRightLines.length,
+        // just for placeholder
+        plainText: "",
+        oldStartIndex: 0,
+        newStartIndex: 0,
+        oldLength: 0,
+        newLength: 0,
+      };
+      this.#splitHunksLines = {
+        ...this.#splitHunksLines,
+        [this.#splitRightLines.length]: lastHunk,
+      };
+      hideStart = Infinity;
+    }
 
-    this.#splitLastStartIndex = hideStart;
+    this.splitLineLength = this.#splitRightLines.length;
 
     this.#hasBuildSplit = true;
 
@@ -639,9 +654,29 @@ export class DiffFile {
       }
     }
 
-    this.unifiedLineLength = this.#unifiedLines.length;
+    // have last hunk
+    if (Number.isFinite(hideStart)) {
+      const lastDiff = new DiffLine("", DiffLineType.Hunk, null, null, null);
+      const lastHunk = lastDiff as DiffHunkItem;
+      lastHunk.isLast = true;
+      lastHunk.unifiedInfo = {
+        startHiddenIndex: hideStart,
+        endHiddenIndex: this.#unifiedLines.length,
+        // just for placeholder
+        plainText: "",
+        oldStartIndex: 0,
+        newStartIndex: 0,
+        oldLength: 0,
+        newLength: 0,
+      };
+      this.#unifiedHunksLines = {
+        ...this.#unifiedHunksLines,
+        [this.#unifiedLines.length]: lastHunk,
+      };
+      hideStart = Infinity;
+    }
 
-    this.#unifiedLastStartIndex = hideStart;
+    this.unifiedLineLength = this.#unifiedLines.length;
 
     this.#hasBuildUnified = true;
 
@@ -660,7 +695,7 @@ export class DiffFile {
     return this.#splitHunksLines?.[index];
   };
 
-  onSplitHunkExpand = (dir: "up" | "down" | "all", index: number) => {
+  onSplitHunkExpand = (dir: "up" | "down" | "all", index: number, needTrigger = true) => {
     const current = this.#splitHunksLines?.[index];
     if (!current) return;
 
@@ -671,7 +706,6 @@ export class DiffFile {
         if (leftLine?.isHidden) leftLine.isHidden = false;
         if (rightLine?.isHidden) rightLine.isHidden = false;
       }
-      current.splitInfo.plainText = current.text;
       current.splitInfo = {
         ...current.splitInfo,
         ...current.hunkInfo,
@@ -685,12 +719,23 @@ export class DiffFile {
         if (leftLine?.isHidden) leftLine.isHidden = false;
         if (rightLine?.isHidden) rightLine.isHidden = false;
       }
-      current.splitInfo = {
-        ...current.splitInfo,
-        startHiddenIndex: current.splitInfo.startHiddenIndex + composeLen,
-        plainText: `@@ -${current.splitInfo.oldStartIndex},${current.splitInfo.oldLength} +${current.splitInfo.newStartIndex},${current.splitInfo.newLength}`,
-      };
+      if (current.isLast) {
+        current.splitInfo = {
+          ...current.splitInfo,
+          startHiddenIndex: current.splitInfo.startHiddenIndex + composeLen,
+        };
+      } else {
+        current.splitInfo = {
+          ...current.splitInfo,
+          startHiddenIndex: current.splitInfo.startHiddenIndex + composeLen,
+          plainText: `@@ -${current.splitInfo.oldStartIndex},${current.splitInfo.oldLength} +${current.splitInfo.newStartIndex},${current.splitInfo.newLength}`,
+        };
+      }
     } else {
+      if (current.isLast) {
+        __DEV__ && console.error("the last hunk can not expand up!");
+        return;
+      }
       for (let i = current.splitInfo.endHiddenIndex - composeLen; i < current.splitInfo.endHiddenIndex; i++) {
         const leftLine = this.#splitLeftLines[i];
         const rightLine = this.#splitRightLines[i];
@@ -716,29 +761,7 @@ export class DiffFile {
       this.#splitHunksLines![current.splitInfo.endHiddenIndex] = current;
     }
 
-    this.notifyAll();
-  };
-
-  onSplitLastExpand = (expandAll?: boolean) => {
-    if (!this.#splitLastStartIndex || !Number.isFinite(this.#splitLastStartIndex)) return;
-
-    const start = this.#splitLastStartIndex;
-
-    const end = expandAll ? this.splitLineLength : this.#splitLastStartIndex + composeLen;
-
-    for (let i = start; i < end; i++) {
-      const leftLine = this.#splitLeftLines[i];
-      const rightLine = this.#splitRightLines[i];
-      if (leftLine?.isHidden) leftLine.isHidden = false;
-      if (rightLine?.isHidden) rightLine.isHidden = false;
-    }
-
-    this.#splitLastStartIndex = end;
-
-    this.#splitLastStartIndex =
-      this.#splitLastStartIndex >= this.splitLineLength ? Infinity : this.#splitLastStartIndex;
-
-    this.notifyAll();
+    needTrigger && this.notifyAll();
   };
 
   getUnifiedLine = (index: number) => {
@@ -749,7 +772,7 @@ export class DiffFile {
     return this.#unifiedHunksLines?.[index];
   };
 
-  onUnifiedHunkExpand = (dir: "up" | "down" | "all", index: number) => {
+  onUnifiedHunkExpand = (dir: "up" | "down" | "all", index: number, needTrigger = true) => {
     const current = this.#unifiedHunksLines?.[index];
     if (!current) return;
 
@@ -760,7 +783,6 @@ export class DiffFile {
           unifiedLine.isHidden = false;
         }
       }
-      current.unifiedInfo.plainText = current.text;
       current.unifiedInfo = {
         ...current.unifiedInfo,
         ...current.hunkInfo,
@@ -772,12 +794,23 @@ export class DiffFile {
         const unifiedLine = this.#unifiedLines[i];
         if (unifiedLine?.isHidden) unifiedLine.isHidden = false;
       }
-      current.unifiedInfo = {
-        ...current.unifiedInfo,
-        startHiddenIndex: current.unifiedInfo.startHiddenIndex + composeLen,
-        plainText: `@@ -${current.unifiedInfo.oldStartIndex},${current.unifiedInfo.oldLength} +${current.unifiedInfo.newStartIndex},${current.unifiedInfo.newLength}`,
-      };
+      if (current.isLast) {
+        current.unifiedInfo = {
+          ...current.unifiedInfo,
+          startHiddenIndex: current.unifiedInfo.startHiddenIndex + composeLen,
+        };
+      } else {
+        current.unifiedInfo = {
+          ...current.unifiedInfo,
+          startHiddenIndex: current.unifiedInfo.startHiddenIndex + composeLen,
+          plainText: `@@ -${current.unifiedInfo.oldStartIndex},${current.unifiedInfo.oldLength} +${current.unifiedInfo.newStartIndex},${current.unifiedInfo.newLength}`,
+        };
+      }
     } else {
+      if (current.isLast) {
+        __DEV__ && console.error("the last hunk can not expand up!");
+        return;
+      }
       for (let i = current.unifiedInfo.endHiddenIndex - composeLen; i < current.unifiedInfo.endHiddenIndex; i++) {
         const unifiedLine = this.#unifiedLines[i];
         if (unifiedLine?.isHidden) unifiedLine.isHidden = false;
@@ -801,25 +834,19 @@ export class DiffFile {
       this.#unifiedHunksLines![current.unifiedInfo.endHiddenIndex] = current;
     }
 
-    this.notifyAll();
+    needTrigger && this.notifyAll();
   };
 
-  onUnifiedLastExpand = (expandAll?: boolean) => {
-    if (!this.#unifiedLastStartIndex || !Number.isFinite(this.#unifiedLastStartIndex)) return;
-
-    const start = this.#unifiedLastStartIndex;
-
-    const end = expandAll ? this.unifiedLineLength : this.#unifiedLastStartIndex + composeLen;
-
-    for (let i = start; i < end; i++) {
-      const unifiedLine = this.#unifiedLines[i];
-      if (unifiedLine?.isHidden) unifiedLine.isHidden = false;
+  onAllExpand = (mode: "split" | "unified") => {
+    if (mode === "split") {
+      Object.keys(this.#splitHunksLines).forEach((key) => {
+        this.onSplitHunkExpand("all", +key, false);
+      })
+    } else {
+      Object.keys(this.#unifiedHunksLines).forEach((key) => {
+        this.onUnifiedHunkExpand("all", +key, false);
+      })
     }
-
-    this.#unifiedLastStartIndex = end;
-
-    this.#unifiedLastStartIndex =
-      this.#unifiedLastStartIndex >= this.unifiedLineLength ? Infinity : this.#unifiedLastStartIndex;
 
     this.notifyAll();
   };
@@ -852,23 +879,6 @@ export class DiffFile {
 
   getUpdateCount = () => this.#updateCount;
 
-  getNeedShowExpandAll = (mode: "split" | "unified") => {
-    if (mode === "split") {
-      return (
-        this.#splitLastStartIndex &&
-        Number.isFinite(this.#splitLastStartIndex) &&
-        (this.getSplitLeftLine(this.splitLineLength - 1)?.isHidden ||
-          this.getSplitRightLine(this.splitLineLength - 1)?.isHidden)
-      );
-    } else {
-      return (
-        this.#unifiedLastStartIndex &&
-        Number.isFinite(this.#unifiedLastStartIndex) &&
-        this.getUnifiedLine(this.unifiedLineLength - 1)?.isHidden
-      );
-    }
-  };
-
   getExpandEnabled = () => !this.#composeByDiff;
 
   getBundle = () => {
@@ -891,12 +901,10 @@ export class DiffFile {
     const splitLeftLines = this.#splitLeftLines;
     const splitRightLines = this.#splitRightLines;
     const splitHunkLines = this.#splitHunksLines;
-    const splitLastStartIndex = this.#splitLastStartIndex;
 
     // unified
     const unifiedLines = this.#unifiedLines;
     const unifiedHunkLines = this.#unifiedHunksLines;
-    const unifiedLastStartIndex = this.#unifiedLastStartIndex;
 
     return {
       hasInitRaw,
@@ -914,10 +922,8 @@ export class DiffFile {
       splitLeftLines,
       splitRightLines,
       splitHunkLines,
-      splitLastStartIndex,
       unifiedLines,
       unifiedHunkLines,
-      unifiedLastStartIndex,
 
       composeByDiff,
     };
@@ -942,11 +948,9 @@ export class DiffFile {
     this.#splitLeftLines = data.splitLeftLines;
     this.#splitRightLines = data.splitRightLines;
     this.#splitHunksLines = data.splitHunkLines;
-    this.#splitLastStartIndex = data.splitLastStartIndex;
 
     this.#unifiedLines = data.unifiedLines;
     this.#unifiedHunksLines = data.unifiedHunkLines;
-    this.#unifiedLastStartIndex = data.unifiedLastStartIndex;
 
     this.notifyAll();
   };

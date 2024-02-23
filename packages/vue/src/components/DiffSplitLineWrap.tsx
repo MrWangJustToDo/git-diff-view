@@ -83,7 +83,7 @@ export const DiffSplitLine = defineComponent(
                 class="diff-line-old-num group relative pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px]"
                 style={{ backgroundColor: oldLineNumberBG, color: `var(${plainLineNumberColorName})` }}
               >
-                {hasDiff && enableAddWidget && (
+                {hasDiff.value && enableAddWidget.value && (
                   <DiffSplitAddWidget
                     index={props.index}
                     lineNumber={oldLine.value.lineNumber}
@@ -103,7 +103,7 @@ export const DiffSplitLine = defineComponent(
                 style={{ backgroundColor: oldLineContentBG }}
                 data-side={SplitSide[SplitSide.old]}
               >
-                {hasDiff && enableAddWidget && (
+                {hasDiff.value && enableAddWidget.value && (
                   <DiffSplitAddWidget
                     index={props.index}
                     lineNumber={oldLine.value.lineNumber}
@@ -139,7 +139,7 @@ export const DiffSplitLine = defineComponent(
                 class="diff-line-new-num group relative pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px] border-l-[1px] border-l-[#ccc]"
                 style={{ backgroundColor: newLineNumberBG, color: `var(${plainLineNumberColorName})` }}
               >
-                {hasDiff && enableAddWidget && (
+                {hasDiff.value && enableAddWidget.value && (
                   <DiffSplitAddWidget
                     index={props.index}
                     lineNumber={newLine.value.lineNumber}
@@ -159,7 +159,7 @@ export const DiffSplitLine = defineComponent(
                 style={{ backgroundColor: newLineContentBG }}
                 data-side={SplitSide[SplitSide.new]}
               >
-                {hasDiff && enableAddWidget && (
+                {hasDiff.value && enableAddWidget.value && (
                   <DiffSplitAddWidget
                     index={props.index}
                     lineNumber={newLine.value.lineNumber}

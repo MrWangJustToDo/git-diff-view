@@ -7,7 +7,7 @@ import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useTextWidth } from "../hooks/useTextWidth";
 
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal";
-import { DiffSplitLastHunkLine, DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
+import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
 import { DiffSplitLine } from "./DiffSplitLineNormal";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
 import { SplitSide } from "./DiffView";
@@ -80,7 +80,12 @@ const DiffSplitViewTable = defineComponent(
                 />
               </Fragment>
             ))}
-            <DiffSplitLastHunkLine side={props.side} diffFile={props.diffFile} />
+            <DiffSplitHunkLine
+              side={props.side}
+              index={props.diffFile.splitLineLength}
+              lineNumber={props.diffFile.splitLineLength}
+              diffFile={props.diffFile}
+            />
           </tbody>
         </table>
       );

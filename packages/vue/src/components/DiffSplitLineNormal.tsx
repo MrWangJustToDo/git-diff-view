@@ -84,7 +84,7 @@ export const DiffSplitLine = defineComponent(
                   color: `var(${plainLineNumberColorName})`,
                 }}
               >
-                {currentLineHasDiff.value && enableAddWidget && (
+                {currentLineHasDiff.value && enableAddWidget.value && (
                   <DiffSplitAddWidget
                     index={props.index}
                     lineNumber={currentLine.value.lineNumber}

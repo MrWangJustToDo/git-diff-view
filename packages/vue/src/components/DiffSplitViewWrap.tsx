@@ -7,7 +7,7 @@ import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useTextWidth } from "../hooks/useTextWidth";
 
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineWrap";
-import { DiffSplitHunkLine, DiffSplitLastHunkLine } from "./DiffSplitHunkLineWrap";
+import { DiffSplitHunkLine } from "./DiffSplitHunkLineWrap";
 import { DiffSplitLine } from "./DiffSplitLineWrap";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineWrap";
 import { removeAllSelection } from "./tools";
@@ -102,7 +102,11 @@ export const DiffSplitViewWrap = defineComponent(
                     <DiffSplitExtendLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
                   </Fragment>
                 ))}
-                <DiffSplitLastHunkLine diffFile={props.diffFile} />
+                <DiffSplitHunkLine
+                  index={props.diffFile.splitLineLength}
+                  lineNumber={props.diffFile.splitLineLength}
+                  diffFile={props.diffFile}
+                />
               </tbody>
             </table>
           </div>

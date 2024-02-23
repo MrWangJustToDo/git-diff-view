@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import { type DiffFile, getSplitContentLines } from "@git-diff-view/core";
 import { Fragment, memo, useCallback, useMemo } from "react";
 import * as React from "react";
@@ -10,7 +9,7 @@ import { useDiffViewContext, SplitSide } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";
 
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineWrap";
-import { DiffSplitLastHunkLine, DiffSplitHunkLine } from "./DiffSplitHunkLineWrap";
+import { DiffSplitHunkLine } from "./DiffSplitHunkLineWrap";
 import { DiffSplitLine } from "./DiffSplitLineWrap";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineWrap";
 import { removeAllSelection } from "./tools";
@@ -131,7 +130,11 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
                 <DiffSplitExtendLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
               </Fragment>
             ))}
-            <DiffSplitLastHunkLine diffFile={diffFile} />
+            <DiffSplitHunkLine
+              index={diffFile.splitLineLength}
+              lineNumber={diffFile.splitLineLength}
+              diffFile={diffFile}
+            />
           </tbody>
         </table>
       </div>

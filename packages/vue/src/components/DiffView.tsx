@@ -186,7 +186,7 @@ export const DiffView = defineComponent<
       if (!diffFile.value) return null;
 
       return (
-        <div class="diff-tailwindcss-wrapper">
+        <div class="diff-tailwindcss-wrapper" data-component="git-diff-view">
           <div class="diff-style-root" style={{ [diffFontSizeName]: props.diffViewFontSize + "px" }}>
             <div
               id={`diff-root${id.value}`}

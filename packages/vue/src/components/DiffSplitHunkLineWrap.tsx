@@ -26,6 +26,8 @@ export const DiffSplitHunkLine = defineComponent(
 
     const currentIsFirstLine = ref(currentHunk.value && currentHunk.value.index === 0);
 
+    const currentIsLastLine = ref(currentHunk.value && currentHunk.value.isLast);
+
     useSubscribeDiffFile(props, (diffFile) => {
       currentHunk.value = diffFile.getSplitHunkLine(props.index);
 
@@ -42,6 +44,8 @@ export const DiffSplitHunkLine = defineComponent(
         currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex;
 
       currentIsFirstLine.value = currentHunk.value && currentHunk.value.index === 0;
+
+      currentIsLastLine.value = currentHunk.value && currentHunk.value.isLast;
     });
 
     return () => {
@@ -65,6 +69,15 @@ export const DiffSplitHunkLine = defineComponent(
                   onClick={() => props.diffFile.onSplitHunkExpand("up", props.index)}
                 >
                   <ExpandUp className="fill-current" />
+                </button>
+              ) : currentIsLastLine.value ? (
+                <button
+                  class="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+                  title="Expand Down"
+                  data-title="Expand Down"
+                  onClick={() => props.diffFile.onSplitHunkExpand("down", props.index)}
+                >
+                  <ExpandDown className="fill-current" />
                 </button>
               ) : currentShowExpandAll.value ? (
                 <button
@@ -115,48 +128,4 @@ export const DiffSplitHunkLine = defineComponent(
     };
   },
   { name: "DiffSplitHunkLine", props: ["diffFile", "index", "lineNumber"] }
-);
-
-export const DiffSplitLastHunkLine = defineComponent(
-  (props: { diffFile: DiffFile }) => {
-    const currentIsShow = ref(props.diffFile.getNeedShowExpandAll("split") && props.diffFile.getExpandEnabled());
-
-    useSubscribeDiffFile(
-      props,
-      (diffFile) => (currentIsShow.value = diffFile.getNeedShowExpandAll("split") && diffFile.getExpandEnabled())
-    );
-
-    return () => {
-      if (!currentIsShow.value) return null;
-
-      return (
-        <tr data-line="last-hunk" data-state="hunk" class="diff-line diff-line-hunk">
-          <td
-            class="diff-line-hunk-action p-[1px] w-[1%] min-w-[40px] select-none"
-            style={{
-              backgroundColor: `var(${hunkLineNumberBGName})`,
-              color: `var(${plainLineNumberColorName})`,
-            }}
-          >
-            <button
-              class="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
-              title="Expand Down"
-              data-title="Expand Down"
-              onClick={() => props.diffFile.onSplitLastExpand()}
-            >
-              <ExpandDown className="fill-current" />
-            </button>
-          </td>
-          <td
-            class="diff-line-hunk-content pr-[10px] align-middle select-none"
-            colspan={3}
-            style={{ backgroundColor: `var(${hunkContentBGName})` }}
-          >
-            <span>&ensp;</span>
-          </td>
-        </tr>
-      );
-    };
-  },
-  { name: "DiffSplitExpandLastLine", props: ["diffFile"] }
 );
