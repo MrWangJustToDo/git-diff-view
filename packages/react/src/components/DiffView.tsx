@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { DiffFile } from "@git-diff-view/core";
-import { memo, useEffect, useMemo } from "react";
+import { memo, useEffect, useMemo, forwardRef, useImperativeHandle } from "react";
 import * as React from "react";
 import { createStore, ref } from "reactivity-store";
 
@@ -12,7 +12,7 @@ import { DiffUnifiedView } from "./DiffUnifiedView";
 import { DiffModeEnum, DiffViewContext } from "./DiffViewContext";
 
 import type { highlighter } from "@git-diff-view/core";
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, ForwardedRef, ReactNode } from "react";
 
 const diffFontSizeName = "--diff-font-size--";
 
@@ -266,7 +266,10 @@ const _InternalDiffView = <T extends unknown>(
 
 const InternalDiffView = memo(_InternalDiffView);
 
-export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
+const DiffViewWithRef = <T extends unknown>(
+  props: DiffViewProps<T>,
+  ref: ForwardedRef<{ getDiffFileInstance: () => DiffFile }>
+) => {
   const { registerHighlighter, autoDetectLang, data, diffFile: _diffFile, ...restProps } = props;
 
   const diffFile = useMemo(() => {
@@ -314,6 +317,8 @@ export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
 
   useUnmount(() => diffFile._destroy(), [diffFile]);
 
+  useImperativeHandle(ref, () => ({ getDiffFileInstance: () => diffFile }), [diffFile]);
+
   if (!diffFile) return null;
 
   return (
@@ -325,5 +330,12 @@ export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
     />
   );
 };
+
+export const DiffView = forwardRef(DiffViewWithRef) as (<T>(
+  props: DiffViewProps<T>,
+  ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }>
+) => ReactNode) & { displayName?: string };
+
+DiffView.displayName = "DiffView";
 
 export const version = __VERSION__;

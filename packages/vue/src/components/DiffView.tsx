@@ -182,11 +182,13 @@ export const DiffView = defineComponent<
 
     onUnmounted(() => diffFile.value._destroy?.());
 
+    options.expose({ getDiffView: () => diffFile.value });
+
     return () => {
       if (!diffFile.value) return null;
 
       return (
-        <div class="diff-tailwindcss-wrapper" data-component="git-diff-view">
+        <div class="diff-tailwindcss-wrapper" data-component="git-diff-view" data-version={__VERSION__}>
           <div class="diff-style-root" style={{ [diffFontSizeName]: props.diffViewFontSize + "px" }}>
             <div
               id={`diff-root${id.value}`}
@@ -220,6 +222,9 @@ export const DiffView = defineComponent<
       "registerHighlighter",
       "style",
     ],
+    // expose: ["getDiffView"],
     slots: Object as typeSlots,
   }
 );
+
+export const version = __VERSION__;
