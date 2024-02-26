@@ -332,8 +332,7 @@ const DiffViewWithRef = <T extends unknown>(
 };
 
 export const DiffView = forwardRef(DiffViewWithRef) as (<T>(
-  props: DiffViewProps<T>,
-  ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }>
+  props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
 ) => ReactNode) & { displayName?: string };
 
 DiffView.displayName = "DiffView";

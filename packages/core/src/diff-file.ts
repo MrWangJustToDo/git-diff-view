@@ -18,6 +18,7 @@ export interface SplitLineItem {
   value?: string;
   diff?: DiffLineItem;
   isHidden?: boolean;
+  _isHidden?: boolean;
 }
 
 export interface UnifiedLineItem {
@@ -26,7 +27,28 @@ export interface UnifiedLineItem {
   value?: string;
   diff?: DiffLineItem;
   isHidden?: boolean;
+  _isHidden?: boolean;
 }
+
+type HunkInfo = {
+  oldStartIndex: number;
+  newStartIndex: number;
+  oldLength: number;
+  newLength: number;
+  _oldStartIndex: number;
+  _newStartIndex: number;
+  _oldLength: number;
+  _newLength: number;
+};
+
+type HunkLineInfo = {
+  startHiddenIndex: number;
+  endHiddenIndex: number;
+  plainText: string;
+  _startHiddenIndex: number;
+  _endHiddenIndex: number;
+  _plainText: string;
+};
 
 export interface DiffLineItem extends DiffLine {
   index: number;
@@ -34,30 +56,9 @@ export interface DiffLineItem extends DiffLine {
 
 export interface DiffHunkItem extends DiffLineItem {
   isLast: boolean;
-  hunkInfo: {
-    oldStartIndex: number;
-    newStartIndex: number;
-    oldLength: number;
-    newLength: number;
-  };
-  splitInfo?: {
-    startHiddenIndex: number;
-    endHiddenIndex: number;
-    plainText: string;
-    oldStartIndex: number;
-    newStartIndex: number;
-    oldLength: number;
-    newLength: number;
-  };
-  unifiedInfo?: {
-    startHiddenIndex: number;
-    endHiddenIndex: number;
-    plainText: string;
-    oldStartIndex: number;
-    newStartIndex: number;
-    oldLength: number;
-    newLength: number;
-  };
+  hunkInfo: HunkInfo;
+  splitInfo?: HunkLineInfo & HunkInfo;
+  unifiedInfo?: HunkLineInfo & HunkInfo;
 }
 
 export class DiffFile {
@@ -326,6 +327,11 @@ export class DiffFile {
           oldLength: Number(oldNumLength),
           newStartIndex: +Number(newNumStartIndex),
           newLength: Number(newNumLength),
+
+          _oldStartIndex: -Number(oldNumStartIndex),
+          _oldLength: Number(oldNumLength),
+          _newStartIndex: +Number(newNumStartIndex),
+          _newLength: Number(newNumLength),
         };
       }
       return typedI;
@@ -491,18 +497,22 @@ export class DiffFile {
           value: oldRawLine,
           diff: oldDiffLine,
           isHidden,
+          _isHidden: isHidden,
         });
         this.#splitRightLines.push({
           lineNumber: newFileLineNumber++,
           value: newRawLine,
           diff: newDiffLine,
           isHidden,
+          _isHidden: isHidden,
         });
       } else if (oldLineHasChange) {
         this.#splitLeftLines.push({
           lineNumber: oldFileLineNumber++,
           value: oldRawLine,
           diff: oldDiffLine,
+          isHidden,
+          _isHidden: isHidden,
         });
         this.#splitRightLines.push({});
       } else if (newLineHasChange) {
@@ -511,6 +521,8 @@ export class DiffFile {
           lineNumber: newFileLineNumber++,
           value: newRawLine,
           diff: newDiffLine,
+          isHidden,
+          _isHidden: isHidden,
         });
       }
 
@@ -528,15 +540,20 @@ export class DiffFile {
           if (Number.isFinite(hideStart)) {
             typedPrevious.splitInfo = {
               ...typedPrevious.hunkInfo,
+
               startHiddenIndex: hideStart,
               endHiddenIndex: len,
               plainText: typedPrevious.text,
+
+              _startHiddenIndex: hideStart,
+              _endHiddenIndex: len,
+              _plainText: typedPrevious.text,
             };
             hideStart = Infinity;
           }
           this.#splitHunksLines = {
             ...this.#splitHunksLines,
-            [len]: previous,
+            [len]: typedPrevious,
           };
         }
       }
@@ -550,12 +567,22 @@ export class DiffFile {
       lastHunk.splitInfo = {
         startHiddenIndex: hideStart,
         endHiddenIndex: this.#splitRightLines.length,
+
+        _startHiddenIndex: hideStart,
+        _endHiddenIndex: this.#splitRightLines.length,
+
         // just for placeholder
         plainText: "",
         oldStartIndex: 0,
         newStartIndex: 0,
         oldLength: 0,
         newLength: 0,
+
+        _plainText: "",
+        _oldStartIndex: 0,
+        _newStartIndex: 0,
+        _oldLength: 0,
+        _newLength: 0,
       };
       this.#splitHunksLines = {
         ...this.#splitHunksLines,
@@ -611,18 +638,23 @@ export class DiffFile {
           value: newRawLine,
           diff: newDiffLine,
           isHidden,
+          _isHidden: isHidden,
         });
       } else if (oldLineHasChange) {
         this.#unifiedLines.push({
           oldLineNumber: oldFileLineNumber++,
           value: oldRawLine,
           diff: oldDiffLine,
+          isHidden,
+          _isHidden: isHidden,
         });
       } else if (newLineHasChange) {
         this.#unifiedLines.push({
           newLineNumber: newFileLineNumber++,
           value: newRawLine,
           diff: newDiffLine,
+          isHidden,
+          _isHidden: isHidden,
         });
       }
 
@@ -640,15 +672,20 @@ export class DiffFile {
           if (Number.isFinite(hideStart)) {
             typedPrevious.unifiedInfo = {
               ...typedPrevious.hunkInfo,
+
               startHiddenIndex: hideStart,
               endHiddenIndex: len,
               plainText: typedPrevious.text,
+
+              _startHiddenIndex: hideStart,
+              _endHiddenIndex: len,
+              _plainText: typedPrevious.text,
             };
             hideStart = Infinity;
           }
           this.#unifiedHunksLines = {
             ...this.#unifiedHunksLines,
-            [len]: previous,
+            [len]: typedPrevious,
           };
         }
       }
@@ -662,12 +699,22 @@ export class DiffFile {
       lastHunk.unifiedInfo = {
         startHiddenIndex: hideStart,
         endHiddenIndex: this.#unifiedLines.length,
+
+        _startHiddenIndex: hideStart,
+        _endHiddenIndex: this.#unifiedLines.length,
         // just for placeholder
+
         plainText: "",
         oldStartIndex: 0,
         newStartIndex: 0,
         oldLength: 0,
         newLength: 0,
+
+        _plainText: "",
+        _oldStartIndex: 0,
+        _newStartIndex: 0,
+        _oldLength: 0,
+        _newLength: 0,
       };
       this.#unifiedHunksLines = {
         ...this.#unifiedHunksLines,
@@ -697,7 +744,7 @@ export class DiffFile {
 
   onSplitHunkExpand = (dir: "up" | "down" | "all", index: number, needTrigger = true) => {
     const current = this.#splitHunksLines?.[index];
-    if (!current) return;
+    if (!current || !current.splitInfo) return;
 
     if (dir === "all") {
       for (let i = current.splitInfo.startHiddenIndex; i < current.splitInfo.endHiddenIndex; i++) {
@@ -774,7 +821,7 @@ export class DiffFile {
 
   onUnifiedHunkExpand = (dir: "up" | "down" | "all", index: number, needTrigger = true) => {
     const current = this.#unifiedHunksLines?.[index];
-    if (!current) return;
+    if (!current || !current.unifiedInfo) return;
 
     if (dir === "all") {
       for (let i = current.unifiedInfo.startHiddenIndex; i < current.unifiedInfo.endHiddenIndex; i++) {
@@ -839,12 +886,79 @@ export class DiffFile {
 
   onAllExpand = (mode: "split" | "unified") => {
     if (mode === "split") {
-      Object.keys(this.#splitHunksLines).forEach((key) => {
+      Object.keys(this.#splitHunksLines || {}).forEach((key) => {
         this.onSplitHunkExpand("all", +key, false);
-      })
+      });
     } else {
-      Object.keys(this.#unifiedHunksLines).forEach((key) => {
+      Object.keys(this.#unifiedHunksLines || {}).forEach((key) => {
         this.onUnifiedHunkExpand("all", +key, false);
+      });
+    }
+
+    this.notifyAll();
+  };
+
+  onAllCollapse = (mode: "split" | "unified") => {
+    if (mode === "split") {
+      Object.values(this.#splitLeftLines || {}).forEach((item) => {
+        if (!item.isHidden && item._isHidden) {
+          item.isHidden = item._isHidden;
+        }
+      });
+      Object.values(this.#splitRightLines || {}).forEach((item) => {
+        if (!item.isHidden && item._isHidden) {
+          item.isHidden = item._isHidden;
+        }
+      });
+      Object.values(this.#splitHunksLines || {}).forEach((item) => {
+        if (!item.splitInfo) return;
+        item.splitInfo = {
+          ...item.splitInfo,
+          oldStartIndex: item.splitInfo._oldStartIndex,
+          oldLength: item.splitInfo._oldLength,
+          newStartIndex: item.splitInfo._newStartIndex,
+          newLength: item.splitInfo._newLength,
+          startHiddenIndex: item.splitInfo._startHiddenIndex,
+          endHiddenIndex: item.splitInfo._endHiddenIndex,
+          plainText: item.splitInfo._plainText,
+        };
+      });
+      Object.keys(this.#splitHunksLines || {}).forEach((key) => {
+        const item = this.#splitHunksLines![key];
+        if (!item.splitInfo) return;
+        if (item.splitInfo.endHiddenIndex !== +key) {
+          delete this.#splitHunksLines![key];
+
+          this.#splitHunksLines![item.splitInfo.endHiddenIndex] = item;
+        }
+      });
+    } else {
+      Object.values(this.#unifiedLines || {}).forEach((item) => {
+        if (!item.isHidden && item._isHidden) {
+          item.isHidden = item._isHidden;
+        }
+      });
+      Object.values(this.#unifiedHunksLines || {}).forEach((item) => {
+        if (!item.unifiedInfo) return;
+        item.unifiedInfo = {
+          ...item.unifiedInfo,
+          oldStartIndex: item.unifiedInfo._oldStartIndex,
+          oldLength: item.unifiedInfo._oldLength,
+          newStartIndex: item.unifiedInfo._newStartIndex,
+          newLength: item.unifiedInfo._newLength,
+          startHiddenIndex: item.unifiedInfo._startHiddenIndex,
+          endHiddenIndex: item.unifiedInfo._endHiddenIndex,
+          plainText: item.unifiedInfo._plainText,
+        };
+      });
+      Object.keys(this.#unifiedHunksLines || {}).forEach((key) => {
+        const item = this.#unifiedHunksLines![key];
+        if (!item.unifiedInfo) return;
+        if (item.unifiedInfo.endHiddenIndex !== +key) {
+          delete this.#unifiedHunksLines![key];
+
+          this.#unifiedHunksLines![item.unifiedInfo.endHiddenIndex] = item;
+        }
       })
     }
 

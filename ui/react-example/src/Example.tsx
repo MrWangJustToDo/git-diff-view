@@ -43,6 +43,10 @@ export function Example() {
 
   const reactApp = useRef<Root>();
 
+  const [expandAll, setExpandAll] = useState(false);
+
+  const ref = useRef<{ getDiffFileInstance: () => DiffFile }>(null);
+
   const vueApp = useRef<App>();
 
   const [diffFileInstance, setDiffFileInstance] = useState<DiffFile>();
@@ -66,6 +70,7 @@ export function Example() {
     worker.addEventListener("message", (e: MessageEvent<MessageData>) => {
       const { data, bundle } = e.data;
       const instance = DiffFile.createInstance(data || {}, bundle);
+      setExpandAll(false);
       setDiffFileInstance(instance);
       console.timeEnd("parse");
     });
@@ -83,10 +88,23 @@ export function Example() {
     }
   }, [v]);
 
+  useEffect(() => {
+    if (expandAll) {
+      ref.current
+        ?.getDiffFileInstance?.()
+        .onAllExpand(useDiffConfig.getReadonlyState().mode === DiffModeEnum.Split ? "split" : "unified");
+    } else {
+      ref.current
+        ?.getDiffFileInstance?.()
+        .onAllCollapse(useDiffConfig.getReadonlyState().mode === DiffModeEnum.Split ? "split" : "unified");
+    }
+  }, [expandAll]);
+
   const { mode, setMode, highlight, setHighlight, wrap, setWrap, fontsize } = useDiffConfig((s) => ({ ...s }));
 
   const reactElement = (
     <DiffViewReact<string>
+      ref={ref}
       renderWidgetLine={({ onClose, side, lineNumber }) => (
         <div className="border flex flex-col w-full px-[4px] py-[8px]">
           <TextArea onChange={(v) => (valRef.current = v)} />
@@ -251,6 +269,12 @@ export function Example() {
       </div>
       <div className="w-[90%] m-auto mb-[1em] text-right text-[12px]">
         <div className="inline-flex gap-x-4">
+          <button
+            className="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+            onClick={() => setExpandAll(!expandAll)}
+          >
+            {expandAll ? "toggle to collapseAll" : "toggle to expandAll"}
+          </button>
           <button
             className="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
             onClick={() => setWrap(!wrap)}
