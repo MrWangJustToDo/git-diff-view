@@ -2,7 +2,7 @@ import { ref, watchPostEffect } from "vue";
 
 import { useIsMounted } from "./useIsMounted";
 
-import type { Ref} from "vue";
+import type { Ref } from "vue";
 
 let canvasCtx: CanvasRenderingContext2D | null = null;
 
@@ -52,7 +52,7 @@ export const useTextWidth = ({
 
   const measureText = () => {
     if (!isMounted.value) return;
-    width.value = measureInstance.measure(text.value, font.value);
+    width.value = measureInstance.measure(text.value || "", font.value);
   };
 
   watchPostEffect(measureText);
