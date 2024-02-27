@@ -4,7 +4,7 @@ import { defineConfig } from "vite";
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  // base: "/git-diff-view/",
+  base: "/git-diff-view/",
   plugins: [react()],
   build: {
     sourcemap: true,
