@@ -25,13 +25,18 @@ export const DiffSplitView = memo(({ diffFile }: { diffFile: DiffFile }) => {
         const widgetLineNumber = ref<number>(undefined);
 
         const setWidget = ({ side, lineNumber }: { side?: SplitSide; lineNumber?: number }) => {
+          const { renderWidgetLine } = useDiffContext.getReadonlyState();
+
+          if (typeof renderWidgetLine !== "function") return;
+
           widgetSide.value = side;
+          
           widgetLineNumber.value = lineNumber;
         };
 
         return { widgetSide, widgetLineNumber, setWidget };
       }),
-    []
+    [useDiffContext]
   );
 
   const contextValue = useMemo(() => ({ useWidget }), [useWidget]);

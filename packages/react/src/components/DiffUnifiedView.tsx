@@ -4,6 +4,8 @@ import { Fragment, memo, useEffect, useMemo } from "react";
 import { createStore, ref } from "reactivity-store";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
 
+import { useDiffViewContext, type SplitSide } from "..";
+
 import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
 import { DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
 import { DiffUnifiedLine } from "./DiffUnifiedLine";
@@ -11,7 +13,6 @@ import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
 import { DiffWidgetContext } from "./DiffWidgetContext";
 import { removeAllSelection } from "./tools";
 
-import type { SplitSide } from "..";
 import type { DiffFile } from "@git-diff-view/core";
 import type { MouseEventHandler } from "react";
 
@@ -26,6 +27,8 @@ const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
 };
 
 export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
+  const { useDiffContext } = useDiffViewContext();
+
   // performance optimization
   const useWidget = useMemo(
     () =>
@@ -35,13 +38,18 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
         const widgetLineNumber = ref<number>(undefined);
 
         const setWidget = ({ side, lineNumber }: { side?: SplitSide; lineNumber?: number }) => {
+          const { renderWidgetLine } = useDiffContext.getReadonlyState();
+
+          if (typeof renderWidgetLine !== "function") return;
+
           widgetSide.value = side;
+          
           widgetLineNumber.value = lineNumber;
         };
 
         return { widgetSide, widgetLineNumber, setWidget };
       }),
-    []
+    [useDiffContext]
   );
 
   const contextValue = useMemo(() => ({ useWidget }), [useWidget]);

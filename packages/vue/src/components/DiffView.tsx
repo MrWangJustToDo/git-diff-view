@@ -92,7 +92,9 @@ export const DiffView = defineComponent<
 
     const widgetState = ref<{ side?: SplitSide; lineNumber?: number }>({});
 
-    const setWidget = (v: { side?: SplitSide; lineNumber?: number }) => (widgetState.value = v);
+    const setWidget = (v: { side?: SplitSide; lineNumber?: number }) => {
+      typeof options.slots.widget === "function" && (widgetState.value = v);
+    };
 
     const enableHighlight = computed(() => props.diffViewHighlight ?? true);
 
