@@ -42,8 +42,8 @@ export const DiffSplitHunkLine = ({
           color: `var(${plainLineNumberColorName})`,
         }}
       >
-        {expandEnabled &&
-          (isFirstLine ? (
+        {expandEnabled ? (
+          isFirstLine ? (
             <button
               className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
               title="Expand Up"
@@ -89,7 +89,10 @@ export const DiffSplitHunkLine = ({
                 <ExpandUp className="fill-current" />
               </button>
             </>
-          ))}
+          )
+        ) : (
+          <div className="min-h-[28px]">&ensp;</div>
+        )}
       </td>
       <td
         className="diff-line-hunk-content pr-[10px] align-middle"

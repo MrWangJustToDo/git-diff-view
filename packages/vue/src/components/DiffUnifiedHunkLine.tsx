@@ -113,7 +113,9 @@ export const DiffUnifiedHunkLine = defineComponent(
                   </button>
                 </>
               )
-            ) : null}
+            ) : (
+              <div class="min-h-[28px]">&ensp;</div>
+            )}
           </td>
           <td
             class="diff-line-hunk-content pr-[10px] align-middle"

@@ -133,7 +133,7 @@ export const DiffSplitHunkLine = defineComponent(
                     </>
                   )
                 ) : (
-                  <span>&ensp;</span>
+                  <div class="min-h-[28px]">&ensp;</div>
                 )}
               </td>
               <td
@@ -156,7 +156,7 @@ export const DiffSplitHunkLine = defineComponent(
               colspan={2}
               style={{ backgroundColor: `var(${hunkContentBGName})` }}
             >
-              <span>&ensp;</span>
+              <div class="min-h-[28px]">&ensp;</div>
             </td>
           )}
         </tr>

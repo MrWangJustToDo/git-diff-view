@@ -92,7 +92,9 @@ const _DiffUnifiedHunkLine = ({
               </button>
             </>
           )
-        ) : null}
+        ) : (
+          <div className="min-h-[28px]">&ensp;</div>
+        )}
       </td>
       <td
         className="diff-line-hunk-content pr-[10px] align-middle"

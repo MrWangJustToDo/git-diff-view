@@ -106,6 +106,8 @@ export class DiffFile {
 
   #composeByDiff: boolean = false;
 
+  _version_ = __VERSION__;
+
   _oldFileContent: string = "";
 
   _oldFileLang: string = "";
@@ -1020,6 +1022,8 @@ export class DiffFile {
     const unifiedLines = this.#unifiedLines;
     const unifiedHunkLines = this.#unifiedHunksLines;
 
+    const version = this._version_;
+
     return {
       hasInitRaw,
       hasInitSyntax,
@@ -1040,6 +1044,8 @@ export class DiffFile {
       unifiedHunkLines,
 
       composeByDiff,
+
+      version
     };
   };
 
@@ -1065,6 +1071,10 @@ export class DiffFile {
 
     this.#unifiedLines = data.unifiedLines;
     this.#unifiedHunksLines = data.unifiedHunkLines;
+
+    if (__DEV__ && this._version_ !== data.version) {
+      console.error('the version of the `diffInstance` is not match, some error may happen!');
+    }
 
     this.notifyAll();
   };

@@ -123,7 +123,7 @@ export const PlayGround = () => {
           }}
           diffViewFontSize={13}
           diffViewHighlight={true}
-          diffViewMode={DiffModeEnum.Split}
+          diffViewMode={DiffModeEnum.Unified}
           diffViewWrap
           diffViewAddWidget
         />
