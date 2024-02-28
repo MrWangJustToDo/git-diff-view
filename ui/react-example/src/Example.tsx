@@ -108,11 +108,6 @@ export function Example() {
       renderWidgetLine={({ onClose, side, lineNumber }) => (
         <div className="border flex flex-col w-full px-[4px] py-[8px]">
           <TextArea onChange={(v) => (valRef.current = v)} />
-          {/* <textarea
-            className="w-full border min-h-[80px] p-[2px]"
-            value={val}
-            onChange={(e) => setVal(e.target.value)}
-          /> */}
           <div className="m-[5px] mt-[0.8em] text-right">
             <div className="inline-flex gap-x-[12px] justify-end">
               <button
