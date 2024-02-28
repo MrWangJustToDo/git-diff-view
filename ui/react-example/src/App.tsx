@@ -1,16 +1,22 @@
-import { useState } from "react";
-
 import { Example } from "./Example";
+import { usePreviewType } from "./hooks/usePreviewType";
 import { PlayGround } from "./PlayGround";
 
+const { set: setType } = usePreviewType.getActions();
+
 function App() {
-  const [type, setType] = useState<"try" | "example">("example");
+  const type = usePreviewType((s) => s.type);
 
   return (
     <>
       <div className="w-[90%] m-auto mb-[1em] mt-[1.5em] text-right">
         <div className=" flex items-center justify-between">
-          <a className="border rounded-md text-gray-500 w-[50px] h-[50px] block" aria-label="github" href="https://github.com/MrWangJustToDo/git-diff-view" target="_blank">
+          <a
+            className="border rounded-md text-gray-500 w-[50px] h-[50px] block"
+            aria-label="github"
+            href="https://github.com/MrWangJustToDo/git-diff-view"
+            target="_blank"
+          >
             <svg
               stroke="currentColor"
               fill="currentColor"
@@ -25,7 +31,7 @@ function App() {
           </a>
           <button
             className=" bg-slate-500 hover:bg-slate-800 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white text-[18px]"
-            onClick={() => setType((last) => (last === "example" ? "try" : "example"))}
+            onClick={() => setType(type === "example" ? "try" : "example")}
           >
             {type === "example" ? "Toggle to playground" : "Toggle to example"}
           </button>
