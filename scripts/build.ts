@@ -3,8 +3,7 @@ import { rollupBuild } from "project-tool/rollup";
 import postcss from "rollup-plugin-postcss";
 import tailwindcss from "tailwindcss";
 
-const externalCorePackage = (id: string) =>
-  id.includes("node_modules") && !id.includes("tslib") && !id.includes("lru-cache");
+const externalCorePackage = (id: string) => id.includes("node_modules") && !id.includes("tslib");
 
 const external = (id: string) => id.includes("node_modules") && !id.includes("tslib") && !id.endsWith(".css");
 

@@ -1,10 +1,18 @@
-import { LRUCache } from "lru-cache";
-
+import { Cache } from "./cache";
 import { highlighter } from "./highlighter";
 
 import type { AST } from "./highlighter";
 
-const map = new LRUCache<string, File>({ max: 30 });
+const map = new Cache<string, File>();
+
+map.setMaxLength(50);
+
+if (__DEV__ && typeof globalThis !== "undefined") {
+  if (typeof globalThis.__diff_cache__ === "object") {
+    console.warn("there are multiple version of @git-diff-view/core in the one environment!");
+  }
+  globalThis.__diff_cache__ = map;
+}
 
 export type SyntaxNode = {
   type: string;

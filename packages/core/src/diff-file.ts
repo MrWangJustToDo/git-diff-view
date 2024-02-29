@@ -478,13 +478,23 @@ export class DiffFile {
       const newLineHasChange = newDiffLine?.isIncludeableLine();
       const len = this.#splitRightLines.length;
       const isHidden = !oldDiffLine && !newDiffLine;
-      if (
-        (oldDiffLine && !newDiffLine && oldDiffLine.newLineNumber && oldDiffLine.newLineNumber > newFileLineNumber) ||
-        (!oldDiffLine && newDiffLine && newDiffLine.oldLineNumber && newDiffLine.oldLineNumber > oldFileLineNumber)
-      ) {
-        oldDiffLine && newFileLineNumber++;
-        newDiffLine && oldFileLineNumber++;
-        continue;
+      if (oldDiffLine && !newDiffLine) {
+        if (oldDiffLine.newLineNumber && oldDiffLine.newLineNumber > newFileLineNumber) {
+          newFileLineNumber++;
+          continue;
+        }
+        if (oldDiffLine.newLineNumber === null || oldDiffLine.newLineNumber === undefined) {
+          newFileLineNumber++;
+        }
+      }
+      if (newDiffLine && !oldDiffLine) {
+        if (newDiffLine.oldLineNumber && newDiffLine.oldLineNumber > oldFileLineNumber) {
+          oldFileLineNumber++;
+          continue;
+        }
+        if (newDiffLine.oldLineNumber === null || newDiffLine.oldLineNumber === undefined) {
+          oldFileLineNumber++;
+        }
       }
       if (!oldDiffLine && !oldRawLine && !newDiffLine && !newRawLine) break;
       if ((oldLineHasChange && newLineHasChange) || (!oldLineHasChange && !newLineHasChange)) {
@@ -612,13 +622,23 @@ export class DiffFile {
       const newLineHasChange = newDiffLine?.isIncludeableLine();
       const len = this.#unifiedLines.length;
       const isHidden = !oldDiffLine && !newDiffLine;
-      if (
-        (oldDiffLine && !newDiffLine && oldDiffLine.newLineNumber && oldDiffLine.newLineNumber > newFileLineNumber) ||
-        (!oldDiffLine && newDiffLine && newDiffLine.oldLineNumber && newDiffLine.oldLineNumber > oldFileLineNumber)
-      ) {
-        oldDiffLine && newFileLineNumber++;
-        newDiffLine && oldFileLineNumber++;
-        continue;
+      if (oldDiffLine && !newDiffLine) {
+        if (oldDiffLine.newLineNumber && oldDiffLine.newLineNumber > newFileLineNumber) {
+          newFileLineNumber++;
+          continue;
+        }
+        if (oldDiffLine.newLineNumber === null || oldDiffLine.newLineNumber === undefined) {
+          newFileLineNumber++;
+        }
+      }
+      if (newDiffLine && !oldDiffLine) {
+        if (newDiffLine.oldLineNumber && newDiffLine.oldLineNumber > oldFileLineNumber) {
+          oldFileLineNumber++;
+          continue;
+        }
+        if (newDiffLine.oldLineNumber === null || newDiffLine.oldLineNumber === undefined) {
+          oldFileLineNumber++;
+        }
       }
       if (!oldRawLine && !newRawLine && !newDiffLine && !oldDiffLine) break;
       if (!oldLineHasChange && !newLineHasChange) {

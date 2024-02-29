@@ -52,8 +52,5 @@
   ],
   "dependencies": {
     "lowlight": "^3.1.0"
-  },
-  "devDependencies": {
-    "lru-cache": "^10.2.0"
   }
 }

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "rootDir": "src",
-    "target": "ESNext",
+    "target": "ES2015",
     "moduleResolution": "Bundler",
     "stripInternal": true,
     "jsx": "react",

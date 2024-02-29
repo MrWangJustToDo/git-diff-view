@@ -146,8 +146,8 @@ export function Example() {
         </div>
       )}
       // use data
-      data={data[v]}
-      // diffFile={diffFileInstance}
+      // data={data[v]}
+      diffFile={diffFileInstance}
       extendData={extend}
       renderExtendLine={({ data }) => {
         return (
