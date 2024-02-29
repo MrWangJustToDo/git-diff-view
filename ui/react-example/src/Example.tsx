@@ -35,7 +35,7 @@ const TextArea = ({ onChange }: { onChange: (v: string) => void }) => {
 const vRef = ref("");
 
 export function Example() {
-  const [v, setV] = useState<K>("m");
+  const [v, setV] = useState<K>("b");
 
   const reactRoot = useRef<HTMLDivElement>(null);
 
