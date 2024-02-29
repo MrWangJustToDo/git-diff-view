@@ -35,7 +35,7 @@ const TextArea = ({ onChange }: { onChange: (v: string) => void }) => {
 const vRef = ref("");
 
 export function Example() {
-  const [v, setV] = useState<K>("b");
+  const [v, setV] = useState<K>("m");
 
   const reactRoot = useRef<HTMLDivElement>(null);
 
@@ -89,6 +89,9 @@ export function Example() {
   }, [v]);
 
   useEffect(() => {
+    setTimeout(() => {
+      console.log(ref.current?.getDiffFileInstance());
+    }, 100)
     if (expandAll) {
       ref.current
         ?.getDiffFileInstance?.()
@@ -143,8 +146,8 @@ export function Example() {
         </div>
       )}
       // use data
-      // data={data[v]}
-      diffFile={diffFileInstance}
+      data={data[v]}
+      // diffFile={diffFileInstance}
       extendData={extend}
       renderExtendLine={({ data }) => {
         return (

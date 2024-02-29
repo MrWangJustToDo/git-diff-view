@@ -482,17 +482,11 @@ export class DiffFile {
         (oldDiffLine && !newDiffLine && oldDiffLine.newLineNumber && oldDiffLine.newLineNumber > newFileLineNumber) ||
         (!oldDiffLine && newDiffLine && newDiffLine.oldLineNumber && newDiffLine.oldLineNumber > oldFileLineNumber)
       ) {
-        if (this.#composeByDiff) {
-          oldDiffLine && newFileLineNumber++;
-          newDiffLine && oldFileLineNumber++;
-          continue;
-        } else {
-          if (__DEV__) {
-            console.error("some error happen for generate diff line!");
-          }
-        }
+        oldDiffLine && newFileLineNumber++;
+        newDiffLine && oldFileLineNumber++;
+        continue;
       }
-      if (!oldDiffLine && !newRawLine && !oldDiffLine && !newDiffLine) break;
+      if (!oldDiffLine && !oldRawLine && !newDiffLine && !newRawLine) break;
       if ((oldLineHasChange && newLineHasChange) || (!oldLineHasChange && !newLineHasChange)) {
         this.#splitLeftLines.push({
           lineNumber: oldFileLineNumber++,
@@ -622,15 +616,9 @@ export class DiffFile {
         (oldDiffLine && !newDiffLine && oldDiffLine.newLineNumber && oldDiffLine.newLineNumber > newFileLineNumber) ||
         (!oldDiffLine && newDiffLine && newDiffLine.oldLineNumber && newDiffLine.oldLineNumber > oldFileLineNumber)
       ) {
-        if (this.#composeByDiff) {
-          oldDiffLine && newFileLineNumber++;
-          newDiffLine && oldFileLineNumber++;
-          continue;
-        } else {
-          if (__DEV__) {
-            console.error("some error happen for generate diff line!");
-          }
-        }
+        oldDiffLine && newFileLineNumber++;
+        newDiffLine && oldFileLineNumber++;
+        continue;
       }
       if (!oldRawLine && !newRawLine && !newDiffLine && !oldDiffLine) break;
       if (!oldLineHasChange && !newLineHasChange) {
@@ -748,6 +736,8 @@ export class DiffFile {
     const current = this.#splitHunksLines?.[index];
     if (!current || !current.splitInfo) return;
 
+    if (this.#composeByDiff) return;
+
     if (dir === "all") {
       for (let i = current.splitInfo.startHiddenIndex; i < current.splitInfo.endHiddenIndex; i++) {
         const leftLine = this.#splitLeftLines[i];
@@ -825,6 +815,8 @@ export class DiffFile {
     const current = this.#unifiedHunksLines?.[index];
     if (!current || !current.unifiedInfo) return;
 
+    if (this.#composeByDiff) return;
+
     if (dir === "all") {
       for (let i = current.unifiedInfo.startHiddenIndex; i < current.unifiedInfo.endHiddenIndex; i++) {
         const unifiedLine = this.#unifiedLines?.[i];
@@ -887,6 +879,8 @@ export class DiffFile {
   };
 
   onAllExpand = (mode: "split" | "unified") => {
+    if (this.#composeByDiff) return;
+
     if (mode === "split") {
       Object.keys(this.#splitHunksLines || {}).forEach((key) => {
         this.onSplitHunkExpand("all", +key, false);
@@ -901,6 +895,8 @@ export class DiffFile {
   };
 
   onAllCollapse = (mode: "split" | "unified") => {
+    if (this.#composeByDiff) return;
+
     if (mode === "split") {
       Object.values(this.#splitLeftLines || {}).forEach((item) => {
         if (!item.isHidden && item._isHidden) {
@@ -961,7 +957,7 @@ export class DiffFile {
 
           this.#unifiedHunksLines![item.unifiedInfo.endHiddenIndex] = item;
         }
-      })
+      });
     }
 
     this.notifyAll();
@@ -1045,7 +1041,7 @@ export class DiffFile {
 
       composeByDiff,
 
-      version
+      version,
     };
   };
 
@@ -1073,7 +1069,7 @@ export class DiffFile {
     this.#unifiedHunksLines = data.unifiedHunkLines;
 
     if (__DEV__ && this._version_ !== data.version) {
-      console.error('the version of the `diffInstance` is not match, some error may happen!');
+      console.error("the version of the `diffInstance` is not match, some error may happen!");
     }
 
     this.notifyAll();
