@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { DiffFile } from "@git-diff-view/core";
+import { DiffFile, _cacheMap } from "@git-diff-view/core";
 import { memo, useEffect, useMemo, forwardRef, useImperativeHandle } from "react";
 import * as React from "react";
 import { createStore, ref } from "reactivity-store";
@@ -15,6 +15,8 @@ import type { highlighter } from "@git-diff-view/core";
 import type { CSSProperties, ForwardedRef, ReactNode } from "react";
 
 const diffFontSizeName = "--diff-font-size--";
+
+_cacheMap.name = "@git-diff-view/react";
 
 export enum SplitSide {
   old = 1,

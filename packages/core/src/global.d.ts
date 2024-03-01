@@ -5,7 +5,7 @@ declare global {
   const __VERSION__: string;
 
   interface globalThis {
-    __diff_cache__: Map<string, File>;
+    __diff_cache__: Map<string, File>[];
   }
 
   namespace NodeJS {

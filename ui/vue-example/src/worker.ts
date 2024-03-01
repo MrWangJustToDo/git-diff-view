@@ -1,4 +1,4 @@
-import { DiffFile } from "@git-diff-view/core";
+import { DiffFile } from "@git-diff-view/react";
 
 import type { DiffViewProps } from "@git-diff-view/vue";
 

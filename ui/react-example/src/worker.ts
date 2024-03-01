@@ -1,4 +1,4 @@
-import { DiffFile, highlighter } from "@git-diff-view/core";
+import { DiffFile, highlighter } from "@git-diff-view/vue";
 
 import type { DiffViewProps } from "@git-diff-view/react";
 

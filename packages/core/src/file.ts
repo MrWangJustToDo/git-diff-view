@@ -7,11 +7,20 @@ const map = new Cache<string, File>();
 
 map.setMaxLength(50);
 
+map.name = "@git-diff-view/core";
+
 if (__DEV__ && typeof globalThis !== "undefined") {
-  if (typeof globalThis.__diff_cache__ === "object") {
-    console.warn("there are multiple version of @git-diff-view/core in the one environment!");
+  if (Array.isArray(globalThis.__diff_cache__)) {
+    globalThis.__diff_cache__ = globalThis.__diff_cache__.filter((i) => i !== map);
+
+    if (globalThis.__diff_cache__.length > 0) {
+      console.warn("there are multiple instance of @git-diff-view/core in the one environment!");
+    }
+
+    globalThis.__diff_cache__.push(map);
+  } else {
+    globalThis.__diff_cache__ = [map];
   }
-  globalThis.__diff_cache__ = map;
 }
 
 export type SyntaxNode = {
@@ -254,3 +263,5 @@ export const getFile = (raw: string, lang: string, fileName?: string) => {
 
   return file;
 };
+
+export const _cacheMap = map;

@@ -1,4 +1,4 @@
-import { DiffFile } from "@git-diff-view/core";
+import { DiffFile, _cacheMap } from "@git-diff-view/core";
 import { defineComponent, provide, ref, watch, watchEffect, computed, onUnmounted } from "vue";
 
 import {
@@ -51,6 +51,8 @@ export type DiffViewProps<T> = {
   diffViewHighlight?: boolean;
   diffViewAddWidget?: boolean;
 };
+
+_cacheMap.name = "@git-diff-view/vue";
 
 const diffFontSizeName = "--diff-font-size--";
 

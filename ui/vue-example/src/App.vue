@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import * as data from "./data";
-import { DiffModeEnum, DiffView, DiffViewProps, SplitSide } from "@git-diff-view/vue";
+import { DiffModeEnum, DiffView, DiffViewProps, SplitSide, DiffFile } from "@git-diff-view/vue";
 import { MessageData } from "./worker";
-import { DiffFile } from "@git-diff-view/core";
 
 const worker = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
 

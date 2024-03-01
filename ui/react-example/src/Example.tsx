@@ -1,5 +1,4 @@
-import { DiffFile } from "@git-diff-view/core";
-import { DiffModeEnum, DiffView as DiffViewReact, SplitSide } from "@git-diff-view/react";
+import { DiffModeEnum, DiffView as DiffViewReact, SplitSide, DiffFile } from "@git-diff-view/react";
 import { DiffView as DiffViewVue } from "@git-diff-view/vue";
 import { useEffect, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
@@ -91,7 +90,7 @@ export function Example() {
   useEffect(() => {
     setTimeout(() => {
       console.log(ref.current?.getDiffFileInstance());
-    }, 100)
+    }, 100);
     if (expandAll) {
       ref.current
         ?.getDiffFileInstance?.()

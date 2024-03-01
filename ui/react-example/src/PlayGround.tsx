@@ -1,5 +1,4 @@
-import { DiffFile } from "@git-diff-view/core";
-import { DiffModeEnum, DiffView } from "@git-diff-view/react";
+import { DiffModeEnum, DiffView, DiffFile } from "@git-diff-view/react";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 

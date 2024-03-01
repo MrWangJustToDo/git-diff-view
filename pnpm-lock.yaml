@@ -166,9 +166,6 @@ importers:
 
   ui/react-example:
     dependencies:
-      '@git-diff-view/core':
-        specifier: workspace:*
-        version: link:../../packages/core
       '@git-diff-view/react':
         specifier: workspace:*
         version: link:../../packages/react
@@ -248,9 +245,6 @@ importers:
 
   ui/vue-example:
     dependencies:
-      '@git-diff-view/core':
-        specifier: workspace:*
-        version: link:../../packages/core
       '@git-diff-view/vue':
         specifier: workspace:*
         version: link:../../packages/vue

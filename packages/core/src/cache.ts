@@ -1,6 +1,8 @@
 export class Cache<K, V> extends Map<K, V> {
   #keyArray: K[] = [];
 
+  name: string;
+
   #maxLength = 30;
 
   setMaxLength(length: number) {

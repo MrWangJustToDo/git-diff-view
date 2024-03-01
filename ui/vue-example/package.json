@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@git-diff-view/core": "workspace:*",
     "@git-diff-view/vue": "workspace:*",
     "vue": "^3.4.20"
   },
