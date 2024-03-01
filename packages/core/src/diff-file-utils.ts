@@ -1,4 +1,4 @@
-import { numIterator } from ".";
+import { DiffLineType, numIterator } from ".";
 
 import type { DiffHunkItem, SplitLineItem, UnifiedLineItem, DiffFile } from ".";
 
@@ -67,6 +67,12 @@ export const getSplitLines = (diffFile: DiffFile, options: Options): DiffSplitLi
       hunkLine.splitInfo.startHiddenIndex < hunkLine.splitInfo.endHiddenIndex &&
       splitLines.push({ type: DiffFileLineType.hunk, index, lineNumber: index + 1, hunkLine: hunkLine });
 
+    hunkLine &&
+      !hunkLine.splitInfo &&
+      !hunkLine.unifiedInfo &&
+      hunkLine.type === DiffLineType.Hunk &&
+      splitLines.push({ type: DiffFileLineType.hunk, index, lineNumber: index + 1, hunkLine: hunkLine });
+
     !splitLeftLine?.isHidden &&
       !splitRightLine?.isHidden &&
       splitLines.push({
@@ -105,6 +111,12 @@ export const getUnifiedLines = (diffFile: DiffFile, options: Options): DiffUnifi
     hunkLine &&
       hunkLine.unifiedInfo &&
       hunkLine.unifiedInfo.startHiddenIndex < hunkLine.unifiedInfo.endHiddenIndex &&
+      unifiedLines.push({ type: DiffFileLineType.hunk, index, lineNumber: index + 1, hunkLine: hunkLine });
+
+    hunkLine &&
+      !hunkLine.splitInfo &&
+      !hunkLine.unifiedInfo &&
+      hunkLine.type === DiffLineType.Hunk &&
       unifiedLines.push({ type: DiffFileLineType.hunk, index, lineNumber: index + 1, hunkLine: hunkLine });
 
     !unifiedLine.isHidden &&

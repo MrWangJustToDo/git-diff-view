@@ -14,6 +14,8 @@ export const DiffSplitHunkLine = defineComponent(
 
     const enableExpand = ref(props.diffFile.getExpandEnabled());
 
+    const couldExpand = computed(() => enableExpand.value && currentHunk.value && currentHunk.value.splitInfo);
+
     const lineSelector = computed(() => `tr[data-line="${props.lineNumber}-hunk"]`);
 
     const currentShowExpand = computed(() => props.side === SplitSide.old);
@@ -27,6 +29,8 @@ export const DiffSplitHunkLine = defineComponent(
     );
 
     const currentIsFirstLine = ref(currentHunk.value && currentHunk.value.index === 0);
+
+    const currentIsPureHunk = ref(currentHunk.value && !currentHunk.value.splitInfo);
 
     const currentIsLastLine = ref(currentHunk.value && currentHunk.value.isLast);
 
@@ -53,6 +57,8 @@ export const DiffSplitHunkLine = defineComponent(
 
       currentIsFirstLine.value = currentHunk.value && currentHunk.value.index === 0;
 
+      currentIsPureHunk.value = currentHunk.value && !currentHunk.value.splitInfo;
+
       currentIsLastLine.value = currentHunk.value && currentHunk.value.isLast;
     });
 
@@ -65,7 +71,7 @@ export const DiffSplitHunkLine = defineComponent(
     });
 
     return () => {
-      if (!currentIsShow.value) return null;
+      if (!currentIsShow.value && !currentIsPureHunk.value) return null;
 
       return (
         <tr
@@ -84,7 +90,7 @@ export const DiffSplitHunkLine = defineComponent(
                   color: `var(${plainLineNumberColorName})`,
                 }}
               >
-                {enableExpand.value ? (
+                {couldExpand.value ? (
                   currentIsFirstLine.value ? (
                     <button
                       class="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
@@ -146,7 +152,7 @@ export const DiffSplitHunkLine = defineComponent(
                     color: `var(${hunkContentColorName})`,
                   }}
                 >
-                  {currentHunk.value.splitInfo.plainText}
+                  {currentHunk.value.splitInfo?.plainText || currentHunk.value.text}
                 </div>
               </td>
             </>

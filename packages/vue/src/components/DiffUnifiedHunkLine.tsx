@@ -1,5 +1,5 @@
 import { composeLen } from "@git-diff-view/core";
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 
 import { useEnableWrap } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
@@ -14,6 +14,8 @@ export const DiffUnifiedHunkLine = defineComponent(
     const currentHunk = ref(props.diffFile.getUnifiedHunkLine(props.index));
 
     const enableExpand = ref(props.diffFile.getExpandEnabled());
+
+    const couldExpand = computed(() => enableExpand.value && currentHunk.value && currentHunk.value.unifiedInfo);
 
     const enableWrap = useEnableWrap();
 
@@ -30,6 +32,8 @@ export const DiffUnifiedHunkLine = defineComponent(
     );
 
     const currentIsFirstLine = ref(currentHunk.value && currentHunk.value.index === 0);
+
+    const currentIsPureHunk = ref(currentHunk.value && !currentHunk.value.unifiedInfo);
 
     const currentIsLastLine = ref(currentHunk.value && currentHunk.value.isLast);
 
@@ -50,11 +54,13 @@ export const DiffUnifiedHunkLine = defineComponent(
 
       currentIsFirstLine.value = currentHunk.value && currentHunk.value.index === 0;
 
+      currentIsPureHunk.value = currentHunk.value && !currentHunk.value.unifiedInfo;
+
       currentIsLastLine.value = currentHunk.value && currentHunk.value.isLast;
     });
 
     return () => {
-      if (!currentIsShow.value) return null;
+      if (!currentIsShow.value && !currentIsPureHunk.value) return null;
 
       return (
         <tr data-line={`${props.lineNumber}-hunk`} data-state="hunk" class="diff-line diff-line-hunk">
@@ -65,7 +71,7 @@ export const DiffUnifiedHunkLine = defineComponent(
               color: `var(${plainLineNumberColorName})`,
             }}
           >
-            {enableExpand.value ? (
+            {couldExpand.value ? (
               currentIsFirstLine.value ? (
                 <button
                   class="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
@@ -129,7 +135,7 @@ export const DiffUnifiedHunkLine = defineComponent(
                 color: `var(${hunkContentColorName})`,
               }}
             >
-              {currentHunk.value.unifiedInfo.plainText}
+              {currentHunk.value.unifiedInfo?.plainText || currentHunk.value.text}
             </div>
           </td>
         </tr>

@@ -32,6 +32,7 @@ export const PlayGround = () => {
       });
       try {
         data?.init();
+        data?.buildSplitDiffLines();
         setDiffInstance(data);
       } catch (e) {
         alert((e as Error).message);
@@ -43,6 +44,8 @@ export const PlayGround = () => {
   useEffect(() => {
     setDiffInstanceCb(lang, diffString, content);
   }, [diffString, content, lang]);
+
+  console.log(diffInstance);
 
   return (
     <div className="w-[90%] m-auto mt-[1em] mb-[1em]">
@@ -123,7 +126,7 @@ export const PlayGround = () => {
           }}
           diffViewFontSize={13}
           diffViewHighlight={true}
-          diffViewMode={DiffModeEnum.Unified}
+          diffViewMode={DiffModeEnum.Split}
           diffViewWrap
           diffViewAddWidget
         />

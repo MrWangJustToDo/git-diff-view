@@ -82,6 +82,10 @@ export class DiffFile {
 
   #newFileSyntaxLines?: File["syntaxFile"];
 
+  #oldFilePlaceholderLines?: Record<string, boolean>;
+
+  #newFilePlaceholderLines?: Record<string, boolean>;
+
   #splitLeftLines: SplitLineItem[] = [];
 
   #splitRightLines: SplitLineItem[] = [];
@@ -213,6 +217,10 @@ export class DiffFile {
   #composeFile() {
     if (this._oldFileContent && this._newFileContent) return;
 
+    const oldFilePlaceholderLines: Record<string, boolean> = {};
+
+    const newFilePlaceholderLines: Record<string, boolean> = {};
+
     // all of the file content not exist, try to use diff result to compose
     if (!this._oldFileContent && !this._newFileContent) {
       let newLineNumber = 1;
@@ -220,21 +228,25 @@ export class DiffFile {
       let oldFileContent = "";
       let newFileContent = "";
       while (oldLineNumber <= this.diffLineLength) {
-        const diffLine = this.#getOldDiffLine(oldLineNumber++);
+        const index = oldLineNumber++;
+        const diffLine = this.#getOldDiffLine(index);
         if (diffLine) {
           oldFileContent += diffLine.text;
         } else {
           // empty line for placeholder
           oldFileContent += "\n";
+          oldFilePlaceholderLines[index] = true;
         }
       }
       while (newLineNumber <= this.diffLineLength) {
-        const diffLine = this.#getNewDiffLine(newLineNumber++);
+        const index = newLineNumber++;
+        const diffLine = this.#getNewDiffLine(index);
         if (diffLine) {
           newFileContent += diffLine.text;
         } else {
           // empty line for placeholder
           newFileContent += "\n";
+          newFilePlaceholderLines[index] = true;
         }
       }
       if (oldFileContent === newFileContent) return;
@@ -242,6 +254,8 @@ export class DiffFile {
       this._newFileContent = newFileContent;
       this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang, this._oldFileName);
       this.#newFileResult = getFile(this._newFileContent, this._newFileLang, this._newFileName);
+      this.#oldFilePlaceholderLines = oldFilePlaceholderLines;
+      this.#newFilePlaceholderLines = newFilePlaceholderLines;
       // all of the file just compose by diff, so we can not do the expand action
       this.#composeByDiff = true;
     } else if (this.#oldFileResult) {
@@ -478,6 +492,7 @@ export class DiffFile {
       const newLineHasChange = newDiffLine?.isIncludeableLine();
       const len = this.#splitRightLines.length;
       const isHidden = !oldDiffLine && !newDiffLine;
+
       if (oldDiffLine && !newDiffLine) {
         if (oldDiffLine.newLineNumber && oldDiffLine.newLineNumber > newFileLineNumber) {
           newFileLineNumber++;
@@ -487,6 +502,7 @@ export class DiffFile {
           newFileLineNumber++;
         }
       }
+
       if (newDiffLine && !oldDiffLine) {
         if (newDiffLine.oldLineNumber && newDiffLine.oldLineNumber > oldFileLineNumber) {
           oldFileLineNumber++;
@@ -496,7 +512,25 @@ export class DiffFile {
           oldFileLineNumber++;
         }
       }
+
       if (!oldDiffLine && !oldRawLine && !newDiffLine && !newRawLine) break;
+
+      if (!oldDiffLine && !newDiffLine) {
+        if (this.#oldFilePlaceholderLines?.[oldFileLineNumber] && this.#newFilePlaceholderLines?.[newFileLineNumber]) {
+          oldFileLineNumber++;
+          newFileLineNumber++;
+          continue;
+        }
+        if (!oldRawLine && this.#newFilePlaceholderLines?.[newFileLineNumber]) {
+          newFileLineNumber++;
+          continue;
+        }
+        if (!newRawLine && this.#oldFilePlaceholderLines?.[oldFileLineNumber]) {
+          oldFileLineNumber++;
+          continue;
+        }
+      }
+
       if ((oldLineHasChange && newLineHasChange) || (!oldLineHasChange && !newLineHasChange)) {
         this.#splitLeftLines.push({
           lineNumber: oldFileLineNumber++,
@@ -622,6 +656,7 @@ export class DiffFile {
       const newLineHasChange = newDiffLine?.isIncludeableLine();
       const len = this.#unifiedLines.length;
       const isHidden = !oldDiffLine && !newDiffLine;
+
       if (oldDiffLine && !newDiffLine) {
         if (oldDiffLine.newLineNumber && oldDiffLine.newLineNumber > newFileLineNumber) {
           newFileLineNumber++;
@@ -631,6 +666,7 @@ export class DiffFile {
           newFileLineNumber++;
         }
       }
+
       if (newDiffLine && !oldDiffLine) {
         if (newDiffLine.oldLineNumber && newDiffLine.oldLineNumber > oldFileLineNumber) {
           oldFileLineNumber++;
@@ -640,7 +676,25 @@ export class DiffFile {
           oldFileLineNumber++;
         }
       }
+
       if (!oldRawLine && !newRawLine && !newDiffLine && !oldDiffLine) break;
+
+      if (!oldDiffLine && !newDiffLine) {
+        if (this.#oldFilePlaceholderLines?.[oldFileLineNumber] && this.#newFilePlaceholderLines?.[newFileLineNumber]) {
+          oldFileLineNumber++;
+          newFileLineNumber++;
+          continue;
+        }
+        if (!oldRawLine && this.#newFilePlaceholderLines?.[newFileLineNumber]) {
+          newFileLineNumber++;
+          continue;
+        }
+        if (!newRawLine && this.#oldFilePlaceholderLines?.[oldFileLineNumber]) {
+          oldFileLineNumber++;
+          continue;
+        }
+      }
+
       if (!oldLineHasChange && !newLineHasChange) {
         this.#unifiedLines.push({
           oldLineNumber: oldFileLineNumber++,
@@ -1022,9 +1076,11 @@ export class DiffFile {
     const oldFileLines = this.#oldFileLines;
     const oldFileDiffLines = this.#oldFileDiffLines;
     const oldFileSyntaxLines = this.#oldFileSyntaxLines;
+    const oldFilePlaceholderLines = this.#oldFilePlaceholderLines;
     const newFileLines = this.#newFileLines;
     const newFileDiffLines = this.#newFileDiffLines;
     const newFileSyntaxLines = this.#newFileSyntaxLines;
+    const newFilePlaceholderLines = this.#newFilePlaceholderLines;
     const splitLineLength = this.splitLineLength;
     const unifiedLineLength = this.unifiedLineLength;
     const composeByDiff = this.#composeByDiff;
@@ -1048,9 +1104,11 @@ export class DiffFile {
       oldFileLines,
       oldFileDiffLines,
       oldFileSyntaxLines,
+      oldFilePlaceholderLines,
       newFileLines,
       newFileDiffLines,
       newFileSyntaxLines,
+      newFilePlaceholderLines,
       splitLineLength,
       unifiedLineLength,
       splitLeftLines,
@@ -1075,9 +1133,11 @@ export class DiffFile {
     this.#oldFileLines = data.oldFileLines;
     this.#oldFileDiffLines = data.oldFileDiffLines;
     this.#oldFileSyntaxLines = data.oldFileSyntaxLines;
+    this.#oldFilePlaceholderLines = data.oldFilePlaceholderLines;
     this.#newFileLines = data.newFileLines;
     this.#newFileDiffLines = data.newFileDiffLines;
     this.#newFileSyntaxLines = data.newFileSyntaxLines;
+    this.#newFilePlaceholderLines = data.newFilePlaceholderLines;
     this.splitLineLength = data.splitLineLength;
     this.unifiedLineLength = data.unifiedLineLength;
 

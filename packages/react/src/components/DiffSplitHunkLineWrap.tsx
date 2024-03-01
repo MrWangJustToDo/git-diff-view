@@ -17,6 +17,8 @@ export const DiffSplitHunkLine = ({
 
   const expandEnabled = diffFile.getExpandEnabled();
 
+  const couldExpand = expandEnabled && currentHunk && currentHunk.splitInfo;
+
   const isExpandAll =
     currentHunk &&
     currentHunk.splitInfo &&
@@ -27,11 +29,13 @@ export const DiffSplitHunkLine = ({
     currentHunk.splitInfo &&
     currentHunk.splitInfo.startHiddenIndex < currentHunk.splitInfo.endHiddenIndex;
 
+  const currentIsPureHunk = currentHunk && !currentHunk.splitInfo;
+
   const isFirstLine = currentHunk && currentHunk.index === 0;
 
   const isLastLine = currentHunk && currentHunk.isLast;
 
-  if (!currentIsShow) return null;
+  if (!currentIsShow && !currentIsPureHunk) return null;
 
   return (
     <tr data-line={`${lineNumber}-hunk`} data-state="hunk" className="diff-line diff-line-hunk">
@@ -42,7 +46,7 @@ export const DiffSplitHunkLine = ({
           color: `var(${plainLineNumberColorName})`,
         }}
       >
-        {expandEnabled ? (
+        {couldExpand ? (
           isFirstLine ? (
             <button
               className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
@@ -105,7 +109,7 @@ export const DiffSplitHunkLine = ({
             color: `var(${hunkContentColorName})`,
           }}
         >
-          {currentHunk.splitInfo.plainText}
+          {currentHunk.splitInfo?.plainText || currentHunk.text}
         </div>
       </td>
     </tr>

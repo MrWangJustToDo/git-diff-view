@@ -30,6 +30,8 @@ const _DiffSplitHunkLine = ({
 
   const enableHunkAction = side === SplitSide.old;
 
+  const couldExpand = expandEnabled && currentHunk && currentHunk.splitInfo;
+
   const isExpandAll =
     currentHunk &&
     currentHunk.splitInfo &&
@@ -55,7 +57,7 @@ const _DiffSplitHunkLine = ({
               color: `var(${plainLineNumberColorName})`,
             }}
           >
-            {expandEnabled ? (
+            {couldExpand ? (
               isFirstLine ? (
                 <button
                   className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
@@ -119,7 +121,7 @@ const _DiffSplitHunkLine = ({
                 color: `var(${hunkContentColorName})`,
               }}
             >
-              {currentHunk.splitInfo.plainText}
+              {currentHunk.splitInfo?.plainText || currentHunk.text}
             </div>
           </td>
         </>
@@ -154,7 +156,9 @@ export const DiffSplitHunkLine = ({
     currentHunk.splitInfo &&
     currentHunk.splitInfo.startHiddenIndex < currentHunk.splitInfo.endHiddenIndex;
 
-  if (!currentIsShow) return null;
+  const currentIsPureHunk = currentHunk && !currentHunk.splitInfo;
+
+  if (!currentIsShow && !currentIsPureHunk) return null;
 
   return <_DiffSplitHunkLine index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
 };

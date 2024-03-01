@@ -26,6 +26,8 @@ const _DiffUnifiedHunkLine = ({
 
   const enableWrap = useDiffContext(useCallback((s) => s.enableWrap, []));
 
+  const couldExpand = expandEnabled && currentHunk && currentHunk.unifiedInfo;
+
   const isExpandAll =
     currentHunk &&
     currentHunk.unifiedInfo &&
@@ -44,7 +46,7 @@ const _DiffUnifiedHunkLine = ({
           color: `var(${plainLineNumberColorName})`,
         }}
       >
-        {expandEnabled ? (
+        {couldExpand ? (
           isFirstLine ? (
             <button
               className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
@@ -108,7 +110,7 @@ const _DiffUnifiedHunkLine = ({
             color: `var(${hunkContentColorName})`,
           }}
         >
-          {currentHunk.unifiedInfo.plainText}
+          {currentHunk.unifiedInfo?.plainText || currentHunk.text}
         </div>
       </td>
     </tr>
@@ -131,7 +133,9 @@ export const DiffUnifiedHunkLine = ({
     currentHunk.unifiedInfo &&
     currentHunk.unifiedInfo.startHiddenIndex < currentHunk.unifiedInfo.endHiddenIndex;
 
-  if (!currentIsShow) return null;
+  const currentIsPureHunk = currentHunk && !currentHunk.unifiedInfo;
+
+  if (!currentIsShow && !currentIsPureHunk) return null;
 
   return <_DiffUnifiedHunkLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
 };
