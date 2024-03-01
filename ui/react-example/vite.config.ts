@@ -8,5 +8,6 @@ export default defineConfig({
   plugins: [react()],
   build: {
     sourcemap: true,
+    target: "es2015",
   },
 });
