@@ -133,7 +133,7 @@ export const DiffUnifiedHunkLine = ({
     currentHunk.unifiedInfo &&
     currentHunk.unifiedInfo.startHiddenIndex < currentHunk.unifiedInfo.endHiddenIndex;
 
-  const currentIsPureHunk = currentHunk && !currentHunk.unifiedInfo;
+  const currentIsPureHunk = currentHunk && diffFile._getIsPureDiffRender() && !currentHunk.unifiedInfo;
 
   if (!currentIsShow && !currentIsPureHunk) return null;
 

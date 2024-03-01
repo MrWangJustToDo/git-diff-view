@@ -1155,6 +1155,8 @@ export class DiffFile {
     this.notifyAll();
   };
 
+  _getIsPureDiffRender = () => this.#composeByDiff;
+
   _addClonedInstance = (instance: DiffFile) => {
     const updateFunc = () => {
       this._notifyOthers(instance);

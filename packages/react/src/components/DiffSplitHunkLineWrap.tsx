@@ -29,7 +29,7 @@ export const DiffSplitHunkLine = ({
     currentHunk.splitInfo &&
     currentHunk.splitInfo.startHiddenIndex < currentHunk.splitInfo.endHiddenIndex;
 
-  const currentIsPureHunk = currentHunk && !currentHunk.splitInfo;
+  const currentIsPureHunk = currentHunk && diffFile._getIsPureDiffRender() && !currentHunk.splitInfo;
 
   const isFirstLine = currentHunk && currentHunk.index === 0;
 

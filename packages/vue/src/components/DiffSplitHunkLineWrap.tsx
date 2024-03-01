@@ -49,9 +49,9 @@ export const DiffSplitHunkLine = defineComponent(
 
       currentIsFirstLine.value = currentHunk.value && currentHunk.value.index === 0;
 
-      currentIsPureHunk.value = currentHunk.value && !currentHunk.value.splitInfo;
-
       currentIsLastLine.value = currentHunk.value && currentHunk.value.isLast;
+
+      currentIsPureHunk.value = currentHunk.value && diffFile._getIsPureDiffRender() && !currentHunk.value.splitInfo;
     });
 
     return () => {
