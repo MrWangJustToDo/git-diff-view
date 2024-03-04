@@ -78,6 +78,15 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
 
+  packages/lowlight:
+    dependencies:
+      highlight.js:
+        specifier: ^11.9.0
+        version: 11.9.0
+      lowlight:
+        specifier: ^3.1.0
+        version: 3.1.0
+
   packages/react:
     dependencies:
       highlight.js:
