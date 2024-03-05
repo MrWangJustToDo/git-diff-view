@@ -88,9 +88,6 @@ export function Example() {
   }, [v]);
 
   useEffect(() => {
-    setTimeout(() => {
-      console.log(ref.current?.getDiffFileInstance());
-    }, 100);
     if (expandAll) {
       ref.current
         ?.getDiffFileInstance?.()
@@ -297,7 +294,7 @@ export function Example() {
         <div className="w-full flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
+            // xmlnsXlink="http://www.w3.org/1999/xlink"
             aria-hidden="true"
             role="img"
             width="35.93"
@@ -316,7 +313,7 @@ export function Example() {
         <div className="w-full flex items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
+            // xmlnsXlink="http://www.w3.org/1999/xlink"
             aria-hidden="true"
             role="img"
             width="37.07"

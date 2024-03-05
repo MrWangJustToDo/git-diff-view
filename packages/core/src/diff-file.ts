@@ -126,6 +126,10 @@ export class DiffFile {
 
   unifiedLineLength: number = 0;
 
+  expandSplitAll: boolean = false;
+
+  expandUnifiedAll: boolean = false;
+
   #id: string = "";
 
   #clonedInstance = new Map<DiffFile, () => void>();
@@ -959,10 +963,12 @@ export class DiffFile {
       Object.keys(this.#splitHunksLines || {}).forEach((key) => {
         this.onSplitHunkExpand("all", +key, false);
       });
+      this.expandSplitAll = true;
     } else {
       Object.keys(this.#unifiedHunksLines || {}).forEach((key) => {
         this.onUnifiedHunkExpand("all", +key, false);
       });
+      this.expandUnifiedAll = true;
     }
 
     this.notifyAll();
@@ -1004,6 +1010,7 @@ export class DiffFile {
           this.#splitHunksLines![item.splitInfo.endHiddenIndex] = item;
         }
       });
+      this.expandSplitAll = false;
     } else {
       Object.values(this.#unifiedLines || {}).forEach((item) => {
         if (!item.isHidden && item._isHidden) {
@@ -1032,6 +1039,7 @@ export class DiffFile {
           this.#unifiedHunksLines![item.unifiedInfo.endHiddenIndex] = item;
         }
       });
+      this.expandUnifiedAll = false;
     }
 
     this.notifyAll();
@@ -1060,6 +1068,11 @@ export class DiffFile {
         return;
       }
       f();
+    });
+
+    // support update from outside instance
+    this.#clonedInstance.forEach((_, instance) => {
+      instance.notifyAll(true);
     });
   };
 
