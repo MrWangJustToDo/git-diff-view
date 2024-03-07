@@ -40,7 +40,7 @@ export const DiffUnifiedView = defineComponent(
 
     const width = useTextWidth({ text: maxText, font });
 
-    const computedWidth = computed(() => Math.max(50, width.value + 25));
+    const computedWidth = computed(() => Math.max(40, width.value + 25));
 
     return () => (
       <div class="unified-diff-view w-full">

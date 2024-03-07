@@ -122,7 +122,7 @@ export const DiffSplitViewNormal = defineComponent(
 
     const width = useTextWidth({ text: maxText, font });
 
-    const computedWidth = computed(() => Math.max(50, width.value + 25));
+    const computedWidth = computed(() => Math.max(40, width.value + 25));
 
     return () => {
       return (
