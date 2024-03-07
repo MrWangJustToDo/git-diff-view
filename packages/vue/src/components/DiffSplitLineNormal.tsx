@@ -8,6 +8,7 @@ import { emptyBGName, getContentBG, getLineNumberBG, plainLineNumberColorName } 
 import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import { SplitSide } from "./DiffView";
+import { asideWidth } from "./tools";
 
 export const DiffSplitLine = defineComponent(
   (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
@@ -82,6 +83,9 @@ export const DiffSplitLine = defineComponent(
                 style={{
                   backgroundColor: lineNumberBG,
                   color: `var(${plainLineNumberColorName})`,
+                  width: `var(${asideWidth})`,
+                  minWidth: `var(${asideWidth})`,
+                  maxWidth: `var(${asideWidth})`,
                 }}
               >
                 {currentLineHasDiff.value && enableAddWidget.value && (

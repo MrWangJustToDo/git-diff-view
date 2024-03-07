@@ -1,13 +1,15 @@
 import { getUnifiedContentLine } from "@git-diff-view/core";
-import { Fragment, defineComponent, ref } from "vue";
+import { Fragment, computed, defineComponent, ref } from "vue";
 
+import { useFontSize } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
+import { useTextWidth } from "../hooks/useTextWidth";
 
 import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
 import { DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
 import { DiffUnifiedLine } from "./DiffUnifiedLine";
 import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
-import { removeAllSelection } from "./tools";
+import { asideWidth, removeAllSelection } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
 
@@ -25,15 +27,30 @@ export const DiffUnifiedView = defineComponent(
   (props: { diffFile: DiffFile }) => {
     const lines = ref(getUnifiedContentLine(props.diffFile));
 
+    const maxText = ref(props.diffFile.unifiedLineLength.toString());
+
     useSubscribeDiffFile(props, (diffFile) => {
       lines.value = getUnifiedContentLine(diffFile);
+      maxText.value = diffFile.splitLineLength.toString();
     });
+
+    const fontSize = useFontSize();
+
+    const font = computed(() => ({ fontSize: fontSize.value + "px", fontFamily: "Menlo, Consolas, monospace" }));
+
+    const width = useTextWidth({ text: maxText, font });
+
+    const computedWidth = computed(() => Math.max(50, width.value + 25));
 
     return () => (
       <div class="unified-diff-view w-full">
         <div
           class="unified-diff-table-wrapper overflow-auto w-full scrollbar-hide"
-          style={{ fontFamily: "Menlo, Consolas, monospace", fontSize: "var(--diff-font-size--)" }}
+          style={{
+            [asideWidth]: `${Math.round(computedWidth.value)}px`,
+            fontFamily: "Menlo, Consolas, monospace",
+            fontSize: "var(--diff-font-size--)",
+          }}
         >
           <table class="unified-diff-table border-collapse w-full">
             <colgroup>

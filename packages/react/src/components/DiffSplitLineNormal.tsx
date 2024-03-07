@@ -7,6 +7,7 @@ import { emptyBGName, getContentBG, getLineNumberBG, plainLineNumberColorName } 
 import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import { useDiffWidgetContext } from "./DiffWidgetContext";
+import { asideWidth } from "./tools";
 
 const _DiffSplitLine = ({
   index,
@@ -74,6 +75,9 @@ const _DiffSplitLine = ({
             style={{
               backgroundColor: lineNumberBG,
               color: `var(${plainLineNumberColorName})`,
+              width: `var(${asideWidth})`,
+              minWidth: `var(${asideWidth})`,
+              maxWidth: `var(${asideWidth})`,
             }}
           >
             {hasDiff && enableAddWidget && (

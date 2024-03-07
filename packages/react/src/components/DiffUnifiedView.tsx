@@ -1,17 +1,19 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { getUnifiedContentLine } from "@git-diff-view/core";
 import * as React from "react";
-import { Fragment, memo, useEffect, useMemo } from "react";
+import { Fragment, memo, useEffect, useMemo, useCallback } from "react";
 import { createStore, ref } from "reactivity-store";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
 
 import { useDiffViewContext, type SplitSide } from "..";
+import { useTextWidth } from "../hooks/useTextWidth";
 
 import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
 import { DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
 import { DiffUnifiedLine } from "./DiffUnifiedLine";
 import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
 import { DiffWidgetContext } from "./DiffWidgetContext";
-import { removeAllSelection } from "./tools";
+import { asideWidth, removeAllSelection } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
 import type { MouseEventHandler } from "react";
@@ -43,7 +45,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
           if (typeof renderWidgetLine !== "function") return;
 
           widgetSide.value = side;
-          
+
           widgetLineNumber.value = lineNumber;
         };
 
@@ -54,6 +56,8 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const contextValue = useMemo(() => ({ useWidget }), [useWidget]);
 
+  const fontSize = useDiffContext(useCallback((s) => s.fontSize, []));
+
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);
 
   useEffect(() => {
@@ -62,6 +66,15 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
     setWidget({});
   }, [diffFile, useWidget]);
 
+  const unifiedLineLength = diffFile.unifiedLineLength;
+
+  const _width = useTextWidth({
+    text: unifiedLineLength.toString(),
+    font: { fontSize: fontSize + "px", fontFamily: "Menlo, Consolas, monospace" },
+  });
+
+  const width = Math.max(40, _width + 25);
+
   const lines = getUnifiedContentLine(diffFile);
 
   return (
@@ -69,7 +82,12 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
       <div className="unified-diff-view w-full">
         <div
           className="unified-diff-table-wrapper overflow-auto w-full scrollbar-hide scrollbar-disable"
-          style={{ fontFamily: "Menlo, Consolas, monospace", fontSize: "var(--diff-font-size--)" }}
+          style={{
+            // @ts-ignore
+            [asideWidth]: `${Math.round(width)}px`,
+            fontFamily: "Menlo, Consolas, monospace",
+            fontSize: "var(--diff-font-size--)",
+          }}
         >
           <table className="unified-diff-table border-collapse w-full">
             <colgroup>
@@ -82,7 +100,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
                 <th scope="col">line content</th>
               </tr>
             </thead>
-            <tbody className="diff-table-body  leading-[1.4]" onMouseDownCapture={onMouseDown}>
+            <tbody className="diff-table-body leading-[1.4]" onMouseDownCapture={onMouseDown}>
               {lines.map((item) => (
                 <Fragment key={item.index}>
                   <DiffUnifiedHunkLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />

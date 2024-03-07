@@ -6,6 +6,7 @@ import { useSyncHeight } from "../hooks/useSyncHeight";
 
 import { hunkContentBGName, hunkContentColorName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
+import { asideWidth } from "./tools";
 
 const _DiffSplitHunkLine = ({
   index,
@@ -55,6 +56,9 @@ const _DiffSplitHunkLine = ({
             style={{
               backgroundColor: `var(${hunkLineNumberBGName})`,
               color: `var(${plainLineNumberColorName})`,
+              width: `var(${asideWidth})`,
+              minWidth: `var(${asideWidth})`,
+              maxWidth: `var(${asideWidth})`,
             }}
           >
             {couldExpand ? (

@@ -67,6 +67,8 @@ export const DiffSplitViewWrap = defineComponent(
 
     const width = useTextWidth({ text: maxText, font });
 
+    const computedWidth = computed(() => Math.max(50, width.value + 25));
+
     return () => {
       return (
         <div class="split-diff-view split-diff-view-normal w-full">
@@ -80,9 +82,9 @@ export const DiffSplitViewWrap = defineComponent(
             <Style splitSideInfo={splitSideInfo.value} id={`diff-root${props.diffFile.getId()}`} />
             <table class="diff-table border-collapse table-fixed w-full">
               <colgroup>
-                <col class="diff-table-old-num-col" width={Math.round(width.value) + 25} />
+                <col class="diff-table-old-num-col" width={Math.round(computedWidth.value)} />
                 <col class="diff-table-old-content-col" />
-                <col class="diff-table-new-num-col" width={Math.round(width.value) + 25} />
+                <col class="diff-table-new-num-col" width={Math.round(computedWidth.value)} />
                 <col class="diff-table-new-content-col" />
               </colgroup>
               <thead class="hidden">

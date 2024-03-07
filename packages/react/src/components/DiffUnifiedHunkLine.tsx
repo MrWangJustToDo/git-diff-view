@@ -6,6 +6,7 @@ import { useDiffViewContext } from "..";
 
 import { hunkContentBGName, hunkContentColorName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
+import { asideWidth } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
 
@@ -44,6 +45,9 @@ const _DiffUnifiedHunkLine = ({
         style={{
           backgroundColor: `var(${hunkLineNumberBGName})`,
           color: `var(${plainLineNumberColorName})`,
+          width: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+          maxWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+          minWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
         }}
       >
         {couldExpand ? (

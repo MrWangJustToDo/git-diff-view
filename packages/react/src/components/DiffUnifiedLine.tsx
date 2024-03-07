@@ -17,6 +17,7 @@ import {
 import { DiffUnifiedAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import { useDiffWidgetContext } from "./DiffWidgetContext";
+import { asideWidth } from "./tools";
 
 import type { DiffViewProps } from "..";
 
@@ -52,6 +53,9 @@ const DiffUnifiedOldLine = ({
         style={{
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${delLineNumberBGName})`,
+          width: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+          maxWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+          minWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
         }}
       >
         {enableAddWidget && (
@@ -118,6 +122,9 @@ const DiffUnifiedNewLine = ({
         style={{
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${addLineNumberBGName})`,
+          width: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+          maxWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+          minWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
         }}
       >
         {enableAddWidget && (
@@ -233,6 +240,9 @@ const _DiffUnifiedLine = memo(
             className="diff-line-num sticky left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
             style={{
               color: `var(${plainLineNumberColorName})`,
+              width: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+              maxWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+              minWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
               backgroundColor: hasDiff ? `var(${plainLineNumberBGName})` : `var(${expandContentBGName})`,
             }}
           >

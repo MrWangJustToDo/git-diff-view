@@ -130,6 +130,8 @@ export class DiffFile {
 
   expandUnifiedAll: boolean = false;
 
+  hasCollapsed: boolean = false;
+
   #id: string = "";
 
   #clonedInstance = new Map<DiffFile, () => void>();
@@ -574,6 +576,10 @@ export class DiffFile {
         hideStart = len;
       }
 
+      if (isHidden) {
+        this.hasCollapsed = true;
+      }
+
       prevIsHidden = isHidden;
 
       if (oldDiffLine && newDiffLine && !oldLineHasChange && !newLineHasChange) {
@@ -728,6 +734,10 @@ export class DiffFile {
 
       if (!prevIsHidden && isHidden) {
         hideStart = len;
+      }
+
+      if (isHidden) {
+        this.hasCollapsed = true;
       }
 
       prevIsHidden = isHidden;
@@ -1097,6 +1107,7 @@ export class DiffFile {
     const splitLineLength = this.splitLineLength;
     const unifiedLineLength = this.unifiedLineLength;
     const composeByDiff = this.#composeByDiff;
+    const hasCollapsed = this.hasCollapsed;
 
     // split
     const splitLeftLines = this.#splitLeftLines;
@@ -1131,6 +1142,7 @@ export class DiffFile {
       unifiedHunkLines,
 
       composeByDiff,
+      hasCollapsed,
 
       version,
     };
@@ -1153,6 +1165,7 @@ export class DiffFile {
     this.#newFilePlaceholderLines = data.newFilePlaceholderLines;
     this.splitLineLength = data.splitLineLength;
     this.unifiedLineLength = data.unifiedLineLength;
+    this.hasCollapsed = data.hasCollapsed;
 
     this.#splitLeftLines = data.splitLeftLines;
     this.#splitRightLines = data.splitRightLines;

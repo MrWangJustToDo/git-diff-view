@@ -28,3 +28,5 @@ export const syncScroll = (left: HTMLElement, right: HTMLElement) => {
     right.onscroll = null;
   };
 };
+
+export const asideWidth = "--diff-aside-width--";

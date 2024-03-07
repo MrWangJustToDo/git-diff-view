@@ -11,12 +11,12 @@ import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
 import { DiffSplitLine } from "./DiffSplitLineNormal";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
 import { SplitSide } from "./DiffView";
-import { removeAllSelection, syncScroll } from "./tools";
+import { asideWidth, removeAllSelection, syncScroll } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
 
 const DiffSplitViewTable = defineComponent(
-  (props: { side: SplitSide; diffFile: DiffFile; width: number }) => {
+  (props: { side: SplitSide; diffFile: DiffFile }) => {
     const className = computed(() => (props.side === SplitSide.new ? "new-diff-table" : "old-diff-table"));
 
     const lines = ref(getSplitContentLines(props.diffFile));
@@ -39,10 +39,7 @@ const DiffSplitViewTable = defineComponent(
       return (
         <table class={className.value + " border-collapse w-full"} data-mode={SplitSide[props.side]}>
           <colgroup>
-            <col
-              class={`diff-table-${SplitSide[props.side]}-num-col`}
-              style={{ minWidth: Math.round(props.width) + 25 + "px" }}
-            />
+            <col class={`diff-table-${SplitSide[props.side]}-num-col`} />
             <col class={`diff-table-${SplitSide[props.side]}-content-col`} />
           </colgroup>
           <thead class="hidden">
@@ -91,7 +88,7 @@ const DiffSplitViewTable = defineComponent(
       );
     };
   },
-  { name: "DiffSplitViewTable", props: ["diffFile", "side", "width"] }
+  { name: "DiffSplitViewTable", props: ["diffFile", "side"] }
 );
 
 export const DiffSplitViewNormal = defineComponent(
@@ -125,6 +122,8 @@ export const DiffSplitViewNormal = defineComponent(
 
     const width = useTextWidth({ text: maxText, font });
 
+    const computedWidth = computed(() => Math.max(50, width.value + 25));
+
     return () => {
       return (
         <div class="split-diff-view split-diff-view-wrap w-full flex basis-[50%]">
@@ -132,24 +131,26 @@ export const DiffSplitViewNormal = defineComponent(
             class="old-diff-table-wrapper overflow-auto w-full scrollbar-hide"
             ref={ref1}
             style={{
+              [asideWidth]: `${Math.round(computedWidth.value)}px`,
               overscrollBehaviorX: "none",
               fontFamily: "Menlo, Consolas, monospace",
               fontSize: "var(--diff-font-size--)",
             }}
           >
-            <DiffSplitViewTable side={SplitSide.old} width={width.value} diffFile={props.diffFile} />
+            <DiffSplitViewTable side={SplitSide.old} diffFile={props.diffFile} />
           </div>
           <div class="diff-split-line w-[1.5px] bg-[#ccc]" />
           <div
             class="new-diff-table-wrapper overflow-auto w-full scrollbar-hide"
             ref={ref2}
             style={{
+              [asideWidth]: `${Math.round(computedWidth.value)}px`,
               overscrollBehaviorX: "none",
               fontFamily: "Menlo, Consolas, monospace",
               fontSize: "var(--diff-font-size--)",
             }}
           >
-            <DiffSplitViewTable side={SplitSide.new} width={width.value} diffFile={props.diffFile} />
+            <DiffSplitViewTable side={SplitSide.new} diffFile={props.diffFile} />
           </div>
         </div>
       );

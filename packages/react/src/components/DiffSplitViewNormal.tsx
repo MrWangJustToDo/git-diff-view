@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { getSplitContentLines, type DiffFile } from "@git-diff-view/core";
 import { Fragment, memo, useCallback, useEffect, useRef } from "react";
 import * as React from "react";
@@ -11,7 +12,7 @@ import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
 import { DiffSplitLine } from "./DiffSplitLineNormal";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
 import { SplitSide } from "./DiffView";
-import { removeAllSelection, syncScroll } from "./tools";
+import { asideWidth, removeAllSelection, syncScroll } from "./tools";
 
 import type { MouseEventHandler } from "react";
 
@@ -25,7 +26,7 @@ const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
   }
 };
 
-const DiffSplitViewTable = ({ side, diffFile, width }: { side: SplitSide; diffFile: DiffFile; width: number }) => {
+const DiffSplitViewTable = ({ side, diffFile }: { side: SplitSide; diffFile: DiffFile }) => {
   const className = side === SplitSide.new ? "new-diff-table" : "old-diff-table";
 
   const lines = getSplitContentLines(diffFile);
@@ -33,7 +34,7 @@ const DiffSplitViewTable = ({ side, diffFile, width }: { side: SplitSide; diffFi
   return (
     <table className={className + " border-collapse w-full"} data-mode={SplitSide[side]}>
       <colgroup>
-        <col className={`diff-table-${SplitSide[side]}-num-col`} style={{ minWidth: Math.round(width) + 25 }} />
+        <col className={`diff-table-${SplitSide[side]}-num-col`} />
         <col className={`diff-table-${SplitSide[side]}-content-col`} />
       </colgroup>
       <thead className="hidden">
@@ -82,10 +83,12 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
     return syncScroll(left, right);
   }, []);
 
-  const width = useTextWidth({
+  const _width = useTextWidth({
     text: splitLineLength.toString(),
     font: { fontSize: fontSize + "px", fontFamily: "Menlo, Consolas, monospace" },
   });
+
+  const width = Math.max(40, _width + 25);
 
   return (
     <div className="split-diff-view split-diff-view-wrap w-full flex basis-[50%]">
@@ -93,24 +96,28 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
         className="old-diff-table-wrapper overflow-auto w-full scrollbar-hide scrollbar-disable"
         ref={ref1}
         style={{
+          // @ts-ignore
+          [asideWidth]: `${Math.round(width)}px`,
           overscrollBehaviorX: "none",
           fontFamily: "Menlo, Consolas, monospace",
           fontSize: "var(--diff-font-size--)",
         }}
       >
-        <DiffSplitViewTable side={SplitSide.old} diffFile={diffFile} width={width} />
+        <DiffSplitViewTable side={SplitSide.old} diffFile={diffFile} />
       </div>
       <div className="diff-split-line w-[1.5px] bg-[#ccc]" />
       <div
         className="new-diff-table-wrapper overflow-auto w-full scrollbar-hide scrollbar-disable"
         ref={ref2}
         style={{
+          // @ts-ignore
+          [asideWidth]: `${Math.round(width)}px`,
           overscrollBehaviorX: "none",
           fontFamily: "Menlo, Consolas, monospace",
           fontSize: "var(--diff-font-size--)",
         }}
       >
-        <DiffSplitViewTable side={SplitSide.new} diffFile={diffFile} width={width} />
+        <DiffSplitViewTable side={SplitSide.new} diffFile={diffFile} />
       </div>
     </div>
   );

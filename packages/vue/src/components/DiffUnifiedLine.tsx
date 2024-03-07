@@ -17,6 +17,7 @@ import {
 } from "./color";
 import { DiffUnifiedAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
+import { asideWidth } from "./tools";
 
 const DiffUnifiedOldLine = ({
   index,
@@ -50,6 +51,9 @@ const DiffUnifiedOldLine = ({
         style={{
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${delLineNumberBGName})`,
+          width: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+          maxWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+          minWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
         }}
       >
         {enableAddWidget && (
@@ -116,6 +120,9 @@ const DiffUnifiedNewLine = ({
         style={{
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${addLineNumberBGName})`,
+          width: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+          maxWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+          minWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
         }}
       >
         {enableAddWidget && (
@@ -243,6 +250,9 @@ export const DiffUnifiedLine = defineComponent(
                 backgroundColor: unifiedItem.value.diff
                   ? `var(${plainLineNumberBGName})`
                   : `var(${expandContentBGName})`,
+                width: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+                maxWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+                minWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
               }}
             >
               {enableAddWidget.value && unifiedItem.value.diff && (

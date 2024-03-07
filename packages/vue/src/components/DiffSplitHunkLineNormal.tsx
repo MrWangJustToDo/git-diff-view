@@ -7,6 +7,7 @@ import { useSyncHeight } from "../hooks/useSyncHeight";
 import { hunkContentBGName, hunkContentColorName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 import { SplitSide } from "./DiffView";
+import { asideWidth } from "./tools";
 
 export const DiffSplitHunkLine = defineComponent(
   (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
@@ -88,6 +89,9 @@ export const DiffSplitHunkLine = defineComponent(
                 style={{
                   backgroundColor: `var(${hunkLineNumberBGName})`,
                   color: `var(${plainLineNumberColorName})`,
+                  width: `var(${asideWidth})`,
+                  minWidth: `var(${asideWidth})`,
+                  maxWidth: `var(${asideWidth})`,
                 }}
               >
                 {couldExpand.value ? (

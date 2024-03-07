@@ -89,10 +89,12 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
     [setSelectSide]
   );
 
-  const width = useTextWidth({
+  const _width = useTextWidth({
     text: splitLineLength.toString(),
     font: { fontSize: fontSize + "px", fontFamily: "Menlo, Consolas, monospace" },
   });
+
+  const width = Math.max(40, _width + 25);
 
   const lines = getSplitContentLines(diffFile);
 
@@ -108,9 +110,9 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
         <Style useSelector={splitSideInfo} id={`diff-root${diffFile.getId()}`} />
         <table className="diff-table border-collapse table-fixed w-full">
           <colgroup>
-            <col className="diff-table-old-num-col" width={Math.round(width) + 25} />
+            <col className="diff-table-old-num-col" width={Math.round(width)} />
             <col className="diff-table-old-content-col" />
-            <col className="diff-table-new-num-col" width={Math.round(width) + 25} />
+            <col className="diff-table-new-num-col" width={Math.round(width)} />
             <col className="diff-table-new-content-col" />
           </colgroup>
           <thead className="hidden">
