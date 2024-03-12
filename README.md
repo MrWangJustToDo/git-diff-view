@@ -109,3 +109,7 @@ import { DiffFile } from "@git-diff-view/Vue";
 # pnpm run dev:react / pnpm run dev:vue
 
 ```
+
+## TODO
+1. add `diff-match-patch` for better line diff
+2. add `virtual scroll` for better performance
