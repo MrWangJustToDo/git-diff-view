@@ -33,8 +33,6 @@ export type DiffViewProps<T> = {
   diffFile?: DiffFile;
   className?: string;
   style?: CSSProperties;
-  // enable auto detect language by highlight.js
-  autoDetectLang?: boolean;
   /**
    * provide a custom highlighter
    * eg: lowlight, refractor, starry-night, shiki
@@ -272,7 +270,7 @@ const DiffViewWithRef = <T extends unknown>(
   props: DiffViewProps<T>,
   ref: ForwardedRef<{ getDiffFileInstance: () => DiffFile }>
 ) => {
-  const { registerHighlighter, autoDetectLang, data, diffFile: _diffFile, ...restProps } = props;
+  const { registerHighlighter, data, diffFile: _diffFile, ...restProps } = props;
 
   const diffFile = useMemo(() => {
     if (_diffFile) {
@@ -303,10 +301,10 @@ const DiffViewWithRef = <T extends unknown>(
   useEffect(() => {
     if (!diffFile) return;
     if (props.diffViewHighlight) {
-      diffFile.initSyntax({ autoDetectLang, registerHighlighter });
+      diffFile.initSyntax({ registerHighlighter });
       diffFile.notifyAll();
     }
-  }, [diffFile, props.diffViewHighlight, autoDetectLang, registerHighlighter]);
+  }, [diffFile, props.diffViewHighlight, registerHighlighter]);
 
   useEffect(() => {
     if (_diffFile && diffFile) {

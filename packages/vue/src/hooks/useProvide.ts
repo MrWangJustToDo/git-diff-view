@@ -6,16 +6,16 @@ export const useProvide = <T extends Record<string, any>, K extends keyof T = ke
   props: T,
   key: K,
   keySymbol: InjectionKey<any>,
-  deepWatch?: boolean
+  option?: { defaultValue?: T[K]; deepWatch?: boolean }
 ) => {
-  const value = ref(props?.[key]);
+  const value = ref(props?.[key] || option?.defaultValue);
 
   watch(
     () => props?.[key],
     () => {
       value.value = props[key];
     },
-    { deep: deepWatch }
+    { deep: option?.deepWatch }
   );
 
   provide(keySymbol, value);

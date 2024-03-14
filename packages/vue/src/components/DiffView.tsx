@@ -43,7 +43,6 @@ export type DiffViewProps<T> = {
   diffFile?: DiffFile;
   class?: string;
   style?: CSSProperties;
-  autoDetectLang?: boolean;
   registerHighlighter?: typeof highlighter;
   diffViewMode?: DiffModeEnum;
   diffViewWrap?: boolean;
@@ -143,7 +142,7 @@ export const DiffView = defineComponent<
     const initSyntax = () => {
       if (!isMounted.value || !enableHighlight.value || !diffFile.value) return;
       const instance = diffFile.value;
-      instance.initSyntax({ autoDetectLang: props.autoDetectLang, registerHighlighter: props.registerHighlighter });
+      instance.initSyntax({ registerHighlighter: props.registerHighlighter });
       instance.notifyAll();
     };
 
@@ -174,7 +173,7 @@ export const DiffView = defineComponent<
 
     useProvide(props, "diffViewMode", modeSymbol);
 
-    useProvide(props, "diffViewFontSize", fontSizeSymbol);
+    useProvide(props, "diffViewFontSize", fontSizeSymbol, { defaultValue: 14 });
 
     useProvide(props, "diffViewWrap", enableWrapSymbol);
 
@@ -182,7 +181,7 @@ export const DiffView = defineComponent<
 
     useProvide(props, "diffViewAddWidget", enableAddWidgetSymbol);
 
-    useProvide(props, "extendData", extendDataSymbol, true);
+    useProvide(props, "extendData", extendDataSymbol, { deepWatch: true });
 
     onUnmounted(() => diffFile.value._destroy?.());
 
@@ -193,7 +192,7 @@ export const DiffView = defineComponent<
 
       return (
         <div class="diff-tailwindcss-wrapper" data-component="git-diff-view" data-version={__VERSION__}>
-          <div class="diff-style-root" style={{ [diffFontSizeName]: props.diffViewFontSize + "px" }}>
+          <div class="diff-style-root" style={{ [diffFontSizeName]: (props.diffViewFontSize || 14) + "px" }}>
             <div
               id={`diff-root${id.value}`}
               class={"diff-view-wrapper" + (props.class ? ` ${props.class}` : "")}
@@ -222,7 +221,6 @@ export const DiffView = defineComponent<
       "diffViewMode",
       "diffViewWrap",
       "extendData",
-      "autoDetectLang",
       "registerHighlighter",
       "style",
     ],

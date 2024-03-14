@@ -89,9 +89,11 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
     [setSelectSide]
   );
 
+  const font = useMemo(() => ({ fontSize: fontSize + "px", fontFamily: "Menlo, Consolas, monospace" }), [fontSize]);
+
   const _width = useTextWidth({
     text: splitLineLength.toString(),
-    font: { fontSize: fontSize + "px", fontFamily: "Menlo, Consolas, monospace" },
+    font,
   });
 
   const width = Math.max(40, _width + 25);

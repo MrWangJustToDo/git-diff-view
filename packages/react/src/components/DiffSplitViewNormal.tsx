@@ -83,9 +83,14 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
     return syncScroll(left, right);
   }, []);
 
+  const font = React.useMemo(
+    () => ({ fontSize: fontSize + "px", fontFamily: "Menlo, Consolas, monospace" }),
+    [fontSize]
+  );
+
   const _width = useTextWidth({
     text: splitLineLength.toString(),
-    font: { fontSize: fontSize + "px", fontFamily: "Menlo, Consolas, monospace" },
+    font,
   });
 
   const width = Math.max(40, _width + 25);
