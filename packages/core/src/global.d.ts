@@ -4,8 +4,8 @@ declare global {
   const __DEV__: boolean;
   const __VERSION__: string;
 
-  interface globalThis {
-    __diff_cache__: Map<string, File>[];
+  export interface globalThis {
+    "@git-diff-cache": Map<string, File>[];
   }
 
   namespace NodeJS {

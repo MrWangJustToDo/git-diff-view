@@ -52,7 +52,7 @@ lowlight.register("vue", function hljsDefineVue(hljs) {
 
 export type AST = ReturnType<typeof lowlight.highlight>;
 
-export const highlighter = lowlight as typeof lowlight & {
+export type Highlighter = {
   maxLineToIgnoreSyntax: number;
   autoDetectLang: boolean;
   setMaxLineToIgnoreSyntax: (v: number) => void;
@@ -63,48 +63,50 @@ export const highlighter = lowlight as typeof lowlight & {
   processAST: (ast: AST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };
 };
 
+const instance = {};
+
 let _autoDetectLang = true;
 
 let _maxLineToIgnoreSyntax = 2000;
 
 const _ignoreSyntaxHighlightList: (string | RegExp)[] = [];
 
-Object.defineProperty(highlighter, "maxLineToIgnoreSyntax", {
+Object.defineProperty(instance, "maxLineToIgnoreSyntax", {
   get: () => _maxLineToIgnoreSyntax,
 });
 
-Object.defineProperty(highlighter, "setMaxLineToIgnoreSyntax", {
+Object.defineProperty(instance, "setMaxLineToIgnoreSyntax", {
   value: (v: number) => {
     _maxLineToIgnoreSyntax = v;
   },
 });
 
-Object.defineProperty(highlighter, "autoDetectLang", {
+Object.defineProperty(instance, "autoDetectLang", {
   get: () => _autoDetectLang,
 });
 
-Object.defineProperty(highlighter, "setAutoDetectLang", {
+Object.defineProperty(instance, "setAutoDetectLang", {
   value: (v: boolean) => {
     _autoDetectLang = v;
   },
 });
 
-Object.defineProperty(highlighter, "ignoreSyntaxHighlightList", {
+Object.defineProperty(instance, "ignoreSyntaxHighlightList", {
   get: () => _ignoreSyntaxHighlightList,
 });
 
-Object.defineProperty(highlighter, "setIgnoreSyntaxHighlightList", {
+Object.defineProperty(instance, "setIgnoreSyntaxHighlightList", {
   value: (v: (string | RegExp)[]) => {
     _ignoreSyntaxHighlightList.length = 0;
     _ignoreSyntaxHighlightList.push(...v);
   },
 });
 
-Object.defineProperty(highlighter, "getAST", {
+Object.defineProperty(instance, "getAST", {
   value: (raw: string, fileName?: string, lang?: string) => {
     let hasRegisteredLang = true;
 
-    if (!highlighter.registered(lang)) {
+    if (!lowlight.registered(lang)) {
       __DEV__ && console.warn(`not support current lang: ${lang} yet`);
       hasRegisteredLang = false;
     }
@@ -123,15 +125,17 @@ Object.defineProperty(highlighter, "getAST", {
     }
 
     if (hasRegisteredLang) {
-      return highlighter.highlight(lang, raw);
+      return lowlight.highlight(lang, raw);
     } else {
-      return highlighter.highlightAuto(raw);
+      return lowlight.highlightAuto(raw);
     }
   },
 });
 
-Object.defineProperty(highlighter, "processAST", {
+Object.defineProperty(instance, "processAST", {
   value: (ast: AST) => {
     return processAST(ast);
   },
 });
+
+export const highlighter: Highlighter = instance as Highlighter;

@@ -5,21 +5,23 @@ import type { AST } from "./highlighter";
 
 const map = new Cache<string, File>();
 
+const devKey = "@git-diff-cache";
+
 map.setMaxLength(50);
 
 map.name = "@git-diff-view/core";
 
 if (__DEV__ && typeof globalThis !== "undefined") {
-  if (Array.isArray(globalThis.__diff_cache__)) {
-    globalThis.__diff_cache__ = globalThis.__diff_cache__.filter((i) => i !== map);
+  if (Array.isArray(globalThis[devKey])) {
+    globalThis[devKey] = globalThis[devKey].filter((i) => i !== map);
 
-    if (globalThis.__diff_cache__.length > 0) {
+    if (globalThis[devKey].length > 0) {
       console.warn("there are multiple instance of @git-diff-view/core in the one environment!");
     }
 
-    globalThis.__diff_cache__.push(map);
+    globalThis[devKey].push(map);
   } else {
-    globalThis.__diff_cache__ = [map];
+    globalThis[devKey] = [map];
   }
 }
 

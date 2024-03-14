@@ -100,8 +100,6 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
 
   const lines = getSplitContentLines(diffFile);
 
-  console.log('update');
-
   return (
     <div className="split-diff-view split-diff-view-normal w-full">
       <div
