@@ -11,19 +11,18 @@ const _DiffSplitWidgetLine = ({
   index,
   diffFile,
   lineNumber,
+  oldLineWidget,
+  newLineWidget,
 }: {
   index: number;
   diffFile: DiffFile;
   lineNumber: number;
+  oldLineWidget: boolean;
+  newLineWidget: boolean;
 }) => {
   const { useWidget } = useDiffWidgetContext();
 
-  const { widgetLineNumber, widgetSide, setWidget } = useWidget(
-    React.useCallback(
-      (s) => ({ widgetLineNumber: s.widgetLineNumber, widgetSide: s.widgetSide, setWidget: s.setWidget }),
-      []
-    )
-  );
+  const setWidget = useWidget.getReadonlyState().setWidget;
 
   const { useDiffContext } = useDiffViewContext();
 
@@ -32,10 +31,6 @@ const _DiffSplitWidgetLine = ({
   const oldLine = diffFile.getSplitLeftLine(index);
 
   const newLine = diffFile.getSplitRightLine(index);
-
-  const oldLineWidget = oldLine.lineNumber && widgetSide === SplitSide.old && widgetLineNumber === oldLine.lineNumber;
-
-  const newLineWidget = newLine.lineNumber && widgetSide === SplitSide.new && widgetLineNumber === newLine.lineNumber;
 
   if (!renderWidgetLine) return null;
 
@@ -112,5 +107,13 @@ export const DiffSplitWidgetLine = ({
 
   if (!currentIsShow) return null;
 
-  return <_DiffSplitWidgetLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
+  return (
+    <_DiffSplitWidgetLine
+      index={index}
+      diffFile={diffFile}
+      lineNumber={lineNumber}
+      oldLineWidget={oldLineWidget}
+      newLineWidget={newLineWidget}
+    />
+  );
 };

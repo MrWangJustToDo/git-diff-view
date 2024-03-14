@@ -19,7 +19,7 @@ export const DiffViewContext = createContext<{
     renderWidgetLine: Ref<DiffViewProps<any>["renderWidgetLine"]>;
     extendData: Ref<DiffViewProps<any>["extendData"]>;
     renderExtendLine: Ref<DiffViewProps<any>["renderExtendLine"]>;
-    onAddWidgetClick: Ref<DiffViewProps<any>["onAddWidgetClick"]>;
+    onAddWidgetClick: Ref<{ current: DiffViewProps<any>["onAddWidgetClick"] }>;
   }>;
 }>(null);
 

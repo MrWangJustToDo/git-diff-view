@@ -10,25 +10,23 @@ const _DiffSplitExtendLine = ({
   index,
   diffFile,
   lineNumber,
+  oldLineExtend,
+  newLineExtend,
 }: {
   index: number;
   diffFile: DiffFile;
   lineNumber: number;
+  oldLineExtend: { data: any };
+  newLineExtend: { data: any };
 }) => {
   const { useDiffContext } = useDiffViewContext();
-
-  // 需要显示的时候才进行方法订阅，可以大幅度提高性能
-  const { extendData, renderExtendLine } = useDiffContext(
-    React.useCallback((s) => ({ extendData: s.extendData, renderExtendLine: s.renderExtendLine }), [])
-  );
 
   const oldLine = diffFile.getSplitLeftLine(index);
 
   const newLine = diffFile.getSplitRightLine(index);
 
-  const oldLineExtend = extendData?.oldFile?.[oldLine?.lineNumber];
-
-  const newLineExtend = extendData?.newFile?.[newLine?.lineNumber];
+  // 需要显示的时候才进行方法订阅，可以大幅度提高性能
+  const renderExtendLine = useDiffContext(React.useCallback((s) => s.renderExtendLine, []));
 
   if (!renderExtendLine) return null;
 
@@ -37,13 +35,14 @@ const _DiffSplitExtendLine = ({
       {oldLineExtend ? (
         <td className="diff-line-extend-old-content p-0" colSpan={2}>
           <div className="diff-line-extend-wrapper">
-            {renderExtendLine?.({
-              diffFile,
-              side: SplitSide.old,
-              lineNumber: oldLine.lineNumber,
-              data: oldLineExtend.data,
-              onUpdate: diffFile.notifyAll,
-            })}
+            {oldLineExtend?.data &&
+              renderExtendLine?.({
+                diffFile,
+                side: SplitSide.old,
+                lineNumber: oldLine.lineNumber,
+                data: oldLineExtend.data,
+                onUpdate: diffFile.notifyAll,
+              })}
           </div>
         </td>
       ) : (
@@ -58,13 +57,14 @@ const _DiffSplitExtendLine = ({
       {newLineExtend ? (
         <td className="diff-line-extend-new-content p-0 border-l-[1px] border-l-[#ccc]" colSpan={2}>
           <div className="diff-line-extend-wrapper">
-            {renderExtendLine?.({
-              diffFile,
-              side: SplitSide.new,
-              lineNumber: newLine.lineNumber,
-              data: newLineExtend.data,
-              onUpdate: diffFile.notifyAll,
-            })}
+            {newLineExtend?.data &&
+              renderExtendLine?.({
+                diffFile,
+                side: SplitSide.new,
+                lineNumber: newLine.lineNumber,
+                data: newLineExtend.data,
+                onUpdate: diffFile.notifyAll,
+              })}
           </div>
         </td>
       ) : (
@@ -95,12 +95,17 @@ export const DiffSplitExtendLine = ({
 
   const newLine = diffFile.getSplitRightLine(index);
 
-  const hasExtend = useDiffContext(
+  const { oldLineExtend, newLineExtend } = useDiffContext(
     React.useCallback(
-      (s) => s.extendData?.oldFile?.[oldLine?.lineNumber] || s.extendData?.newFile?.[newLine?.lineNumber],
+      (s) => ({
+        oldLineExtend: s.extendData?.oldFile?.[oldLine?.lineNumber],
+        newLineExtend: s.extendData?.newFile?.[newLine?.lineNumber],
+      }),
       [oldLine?.lineNumber, newLine?.lineNumber]
     )
   );
+
+  const hasExtend = oldLineExtend?.data || newLineExtend?.data;
 
   // if the expand action not enabled, the `isHidden` property will never change
   const enableExpand = diffFile.getExpandEnabled();
@@ -109,5 +114,13 @@ export const DiffSplitExtendLine = ({
 
   if (!currentIsShow) return null;
 
-  return <_DiffSplitExtendLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
+  return (
+    <_DiffSplitExtendLine
+      index={index}
+      diffFile={diffFile}
+      lineNumber={lineNumber}
+      oldLineExtend={oldLineExtend}
+      newLineExtend={newLineExtend}
+    />
+  );
 };

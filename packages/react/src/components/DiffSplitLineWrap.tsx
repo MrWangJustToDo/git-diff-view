@@ -40,7 +40,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
 
   const { useWidget } = useDiffWidgetContext();
 
-  const { setWidget } = useWidget.getReadonlyState();
+  const setWidget = useWidget.getReadonlyState().setWidget;
 
   const hasOldLine = !!oldLine.lineNumber;
 
@@ -69,7 +69,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 lineNumber={oldLine.lineNumber}
                 side={SplitSide.old}
                 diffFile={diffFile}
-                onWidgetClick={onAddWidgetClick}
+                onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
                 className="absolute left-[100%] translate-x-[-50%] z-[1]"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
@@ -89,7 +89,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 lineNumber={oldLine.lineNumber}
                 side={SplitSide.old}
                 diffFile={diffFile}
-                onWidgetClick={onAddWidgetClick}
+                onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
                 className="absolute right-[100%] translate-x-[50%] z-[1] select-none"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
@@ -127,7 +127,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 lineNumber={newLine.lineNumber}
                 side={SplitSide.new}
                 diffFile={diffFile}
-                onWidgetClick={onAddWidgetClick}
+                onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
                 className="absolute left-[100%] translate-x-[-50%] z-[1]"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
@@ -147,7 +147,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 lineNumber={newLine.lineNumber}
                 side={SplitSide.new}
                 diffFile={diffFile}
-                onWidgetClick={onAddWidgetClick}
+                onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
                 className="absolute right-[100%] translate-x-[50%] z-[1] select-none"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />

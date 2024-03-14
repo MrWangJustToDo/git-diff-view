@@ -29,7 +29,7 @@ export const DiffSplitView = memo(({ diffFile }: { diffFile: DiffFile }) => {
           if (typeof renderWidgetLine !== "function") return;
 
           widgetSide.value = side;
-          
+
           widgetLineNumber.value = lineNumber;
         };
 

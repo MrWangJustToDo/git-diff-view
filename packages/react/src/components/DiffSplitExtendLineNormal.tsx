@@ -11,26 +11,25 @@ import type { DiffFile } from "@git-diff-view/core";
 const _DiffSplitExtendLine = ({
   index,
   diffFile,
+  oldLineExtend,
+  newLineExtend,
   side,
   lineNumber,
 }: {
   index: number;
   side: SplitSide;
+  oldLineExtend: { data: any };
+  newLineExtend: { data: any };
   diffFile: DiffFile;
   lineNumber: number;
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
-  const { extendData, renderExtendLine } = useDiffContext(
-    React.useCallback((s) => ({ extendData: s.extendData, renderExtendLine: s.renderExtendLine }), [])
-  );
   const oldLine = diffFile.getSplitLeftLine(index);
 
   const newLine = diffFile.getSplitRightLine(index);
 
-  const oldLineExtend = extendData?.oldFile?.[oldLine?.lineNumber];
-
-  const newLineExtend = extendData?.newFile?.[newLine?.lineNumber];
+  const renderExtendLine = useDiffContext(React.useCallback((s) => s.renderExtendLine, []));
 
   const currentExtend = side === SplitSide.old ? oldLineExtend : newLineExtend;
 
@@ -62,6 +61,7 @@ const _DiffSplitExtendLine = ({
         <td className={`diff-line-extend-${SplitSide[side]}-content p-0`} colSpan={2}>
           <div className="diff-line-extend-wrapper sticky left-0" style={{ width }}>
             {width > 0 &&
+              currentExtend?.data &&
               renderExtendLine?.({
                 diffFile,
                 side,
@@ -101,12 +101,17 @@ export const DiffSplitExtendLine = ({
 
   const newLine = diffFile.getSplitRightLine(index);
 
-  const hasExtend = useDiffContext(
+  const { oldLineExtend, newLineExtend } = useDiffContext(
     React.useCallback(
-      (s) => s.extendData?.oldFile?.[oldLine?.lineNumber] || s.extendData?.newFile?.[newLine?.lineNumber],
+      (s) => ({
+        oldLineExtend: s.extendData?.oldFile?.[oldLine?.lineNumber],
+        newLineExtend: s.extendData?.newFile?.[newLine?.lineNumber],
+      }),
       [oldLine?.lineNumber, newLine?.lineNumber]
     )
   );
+
+  const hasExtend = oldLineExtend?.data || newLineExtend?.data;
 
   // if the expand action not enabled, the `isHidden` property will never change
   const enableExpand = diffFile.getExpandEnabled();
@@ -117,5 +122,14 @@ export const DiffSplitExtendLine = ({
 
   if (!currentIsShow) return null;
 
-  return <_DiffSplitExtendLine index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
+  return (
+    <_DiffSplitExtendLine
+      side={side}
+      index={index}
+      diffFile={diffFile}
+      lineNumber={lineNumber}
+      oldLineExtend={oldLineExtend}
+      newLineExtend={newLineExtend}
+    />
+  );
 };

@@ -53,7 +53,7 @@ const _DiffSplitLine = ({
 
   const { useWidget } = useDiffWidgetContext();
 
-  const { setWidget } = useWidget.getReadonlyState();
+  const setWidget = useWidget.getReadonlyState().setWidget;
 
   const contentBG = getContentBG(isAdded, isDelete, hasDiff);
 
@@ -86,7 +86,7 @@ const _DiffSplitLine = ({
                 lineNumber={currentLine.lineNumber}
                 side={side}
                 diffFile={diffFile}
-                onWidgetClick={onAddWidgetClick}
+                onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
                 className="absolute left-[100%] translate-x-[-50%] z-[1]"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />

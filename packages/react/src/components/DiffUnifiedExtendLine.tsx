@@ -10,24 +10,20 @@ const _DiffUnifiedExtendLine = ({
   index,
   diffFile,
   lineNumber,
+  oldLineExtend,
+  newLineExtend,
 }: {
   index: number;
   diffFile: DiffFile;
   lineNumber: number;
+  oldLineExtend: { data: any };
+  newLineExtend: { data: any };
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
   const renderExtendLine = useDiffContext(useCallback((s) => s.renderExtendLine, []));
 
   const unifiedItem = diffFile.getUnifiedLine(index);
-
-  const oldExtend = useDiffContext(
-    useCallback((s) => s.extendData?.oldFile?.[unifiedItem?.oldLineNumber], [unifiedItem?.oldLineNumber])
-  );
-
-  const newExtend = useDiffContext(
-    useCallback((s) => s.extendData?.newFile?.[unifiedItem?.newLineNumber], [unifiedItem?.newLineNumber])
-  );
 
   const width = useDomWidth({
     selector: ".unified-diff-table-wrapper",
@@ -41,21 +37,21 @@ const _DiffUnifiedExtendLine = ({
       <td className="diff-line-extend-content align-top p-0" colSpan={2}>
         <div className="diff-line-extend-wrapper sticky left-0" style={{ width }}>
           {width > 0 &&
-            oldExtend &&
+            oldLineExtend?.data &&
             renderExtendLine?.({
               diffFile,
               side: SplitSide.old,
               lineNumber: unifiedItem.oldLineNumber,
-              data: oldExtend.data,
+              data: oldLineExtend.data,
               onUpdate: diffFile.notifyAll,
             })}
           {width > 0 &&
-            newExtend &&
+            newLineExtend?.data &&
             renderExtendLine?.({
               diffFile,
               side: SplitSide.new,
               lineNumber: unifiedItem.newLineNumber,
-              data: newExtend.data,
+              data: newLineExtend.data,
               onUpdate: diffFile.notifyAll,
             })}
         </div>
@@ -77,14 +73,27 @@ export const DiffUnifiedExtendLine = ({
 
   const unifiedItem = diffFile.getUnifiedLine(index);
 
-  const hasExtend = useDiffContext(
+  const { oldLineExtend, newLineExtend } = useDiffContext(
     useCallback(
-      (s) => s.extendData?.oldFile?.[unifiedItem?.oldLineNumber] || s.extendData?.newFile?.[unifiedItem?.newLineNumber],
+      (s) => ({
+        oldLineExtend: s.extendData?.oldFile?.[unifiedItem?.oldLineNumber],
+        newLineExtend: s.extendData?.newFile?.[unifiedItem?.newLineNumber],
+      }),
       [unifiedItem.oldLineNumber, unifiedItem.newLineNumber]
     )
   );
 
+  const hasExtend = oldLineExtend?.data || newLineExtend?.data;
+
   if (!hasExtend || !unifiedItem || unifiedItem.isHidden || !unifiedItem.diff) return null;
 
-  return <_DiffUnifiedExtendLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
+  return (
+    <_DiffUnifiedExtendLine
+      index={index}
+      diffFile={diffFile}
+      lineNumber={lineNumber}
+      oldLineExtend={oldLineExtend}
+      newLineExtend={newLineExtend}
+    />
+  );
 };

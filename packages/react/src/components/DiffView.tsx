@@ -3,7 +3,7 @@
 import { DiffFile, _cacheMap } from "@git-diff-view/core";
 import { memo, useEffect, useMemo, forwardRef, useImperativeHandle } from "react";
 import * as React from "react";
-import { createStore, ref } from "reactivity-store";
+import { createStore, markRaw, ref } from "reactivity-store";
 
 import { useUnmount } from "../hooks/useUnmount";
 
@@ -156,10 +156,11 @@ const _InternalDiffView = <T extends unknown>(
         const setRenderExtendLine = (_renderExtendLine: typeof renderExtendLine.value) =>
           (renderExtendLine.value = _renderExtendLine);
 
-        const onAddWidgetClick = ref(props.onAddWidgetClick);
+        // 避免无意义的订阅
+        const onAddWidgetClick = ref(markRaw({ current: props.onAddWidgetClick }));
 
         const setOnAddWidgetClick = (_onAddWidgetClick: typeof onAddWidgetClick.value) =>
-          (onAddWidgetClick.value = _onAddWidgetClick);
+          (onAddWidgetClick.value.current = _onAddWidgetClick.current);
 
         return {
           id,
@@ -218,7 +219,7 @@ const _InternalDiffView = <T extends unknown>(
     diffViewWrap !== enableWrap && setEnableWrap(diffViewWrap);
     extendData && setExtendData(extendData);
     diffViewFontSize && diffViewFontSize !== fontSize && setFontSize(diffViewFontSize);
-    onAddWidgetClick !== _onAddWidgetClick && setOnAddWidgetClick(onAddWidgetClick);
+    onAddWidgetClick !== _onAddWidgetClick.current && setOnAddWidgetClick({ current: onAddWidgetClick });
     renderExtendLine !== _renderExtendLine && setRenderExtendLine(renderExtendLine);
     renderWidgetLine !== _renderWidgetLine && setRenderWidgetLine(renderWidgetLine);
   }, [

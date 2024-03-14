@@ -179,7 +179,7 @@ const _DiffUnifiedLine = memo(
 
     const { useWidget } = useDiffWidgetContext();
 
-    const { setWidget } = useWidget.getReadonlyState();
+    const setWidget = useWidget.getReadonlyState().setWidget;
 
     const hasDiff = unifiedLine.diff;
 
@@ -212,8 +212,8 @@ const _DiffUnifiedLine = memo(
             syntaxLine={syntaxLine}
             enableHighlight={enableHighlight}
             enableAddWidget={enableAddWidget}
-            onAddWidgetClick={onAddWidgetClick}
             lineNumber={unifiedLine.oldLineNumber}
+            onAddWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
           />
         );
       } else {
@@ -228,8 +228,8 @@ const _DiffUnifiedLine = memo(
             syntaxLine={syntaxLine}
             enableHighlight={enableHighlight}
             enableAddWidget={enableAddWidget}
-            onAddWidgetClick={onAddWidgetClick}
             lineNumber={unifiedLine.newLineNumber!}
+            onAddWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
           />
         );
       }
@@ -252,7 +252,7 @@ const _DiffUnifiedLine = memo(
                 diffFile={diffFile}
                 lineNumber={unifiedLine.newLineNumber}
                 side={SplitSide.new}
-                onWidgetClick={onAddWidgetClick}
+                onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber, side })}
               />
             )}
