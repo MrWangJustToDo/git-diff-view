@@ -1,6 +1,6 @@
 import { DiffModeEnum, DiffView as DiffViewReact, SplitSide, DiffFile } from "@git-diff-view/react";
 import { DiffView as DiffViewVue } from "@git-diff-view/vue";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { createApp, h, ref } from "vue";
 
@@ -36,9 +36,9 @@ const vRef = ref("");
 export function Example() {
   const [v, setV] = useState<K>("b");
 
-  const reactRoot = useRef<HTMLDivElement>(null);
+  const reactRef = useRef<HTMLDivElement | null>();
 
-  const vueRef = useRef<HTMLDivElement>(null);
+  const vueRef = useRef<HTMLDivElement | null>();
 
   const reactApp = useRef<Root>();
 
@@ -73,10 +73,6 @@ export function Example() {
       setDiffFileInstance(instance);
       console.timeEnd("parse");
     });
-  }, []);
-
-  useEffect(() => {
-    reactApp.current = reactApp.current || createRoot(reactRoot.current!);
   }, []);
 
   useEffect(() => {
@@ -228,9 +224,17 @@ export function Example() {
   );
 
   useEffect(() => {
+    reactRef.current = document.getElementById("react")! as HTMLDivElement;
+    vueRef.current = document.getElementById("vue")! as HTMLDivElement;
+  }, []);
+
+  useEffect(() => {
+    reactApp.current = reactApp.current || createRoot(reactRef.current!);
+  }, []);
+
+  useEffect(() => {
     if (diffFileInstance) {
       // mount react
-      delete (reactRoot.current as any)?.__fiber__;
       reactApp.current?.render?.(reactElement);
       // mount vue
       vueApp.current = createApp(vueElement);
@@ -239,6 +243,9 @@ export function Example() {
       return () => vueApp.current?.unmount?.();
     }
   }, [diffFileInstance, reactElement]);
+
+  const eleString1 = useMemo(() => ({ __html: `<div id='react'></div>` }), []);
+  const eleString2 = useMemo(() => ({ __html: `<div id='vue'></div>` }), []);
 
   return (
     <>
@@ -332,15 +339,13 @@ export function Example() {
 
       <div className="flex items-start w-[95%] gap-x-1 m-auto">
         <div
-          id="react"
-          ref={reactRoot}
           className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]"
-        ></div>
+          dangerouslySetInnerHTML={eleString1}
+        />
         <div
-          id="vue"
-          ref={vueRef}
           className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]"
-        ></div>
+          dangerouslySetInnerHTML={eleString2}
+        />
       </div>
     </>
   );
