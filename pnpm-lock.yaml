@@ -190,6 +190,9 @@ importers:
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
+      overlayscrollbars:
+        specifier: ^2.6.1
+        version: 2.6.1
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -4480,6 +4483,10 @@ packages:
       prelude-ls: 1.2.1
       type-check: 0.4.0
     dev: true
+
+  /overlayscrollbars@2.6.1:
+    resolution: {integrity: sha512-V+ZAqWMYMyGBJNRDEcdRC7Ch+WT9RBx9hY8bfJSMyFObQeJoecs1Vqg7ZAzBVcpN6sCUXFAZldCbeySwmmD0RA==}
+    dev: false
 
   /p-finally@1.0.0:
     resolution: {integrity: sha512-LICb2p9CB7FS+0eR1oqWnHhp0FljGLZCWBE9aix0Uye9W8LTQPwMTYVGWQWIw9RdQiDg4+epXQODwIYJtSJaow==}

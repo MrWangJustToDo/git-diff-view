@@ -1,8 +1,10 @@
 import { DiffModeEnum, DiffView as DiffViewReact, SplitSide, DiffFile } from "@git-diff-view/react";
 import { DiffView as DiffViewVue } from "@git-diff-view/vue";
+import { OverlayScrollbars } from "overlayscrollbars";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { createApp, h, ref } from "vue";
+import "overlayscrollbars/overlayscrollbars.css";
 
 import * as data from "./data";
 import { useDiffConfig } from "./hooks/useDiffConfig";
@@ -36,6 +38,10 @@ const vRef = ref("");
 export function Example() {
   const [v, setV] = useState<K>("b");
 
+  const reactWrapRef = useRef<HTMLDivElement>(null);
+
+  const vueWrapRef = useRef<HTMLDivElement>(null);
+
   const reactRef = useRef<HTMLDivElement | null>();
 
   const vueRef = useRef<HTMLDivElement | null>();
@@ -43,6 +49,8 @@ export function Example() {
   const reactApp = useRef<Root>();
 
   const [expandAll, setExpandAll] = useState(false);
+
+  const [scrollBar, setScrollBar] = useState(true);
 
   const ref = useRef<{ getDiffFileInstance: () => DiffFile }>(null);
 
@@ -95,7 +103,7 @@ export function Example() {
     }
   }, [expandAll]);
 
-  const { mode, setMode, highlight, setHighlight, wrap, setWrap, fontsize } = useDiffConfig((s) => ({ ...s }));
+  const { mode, setMode, highlight, setHighlight, wrap, setWrap, fontsize } = useDiffConfig();
 
   const reactElement = (
     <DiffViewReact<string>
@@ -247,6 +255,49 @@ export function Example() {
   const eleString1 = useMemo(() => ({ __html: `<div id='react'></div>` }), []);
   const eleString2 = useMemo(() => ({ __html: `<div id='vue'></div>` }), []);
 
+  // same logic for vue app;
+  useEffect(() => {
+    if (diffFileInstance && scrollBar && !wrap) {
+      const instanceArray: OverlayScrollbars[] = [];
+      const init = () => {
+        const isSplitMode = mode === DiffModeEnum.Split;
+        if (isSplitMode) {
+          const leftScrollbar = reactWrapRef.current?.querySelector("[data-left]") as HTMLDivElement;
+          const rightScrollbar = reactWrapRef.current?.querySelector("[data-right]") as HTMLDivElement;
+          const scrollContainers = Array.from(
+            reactRef.current?.querySelectorAll(".scrollbar-hide") || []
+          ) as HTMLDivElement[];
+          const [left, right] = scrollContainers;
+          if (left && right) {
+            const i1 = OverlayScrollbars({ target: left, scrollbars: { slot: leftScrollbar } }, {});
+            const i2 = OverlayScrollbars({ target: right, scrollbars: { slot: rightScrollbar } }, {});
+            instanceArray.push(i1, i2);
+            const leftScrollEle = i1.elements().scrollEventElement as HTMLDivElement;
+            const rightScrollEle = i2.elements().scrollEventElement as HTMLDivElement;
+            i1.on("scroll", () => {
+              rightScrollEle.scrollLeft = leftScrollEle.scrollLeft;
+            });
+            i2.on("scroll", () => {
+              leftScrollEle.scrollLeft = rightScrollEle.scrollLeft;
+            });
+          }
+        } else {
+          const scrollBarContainer = reactWrapRef.current?.querySelector("[data-full]") as HTMLDivElement;
+          const scrollContainer = reactRef.current?.querySelector(".scrollbar-hide") as HTMLDivElement;
+          if (scrollContainer) {
+            const i = OverlayScrollbars({ target: scrollContainer, scrollbars: { slot: scrollBarContainer } }, {});
+            instanceArray.push(i);
+          }
+        }
+      };
+      const id = setTimeout(init, 500);
+      return () => {
+        clearTimeout(id);
+        instanceArray.forEach((i) => i.destroy());
+      };
+    }
+  }, [diffFileInstance, scrollBar, wrap, mode]);
+
   return (
     <>
       <div className="w-[90%] m-auto mb-[1em] mt-[1em]">
@@ -270,6 +321,14 @@ export function Example() {
       </div>
       <div className="w-[90%] m-auto mb-[1em] text-right text-[12px]">
         <div className="inline-flex gap-x-4">
+          {!wrap && (
+            <button
+              className="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+              onClick={() => setScrollBar(!scrollBar)}
+            >
+              {scrollBar ? "toggle to disable scrollbar" : "toggle to enable scrollbar"}
+            </button>
+          )}
           <button
             className="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
             onClick={() => setExpandAll(!expandAll)}
@@ -337,15 +396,30 @@ export function Example() {
         </div>
       </div>
 
-      <div className="flex items-start w-[95%] gap-x-1 m-auto">
-        <div
-          className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]"
-          dangerouslySetInnerHTML={eleString1}
-        />
-        <div
-          className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]"
-          dangerouslySetInnerHTML={eleString2}
-        />
+      <div className="flex items-start w-[95vw] gap-x-1 m-auto">
+        <div ref={reactWrapRef} className=" flex-grow-0 w-[50%]">
+          <div
+            className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]"
+            dangerouslySetInnerHTML={eleString1}
+          />
+          <div data-scroll-target className="sticky bottom-0 w-full h-[6px] flex">
+            {mode === DiffModeEnum.Split ? (
+              <>
+                <div data-left className="w-[50%] relative"></div>
+                <div data-right className="w-[50%] relative"></div>
+              </>
+            ) : (
+              <div data-full></div>
+            )}
+          </div>
+        </div>
+        <div ref={vueWrapRef} className=" flex-grow-0 w-[50%]">
+          <div
+            className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]"
+            dangerouslySetInnerHTML={eleString2}
+          />
+          <div data-scroll-target className="sticky bottom-0"></div>
+        </div>
       </div>
     </>
   );
