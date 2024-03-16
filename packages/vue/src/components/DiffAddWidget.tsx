@@ -27,7 +27,7 @@ export const DiffSplitAddWidget = ({
       }}
     >
       <button
-        class="diff-add-widget overflow-hidden cursor-pointer rounded-md w-0 h-0 flex items-center justify-center transition-transform origin-center group-hover:w-full group-hover:h-full hover:scale-110"
+        class="diff-add-widget w-full h-full invisible cursor-pointer rounded-md flex items-center justify-center transition-transform origin-center group-hover:visible hover:scale-110"
         style={{
           color: `var(${addWidgetColorName})`,
           zIndex: 1,
@@ -67,7 +67,7 @@ export const DiffUnifiedAddWidget = ({
       }}
     >
       <button
-        class="diff-add-widget overflow-hidden cursor-pointer rounded-md w-0 h-0 flex items-center justify-center transition-transform origin-center group-hover:w-full group-hover:h-full hover:scale-110"
+        class="diff-add-widget w-full h-full invisible cursor-pointer rounded-md flex items-center justify-center transition-transform origin-center group-hover:visible hover:scale-110"
         style={{
           color: `var(${addWidgetColorName})`,
           zIndex: 1,

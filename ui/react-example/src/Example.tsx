@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { DiffModeEnum, DiffView as DiffViewReact, SplitSide, DiffFile } from "@git-diff-view/react";
 import { DiffView as DiffViewVue } from "@git-diff-view/vue";
 import { OverlayScrollbars } from "overlayscrollbars";
@@ -29,7 +30,12 @@ const TextArea = ({ onChange }: { onChange: (v: string) => void }) => {
   }, [val]);
 
   return (
-    <textarea className="w-full border min-h-[80px] p-[2px]" value={val} onChange={(e) => setVal(e.target.value)} />
+    <textarea
+      className="w-full border min-h-[80px] p-[2px]"
+      autoFocus
+      value={val}
+      onChange={(e) => setVal(e.target.value)}
+    />
   );
 };
 
@@ -269,8 +275,22 @@ export function Example() {
           ) as HTMLDivElement[];
           const [left, right] = scrollContainers;
           if (left && right) {
-            const i1 = OverlayScrollbars({ target: left, scrollbars: { slot: leftScrollbar } }, {});
-            const i2 = OverlayScrollbars({ target: right, scrollbars: { slot: rightScrollbar } }, {});
+            const i1 = OverlayScrollbars(
+              { target: left, scrollbars: { slot: leftScrollbar } },
+              {
+                overflow: {
+                  y: "hidden",
+                },
+              }
+            );
+            const i2 = OverlayScrollbars(
+              { target: right, scrollbars: { slot: rightScrollbar } },
+              {
+                overflow: {
+                  y: "hidden",
+                },
+              }
+            );
             instanceArray.push(i1, i2);
             const leftScrollEle = i1.elements().scrollEventElement as HTMLDivElement;
             const rightScrollEle = i2.elements().scrollEventElement as HTMLDivElement;
@@ -285,12 +305,20 @@ export function Example() {
           const scrollBarContainer = reactWrapRef.current?.querySelector("[data-full]") as HTMLDivElement;
           const scrollContainer = reactRef.current?.querySelector(".scrollbar-hide") as HTMLDivElement;
           if (scrollContainer) {
-            const i = OverlayScrollbars({ target: scrollContainer, scrollbars: { slot: scrollBarContainer } }, {});
+            const i = OverlayScrollbars(
+              { target: scrollContainer, scrollbars: { slot: scrollBarContainer } },
+              {
+                overflow: {
+                  y: "hidden",
+                },
+              }
+            );
             instanceArray.push(i);
           }
         }
       };
-      const id = setTimeout(init, 500);
+      // 当前 @myreact 的调度还很简陋，所以这里使用 setTimeout
+      const id = setTimeout(init, 1000);
       return () => {
         clearTimeout(id);
         instanceArray.forEach((i) => i.destroy());
@@ -314,8 +342,8 @@ export function Example() {
             <option value="c">diff 3</option>
             <option value="d">diff 4</option>
             <option value="e">diff 5</option>
-            <option value="j">large file</option>
-            <option value="k">large file</option>
+            <option value="j">large file 1</option>
+            <option value="k">large file 2</option>
           </select>
         </p>
       </div>
@@ -399,10 +427,10 @@ export function Example() {
       <div className="flex items-start w-[95vw] gap-x-1 m-auto">
         <div ref={reactWrapRef} className=" flex-grow-0 w-[50%]">
           <div
-            className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]"
+            className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden"
             dangerouslySetInnerHTML={eleString1}
           />
-          <div data-scroll-target className="sticky bottom-0 w-full h-[6px] flex">
+          <div data-scroll-target className="sticky bottom-0 w-full h-[6px] flex mt-[-6px]">
             {mode === DiffModeEnum.Split ? (
               <>
                 <div data-left className="w-[50%] relative"></div>
@@ -415,12 +443,13 @@ export function Example() {
         </div>
         <div ref={vueWrapRef} className=" flex-grow-0 w-[50%]">
           <div
-            className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden mb-[5em]"
+            className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden"
             dangerouslySetInnerHTML={eleString2}
           />
           <div data-scroll-target className="sticky bottom-0"></div>
         </div>
       </div>
+      <div className="mb-[5em]" />
     </>
   );
 }
