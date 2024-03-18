@@ -73,10 +73,10 @@ importers:
         version: 5.3.3
 
   packages/core:
-    dependencies:
-      lowlight:
-        specifier: ^3.1.0
-        version: 3.1.0
+    devDependencies:
+      '@git-diff-view/lowlight':
+        specifier: latest
+        version: link:../lowlight
 
   packages/lowlight:
     dependencies:

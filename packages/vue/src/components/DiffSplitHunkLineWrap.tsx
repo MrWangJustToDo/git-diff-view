@@ -124,7 +124,7 @@ export const DiffSplitHunkLine = defineComponent(
             colspan={3}
           >
             <div
-              class="pl-[1.5em] min-h-[28px]"
+              class="pl-[1.5em]"
               style={{
                 color: `var(${hunkContentColorName})`,
               }}

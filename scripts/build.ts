@@ -5,9 +5,9 @@ import tailwindcss from "tailwindcss";
 
 const externalLowlight = (id: string) =>
   id.includes("node_modules") &&
-  !id.includes("lowlight") &&
-  !id.includes("highlight.js") &&
-  !id.includes("devlop") &&
+  // !id.includes("lowlight") &&
+  // !id.includes("highlight.js") &&
+  // !id.includes("devlop") &&
   !id.includes("tslib");
 
 const externalCorePackage = (id: string) => id.includes("node_modules") && !id.includes("tslib");

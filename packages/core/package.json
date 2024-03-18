@@ -50,7 +50,7 @@
     "diff",
     "diff parse"
   ],
-  "dependencies": {
-    "lowlight": "^3.1.0"
+  "devDependencies": {
+    "@git-diff-view/lowlight": "latest"
   }
 }

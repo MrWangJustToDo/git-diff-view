@@ -70,9 +70,7 @@ export type DiffViewProps<T> = {
   onAddWidgetClick?: (lineNumber: number, side: SplitSide) => void;
 };
 
-const _InternalDiffView = <T extends unknown>(
-  props: Omit<DiffViewProps<T>, "data" | "registerHighlighter" | "autoDetectLang">
-) => {
+const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data" | "registerHighlighter">) => {
   const {
     diffFile,
     className,

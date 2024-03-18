@@ -1,13 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable max-lines */
+
 import { DiffLineType, DiffLine } from "./diff-line";
 import { parseInstance } from "./diff-parse";
 import { getFile } from "./file";
 import { getDiffRange, getLang } from "./tool";
 
 import type { File } from "./file";
-import type { highlighter } from "./highlighter";
 import type { IRawDiff } from "./raw-diff";
+import type { highlighter } from "@git-diff-view/lowlight";
 
 export const composeLen = 40;
 
@@ -402,18 +403,12 @@ export class DiffFile {
     });
   }
 
-  #composeSyntax({
-    autoDetectLang,
-    registerHighlighter,
-  }: {
-    autoDetectLang?: boolean;
-    registerHighlighter?: typeof highlighter;
-  }) {
-    this.#oldFileResult?.doSyntax({ autoDetectLang, registerHighlighter });
+  #composeSyntax({ registerHighlighter }: { registerHighlighter?: typeof highlighter }) {
+    this.#oldFileResult?.doSyntax({ registerHighlighter });
 
     this.#oldFileSyntaxLines = this.#oldFileResult?.syntaxFile;
 
-    this.#newFileResult?.doSyntax({ autoDetectLang, registerHighlighter });
+    this.#newFileResult?.doSyntax({ registerHighlighter });
 
     this.#newFileSyntaxLines = this.#newFileResult?.syntaxFile;
   }
@@ -466,12 +461,9 @@ export class DiffFile {
     this.#hasInitRaw = true;
   }
 
-  initSyntax({
-    autoDetectLang,
-    registerHighlighter,
-  }: { autoDetectLang?: boolean; registerHighlighter?: typeof highlighter } = {}) {
+  initSyntax({ registerHighlighter }: { registerHighlighter?: typeof highlighter } = {}) {
     if (this.#hasInitSyntax) return;
-    this.#composeSyntax({ registerHighlighter, autoDetectLang });
+    this.#composeSyntax({ registerHighlighter });
     this.#hasInitSyntax = true;
   }
 

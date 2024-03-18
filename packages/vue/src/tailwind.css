@@ -26,12 +26,7 @@
 }
 
 .diff-widget-tooltip {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: calc(100% - 3px);
-  height: calc(100% - 3px);
+  position: relative;
 }
 
 .diff-widget-tooltip::after {
