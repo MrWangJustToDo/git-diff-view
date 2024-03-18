@@ -16,6 +16,7 @@ const external = (id: string) => id.includes("node_modules") && !id.includes("ts
 
 const start = async () => {
   await rollupBuild({ packageName: "lowlight", packageScope: "packages", external: externalLowlight });
+  await rollupBuild({ packageName: "shiki", packageScope: "packages", external: external });
   await rollupBuild({ packageName: "core", packageScope: "packages", external: externalCorePackage });
   await rollupBuild({
     packageName: "react",

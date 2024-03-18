@@ -78,6 +78,7 @@ const DiffSyntax = ({
                   data-start={node.startIndex}
                   data-end={node.endIndex}
                   class={wrapper?.properties?.className?.join(" ")}
+                  style={wrapper?.properties?.style}
                 >
                   {node.value}
                 </span>
@@ -97,6 +98,7 @@ const DiffSyntax = ({
                   data-start={node.startIndex}
                   data-end={node.endIndex}
                   class={wrapper?.properties?.className?.join(" ")}
+                  style={wrapper?.properties?.style}
                 >
                   {str1}
                   <span
@@ -138,6 +140,7 @@ const DiffSyntax = ({
           data-start={node.startIndex}
           data-end={node.endIndex}
           class={wrapper?.properties?.className?.join(" ")}
+          style={wrapper?.properties?.style}
         >
           {node.value}
         </span>

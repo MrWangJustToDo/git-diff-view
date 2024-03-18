@@ -12,6 +12,7 @@
   "packageManager": "pnpm@8.9.0",
   "dependencies": {
     "@git-diff-view/react": "workspace:*",
+    "@git-diff-view/shiki": "workspace:*",
     "@git-diff-view/vue": "workspace:*",
     "@my-react/react": "0.3.0",
     "@my-react/react-dom": "0.3.0",

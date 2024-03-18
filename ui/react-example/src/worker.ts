@@ -1,4 +1,5 @@
-import { DiffFile, highlighter } from "@git-diff-view/vue";
+// import { highlighter } from "@git-diff-view/shiki";
+import { DiffFile } from "@git-diff-view/vue";
 
 import type { DiffViewProps } from "@git-diff-view/react";
 
@@ -10,7 +11,7 @@ export type MessageData = {
 
 const post = (d: MessageData) => postMessage(d);
 
-highlighter.setMaxLineToIgnoreSyntax(60000);
+// highlighter.setMaxLineToIgnoreSyntax(60000);
 
 // highlighter.setIgnoreSyntaxHighlightList([/.vue$/])
 
@@ -29,7 +30,10 @@ onmessage = (event: MessageEvent<MessageData>) => {
     data?.newFile?.fileLang || ""
   );
 
-  file.init();
+  file.initRaw();
+
+  // file.initSyntax({ registerHighlighter: highlighter });
+  file.initSyntax();
 
   file.buildSplitDiffLines();
 

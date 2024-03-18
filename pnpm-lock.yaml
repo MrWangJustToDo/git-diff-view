@@ -73,6 +73,10 @@ importers:
         version: 5.3.3
 
   packages/core:
+    dependencies:
+      lowlight:
+        specifier: ^3.1.0
+        version: 3.1.0
     devDependencies:
       '@git-diff-view/lowlight':
         specifier: latest
@@ -127,6 +131,12 @@ importers:
         specifier: ^3.4.1
         version: 3.4.1(ts-node@10.9.2)
 
+  packages/shiki:
+    dependencies:
+      shiki:
+        specifier: ^1.2.0
+        version: 1.2.0
+
   packages/vue:
     dependencies:
       highlight.js:
@@ -178,6 +188,9 @@ importers:
       '@git-diff-view/react':
         specifier: workspace:*
         version: link:../../packages/react
+      '@git-diff-view/shiki':
+        specifier: workspace:*
+        version: link:../../packages/shiki
       '@git-diff-view/vue':
         specifier: workspace:*
         version: link:../../packages/vue
@@ -1346,6 +1359,10 @@ packages:
       colors: 1.2.5
       string-argv: 0.3.2
     dev: true
+
+  /@shikijs/core@1.2.0:
+    resolution: {integrity: sha512-OlFvx+nyr5C8zpcMBnSGir0YPD6K11uYhouqhNmm1qLiis4GA7SsGtu07r9gKS9omks8RtQqHrJL4S+lqWK01A==}
+    dev: false
 
   /@swc/core-darwin-arm64@1.4.2:
     resolution: {integrity: sha512-1uSdAn1MRK5C1m/TvLZ2RDvr0zLvochgrZ2xL+lRzugLlCTlSA+Q4TWtrZaOz+vnnFVliCpw7c7qu0JouhgQIw==}
@@ -5488,6 +5505,12 @@ packages:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
     dev: true
+
+  /shiki@1.2.0:
+    resolution: {integrity: sha512-xLhiTMOIUXCv5DqJ4I70GgQCtdlzsTqFLZWcMHHG3TAieBUbvEGthdrlPDlX4mL/Wszx9C6rEcxU6kMlg4YlxA==}
+    dependencies:
+      '@shikijs/core': 1.2.0
+    dev: false
 
   /side-channel@1.0.4:
     resolution: {integrity: sha512-q5XPytqFEIKHkGdiMIrY10mvLRvnQh42/+GoBlFW3b2LXLE2xxJpZFdm94we0BaoV3RwJyGqg5wS7epxTv0Zvw==}

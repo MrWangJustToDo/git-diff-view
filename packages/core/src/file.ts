@@ -32,7 +32,7 @@ export type SyntaxNode = {
   lineNumber: number;
   startIndex: number;
   endIndex: number;
-  properties?: { className?: string[] };
+  properties?: { className?: string[]; style?: string };
   children?: SyntaxNode[];
 };
 

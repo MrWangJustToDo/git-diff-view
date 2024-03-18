@@ -1,56 +1,10 @@
-import { createLowlight, all } from "lowlight";
+import { getHighlighter } from "shiki";
 
 import { processAST, type SyntaxLine } from "./processAST";
 
-const lowlight = createLowlight(all);
+import type { codeToHast } from "shiki";
 
-lowlight.register("vue", function hljsDefineVue(hljs) {
-  return {
-    subLanguage: "xml",
-    contains: [
-      hljs.COMMENT("<!--", "-->", {
-        relevance: 10,
-      }),
-      {
-        begin: /^(\s*)(<script>)/gm,
-        end: /^(\s*)(<\/script>)/gm,
-        subLanguage: "javascript",
-        excludeBegin: true,
-        excludeEnd: true,
-      },
-      {
-        begin: /^(?:\s*)(?:<script\s+lang=(["'])ts\1>)/gm,
-        end: /^(\s*)(<\/script>)/gm,
-        subLanguage: "typescript",
-        excludeBegin: true,
-        excludeEnd: true,
-      },
-      {
-        begin: /^(\s*)(<style(\s+scoped)?>)/gm,
-        end: /^(\s*)(<\/style>)/gm,
-        subLanguage: "css",
-        excludeBegin: true,
-        excludeEnd: true,
-      },
-      {
-        begin: /^(?:\s*)(?:<style(?:\s+scoped)?\s+lang=(["'])(?:s[ca]ss)\1(?:\s+scoped)?>)/gm,
-        end: /^(\s*)(<\/style>)/gm,
-        subLanguage: "scss",
-        excludeBegin: true,
-        excludeEnd: true,
-      },
-      {
-        begin: /^(?:\s*)(?:<style(?:\s+scoped)?\s+lang=(["'])stylus\1(?:\s+scoped)?>)/gm,
-        end: /^(\s*)(<\/style>)/gm,
-        subLanguage: "stylus",
-        excludeBegin: true,
-        excludeEnd: true,
-      },
-    ],
-  };
-});
-
-export type AST = ReturnType<typeof lowlight.highlight>;
+export type AST = DePromise<ReturnType<typeof codeToHast>>;
 
 export type Highlighter = {
   maxLineToIgnoreSyntax: number;
@@ -60,6 +14,46 @@ export type Highlighter = {
   getAST: (raw: string, fileName?: string, lang?: string) => AST;
   processAST: (ast: AST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };
 };
+
+const internal = await getHighlighter({
+  themes: ["github-light", "github-dark"],
+  langs: [
+    "cpp",
+    "java",
+    "javascript",
+    "css",
+    "c#",
+    "c",
+    "c++",
+    "vue",
+    "vue-html",
+    "astro",
+    "bash",
+    "make",
+    "markdown",
+    "makefile",
+    "bat",
+    "cmake",
+    "cmd",
+    "csv",
+    "docker",
+    "dockerfile",
+    "go",
+    "python",
+    "html",
+    "jsx",
+    "tsx",
+    "typescript",
+    "sql",
+    "xml",
+    "sass",
+    "ssh-config",
+    "kotlin",
+    "json",
+    "swift",
+    "txt",
+  ],
+});
 
 const instance = {};
 
@@ -90,13 +84,6 @@ Object.defineProperty(instance, "setIgnoreSyntaxHighlightList", {
 
 Object.defineProperty(instance, "getAST", {
   value: (raw: string, fileName?: string, lang?: string) => {
-    let hasRegisteredLang = true;
-
-    if (!lowlight.registered(lang)) {
-      __DEV__ && console.warn(`not support current lang: ${lang} yet`);
-      hasRegisteredLang = false;
-    }
-
     if (
       fileName &&
       highlighter.ignoreSyntaxHighlightList.some((item) =>
@@ -110,11 +97,7 @@ Object.defineProperty(instance, "getAST", {
       return;
     }
 
-    if (hasRegisteredLang) {
-      return lowlight.highlight(lang, raw);
-    } else {
-      return lowlight.highlightAuto(raw);
-    }
+    return internal.codeToHast(raw, { lang: lang, theme: "github-light" });
   },
 });
 

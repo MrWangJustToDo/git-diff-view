@@ -2,6 +2,19 @@ import { DiffLineType, type DiffFile, type DiffLine, type SyntaxLine } from "@gi
 import * as React from "react";
 
 import { addContentHighlightBGName, delContentHighlightBGName } from "./color";
+import { memoFunc } from "./tools";
+
+const temp = {};
+
+const parseInlineStyle = memoFunc((style: string) => {
+  if (!style) return temp;
+  const template = document.createElement("template");
+  template.setAttribute("style", style);
+  return Object.entries(template.style)
+    .filter(([key]) => !/^[0-9]+$/.test(key))
+    .filter(([, value]) => Boolean(value))
+    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+});
 
 const DiffString = ({
   rawLine,
@@ -79,6 +92,7 @@ const DiffSyntax = ({
                   data-start={node.startIndex}
                   data-end={node.endIndex}
                   className={wrapper?.properties?.className?.join(" ")}
+                  style={parseInlineStyle(wrapper?.properties?.style || "")}
                 >
                   {node.value}
                 </span>
@@ -98,6 +112,7 @@ const DiffSyntax = ({
                   data-start={node.startIndex}
                   data-end={node.endIndex}
                   className={wrapper?.properties?.className?.join(" ")}
+                  style={parseInlineStyle(wrapper?.properties?.style || "")}
                 >
                   {str1}
                   <span
@@ -139,6 +154,7 @@ const DiffSyntax = ({
           data-start={node.startIndex}
           data-end={node.endIndex}
           className={wrapper?.properties?.className?.join(" ")}
+          style={parseInlineStyle(wrapper?.properties?.style || "")}
         >
           {node.value}
         </span>

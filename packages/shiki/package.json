@@ -1,11 +1,11 @@
 {
-  "name": "@git-diff-view/core",
-  "description": "@git-diff-view/core",
+  "name": "@git-diff-view/shiki",
+  "description": "@git-diff-view/shiki",
   "author": "MrWangJustToDo",
   "license": "MIT",
   "version": "0.0.9",
-  "main": "index.js",
   "types": "index.d.ts",
+  "type": "module",
   "files": [
     "dist",
     "index.js",
@@ -14,16 +14,14 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MrWangJustToDo/git-diff-view.git",
-    "directory": "packages/core"
+    "directory": "packages/shiki"
   },
   "homepage": "https://github.com/MrWangJustToDo/git-diff-view",
   "exports": {
     ".": {
-      "require": "./index.js",
       "types": "./index.d.ts",
       "import": "./dist/esm/index.mjs"
     },
-    "./cjsIndex.js": "./index.js",
     "./esmIndex.js": "./dist/esm/index.mjs",
     "./package.json": "./package.json"
   },
@@ -32,28 +30,18 @@
     "output": [
       {
         "dir": "./dist",
-        "entryFileNames": "cjs/index.js",
-        "format": "cjs",
-        "type": true,
-        "multiple": true,
-        "sourcemap": true
-      },
-      {
-        "dir": "./dist",
         "entryFileNames": "esm/index.mjs",
+        "type": true,
         "format": "esm",
         "sourcemap": true
       }
     ]
   },
   "keywords": [
-    "diff",
-    "diff parse"
+    "highlight",
+    "virtual dom highlight"
   ],
   "dependencies": {
-    "lowlight": "^3.1.0"
-  },
-  "devDependencies": {
-    "@git-diff-view/lowlight": "latest"
+    "shiki": "^1.2.0"
   }
 }

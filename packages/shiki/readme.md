@@ -1,0 +1,1 @@
+## shiki highlighter for @git-diff-view
