@@ -427,7 +427,7 @@ export function Example() {
       <div className="flex items-start w-[95vw] gap-x-1 m-auto">
         <div ref={reactWrapRef} className=" flex-grow-0 w-[50%]">
           <div
-            className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden"
+            className="w-full border border-[#c8c8c8] border-solid rounded-[5px] overflow-hidden"
             dangerouslySetInnerHTML={eleString1}
           />
           <div data-scroll-target className="sticky bottom-0 w-full h-[6px] flex mt-[-6px]">
@@ -443,7 +443,7 @@ export function Example() {
         </div>
         <div ref={vueWrapRef} className=" flex-grow-0 w-[50%]">
           <div
-            className="w-full border border-[grey] border-solid rounded-[5px] overflow-hidden"
+            className="w-full border border-[#c8c8c8] border-solid rounded-[5px] overflow-hidden"
             dangerouslySetInnerHTML={eleString2}
           />
           <div data-scroll-target className="sticky bottom-0"></div>

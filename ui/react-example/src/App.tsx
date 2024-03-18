@@ -12,7 +12,7 @@ function App() {
       <div className="w-[90%] m-auto mb-[1em] mt-[1.5em] text-right">
         <div className=" flex items-center justify-between">
           <a
-            className="border rounded-md text-gray-500 w-[50px] h-[50px] block"
+            className="border rounded-full text-gray-500 w-[40px] h-[40px] block"
             aria-label="github"
             href="https://github.com/MrWangJustToDo/git-diff-view"
             target="_blank"

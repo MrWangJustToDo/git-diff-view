@@ -107,7 +107,7 @@ const _DiffUnifiedHunkLine = ({
         style={{ backgroundColor: `var(${hunkContentBGName})` }}
       >
         <div
-          className="pl-[1.5em]"
+          className="pl-[1.5em] min-h-[28px]"
           style={{
             whiteSpace: enableWrap ? "pre-wrap" : "pre",
             wordBreak: enableWrap ? "break-all" : "initial",
