@@ -6,14 +6,29 @@ import { memoFunc } from "./tools";
 
 const temp = {};
 
-const parseInlineStyle = memoFunc((style: string) => {
-  if (!style) return temp;
-  const template = document.createElement("template");
-  template.setAttribute("style", style);
-  return Object.entries(template.style)
-    .filter(([key]) => !/^[0-9]+$/.test(key))
-    .filter(([, value]) => Boolean(value))
-    .reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+const formatStringToCamelCase = (str: string) => {
+  const splitted = str.split("-");
+  if (splitted.length === 1) return splitted[0];
+  return (
+    splitted[0] +
+    splitted
+      .slice(1)
+      .map((word) => word[0].toUpperCase() + word.slice(1))
+      .join("")
+  );
+};
+
+const getStyleObjectFromString = memoFunc((str: string) => {
+  if (!str) return temp;
+  const style = {};
+  str.split(";").forEach((el) => {
+    const [property, value] = el.split(":");
+    if (!property) return;
+
+    const formattedProperty = formatStringToCamelCase(property.trim());
+    style[formattedProperty] = value.trim();
+  });
+  return style;
 });
 
 const DiffString = ({
@@ -92,7 +107,7 @@ const DiffSyntax = ({
                   data-start={node.startIndex}
                   data-end={node.endIndex}
                   className={wrapper?.properties?.className?.join(" ")}
-                  style={parseInlineStyle(wrapper?.properties?.style || "")}
+                  style={getStyleObjectFromString(wrapper?.properties?.style || "")}
                 >
                   {node.value}
                 </span>
@@ -112,7 +127,7 @@ const DiffSyntax = ({
                   data-start={node.startIndex}
                   data-end={node.endIndex}
                   className={wrapper?.properties?.className?.join(" ")}
-                  style={parseInlineStyle(wrapper?.properties?.style || "")}
+                  style={getStyleObjectFromString(wrapper?.properties?.style || "")}
                 >
                   {str1}
                   <span
@@ -154,7 +169,7 @@ const DiffSyntax = ({
           data-start={node.startIndex}
           data-end={node.endIndex}
           className={wrapper?.properties?.className?.join(" ")}
-          style={parseInlineStyle(wrapper?.properties?.style || "")}
+          style={getStyleObjectFromString(wrapper?.properties?.style || "")}
         >
           {node.value}
         </span>
