@@ -252,7 +252,9 @@ export function Example() {
               h("span", { class: "text-[12px]" }, new Date().toDateString()),
             ]),
             h("div", { class: "bg-[rgb(210,210,210)] h-[1px] my-[5px]" }),
-            h("div", { class: "indent-1 my-[5px] mx-[4px]" }, [data]),
+            h("div", { class: "indent-1 my-[5px] mx-[4px]" }, [
+              h("span", { class: "text-[15px]" }, data),
+            ]),
           ]),
         ]);
       },
