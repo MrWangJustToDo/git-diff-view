@@ -31,7 +31,7 @@ const TextArea = ({ onChange }: { onChange: (v: string) => void }) => {
 
   return (
     <textarea
-      className="w-full border min-h-[80px] p-[2px]"
+      className="w-full border min-h-[80px] !p-[2px]"
       autoFocus
       value={val}
       onChange={(e) => setVal(e.target.value)}
@@ -120,7 +120,7 @@ export function Example() {
           <div className="m-[5px] mt-[0.8em] text-right">
             <div className="inline-flex gap-x-[12px] justify-end">
               <button
-                className="border px-[12px] py-[6px] rounded-[4px]"
+                className="border !px-[12px] py-[6px] rounded-[4px]"
                 onClick={() => {
                   onClose();
                   valRef.current = "";
@@ -129,7 +129,7 @@ export function Example() {
                 cancel
               </button>
               <button
-                className="border px-[12px] py-[6px] rounded-[4px]"
+                className="border !px-[12px] py-[6px] rounded-[4px]"
                 onClick={() => {
                   onClose();
                   if (valRef.current) {
@@ -157,11 +157,20 @@ export function Example() {
       extendData={extend}
       renderExtendLine={({ data }) => {
         return (
-          <div className="border flex px-[10px] py-[8px] bg-slate-400">
-            <h2 className="text-[20px]">
-              {">> "}
-              {data}
-            </h2>
+          <div className="px-[8px] py-[6px] bg-slate-200">
+            <div className="border border-solid border-[rgb(200,200,200)] rounded-[4px]">
+              <div className="my-[5px] mx-[4px]">
+                <div className="w-[24px] h-[24px] inline-flex items-center justify-center rounded-full bg-slate-300">
+                  W
+                </div>
+                <span className="mx-[2px]">:</span>
+                <span className="text-[12px]">{new Date().toDateString()}</span>
+              </div>
+              <div className="bg-[rgb(210,210,210)] h-[1px] my-[5px]"></div>
+              <div className="indent-1 my-[5px] mx-[4px]">
+                <span className="text-[15px]">{data}</span>
+              </div>
+            </div>
           </div>
         );
       }}
@@ -189,7 +198,7 @@ export function Example() {
       widget: ({ onClose, side, lineNumber }: { onClose: () => void; side: SplitSide; lineNumber: number }) =>
         h("div", { class: "border flex flex-col w-full px-[4px] py-[8px]" }, [
           h("textarea", {
-            class: "w-full border min-h-[80px] p-[2px]",
+            class: "w-full border min-h-[80px] !p-[2px]",
             value: vRef.value,
             onChange: (e: InputEvent) => (vRef.value = (e.target as HTMLTextAreaElement).value),
           }),
@@ -198,7 +207,7 @@ export function Example() {
               h(
                 "button",
                 {
-                  class: "border px-[12px] py-[6px] rounded-[4px]",
+                  class: "border !px-[12px] py-[6px] rounded-[4px]",
                   onClick: () => {
                     onClose();
                     vRef.value = "";
@@ -209,7 +218,7 @@ export function Example() {
               h(
                 "button",
                 {
-                  class: "border px-[12px] py-[6px] rounded-[4px]",
+                  class: "border !px-[12px] py-[6px] rounded-[4px]",
                   onClick: () => {
                     onClose();
                     if (vRef.value) {
@@ -230,10 +239,23 @@ export function Example() {
             ]),
           ]),
         ]),
-      extend: ({ data }: { data: string }) =>
-        h("div", { class: "border flex px-[10px] py-[8px] bg-slate-400" }, [
-          h("h2", { class: "text-[20px]" }, [">> ", data]),
-        ]),
+      extend: ({ data }: { data: string }) => {
+        return h("div", { class: "px-[8px] py-[6px] bg-slate-200" }, [
+          h("div", { class: "border border-solid border-[rgb(200,200,200)] rounded-[4px]" }, [
+            h("div", { class: "my-[5px] mx-[4px]" }, [
+              h(
+                "div",
+                { class: "w-[24px] h-[24px] inline-flex items-center justify-center rounded-full bg-slate-300" },
+                "W"
+              ),
+              h("span", { class: "mx-[2px]" }, ":"),
+              h("span", { class: "text-[12px]" }, new Date().toDateString()),
+            ]),
+            h("div", { class: "bg-[rgb(210,210,210)] h-[1px] my-[5px]" }),
+            h("div", { class: "indent-1 my-[5px] mx-[4px]" }, [data]),
+          ]),
+        ]);
+      },
     }
   );
 

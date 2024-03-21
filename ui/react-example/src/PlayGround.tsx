@@ -17,8 +17,6 @@ export const PlayGround = () => {
 
   const [content, setContent] = useState(rawTemp);
 
-  const [val, setVal] = useState("");
-
   const setDiffInstanceCb = useCallback(
     debounce((lang, diffString, content) => {
       if (!diffString) {
@@ -81,53 +79,12 @@ export const PlayGround = () => {
 
       {diffInstance ? (
         <DiffView<string>
-          renderWidgetLine={({ onClose }) => (
-            <div className="border flex flex-col w-full px-[4px] py-[8px]">
-              <textarea
-                className="w-full border min-h-[80px] p-[2px]"
-                value={val}
-                onChange={(e) => setVal(e.target.value)}
-              />
-              <div className="m-[5px] mt-[0.8em] text-right">
-                <div className="inline-flex gap-x-[12px] justify-end">
-                  <button
-                    className="border px-[12px] py-[6px] rounded-[4px]"
-                    onClick={() => {
-                      onClose();
-                      setVal("");
-                    }}
-                  >
-                    cancel
-                  </button>
-                  <button
-                    className="border px-[12px] py-[6px] rounded-[4px]"
-                    onClick={() => {
-                      onClose();
-                    }}
-                  >
-                    submit
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
           className="mt-[10px] border rounded-[4px] overflow-hidden"
           diffFile={diffInstance}
-          renderExtendLine={({ data }) => {
-            return (
-              <div className="border flex px-[10px] py-[8px] bg-slate-400">
-                <h2 className="text-[20px]">
-                  {">> "}
-                  {data}
-                </h2>
-              </div>
-            );
-          }}
           diffViewFontSize={13}
           diffViewHighlight={true}
           diffViewMode={DiffModeEnum.Split}
           diffViewWrap
-          diffViewAddWidget
         />
       ) : (
         <div className="border mt-[10px] rounded-[4px] p-[10px] text-orange-500 text-[22px]">
