@@ -185,7 +185,7 @@ export const DiffView = defineComponent<
 
     onUnmounted(() => diffFile.value._destroy?.());
 
-    options.expose({ getDiffView: () => diffFile.value });
+    options.expose({ getDiffFileInstance: () => diffFile.value });
 
     return () => {
       if (!diffFile.value) return null;

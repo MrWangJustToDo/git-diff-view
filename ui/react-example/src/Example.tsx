@@ -161,10 +161,10 @@ export function Example() {
             <div className="border border-solid border-[rgb(200,200,200)] rounded-[4px]">
               <div className="my-[5px] mx-[4px]">
                 <div className="w-[24px] h-[24px] inline-flex items-center justify-center rounded-full bg-slate-300">
-                  W
+                  @
                 </div>
-                <span className="mx-[2px]">:</span>
-                <span className="text-[12px]">{new Date().toDateString()}</span>
+                <span className="text-[11px] mx-[4px] text-[grey]">:</span>
+                <span className="text-[11px] text-[grey]">{new Date().toLocaleString()}</span>
               </div>
               <div className="bg-[rgb(210,210,210)] h-[1px] my-[5px]"></div>
               <div className="indent-1 my-[5px] mx-[4px]">
@@ -246,15 +246,13 @@ export function Example() {
               h(
                 "div",
                 { class: "w-[24px] h-[24px] inline-flex items-center justify-center rounded-full bg-slate-300" },
-                "W"
+                "@"
               ),
-              h("span", { class: "mx-[2px]" }, ":"),
-              h("span", { class: "text-[12px]" }, new Date().toDateString()),
+              h("span", { class: "text-[11px] mx-[4px] text-[grey]" }, ":"),
+              h("span", { class: "text-[11px] text-[grey]" }, new Date().toLocaleString()),
             ]),
             h("div", { class: "bg-[rgb(210,210,210)] h-[1px] my-[5px]" }),
-            h("div", { class: "indent-1 my-[5px] mx-[4px]" }, [
-              h("span", { class: "text-[15px]" }, data),
-            ]),
+            h("div", { class: "indent-1 my-[5px] mx-[4px]" }, [h("span", { class: "text-[15px]" }, data)]),
           ]),
         ]);
       },

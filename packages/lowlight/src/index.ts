@@ -124,4 +124,6 @@ Object.defineProperty(instance, "processAST", {
   },
 });
 
+export { processAST } from "./processAST";
+
 export const highlighter: Highlighter = instance as Highlighter;

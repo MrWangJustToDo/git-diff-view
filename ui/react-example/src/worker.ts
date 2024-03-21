@@ -1,5 +1,5 @@
+import { DiffFile } from "@git-diff-view/react";
 // import { highlighter } from "@git-diff-view/shiki";
-import { DiffFile } from "@git-diff-view/vue";
 
 import type { DiffViewProps } from "@git-diff-view/react";
 

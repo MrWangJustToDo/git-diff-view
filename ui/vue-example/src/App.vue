@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import * as data from "./data";
 import { DiffModeEnum, DiffView, DiffViewProps, SplitSide, DiffFile } from "@git-diff-view/vue";
 import { MessageData } from "./worker";
@@ -34,6 +34,12 @@ worker.addEventListener("message", (e: MessageEvent<MessageData>) => {
 const k = ref<Key>("a");
 
 const v = ref("");
+
+const instance = ref<{ getDiffFileInstance: () => DiffFile }>();
+
+onMounted(() => {
+  console.log(instance.value);
+})
 
 const _data = computed(() => data[k.value]);
 
@@ -89,7 +95,8 @@ const resetV = () => (v.value = "");
   </div>
   <div class="w-[90%] m-auto border border-[#c1c1c1] border-solid rounded-[5px] overflow-hidden mb-[5em]">
     <DiffView :diff-file="diffFile" :diff-view-font-size="14" :diff-view-mode="mode" :diff-view-highlight="highlight"
-      :diff-view-add-widget="true" :diff-view-wrap="wrap" @on-add-widget-click="resetV" :extend-data="extendData">
+      :diff-view-add-widget="true" ref="instance" :diff-view-wrap="wrap" @on-add-widget-click="resetV"
+      :extend-data="extendData">
       <template #widget="{ onClose, lineNumber, side }">
         <div class="border flex flex-col w-full px-[4px] py-[8px]">
           <textarea class="w-full border min-h-[80px] p-[2px]" v-model="v" />
@@ -97,12 +104,12 @@ const resetV = () => (v.value = "");
             <div class="inline-flex gap-x-[12px] justify-end">
               <button class="border px-[12px] py-[6px] rounded-[4px]" @click="onClose">cancel</button>
               <button class="border px-[12px] py-[6px] rounded-[4px]" @click="() => {
-          if (v.length) {
-            const _side = side === SplitSide.old ? 'oldFile' : 'newFile';
-            extendData![_side]![lineNumber] = { data: v };
-            onClose();
-          }
+        if (v.length) {
+          const _side = side === SplitSide.old ? 'oldFile' : 'newFile';
+          extendData![_side]![lineNumber] = { data: v };
+          onClose();
         }
+      }
         ">
                 submit
               </button>
