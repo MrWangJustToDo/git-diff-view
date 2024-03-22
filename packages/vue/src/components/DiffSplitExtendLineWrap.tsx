@@ -70,7 +70,7 @@ export const DiffSplitExtendLine = defineComponent(
             </td>
           )}
           {newLineExtend.value ? (
-            <td class="diff-line-extend-new-content p-0 border-l-[1px] border-l-[#ccc]" colspan={2}>
+            <td class="diff-line-extend-new-content p-0 border-l-[1px] border-l-[rgb(222,222,222)]" colspan={2}>
               <div class="diff-line-extend-wrapper">
                 {slots.extend?.({
                   diffFile: props.diffFile,
@@ -83,7 +83,7 @@ export const DiffSplitExtendLine = defineComponent(
             </td>
           ) : (
             <td
-              class="diff-line-extend-new-placeholder p-0 border-l-[1px] border-l-[#ccc] select-none"
+              class="diff-line-extend-new-placeholder p-0 border-l-[1px] border-l-[rgb(222,222,222)] select-none"
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >

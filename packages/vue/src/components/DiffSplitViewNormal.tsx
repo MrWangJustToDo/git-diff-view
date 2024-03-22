@@ -139,7 +139,7 @@ export const DiffSplitViewNormal = defineComponent(
           >
             <DiffSplitViewTable side={SplitSide.old} diffFile={props.diffFile} />
           </div>
-          <div class="diff-split-line w-[1.5px] bg-[#ccc]" />
+          <div class="diff-split-line w-[1.5px] bg-[rgb(222,222,222)]" />
           <div
             class="new-diff-table-wrapper overflow-auto w-full scrollbar-hide"
             ref={ref2}

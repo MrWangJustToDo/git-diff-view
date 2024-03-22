@@ -110,7 +110,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
       >
         <DiffSplitViewTable side={SplitSide.old} diffFile={diffFile} />
       </div>
-      <div className="diff-split-line w-[1.5px] bg-[#ccc]" />
+      <div className="diff-split-line w-[1.5px] bg-[rgb(222,222,222)]" />
       <div
         className="new-diff-table-wrapper overflow-auto w-full scrollbar-hide scrollbar-disable"
         ref={ref2}

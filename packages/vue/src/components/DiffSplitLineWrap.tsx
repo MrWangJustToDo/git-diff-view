@@ -136,7 +136,7 @@ export const DiffSplitLine = defineComponent(
           {hasNewLine ? (
             <>
               <td
-                class="diff-line-new-num group relative pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px] border-l-[1px] border-l-[#ccc]"
+                class="diff-line-new-num group relative pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px] border-l-[1px] border-l-[rgb(222,222,222)]"
                 style={{ backgroundColor: newLineNumberBG, color: `var(${plainLineNumberColorName})` }}
               >
                 {hasDiff.value && enableAddWidget.value && (
@@ -182,7 +182,7 @@ export const DiffSplitLine = defineComponent(
             </>
           ) : (
             <td
-              class="diff-line-new-placeholder border-l-[1px] border-l-[#ccc] select-none"
+              class="diff-line-new-placeholder border-l-[1px] border-l-[rgb(222,222,222)] select-none"
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >

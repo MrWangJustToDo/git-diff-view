@@ -117,7 +117,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
       {hasNewLine ? (
         <>
           <td
-            className="diff-line-new-num group relative pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px] border-l-[1px] border-l-[#ccc]"
+            className="diff-line-new-num group relative pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px] border-l-[1px] border-l-[rgb(222,222,222)]"
             data-side={SplitSide[SplitSide.new]}
             style={{ backgroundColor: newLineNumberBG, color: `var(${plainLineNumberColorName})` }}
           >
@@ -164,7 +164,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
         </>
       ) : (
         <td
-          className="diff-line-new-placeholder select-none border-l-[1px] border-l-[#ccc]"
+          className="diff-line-new-placeholder select-none border-l-[1px] border-l-[rgb(222,222,222)]"
           style={{ backgroundColor: `var(${emptyBGName})` }}
           data-side={SplitSide[SplitSide.new]}
           colSpan={2}

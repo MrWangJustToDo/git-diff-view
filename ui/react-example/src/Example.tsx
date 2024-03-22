@@ -373,32 +373,32 @@ export function Example() {
         <div className="inline-flex gap-x-4">
           {!wrap && (
             <button
-              className="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+              className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
               onClick={() => setScrollBar(!scrollBar)}
             >
               {scrollBar ? "toggle to disable scrollbar" : "toggle to enable scrollbar"}
             </button>
           )}
           <button
-            className="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+            className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
             onClick={() => setExpandAll(!expandAll)}
           >
             {expandAll ? "toggle to collapseAll" : "toggle to expandAll"}
           </button>
           <button
-            className="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+            className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
             onClick={() => setWrap(!wrap)}
           >
             {wrap ? "Toggle to nowrap" : "Toggle to wrap"}
           </button>
           <button
-            className="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+            className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
             onClick={() => setHighlight(!highlight)}
           >
             {highlight ? "Toggle to disable highlight" : "Toggle to enable highlight"}
           </button>
           <button
-            className="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+            className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
             onClick={() => setMode(mode === DiffModeEnum.Split ? DiffModeEnum.Unified : DiffModeEnum.Split)}
           >
             {mode === DiffModeEnum.Split ? "Toggle to UnifiedMode" : "Toggle to SplitMode"}
