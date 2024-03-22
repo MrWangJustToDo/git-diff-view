@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
-// NODE: ALL of the Diff parse logic from desktop, SEE https://github.com/desktop/desktop
+
+// !NOTE: ALL of the diff parse logic copy from desktop, SEE https://github.com/desktop/desktop
 
 // https://en.wikipedia.org/wiki/Diff_utility
 //

@@ -1,4 +1,4 @@
-import type { AST } from ".";
+import type { DiffAST } from ".";
 
 export type SyntaxNode = {
   type: string;
@@ -17,7 +17,7 @@ export type SyntaxLine = {
   nodeList: { node: SyntaxNode; wrapper?: SyntaxNode }[];
 };
 
-export const processAST = (ast: AST) => {
+export const processAST = (ast: DiffAST) => {
   let lineNumber = 1;
 
   const syntaxObj: Record<number, SyntaxLine> = {};

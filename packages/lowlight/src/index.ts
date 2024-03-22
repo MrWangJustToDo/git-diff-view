@@ -50,16 +50,16 @@ lowlight.register("vue", function hljsDefineVue(hljs) {
   };
 });
 
-export type AST = ReturnType<typeof lowlight.highlight>;
+export type DiffAST = ReturnType<typeof lowlight.highlight>;
 
-export type Highlighter = {
+export type DiffHighlighter = {
   name: string;
   maxLineToIgnoreSyntax: number;
   setMaxLineToIgnoreSyntax: (v: number) => void;
   ignoreSyntaxHighlightList: (string | RegExp)[];
   setIgnoreSyntaxHighlightList: (v: (string | RegExp)[]) => void;
-  getAST: (raw: string, fileName?: string, lang?: string) => AST;
-  processAST: (ast: AST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };
+  getAST: (raw: string, fileName?: string, lang?: string) => DiffAST;
+  processAST: (ast: DiffAST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };
 };
 
 const instance = { name: "lowlight" };
@@ -120,11 +120,11 @@ Object.defineProperty(instance, "getAST", {
 });
 
 Object.defineProperty(instance, "processAST", {
-  value: (ast: AST) => {
+  value: (ast: DiffAST) => {
     return processAST(ast);
   },
 });
 
 export { processAST } from "./processAST";
 
-export const highlighter: Highlighter = instance as Highlighter;
+export const highlighter: DiffHighlighter = instance as DiffHighlighter;

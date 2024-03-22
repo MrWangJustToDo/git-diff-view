@@ -4,16 +4,16 @@ import { processAST, type SyntaxLine } from "./processAST";
 
 import type { codeToHast } from "shiki";
 
-export type AST = DePromise<ReturnType<typeof codeToHast>>;
+export type DiffAST = DePromise<ReturnType<typeof codeToHast>>;
 
-export type Highlighter = {
+export type DiffHighlighter = {
   name: string;
   maxLineToIgnoreSyntax: number;
   setMaxLineToIgnoreSyntax: (v: number) => void;
   ignoreSyntaxHighlightList: (string | RegExp)[];
   setIgnoreSyntaxHighlightList: (v: (string | RegExp)[]) => void;
-  getAST: (raw: string, fileName?: string, lang?: string) => AST;
-  processAST: (ast: AST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };
+  getAST: (raw: string, fileName?: string, lang?: string) => DiffAST;
+  processAST: (ast: DiffAST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };
 };
 
 let internal: DePromise<ReturnType<typeof getHighlighter>> | null = null;
@@ -106,14 +106,14 @@ Object.defineProperty(instance, "getAST", {
 });
 
 Object.defineProperty(instance, "processAST", {
-  value: (ast: AST) => {
+  value: (ast: DiffAST) => {
     return processAST(ast);
   },
 });
 
-const highlighter: Highlighter = instance as Highlighter;
+const highlighter: DiffHighlighter = instance as DiffHighlighter;
 
-export const highlighterReady = new Promise<Highlighter>((r) => {
+export const highlighterReady = new Promise<DiffHighlighter>((r) => {
   if (internal) {
     r(highlighter);
   } else {
@@ -124,5 +124,7 @@ export const highlighterReady = new Promise<Highlighter>((r) => {
       .then(() => r(highlighter));
   }
 });
+
+export { processAST } from "./processAST";
 
 export * from "shiki";

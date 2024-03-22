@@ -2,7 +2,7 @@ import { highlighter } from "@git-diff-view/lowlight";
 
 import { Cache } from "./cache";
 
-import type { AST } from "@git-diff-view/lowlight";
+import type { DiffAST } from "@git-diff-view/lowlight";
 
 const map = new Cache<string, File>();
 
@@ -44,7 +44,7 @@ export type SyntaxLine = {
 };
 
 export class File {
-  ast?: AST;
+  ast?: DiffAST;
 
   rawFile: Record<number, string> = {};
 
