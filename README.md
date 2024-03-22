@@ -6,12 +6,18 @@ a React/Vue component to show the `git --diff` result, just like Github code rev
 
 ## Packages
 
-| Package                                                           | Version                                                                                                                                      |
-| :---------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`@git-diff-view/core`](packages/core)                             | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/core)](https://www.npmjs.com/package/@git-diff-view/core)                             |
-| [`@git-diff-view/react`](packages/react)                     | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/react)](https://www.npmjs.com/package/@git-diff-view/react)                     |
-| [`@git-diff-view/vue`](packages/vue)                     | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/vue)](https://www.npmjs.com/package/@git-diff-view/vue)                     |
-   
+| Package | Version  |
+| :-------------------- | :----------------------------- |
+| [`@git-diff-view/core`](packages/core) | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/core)](https://www.npmjs.com/package/@git-diff-view/core) |
+| [`@git-diff-view/react`](packages/react) | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/react)](https://www.npmjs.com/package/@git-diff-view/react) |
+| [`@git-diff-view/vue`](packages/vue) | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/vue)](https://www.npmjs.com/package/@git-diff-view/vue) |
+
+### syntax highlighter
+| Package | Version  |
+| :-------------------- | :----------------------------- |
+| [`@git-diff-view/lowlight`](packages/lowlight) `build in` | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/lowlight)](https://www.npmjs.com/package/@git-diff-view/lowlight) |
+| [`@git-diff-view/shiki`](packages/shiki) | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/shiki)](https://www.npmjs.com/package/@git-diff-view/shiki) |
+
 
 ## Screen Shot
 ![Screenshot](1.png)
