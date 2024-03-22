@@ -124,3 +124,5 @@ export const highlighterReady = new Promise<Highlighter>((r) => {
       .then(() => r(highlighter));
   }
 });
+
+export * from "shiki";
