@@ -87,6 +87,8 @@ export class File {
 
     this.ast = _highlighter.getAST(this.raw, this.fileName, this.lang);
 
+    if (!this.ast) return;
+
     const { syntaxFileObject, syntaxFileLineNumber } = _highlighter.processAST(this.ast);
 
     this.syntaxFile = syntaxFileObject;
