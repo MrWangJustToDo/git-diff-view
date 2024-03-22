@@ -1,5 +1,5 @@
 import { DiffFile } from "@git-diff-view/react";
-// import { highlighter } from "@git-diff-view/shiki";
+import { highlighterReady } from "@git-diff-view/shiki";
 
 import type { DiffViewProps } from "@git-diff-view/react";
 
@@ -32,20 +32,22 @@ onmessage = (event: MessageEvent<MessageData>) => {
 
   file.initRaw();
 
-  // file.initSyntax({ registerHighlighter: highlighter });
-  file.initSyntax();
+  highlighterReady.then((highlighter) => {
+    file.initSyntax({ registerHighlighter: highlighter });
+    // file.initSyntax();
 
-  file.buildSplitDiffLines();
+    file.buildSplitDiffLines();
 
-  file.buildUnifiedDiffLines();
+    file.buildUnifiedDiffLines();
 
-  const res: MessageData = {
-    id: _data.id,
-    data: _data.data,
-    bundle: file.getBundle(),
-  };
+    const res: MessageData = {
+      id: _data.id,
+      data: _data.data,
+      bundle: file.getBundle(),
+    };
 
-  file.clear();
+    file.clear();
 
-  post(res);
+    post(res);
+  });
 };

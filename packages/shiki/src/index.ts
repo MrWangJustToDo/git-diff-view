@@ -7,6 +7,7 @@ import type { codeToHast } from "shiki";
 export type AST = DePromise<ReturnType<typeof codeToHast>>;
 
 export type Highlighter = {
+  name: string;
   maxLineToIgnoreSyntax: number;
   setMaxLineToIgnoreSyntax: (v: number) => void;
   ignoreSyntaxHighlightList: (string | RegExp)[];
@@ -15,47 +16,50 @@ export type Highlighter = {
   processAST: (ast: AST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };
 };
 
-const internal = await getHighlighter({
-  themes: ["github-light", "github-dark"],
-  langs: [
-    "cpp",
-    "java",
-    "javascript",
-    "css",
-    "c#",
-    "c",
-    "c++",
-    "vue",
-    "vue-html",
-    "astro",
-    "bash",
-    "make",
-    "markdown",
-    "makefile",
-    "bat",
-    "cmake",
-    "cmd",
-    "csv",
-    "docker",
-    "dockerfile",
-    "go",
-    "python",
-    "html",
-    "jsx",
-    "tsx",
-    "typescript",
-    "sql",
-    "xml",
-    "sass",
-    "ssh-config",
-    "kotlin",
-    "json",
-    "swift",
-    "txt",
-  ],
-});
+let internal: DePromise<ReturnType<typeof getHighlighter>> | null = null;
 
-const instance = {};
+const getDefaultHighlighter = async () =>
+  await getHighlighter({
+    themes: ["github-light", "github-dark"],
+    langs: [
+      "cpp",
+      "java",
+      "javascript",
+      "css",
+      "c#",
+      "c",
+      "c++",
+      "vue",
+      "vue-html",
+      "astro",
+      "bash",
+      "make",
+      "markdown",
+      "makefile",
+      "bat",
+      "cmake",
+      "cmd",
+      "csv",
+      "docker",
+      "dockerfile",
+      "go",
+      "python",
+      "html",
+      "jsx",
+      "tsx",
+      "typescript",
+      "sql",
+      "xml",
+      "sass",
+      "ssh-config",
+      "kotlin",
+      "json",
+      "swift",
+      "txt",
+    ],
+  });
+
+const instance = { name: "shiki" };
 
 let _maxLineToIgnoreSyntax = 2000;
 
@@ -97,7 +101,7 @@ Object.defineProperty(instance, "getAST", {
       return;
     }
 
-    return internal.codeToHast(raw, { lang: lang, theme: "github-light" });
+    return internal?.codeToHast(raw, { lang: lang, theme: "github-light" });
   },
 });
 
@@ -107,4 +111,16 @@ Object.defineProperty(instance, "processAST", {
   },
 });
 
-export const highlighter: Highlighter = instance as Highlighter;
+const highlighter: Highlighter = instance as Highlighter;
+
+export const highlighterReady = new Promise<Highlighter>((r) => {
+  if (internal) {
+    r(highlighter);
+  } else {
+    getDefaultHighlighter()
+      .then((i) => {
+        internal = i;
+      })
+      .then(() => r(highlighter));
+  }
+});

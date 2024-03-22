@@ -53,6 +53,7 @@ lowlight.register("vue", function hljsDefineVue(hljs) {
 export type AST = ReturnType<typeof lowlight.highlight>;
 
 export type Highlighter = {
+  name: string;
   maxLineToIgnoreSyntax: number;
   setMaxLineToIgnoreSyntax: (v: number) => void;
   ignoreSyntaxHighlightList: (string | RegExp)[];
@@ -61,7 +62,7 @@ export type Highlighter = {
   processAST: (ast: AST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };
 };
 
-const instance = {};
+const instance = { name: "lowlight" };
 
 let _maxLineToIgnoreSyntax = 2000;
 

@@ -58,6 +58,8 @@ export class File {
 
   syntaxLength?: number;
 
+  highlighterName?: string;
+
   maxLineNumber: number = 0;
 
   constructor(
@@ -90,6 +92,8 @@ export class File {
     this.syntaxFile = syntaxFileObject;
 
     this.syntaxLength = syntaxFileLineNumber;
+
+    this.highlighterName = _highlighter.name;
 
     if (__DEV__) {
       this.#doCheck();

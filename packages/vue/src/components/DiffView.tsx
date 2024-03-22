@@ -191,7 +191,12 @@ export const DiffView = defineComponent<
       if (!diffFile.value) return null;
 
       return (
-        <div class="diff-tailwindcss-wrapper" data-component="git-diff-view" data-version={__VERSION__}>
+        <div
+          class="diff-tailwindcss-wrapper"
+          data-component="git-diff-view"
+          data-version={__VERSION__}
+          data-highlighter={diffFile.value._getHighlighterName()}
+        >
           <div class="diff-style-root" style={{ [diffFontSizeName]: (props.diffViewFontSize || 14) + "px" }}>
             <div
               id={`diff-root${id.value}`}
