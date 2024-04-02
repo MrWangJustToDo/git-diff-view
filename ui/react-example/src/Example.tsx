@@ -401,7 +401,7 @@ export function Example() {
             className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
             onClick={() => setMode(mode & DiffModeEnum.Split ? DiffModeEnum.Unified : DiffModeEnum.SplitGitHub)}
           >
-            {mode === DiffModeEnum.SplitGitHub ? "Toggle to UnifiedMode" : "Toggle to SplitMode"}
+            {mode & DiffModeEnum.Split ? "Toggle to UnifiedMode" : "Toggle to SplitMode"}
           </button>
         </div>
       </div>

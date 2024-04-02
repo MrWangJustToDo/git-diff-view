@@ -271,7 +271,11 @@ const _DiffSplitHunkLine = ({
 
   const diffViewMode = useDiffContext(React.useCallback((s) => s.mode, []));
 
-  if (diffViewMode === DiffModeEnum.SplitGitHub || diffViewMode === DiffModeEnum.Split) {
+  if (
+    diffViewMode === DiffModeEnum.SplitGitHub ||
+    diffViewMode === DiffModeEnum.Split ||
+    diffViewMode === DiffModeEnum.Unified
+  ) {
     return <_DiffSplitHunkLineGitHub index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
   } else {
     return <_DiffSplitHunkLineGitLab index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
