@@ -127,4 +127,6 @@ export const highlighterReady = new Promise<DiffHighlighter>((r) => {
 
 export { processAST } from "./processAST";
 
+export const versions = __VERSION__;
+
 export * from "shiki";

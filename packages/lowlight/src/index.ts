@@ -129,4 +129,6 @@ Object.defineProperty(instance, "processAST", {
 
 export { processAST } from "./processAST";
 
+export const versions = __VERSION__;
+
 export const highlighter: DiffHighlighter = instance as DiffHighlighter;
