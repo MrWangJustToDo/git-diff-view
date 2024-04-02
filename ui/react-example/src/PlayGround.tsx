@@ -1,4 +1,4 @@
-import { DiffModeEnum, DiffView, DiffFile } from "@git-diff-view/react";
+import { DiffView, DiffFile } from "@git-diff-view/react";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 
@@ -83,7 +83,6 @@ export const PlayGround = () => {
           diffFile={diffInstance}
           diffViewFontSize={13}
           diffViewHighlight={true}
-          diffViewMode={DiffModeEnum.Split}
           diffViewWrap
         />
       ) : (

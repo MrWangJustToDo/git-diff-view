@@ -5,6 +5,7 @@ import { processAST, type SyntaxLine } from "./processAST";
 const lowlight = createLowlight(all);
 
 // !SEE https://github.com/highlightjs/highlightjs-vue
+
 lowlight.register("vue", function hljsDefineVue(hljs) {
   return {
     subLanguage: "xml",

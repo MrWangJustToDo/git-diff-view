@@ -45,7 +45,7 @@ export const DiffUnifiedView = defineComponent(
     return () => (
       <div class="unified-diff-view w-full">
         <div
-          class="unified-diff-table-wrapper overflow-auto w-full scrollbar-hide"
+          class="unified-diff-table-wrapper overflow-x-auto w-full scrollbar-hide"
           style={{
             [asideWidth]: `${Math.round(computedWidth.value)}px`,
             fontFamily: "Menlo, Consolas, monospace",

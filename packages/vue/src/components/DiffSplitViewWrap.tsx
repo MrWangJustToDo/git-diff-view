@@ -16,7 +16,7 @@ import type { DiffFile } from "@git-diff-view/core";
 
 const Style = ({ splitSideInfo, id }: { splitSideInfo: { side: SplitSide }; id: string }) => {
   return (
-    <style>
+    <style data-select-style>
       {splitSideInfo.side === SplitSide.old
         ? `#${id} td[data-side="${SplitSide[SplitSide.new]}"] {user-select: none}`
         : splitSideInfo.side === SplitSide.new

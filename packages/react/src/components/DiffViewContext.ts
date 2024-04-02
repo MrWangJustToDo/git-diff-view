@@ -4,8 +4,12 @@ import type { DiffViewProps } from "..";
 import type { Ref, UseSelectorWithStore } from "reactivity-store";
 
 export enum DiffModeEnum {
-  Split = 1,
-  Unified = 2,
+  // github like
+  SplitGitHub = 1,
+  // gitlab like
+  SplitGitLab = 2,
+  Split = 1 | 2,
+  Unified = 4,
 }
 
 export const DiffViewContext = createContext<{

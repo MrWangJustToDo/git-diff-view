@@ -24,8 +24,12 @@ import type { highlighter } from "@git-diff-view/core";
 import type { CSSProperties, SlotsType } from "vue";
 
 export enum DiffModeEnum {
-  Split = 1,
-  Unified = 2,
+  // github like
+  SplitGitHub = 1,
+  // gitlab like
+  SplitGitLab = 2,
+  Split = 1 | 2,
+  Unified = 4,
 }
 
 export enum SplitSide {
@@ -171,7 +175,7 @@ export const DiffView = defineComponent<
 
     provide(setWidgetStateSymbol, setWidget);
 
-    useProvide(props, "diffViewMode", modeSymbol);
+    useProvide(props, "diffViewMode", modeSymbol, { defaultValue: DiffModeEnum.SplitGitHub });
 
     useProvide(props, "diffViewFontSize", fontSizeSymbol, { defaultValue: 14 });
 
@@ -203,7 +207,7 @@ export const DiffView = defineComponent<
               class={"diff-view-wrapper" + (props.class ? ` ${props.class}` : "")}
               style={props.style}
             >
-              {!props.diffViewMode || props.diffViewMode === DiffModeEnum.Split ? (
+              {!props.diffViewMode || props.diffViewMode & DiffModeEnum.Split ? (
                 <DiffSplitView key={DiffModeEnum.Split} diffFile={diffFile.value as DiffFile} />
               ) : (
                 <DiffUnifiedView key={DiffModeEnum.Unified} diffFile={diffFile.value as DiffFile} />

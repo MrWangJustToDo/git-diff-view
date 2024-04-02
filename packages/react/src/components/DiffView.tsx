@@ -256,7 +256,7 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
             className={"diff-view-wrapper" + (className ? ` ${className}` : "")}
             style={style}
           >
-            {diffViewMode === DiffModeEnum.Split ? (
+            {diffViewMode & DiffModeEnum.Split ? (
               <DiffSplitView diffFile={diffFile} />
             ) : (
               <DiffUnifiedView diffFile={diffFile} />
@@ -330,6 +330,7 @@ const DiffViewWithRef = <T extends unknown>(
       key={diffFile.getId()}
       {...restProps}
       diffFile={diffFile}
+      diffViewMode={restProps.diffViewMode || DiffModeEnum.SplitGitHub}
       diffViewFontSize={restProps.diffViewFontSize || 14}
     />
   );

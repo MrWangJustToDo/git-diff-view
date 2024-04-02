@@ -101,11 +101,11 @@ export function Example() {
     if (expandAll) {
       ref.current
         ?.getDiffFileInstance?.()
-        .onAllExpand(useDiffConfig.getReadonlyState().mode === DiffModeEnum.Split ? "split" : "unified");
+        .onAllExpand(useDiffConfig.getReadonlyState().mode & DiffModeEnum.Split ? "split" : "unified");
     } else {
       ref.current
         ?.getDiffFileInstance?.()
-        .onAllCollapse(useDiffConfig.getReadonlyState().mode === DiffModeEnum.Split ? "split" : "unified");
+        .onAllCollapse(useDiffConfig.getReadonlyState().mode & DiffModeEnum.Split ? "split" : "unified");
     }
   }, [expandAll]);
 
@@ -288,7 +288,7 @@ export function Example() {
     if (diffFileInstance && scrollBar && !wrap) {
       const instanceArray: OverlayScrollbars[] = [];
       const init = () => {
-        const isSplitMode = mode === DiffModeEnum.Split;
+        const isSplitMode = mode & DiffModeEnum.Split;
         if (isSplitMode) {
           const leftScrollbar = reactWrapRef.current?.querySelector("[data-left]") as HTMLDivElement;
           const rightScrollbar = reactWrapRef.current?.querySelector("[data-right]") as HTMLDivElement;
@@ -399,9 +399,9 @@ export function Example() {
           </button>
           <button
             className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
-            onClick={() => setMode(mode === DiffModeEnum.Split ? DiffModeEnum.Unified : DiffModeEnum.Split)}
+            onClick={() => setMode(mode & DiffModeEnum.Split ? DiffModeEnum.Unified : DiffModeEnum.SplitGitHub)}
           >
-            {mode === DiffModeEnum.Split ? "Toggle to UnifiedMode" : "Toggle to SplitMode"}
+            {mode === DiffModeEnum.SplitGitHub ? "Toggle to UnifiedMode" : "Toggle to SplitMode"}
           </button>
         </div>
       </div>
@@ -453,7 +453,7 @@ export function Example() {
             dangerouslySetInnerHTML={eleString1}
           />
           <div data-scroll-target className="sticky bottom-0 w-full h-[6px] flex mt-[-6px]">
-            {mode === DiffModeEnum.Split ? (
+            {mode & DiffModeEnum.Split ? (
               <>
                 <div data-left className="w-[50%] relative"></div>
                 <div data-right className="w-[50%] relative"></div>

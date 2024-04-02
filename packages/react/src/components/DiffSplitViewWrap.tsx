@@ -27,7 +27,7 @@ const Style = ({
   const splitRef = useSelector((s) => s.splitRef);
 
   return (
-    <style>
+    <style data-select-style>
       {splitRef === SplitSide.old
         ? `#${id} td[data-side="${SplitSide[SplitSide.new]}"] {user-select: none}`
         : splitRef === SplitSide.new
