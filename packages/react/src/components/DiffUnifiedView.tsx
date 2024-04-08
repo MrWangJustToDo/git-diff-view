@@ -81,7 +81,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
     <DiffWidgetContext.Provider value={contextValue}>
       <div className="unified-diff-view w-full">
         <div
-          className="unified-diff-table-wrapper overflow-x-auto w-full scrollbar-hide scrollbar-disable"
+          className="unified-diff-table-wrapper overflow-x-auto overflow-y-hidden w-full scrollbar-hide scrollbar-disable"
           style={{
             // @ts-ignore
             [asideWidth]: `${Math.round(width)}px`,

@@ -128,7 +128,7 @@ export const DiffSplitViewNormal = defineComponent(
       return (
         <div class="split-diff-view split-diff-view-wrap w-full flex basis-[50%]">
           <div
-            class="old-diff-table-wrapper overflow-x-auto w-full scrollbar-hide"
+            class="old-diff-table-wrapper overflow-x-auto overflow-y-hidden w-full scrollbar-hide"
             ref={ref1}
             style={{
               [asideWidth]: `${Math.round(computedWidth.value)}px`,
@@ -141,7 +141,7 @@ export const DiffSplitViewNormal = defineComponent(
           </div>
           <div class="diff-split-line w-[1.5px] bg-[rgb(222,222,222)]" />
           <div
-            class="new-diff-table-wrapper overflow-x-auto w-full scrollbar-hide"
+            class="new-diff-table-wrapper overflow-x-auto overflow-y-hidden w-full scrollbar-hide"
             ref={ref2}
             style={{
               [asideWidth]: `${Math.round(computedWidth.value)}px`,
