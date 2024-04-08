@@ -1,6 +1,6 @@
 ## Usage
 
-``` vue
+```vue
     <DiffView
       # diffFileInstance / data
       :data="data"
@@ -48,4 +48,3 @@
 ### example repo
 
 [vue-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/vue-example)
-

@@ -5,7 +5,7 @@ import * as path from "path";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
 
-import pkg from './package.json';
+import pkg from "./package.json";
 
 export default defineConfig({
   plugins: [typescript({ tsconfig: "./tsconfig.json" }), vue(), vueJsx(), dts()],
@@ -30,5 +30,5 @@ export default defineConfig({
   },
   define: {
     __VERSION__: JSON.stringify(pkg.version),
-  }
+  },
 });

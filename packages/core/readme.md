@@ -1,6 +1,7 @@
 ## Pure Logic for Diff View Component
 
 ## Usage
+
 ```tsx
 const file = new DiffFile(
     data?.oldFile?.fileName || "",

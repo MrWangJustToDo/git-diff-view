@@ -59,7 +59,11 @@ export const DiffSplitExtendLine = defineComponent(
     );
 
     const currentIsShow = computed(() =>
-      Boolean((oldLineExtend.value || newLineExtend.value) && (!currentItem.value.isHidden || enableExpand.value) && slots.extend)
+      Boolean(
+        (oldLineExtend.value || newLineExtend.value) &&
+          (!currentItem.value.isHidden || enableExpand.value) &&
+          slots.extend
+      )
     );
 
     const currentSideIsNew = computed(() => props.side === SplitSide.new && currentIsShow.value);

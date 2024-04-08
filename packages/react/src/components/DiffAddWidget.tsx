@@ -16,7 +16,7 @@ export const DiffSplitAddWidget = ({
   lineNumber: number;
   diffFile: DiffFile;
   side: SplitSide;
-  className?: string
+  className?: string;
   onWidgetClick?: (lineNumber: number, side: SplitSide) => void;
   onOpenAddWidget: (lineNumber: number, side: SplitSide) => void;
 }) => {

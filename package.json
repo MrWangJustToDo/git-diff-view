@@ -10,6 +10,7 @@
     "dev:react": "cd ui/react-example && pnpm run dev",
     "dev:vue": "cd ui/vue-example && pnpm run dev",
     "build:react": "cd ui/react-example && pnpm run build",
+    "release": "pnpm run lint && pnpm run prettier && pnpm run clean && pnpm run build:packages && ts-node ./scripts/release.ts",
     "lint": "eslint --cache --ext ts,tsx .",
     "lint:fix": "pnpm run lint --fix",
     "prettier": "prettier --ignore-path .prettierignore --write .",

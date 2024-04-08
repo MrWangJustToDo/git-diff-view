@@ -4,15 +4,7 @@ import { useDiffViewContext } from "../components/DiffViewContext";
 
 import { useSafeLayout } from "./useSafeLayout";
 
-export const useSyncHeight = ({
-  selector,
-  side,
-  enable,
-}: {
-  selector: string;
-  side: string;
-  enable: boolean;
-}) => {
+export const useSyncHeight = ({ selector, side, enable }: { selector: string; side: string; enable: boolean }) => {
   const { useDiffContext } = useDiffViewContext();
 
   const id = useDiffContext(useCallback((s) => s.id, []));

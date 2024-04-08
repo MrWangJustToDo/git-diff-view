@@ -8,7 +8,6 @@
   "type": "module",
   "files": [
     "dist",
-    "index.js",
     "index.d.ts"
   ],
   "repository": {
@@ -20,9 +19,9 @@
   "exports": {
     ".": {
       "types": "./index.d.ts",
-      "import": "./dist/esm/index.mjs"
+      "import": "./dist/esm/index.mjs",
+      "default": "./dist/esm/index.mjs"
     },
-    "./esmIndex.js": "./dist/esm/index.mjs",
     "./package.json": "./package.json"
   },
   "buildOptions": {

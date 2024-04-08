@@ -39,15 +39,18 @@ const instance = ref<{ getDiffFileInstance: () => DiffFile }>();
 
 onMounted(() => {
   console.log(instance.value);
-})
+});
 
 const _data = computed(() => data[k.value]);
 
 const extendData = ref<DiffViewProps<any>["extendData"]>({ oldFile: {}, newFile: {} });
 
-watch(() => diffFile.value, () => {
-  extendData.value = { oldFile: {}, newFile: {} };
-});
+watch(
+  () => diffFile.value,
+  () => {
+    extendData.value = { oldFile: {}, newFile: {} };
+  }
+);
 
 watch(
   _data,
@@ -62,9 +65,7 @@ const resetV = () => (v.value = "");
 
 <template>
   <div class="w-[90%] m-auto mb-[1em] mt-[1em]">
-    <h2 class="text-[24px]">
-      A Vue component to show the file diff
-    </h2>
+    <h2 class="text-[24px]">A Vue component to show the file diff</h2>
     <br />
     <p>
       Select a file to show the diff: &nbsp;
@@ -79,38 +80,56 @@ const resetV = () => (v.value = "");
   </div>
   <div class="w-[90%] m-auto mb-[1em] text-right">
     <div class="inline-flex gap-x-4">
-      <button class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
-        @click="toggleWrap">
+      <button
+        class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+        @click="toggleWrap"
+      >
         {{ wrap ? "Toggle to nowrap" : "Toggle to wrap" }}
       </button>
-      <button class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
-        @click="toggleHighlight">
+      <button
+        class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+        @click="toggleHighlight"
+      >
         {{ highlight ? "Toggle to disable highlight" : "Toggle to enable highlight" }}
       </button>
-      <button class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
-        @click="toggleMode">
+      <button
+        class="bg-sky-500 hover:bg-sky-700 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+        @click="toggleMode"
+      >
         {{ mode === DiffModeEnum.Split ? "Toggle to UnifiedMode" : "Toggle to SplitMode" }}
       </button>
     </div>
   </div>
   <div class="w-[90%] m-auto border border-[#c1c1c1] border-solid rounded-[5px] overflow-hidden mb-[5em]">
-    <DiffView :diff-file="diffFile" :diff-view-font-size="14" :diff-view-mode="mode" :diff-view-highlight="highlight"
-      :diff-view-add-widget="true" ref="instance" :diff-view-wrap="wrap" @on-add-widget-click="resetV"
-      :extend-data="extendData">
+    <DiffView
+      :diff-file="diffFile"
+      :diff-view-font-size="14"
+      :diff-view-mode="mode"
+      :diff-view-highlight="highlight"
+      :diff-view-add-widget="true"
+      ref="instance"
+      :diff-view-wrap="wrap"
+      @on-add-widget-click="resetV"
+      :extend-data="extendData"
+    >
       <template #widget="{ onClose, lineNumber, side }">
         <div class="border flex flex-col w-full px-[4px] py-[8px]">
           <textarea class="w-full border min-h-[80px] p-[2px]" v-model="v" />
           <div class="m-[5px] mt-[0.8em] text-right">
             <div class="inline-flex gap-x-[12px] justify-end">
               <button class="border px-[12px] py-[6px] rounded-[4px]" @click="onClose">cancel</button>
-              <button class="border px-[12px] py-[6px] rounded-[4px]" @click="() => {
-        if (v.length) {
-          const _side = side === SplitSide.old ? 'oldFile' : 'newFile';
-          extendData![_side]![lineNumber] = { data: v };
-          onClose();
-        }
-      }
-        ">
+              <button
+                class="border px-[12px] py-[6px] rounded-[4px]"
+                @click="
+                  () => {
+                    if (v.length) {
+                      const _side = side === SplitSide.old ? 'oldFile' : 'newFile';
+                      extendData![_side]![lineNumber] = { data: v };
+                      onClose();
+                    }
+                  }
+                "
+              >
                 submit
               </button>
             </div>
