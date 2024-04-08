@@ -277,7 +277,11 @@ export class DiffFile {
           newFileContent += newDiffLine.text;
           oldLineNumber = newDiffLine.oldLineNumber ? newDiffLine.oldLineNumber + 1 : oldLineNumber;
         } else {
-          newFileContent += this.#getOldRawLine(oldLineNumber++);
+          const oldDiffLine = this.#getOldDiffLine(oldLineNumber);
+          if (!oldDiffLine) {
+            newFileContent += this.#getOldRawLine(oldLineNumber);
+          }
+          oldLineNumber++;
         }
       }
       if (newFileContent === this._oldFileContent) return;
@@ -293,7 +297,11 @@ export class DiffFile {
           oldFileContent += oldDiffLine.text;
           newLineNumber = oldDiffLine.newLineNumber ? oldDiffLine.newLineNumber + 1 : newLineNumber;
         } else {
-          oldFileContent += this.#getNewRawLine(newLineNumber++);
+          const newDiffLine = this.#getNewDiffLine(newLineNumber);
+          if (!newDiffLine) {
+            oldFileContent += this.#getNewRawLine(newLineNumber);
+          }
+          newLineNumber++;
         }
       }
       if (oldFileContent === this._newFileContent) return;

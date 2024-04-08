@@ -62,12 +62,14 @@ export function relativeChanges(stringA: string, stringB: string): { stringARang
       stringARange: {
         location: _stringA.length,
         length: stringA.length - _stringA.length,
-        newLineSymbol: aEndStr === "\r\n" ? NewLineSymbol.CRLF : NewLineSymbol.LF,
+        newLineSymbol:
+          aEndStr === "\r\n" ? NewLineSymbol.CRLF : aEndStr.endsWith("\r") ? NewLineSymbol.CR : NewLineSymbol.LF,
       },
       stringBRange: {
         location: _stringB.length,
         length: stringB.length - _stringB.length,
-        newLineSymbol: bEndStr === "\r\n" ? NewLineSymbol.CRLF : NewLineSymbol.LF,
+        newLineSymbol:
+          bEndStr === "\r\n" ? NewLineSymbol.CRLF : bEndStr.endsWith("\r") ? NewLineSymbol.CR : NewLineSymbol.LF,
       },
     };
   }
