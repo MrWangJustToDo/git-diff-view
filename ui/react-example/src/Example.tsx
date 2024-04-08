@@ -42,7 +42,7 @@ const TextArea = ({ onChange }: { onChange: (v: string) => void }) => {
 const vRef = ref("");
 
 export function Example() {
-  const [v, setV] = useState<K>("o");
+  const [v, setV] = useState<K>("b");
 
   const reactWrapRef = useRef<HTMLDivElement>(null);
 
