@@ -1,3 +1,9 @@
+export enum NewLineSymbol {
+  CRLF = 1,
+  CR = 2,
+  LF = 3,
+}
+
 export interface IRange {
   /** The starting location for the range. */
   readonly location: number;
@@ -5,7 +11,7 @@ export interface IRange {
   /** The length of the range. */
   readonly length: number;
 
-  readonly isNewLineSymbolChanged?: boolean;
+  readonly newLineSymbol?: NewLineSymbol;
 }
 
 const maxLength = 1000;
@@ -56,12 +62,12 @@ export function relativeChanges(stringA: string, stringB: string): { stringARang
       stringARange: {
         location: _stringA.length,
         length: stringA.length - _stringA.length,
-        isNewLineSymbolChanged: true,
+        newLineSymbol: aEndStr === "\r\n" ? NewLineSymbol.CRLF : NewLineSymbol.LF,
       },
       stringBRange: {
         location: _stringB.length,
         length: stringB.length - _stringB.length,
-        isNewLineSymbolChanged: true,
+        newLineSymbol: bEndStr === "\r\n" ? NewLineSymbol.CRLF : NewLineSymbol.LF,
       },
     };
   }

@@ -101,7 +101,7 @@ Object.defineProperty(instance, "getAST", {
       return;
     }
 
-    return internal?.codeToHast(raw, { lang: lang, theme: "github-light" });
+    return internal?.codeToHast(raw, { lang: lang, theme: "github-light", mergeWhitespaces: false });
   },
 });
 

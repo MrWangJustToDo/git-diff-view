@@ -1,4 +1,4 @@
-import { DiffLineType, type DiffFile, type DiffLine, type SyntaxLine } from "@git-diff-view/core";
+import { DiffLineType, NewLineSymbol, type DiffFile, type DiffLine, type SyntaxLine } from "@git-diff-view/core";
 import * as React from "react";
 
 import { addContentHighlightBGName, delContentHighlightBGName } from "./color";
@@ -46,7 +46,9 @@ const DiffString = ({
     const str1 = rawLine.slice(0, range.location);
     const str2 = rawLine.slice(range.location, range.location + range.length);
     const str3 = rawLine.slice(range.location + range.length);
-    const isNewLineSymbolChanged = range.isNewLineSymbolChanged;
+    const isLast = str2.includes("\n");
+    const _str2 = isLast ? str2.replace("\n", "") : str2;
+    const isNewLineSymbolChanged = range.newLineSymbol;
     return (
       <span className="diff-line-content-raw">
         <span data-range-start={range.location} data-range-end={range.location + range.length}>
@@ -59,14 +61,14 @@ const DiffString = ({
                 operator === "add" ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`,
             }}
           >
-            {isNewLineSymbolChanged
-              ? str2 === "\r"
-                ? "␍"
-                : str2 === "\n"
-                  ? "␊"
-                  : str2 === "\r\n"
-                    ? "␍␊"
-                    : str2
+            {isLast
+              ? `${_str2}${
+                  isNewLineSymbolChanged === NewLineSymbol.LF
+                    ? "␊"
+                    : isNewLineSymbolChanged === NewLineSymbol.CR
+                      ? "␍"
+                      : "␍␊"
+                }`
               : str2}
           </span>
           {str3}
@@ -120,7 +122,9 @@ const DiffSyntax = ({
               const str3 = node.value.slice(index1 + range.length);
               const isStart = str1.length || range.location === node.startIndex;
               const isEnd = str3.length || node.endIndex === range.location + range.length - 1;
-              const isNewLineSymbolChanged = range.isNewLineSymbolChanged;
+              const isLast = str2.includes("\n");
+              const _str2 = isLast ? str2.replace("\n", "") : str2;
+              const isNewLineSymbolChanged = range.newLineSymbol;
               return (
                 <span
                   key={index}
@@ -137,18 +141,18 @@ const DiffSyntax = ({
                         operator === "add" ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`,
                       borderTopLeftRadius: isStart ? "0.2em" : undefined,
                       borderBottomLeftRadius: isStart ? "0.2em" : undefined,
-                      borderTopRightRadius: isEnd ? "0.2em" : undefined,
-                      borderBottomRightRadius: isEnd ? "0.2em" : undefined,
+                      borderTopRightRadius: isEnd || isLast ? "0.2em" : undefined,
+                      borderBottomRightRadius: isEnd || isLast ? "0.2em" : undefined,
                     }}
                   >
-                    {isNewLineSymbolChanged
-                      ? str2 === "\r"
-                        ? "␍"
-                        : str2 === "\n"
-                          ? "␊"
-                          : str2 === "\r\n"
-                            ? "␍␊"
-                            : str2
+                    {isLast
+                      ? `${_str2}${
+                          isNewLineSymbolChanged === NewLineSymbol.LF
+                            ? "␊"
+                            : isNewLineSymbolChanged === NewLineSymbol.CR
+                              ? "␍"
+                              : "␍␊"
+                        }`
                       : str2}
                   </span>
                   {str3}
