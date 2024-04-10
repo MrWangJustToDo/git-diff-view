@@ -11,7 +11,7 @@ import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
 import { DiffSplitLine } from "./DiffSplitLineNormal";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
-import { SplitSide } from "./DiffView";
+import { SplitSide, diffFontSizeName } from "./DiffView";
 import { asideWidth, removeAllSelection, syncScroll } from "./tools";
 
 import type { MouseEventHandler } from "react";
@@ -105,7 +105,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
           [asideWidth]: `${Math.round(width)}px`,
           overscrollBehaviorX: "none",
           fontFamily: "Menlo, Consolas, monospace",
-          fontSize: "var(--diff-font-size--)",
+          fontSize: `var(${diffFontSizeName})`,
         }}
       >
         <DiffSplitViewTable side={SplitSide.old} diffFile={diffFile} />
@@ -119,7 +119,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
           [asideWidth]: `${Math.round(width)}px`,
           overscrollBehaviorX: "none",
           fontFamily: "Menlo, Consolas, monospace",
-          fontSize: "var(--diff-font-size--)",
+          fontSize: `var(${diffFontSizeName})`,
         }}
       >
         <DiffSplitViewTable side={SplitSide.new} diffFile={diffFile} />

@@ -10,7 +10,7 @@ import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
 import { DiffSplitLine } from "./DiffSplitLineNormal";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
-import { SplitSide } from "./DiffView";
+import { SplitSide, diffFontSizeName } from "./DiffView";
 import { asideWidth, removeAllSelection, syncScroll } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
@@ -134,7 +134,7 @@ export const DiffSplitViewNormal = defineComponent(
               [asideWidth]: `${Math.round(computedWidth.value)}px`,
               overscrollBehaviorX: "none",
               fontFamily: "Menlo, Consolas, monospace",
-              fontSize: "var(--diff-font-size--)",
+              fontSize: `var(${diffFontSizeName})`,
             }}
           >
             <DiffSplitViewTable side={SplitSide.old} diffFile={props.diffFile} />
@@ -147,7 +147,7 @@ export const DiffSplitViewNormal = defineComponent(
               [asideWidth]: `${Math.round(computedWidth.value)}px`,
               overscrollBehaviorX: "none",
               fontFamily: "Menlo, Consolas, monospace",
-              fontSize: "var(--diff-font-size--)",
+              fontSize: `var(${diffFontSizeName})`,
             }}
           >
             <DiffSplitViewTable side={SplitSide.new} diffFile={props.diffFile} />

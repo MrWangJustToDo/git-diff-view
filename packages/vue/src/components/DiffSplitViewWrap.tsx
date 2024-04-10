@@ -1,7 +1,7 @@
 import { getSplitContentLines } from "@git-diff-view/core";
 import { Fragment, computed, defineComponent, ref } from "vue";
 
-import { SplitSide } from "..";
+import { SplitSide, diffFontSizeName } from "..";
 import { useFontSize } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useTextWidth } from "../hooks/useTextWidth";
@@ -76,7 +76,7 @@ export const DiffSplitViewWrap = defineComponent(
             class="diff-table-wrapper w-full"
             style={{
               fontFamily: "Menlo, Consolas, monospace",
-              fontSize: "var(--diff-font-size--)",
+              fontSize: `var(${diffFontSizeName})`,
             }}
           >
             <Style splitSideInfo={splitSideInfo.value} id={`diff-root${props.diffFile.getId()}`} />

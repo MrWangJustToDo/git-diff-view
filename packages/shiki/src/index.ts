@@ -56,6 +56,7 @@ const getDefaultHighlighter = async () =>
       "json",
       "swift",
       "txt",
+      "diff",
     ],
   });
 
@@ -101,7 +102,16 @@ Object.defineProperty(instance, "getAST", {
       return;
     }
 
-    return internal?.codeToHast(raw, { lang: lang, theme: "github-light", mergeWhitespaces: false });
+    try {
+      return internal?.codeToHast(raw, { lang: lang, theme: "github-light", mergeWhitespaces: false });
+    } catch (e) {
+      if (__DEV__) {
+        console.error(e);
+      } else {
+        console.log((e as Error).message);
+      }
+      return;
+    }
   },
 });
 

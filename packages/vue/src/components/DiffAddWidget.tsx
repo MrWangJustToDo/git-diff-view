@@ -1,6 +1,6 @@
 import { addWidgetBGName, addWidgetColorName } from "./color";
+import { diffFontSizeName, type SplitSide } from "./DiffView";
 
-import type { SplitSide } from "./DiffView";
 import type { DiffFile } from "@git-diff-view/core";
 
 export const DiffSplitAddWidget = ({
@@ -22,8 +22,8 @@ export const DiffSplitAddWidget = ({
     <div
       class={"diff-add-widget-wrapper" + (className ? " " + className : "")}
       style={{
-        width: "calc(var(--diff-font-size--) * 1.4)",
-        height: "calc(var(--diff-font-size--) * 1.4)",
+        width: `calc(var(${diffFontSizeName}) * 1.4)`,
+        height: `calc(var(${diffFontSizeName}) * 1.4)`,
       }}
     >
       <button
@@ -62,8 +62,8 @@ export const DiffUnifiedAddWidget = ({
     <div
       class="diff-add-widget-wrapper absolute left-[100%] top-[1px] translate-x-[-50%]"
       style={{
-        width: "calc(var(--diff-font-size--) * 1.4)",
-        height: "calc(var(--diff-font-size--) * 1.4)",
+        width: `calc(var(${diffFontSizeName}) * 1.4)`,
+        height: `calc(var(${diffFontSizeName}) * 1.4)`,
       }}
     >
       <button

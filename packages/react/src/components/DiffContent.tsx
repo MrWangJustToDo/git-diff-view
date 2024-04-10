@@ -2,6 +2,8 @@ import { DiffLineType, NewLineSymbol, type DiffFile, type DiffLine, type SyntaxL
 import * as React from "react";
 
 import { addContentHighlightBGName, delContentHighlightBGName } from "./color";
+import { DiffNoNewLine } from "./DiffNoNewLine";
+import { diffFontSizeName } from "./DiffView";
 import { memoFunc } from "./tools";
 
 const temp = {};
@@ -35,10 +37,12 @@ const DiffString = ({
   rawLine,
   diffLine,
   operator,
+  enableWrap,
 }: {
   rawLine: string;
   diffLine?: DiffLine;
   operator?: "add" | "del";
+  enableWrap?: boolean;
 }) => {
   const range = diffLine?.range;
 
@@ -67,12 +71,26 @@ const DiffString = ({
                     ? "␊"
                     : isNewLineSymbolChanged === NewLineSymbol.CR
                       ? "␍"
-                      : "␍␊"
+                      : isNewLineSymbolChanged === NewLineSymbol.CRLF
+                        ? "␍␊"
+                        : ""
                 }`
               : str2}
           </span>
           {str3}
         </span>
+        {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && diffLine.noTrailingNewLine && (
+          <span
+            data-no-newline-at-end-of-file
+            className={enableWrap ? "block text-red-500" : "inline-block align-middle text-red-500"}
+            style={{
+              width: `var(${diffFontSizeName})`,
+              height: `var(${diffFontSizeName})`,
+            }}
+          >
+            <DiffNoNewLine />
+          </span>
+        )}
       </span>
     );
   }
@@ -85,11 +103,13 @@ const DiffSyntax = ({
   diffLine,
   operator,
   syntaxLine,
+  enableWrap,
 }: {
   rawLine: string;
   diffLine?: DiffLine;
   syntaxLine?: SyntaxLine;
   operator?: "add" | "del";
+  enableWrap?: boolean;
 }) => {
   if (!syntaxLine) {
     return <DiffString rawLine={rawLine} diffLine={diffLine} operator={operator} />;
@@ -98,6 +118,8 @@ const DiffSyntax = ({
   const range = diffLine?.range;
 
   if (range) {
+    const isNewLineSymbolChanged = range.newLineSymbol;
+
     return (
       <span className="diff-line-syntax-raw">
         <span data-range-start={range.location} data-range-end={range.location + range.length}>
@@ -124,7 +146,6 @@ const DiffSyntax = ({
               const isEnd = str3.length || node.endIndex === range.location + range.length - 1;
               const isLast = str2.includes("\n");
               const _str2 = isLast ? str2.replace("\n", "") : str2;
-              const isNewLineSymbolChanged = range.newLineSymbol;
               return (
                 <span
                   key={index}
@@ -151,7 +172,9 @@ const DiffSyntax = ({
                             ? "␊"
                             : isNewLineSymbolChanged === NewLineSymbol.CR
                               ? "␍"
-                              : "␍␊"
+                              : isNewLineSymbolChanged === NewLineSymbol.CRLF
+                                ? "␍␊"
+                                : ""
                         }`
                       : str2}
                   </span>
@@ -161,6 +184,18 @@ const DiffSyntax = ({
             }
           })}
         </span>
+        {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && diffLine.noTrailingNewLine && (
+          <span
+            data-no-newline-at-end-of-file
+            className={enableWrap ? "block text-red-500" : "inline-block align-middle text-red-500"}
+            style={{
+              width: `var(${diffFontSizeName})`,
+              height: `var(${diffFontSizeName})`,
+            }}
+          >
+            <DiffNoNewLine />
+          </span>
+        )}
       </span>
     );
   }
@@ -223,9 +258,15 @@ export const DiffContent = ({
           rawLine={rawLine}
           diffLine={diffLine}
           syntaxLine={syntaxLine}
+          enableWrap={enableWrap}
         />
       ) : (
-        <DiffString operator={isAdded ? "add" : isDelete ? "del" : undefined} rawLine={rawLine} diffLine={diffLine} />
+        <DiffString
+          operator={isAdded ? "add" : isDelete ? "del" : undefined}
+          rawLine={rawLine}
+          diffLine={diffLine}
+          enableWrap={enableWrap}
+        />
       )}
     </div>
   );

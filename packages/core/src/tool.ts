@@ -97,9 +97,9 @@ export const getDiffRange = (additions: DiffLine[], deletions: DiffLine[]) => {
     for (let i = 0; i < len; i++) {
       const addition = additions[i];
       const deletion = deletions[i];
-      const hasDiffRange = hasRelativeChange(addition.text, deletion.text);
+      const hasDiffRange = hasRelativeChange(addition, deletion);
       if (hasDiffRange) {
-        const { stringARange, stringBRange } = relativeChanges(addition.text, deletion.text);
+        const { stringARange, stringBRange } = relativeChanges(addition, deletion);
         addition.needRematch = true;
         addition.range = stringARange;
         deletion.needRematch = true;

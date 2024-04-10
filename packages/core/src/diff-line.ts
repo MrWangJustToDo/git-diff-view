@@ -53,6 +53,10 @@ export class DiffLine {
       this.noTrailingNewLine === other.noTrailingNewLine
     );
   }
+
+  public clone(text: string) {
+    return new DiffLine(text, this.type, this.originalLineNumber, this.oldLineNumber, this.newLineNumber);
+  }
 }
 
 export const checkDiffLineIncludeChange = (diffLine?: DiffLine) => {

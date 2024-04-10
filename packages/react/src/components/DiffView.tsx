@@ -14,7 +14,7 @@ import { DiffModeEnum, DiffViewContext } from "./DiffViewContext";
 import type { highlighter } from "@git-diff-view/core";
 import type { CSSProperties, ForwardedRef, ReactNode } from "react";
 
-const diffFontSizeName = "--diff-font-size--";
+export const diffFontSizeName = "--diff-font-size--";
 
 _cacheMap.name = "@git-diff-view/react";
 

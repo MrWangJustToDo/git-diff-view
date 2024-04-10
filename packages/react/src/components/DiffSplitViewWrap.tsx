@@ -5,7 +5,7 @@ import { flushSync } from "react-dom";
 import { createStore, ref } from "reactivity-store";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
 
-import { useDiffViewContext, SplitSide } from "..";
+import { useDiffViewContext, SplitSide, diffFontSizeName } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";
 
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineWrap";
@@ -106,7 +106,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
         className="diff-table-wrapper w-full"
         style={{
           fontFamily: "Menlo, Consolas, monospace",
-          fontSize: "var(--diff-font-size--)",
+          fontSize: `var(${diffFontSizeName})`,
         }}
       >
         <Style useSelector={splitSideInfo} id={`diff-root${diffFile.getId()}`} />

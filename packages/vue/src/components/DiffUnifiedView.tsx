@@ -9,6 +9,7 @@ import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
 import { DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
 import { DiffUnifiedLine } from "./DiffUnifiedLine";
 import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
+import { diffFontSizeName } from "./DiffView";
 import { asideWidth, removeAllSelection } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
@@ -49,7 +50,7 @@ export const DiffUnifiedView = defineComponent(
           style={{
             [asideWidth]: `${Math.round(computedWidth.value)}px`,
             fontFamily: "Menlo, Consolas, monospace",
-            fontSize: "var(--diff-font-size--)",
+            fontSize: `var(${diffFontSizeName})`,
           }}
         >
           <table class="unified-diff-table border-collapse w-full">

@@ -186,3 +186,19 @@ export const m = {
     "--- apps/operation_reports/vendor/github.com/cespare/xxhash/v2/go.mod\n+++ /dev/null\n@@ -1,3 +0,0 @@\n-module github.com/cespare/xxhash/v2\n-\n-go 1.11\n",
   ],
 };
+
+export const n = {
+  oldFile: {
+    fileName: "vcpkg_overlay/ports/libsafec/cross_build_aarch64_for_linux.patch",
+    content:
+      'diff --git a/CMakeLists.txt b/CMakeLists.txt\nindex b767157..f91375a 100644\n--- a/CMakeLists.txt\n+++ b/CMakeLists.txt\n@@ -18,7 +18,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"\n \tset(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")\n \tset(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")\n \tset(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")\n-\tset(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")\n+\tset(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")\n endif()\n \n if(UNIX)\ndiff --git a/src/scanfimpl.h b/src/scanfimpl.h\nindex 2da2119..2010f4f 100644\n--- a/src/scanfimpl.h\n+++ b/src/scanfimpl.h\n@@ -51,6 +51,8 @@ struct KPrintIn\n #define UN_INC(chr)     (--charcount, UngetC(in, chr))\r\n #define EAT_WHITE()     _whiteout(in, &charcount)\r\n \r\n+#include <cstring>\r\n+\r\n //--------------------------------------------------------------------------\r\n \r\n /*',
+  },
+  newFile: {
+    fileName: "vcpkg_overlay/ports/libsafec/cross_build_aarch64_for_linux.patch",
+    content:
+      'diff --git a/CMakeLists.txt b/CMakeLists.txt\nindex b767157..f91375a 100644\n--- a/CMakeLists.txt\n+++ b/CMakeLists.txt\n@@ -18,7 +18,7 @@ if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang"\n \tset(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Werror=return-type")\n \tset(CMAKE_EXE_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")\n \tset(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-undefined")\n-\tset(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++")\n+\tset(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")\n endif()\n \n if(UNIX)\ndiff --git a/src/scanfimpl.h b/src/scanfimpl.h\nindex 2da2119..2010f4f 100644\n--- a/src/scanfimpl.h\n+++ b/src/scanfimpl.h\n@@ -51,6 +51,8 @@ struct KPrintIn\n #define UN_INC(chr)     (--charcount, UngetC(in, chr))\r\n #define EAT_WHITE()     _whiteout(in, &charcount)\r\n \r\n+#include <cstring>\r\n+\r\n //--------------------------------------------------------------------------\r\n \r\n /*\r',
+  },
+  hunks: [
+    "--- vcpkg_overlay/ports/libsafec/cross_build_aarch64_for_linux.patch\n+++ vcpkg_overlay/ports/libsafec/cross_build_aarch64_for_linux.patch\n@@ -23,4 +23,4 @@ index 2da2119..2010f4f 100644\n +\r\n  //--------------------------------------------------------------------------\r\n  \r\n- /*\n\\ No newline at end of file\n+ /*\r\n",
+  ],
+};

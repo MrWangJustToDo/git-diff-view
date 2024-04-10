@@ -5,7 +5,7 @@ import { Fragment, memo, useEffect, useMemo, useCallback } from "react";
 import { createStore, ref } from "reactivity-store";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
 
-import { useDiffViewContext, type SplitSide } from "..";
+import { diffFontSizeName, useDiffViewContext, type SplitSide } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";
 
 import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
@@ -86,7 +86,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
             // @ts-ignore
             [asideWidth]: `${Math.round(width)}px`,
             fontFamily: "Menlo, Consolas, monospace",
-            fontSize: "var(--diff-font-size--)",
+            fontSize: `var(${diffFontSizeName})`,
           }}
         >
           <table className="unified-diff-table border-collapse w-full">

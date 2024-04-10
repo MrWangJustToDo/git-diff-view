@@ -1,7 +1,10 @@
+import type { DiffLine } from "./diff-line";
+
 export enum NewLineSymbol {
   CRLF = 1,
   CR = 2,
   LF = 3,
+  NEWLINE = 4,
 }
 
 export interface IRange {
@@ -44,8 +47,16 @@ function isInValidString(s: string) {
   return s.trim().length === 0 || s.length >= maxLength;
 }
 
+// TODO maybe could use the original content line
 /** Get the changed ranges in the strings, relative to each other. */
-export function relativeChanges(stringA: string, stringB: string): { stringARange: IRange; stringBRange: IRange } {
+export function relativeChanges(
+  addition: DiffLine,
+  deletion: DiffLine
+): { stringARange: IRange; stringBRange: IRange } {
+  const stringA = addition.text;
+
+  const stringB = deletion.text;
+
   let bRange = { location: 0, length: stringB.length };
   let aRange = { location: 0, length: stringA.length };
 
@@ -57,19 +68,31 @@ export function relativeChanges(stringA: string, stringB: string): { stringARang
 
   const bEndStr = stringB.slice(-2);
 
-  if (_stringA === _stringB && aEndStr !== bEndStr && (aEndStr === "\r\n" || bEndStr === "\r\n")) {
+  const hasNewLineChanged = addition.noTrailingNewLine !== deletion.noTrailingNewLine;
+
+  if (_stringA === _stringB && (hasNewLineChanged || aEndStr !== bEndStr)) {
     return {
       stringARange: {
         location: _stringA.length,
         length: stringA.length - _stringA.length,
-        newLineSymbol:
-          aEndStr === "\r\n" ? NewLineSymbol.CRLF : aEndStr.endsWith("\r") ? NewLineSymbol.CR : NewLineSymbol.LF,
+        newLineSymbol: hasNewLineChanged
+          ? NewLineSymbol.NEWLINE
+          : aEndStr === "\r\n"
+            ? NewLineSymbol.CRLF
+            : aEndStr.endsWith("\r")
+              ? NewLineSymbol.CR
+              : NewLineSymbol.LF,
       },
       stringBRange: {
         location: _stringB.length,
         length: stringB.length - _stringB.length,
-        newLineSymbol:
-          bEndStr === "\r\n" ? NewLineSymbol.CRLF : bEndStr.endsWith("\r") ? NewLineSymbol.CR : NewLineSymbol.LF,
+        newLineSymbol: hasNewLineChanged
+          ? NewLineSymbol.NEWLINE
+          : bEndStr === "\r\n"
+            ? NewLineSymbol.CRLF
+            : bEndStr.endsWith("\r")
+              ? NewLineSymbol.CR
+              : NewLineSymbol.LF,
       },
     };
   }
@@ -99,12 +122,16 @@ export function relativeChanges(stringA: string, stringB: string): { stringARang
 }
 
 /** Check two string have a diff range */
-export function hasRelativeChange(stringA: string, stringB: string): boolean {
-  const _stringA = stringA.trim();
+export function hasRelativeChange(addition: DiffLine, deletion: DiffLine): boolean {
+  const _stringA = addition.text.trim();
 
-  const _stringB = stringB.trim();
+  const _stringB = deletion.text.trim();
 
-  const { stringARange, stringBRange } = relativeChanges(_stringA, _stringB);
+  const _addition = addition.clone(_stringA);
+
+  const _deletion = deletion.clone(_stringB);
+
+  const { stringARange, stringBRange } = relativeChanges(_addition, _deletion);
 
   return (
     stringARange.location > 0 ||

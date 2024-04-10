@@ -57,7 +57,7 @@ export type DiffViewProps<T> = {
 
 _cacheMap.name = "@git-diff-view/vue";
 
-const diffFontSizeName = "--diff-font-size--";
+export const diffFontSizeName = "--diff-font-size--";
 
 type typeSlots = SlotsType<{
   widget: { lineNumber: number; side: SplitSide; diffFile: DiffFile; onClose: () => void };

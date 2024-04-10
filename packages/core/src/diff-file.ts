@@ -236,29 +236,31 @@ export class DiffFile {
       let oldLineNumber = 1;
       let oldFileContent = "";
       let newFileContent = "";
-      while (oldLineNumber <= this.diffLineLength) {
-        const index = oldLineNumber++;
-        const diffLine = this.#getOldDiffLine(index);
-        if (diffLine) {
-          oldFileContent += diffLine.text;
+      let hasSymbolChanged = false;
+      while (oldLineNumber <= this.diffLineLength || newLineNumber <= this.diffLineLength) {
+        const oldIndex = oldLineNumber++;
+        const newIndex = newLineNumber++;
+        const oldDiffLine = this.#getOldDiffLine(oldIndex);
+        const newDiffLine = this.#getNewDiffLine(newIndex);
+        if (oldDiffLine) {
+          oldFileContent += oldDiffLine.text;
         } else {
           // empty line for placeholder
           oldFileContent += "\n";
-          oldFilePlaceholderLines[index] = true;
+          oldFilePlaceholderLines[oldIndex] = true;
         }
-      }
-      while (newLineNumber <= this.diffLineLength) {
-        const index = newLineNumber++;
-        const diffLine = this.#getNewDiffLine(index);
-        if (diffLine) {
-          newFileContent += diffLine.text;
+        if (newDiffLine) {
+          newFileContent += newDiffLine.text;
         } else {
           // empty line for placeholder
           newFileContent += "\n";
-          newFilePlaceholderLines[index] = true;
+          newFilePlaceholderLines[newIndex] = true;
+        }
+        if (!hasSymbolChanged && oldDiffLine && newDiffLine) {
+          hasSymbolChanged = hasSymbolChanged || oldDiffLine.noTrailingNewLine !== newDiffLine.noTrailingNewLine;
         }
       }
-      if (oldFileContent === newFileContent) return;
+      if (!hasSymbolChanged && oldFileContent === newFileContent) return;
       this._oldFileContent = oldFileContent;
       this._newFileContent = newFileContent;
       this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang, this._oldFileName);
@@ -271,40 +273,48 @@ export class DiffFile {
       let newLineNumber = 1;
       let oldLineNumber = 1;
       let newFileContent = "";
+      let hasSymbolChanged = false;
       while (oldLineNumber <= this.#oldFileResult.maxLineNumber) {
         const newDiffLine = this.#getNewDiffLine(newLineNumber++);
+        const oldDiffLine = this.#getOldDiffLine(oldLineNumber);
         if (newDiffLine) {
           newFileContent += newDiffLine.text;
           oldLineNumber = newDiffLine.oldLineNumber ? newDiffLine.oldLineNumber + 1 : oldLineNumber;
         } else {
-          const oldDiffLine = this.#getOldDiffLine(oldLineNumber);
           if (!oldDiffLine) {
             newFileContent += this.#getOldRawLine(oldLineNumber);
           }
           oldLineNumber++;
         }
+        if (!hasSymbolChanged && newDiffLine && oldDiffLine) {
+          hasSymbolChanged = hasSymbolChanged || newDiffLine.noTrailingNewLine !== oldDiffLine.noTrailingNewLine;
+        }
       }
-      if (newFileContent === this._oldFileContent) return;
+      if (!hasSymbolChanged && newFileContent === this._oldFileContent) return;
       this._newFileContent = newFileContent;
       this.#newFileResult = getFile(this._newFileContent, this._newFileLang, this._newFileName);
     } else if (this.#newFileResult) {
       let oldLineNumber = 1;
       let newLineNumber = 1;
       let oldFileContent = "";
+      let hasSymbolChanged = false;
       while (newLineNumber <= this.#newFileResult.maxLineNumber) {
         const oldDiffLine = this.#getOldDiffLine(oldLineNumber++);
+        const newDiffLine = this.#getNewDiffLine(newLineNumber);
         if (oldDiffLine) {
           oldFileContent += oldDiffLine.text;
           newLineNumber = oldDiffLine.newLineNumber ? oldDiffLine.newLineNumber + 1 : newLineNumber;
         } else {
-          const newDiffLine = this.#getNewDiffLine(newLineNumber);
           if (!newDiffLine) {
             oldFileContent += this.#getNewRawLine(newLineNumber);
           }
           newLineNumber++;
         }
+        if (!hasSymbolChanged && newDiffLine && oldDiffLine) {
+          hasSymbolChanged = hasSymbolChanged || newDiffLine.noTrailingNewLine !== oldDiffLine.noTrailingNewLine;
+        }
       }
-      if (oldFileContent === this._newFileContent) return;
+      if (!hasSymbolChanged && oldFileContent === this._newFileContent) return;
       this._oldFileContent = oldFileContent;
       this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang, this._oldFileName);
     }
