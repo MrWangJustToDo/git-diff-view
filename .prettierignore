@@ -1,6 +1,7 @@
 **/node_modules
 **/dist
 **/dev
+**/*.md
 package.json
 tsconfig.json
 pnpm-lock.yaml

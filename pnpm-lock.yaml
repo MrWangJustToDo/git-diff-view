@@ -204,6 +204,9 @@ importers:
 
   ui/react-example:
     dependencies:
+      '@git-diff-view/file':
+        specifier: workspace:*
+        version: link:../../packages/file
       '@git-diff-view/react':
         specifier: workspace:*
         version: link:../../packages/react

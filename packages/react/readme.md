@@ -1,66 +1,90 @@
-## Usage
+## A React UI Component to render `git diff` data, support `Split View` and `Unified View`, just like `GitHub` and `GitLab`.
+
+### Usage
+
+#### There are two ways to use this component:
+
+1. Use the `DiffView` component directly.
 
 ```tsx
-<DiffViewReact<string>
-  ref={ref}
-  renderWidgetLine={({ onClose, side, lineNumber }) => (
-    <div className="border flex flex-col w-full px-[4px] py-[8px]">
-      <TextArea onChange={(v) => (valRef.current = v)} />
-      <div className="m-[5px] mt-[0.8em] text-right">
-        <div className="inline-flex gap-x-[12px] justify-end">
-          <button
-            className="border px-[12px] py-[6px] rounded-[4px]"
-            onClick={() => {
-              onClose();
-              valRef.current = "";
-            }}
-          >
-            cancel
-          </button>
-          <button
-            className="border px-[12px] py-[6px] rounded-[4px]"
-            onClick={() => {
-              onClose();
-              if (valRef.current) {
-                const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
-                setExtend((prev) => {
-                  const res = { ...prev };
-                  res[sideKey] = { ...res[sideKey], [lineNumber]: { lineNumber, data: valRef.current } };
-                  return res;
-                });
-                setTimeout(() => {
-                  valRef.current = "";
-                });
-              }
-            }}
-          >
-            submit
-          </button>
-        </div>
-      </div>
-    </div>
-  )}
+import { DiffView, DiffModeEnum } from "@git-diff-view/react";
+import "@git-diff-view/react/styles/diff-view.css";
+
+<DiffView<string>
   // use data
-  // data={data[v]}
-  diffFile={diffFileInstance}
-  extendData={extend}
-  renderExtendLine={({ data }) => {
-    return (
-      <div className="border flex px-[10px] py-[8px] bg-slate-400">
-        <h2 className="text-[20px]">
-          {">> "}
-          {data}
-        </h2>
-      </div>
-    );
+  data={{
+    oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+    newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+    hunks: string[];
   }}
-  diffViewFontSize={fontsize}
-  diffViewHighlight={highlight}
-  diffViewMode={mode}
-  diffViewWrap={wrap}
+  extendData={{oldFile: {10: {data: 'foo'}}, newFile: {20: {data: 'bar'}}}}
+  renderExtendLine={({ data }) => ReactNode}
+  diffViewFontSize={number}
+  diffViewHighlight={boolean}
+  diffViewMode={DiffModeEnum.Split | DiffModeEnum.Unified}
+  diffViewWrap={boolean}
   diffViewAddWidget
+  onAddWidgetClick={({ side, lineNumber }) => void}
+  renderWidgetLine={({ onClose, side, lineNumber }) => ReactNode}
 />
+
 ```
+
+2. Use the `DiffView` component with `@git-diff-view/core`/`@git-diff-view/file`
+
+```tsx
+// with @git-diff-view/file
+import { DiffFile, generateDiffFile } from "@git-diff-view/file";
+const file = generateDiffFile(
+  data?.oldFile?.fileName || "",
+  data?.oldFile?.content || "",
+  data?.newFile?.fileName || "",
+  data?.newFile?.content || "",
+  data?.oldFile?.fileLang || "",
+  data?.newFile?.fileLang || ""
+);
+file.init();
+file.buildSplitDiffLines();
+file.buildUnifiedDiffLines();
+
+// with @git-diff-view/core
+import { DiffView } from "@git-diff-view/core";
+const file = new DiffFile(
+  data?.oldFile?.fileName || "",
+  data?.oldFile?.content || "",
+  data?.newFile?.fileName || "",
+  data?.newFile?.content || "",
+  data?.hunks || [],
+  data?.oldFile?.fileLang || "",
+  data?.newFile?.fileLang || ""
+);
+file.init();
+file.buildSplitDiffLines();
+file.buildUnifiedDiffLines();
+
+// use current data to render
+<DiffView diffFile={file} {...props} />;
+// or use the bundle data to render, eg: postMessage/httpRequest
+const bundle = file.getBundle();
+const diffFile = DiffFile.createInstance(data || {}, bundle);
+<DiffView diffFile={diffFile} {...props} />;
+```
+
+### Props
+
+| Props  | Description  |
+| :--------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| data             | The diff data need to show, type: `{ oldFile: {fileName?: string, content?: string}, newFile: {fileName?: string, content?: string}, hunks: string[] }`, you can only pass hunks data, and the component will generate the oldFile and newFile data automatically |
+| diffFile         | the target data to render |
+| renderWidgetLine | return a valid `react` element to show the widget, this element will render when you click the `addWidget` button in the diff view  |
+| renderExtendLine | return a valid `react` element to show the extend data |
+| extendData       | a list to store the extend data to show in the `Diff View`, type: {oldFile: {lineNumber: {data: any}}, newFile: {lineNumber: {data: any}}}   |
+| diffViewFontSize | the fontSize for the DiffView component, type: number |
+| diffViewHighlight | enable syntax highlight, type: boolean |
+| diffViewMode     | the mode for the DiffView component, type: `DiffModeEnum.Split` or `DiffModeEnum.Unified` |
+| diffViewWrap     | enable code line auto wrap, type: boolean |
+| diffViewAddWidget| enable `addWidget` button, type: boolean |
+| onAddWidgetClick | when the `addWidget` button clicked, type: `({ side: "old" | "new", lineNumber: number }) => void` |
 
 ### example repo
 

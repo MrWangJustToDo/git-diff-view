@@ -1,14 +1,20 @@
 ## Git Diff Component
 
-a React/Vue component to show the `git --diff` result, just like Github code review page.
+a React/Vue component to show the `git diff`/`file diff` result, just like Github code review page.
 
 [![Deploy](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml/badge.svg)](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml)
+
+## Demo ---- git-diff / file-diff
+[git-mode](https://mrwangjusttodo.github.io/git-diff-view/?type=example&tab=git)
+
+[file-mode](https://mrwangjusttodo.github.io/git-diff-view/?type=example&tab=file)
 
 ## Packages
 
 | Package                                  | Version                                                                                                                    |
 | :--------------------------------------- | :------------------------------------------------------------------------------------------------------------------------- |
 | [`@git-diff-view/core`](packages/core)   | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/core)](https://www.npmjs.com/package/@git-diff-view/core)   |
+| [`@git-diff-view/file`](packages/file)   | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/file)](https://www.npmjs.com/package/@git-diff-view/file)   |
 | [`@git-diff-view/react`](packages/react) | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/react)](https://www.npmjs.com/package/@git-diff-view/react) |
 | [`@git-diff-view/vue`](packages/vue)     | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/vue)](https://www.npmjs.com/package/@git-diff-view/vue)     |
 
@@ -25,6 +31,20 @@ a React/Vue component to show the `git --diff` result, just like Github code rev
 ![Screenshot](2.png)
 ![Screenshot](3.png)
 
+## Features
+
++ [x] Show the `git diff` result 
++ [x] Support `Split View` and `Unified View`
++ [x] Support `Syntax Highlight`
++ [x] Support `Extend Data` to show in the `Diff View`
++ [x] Support `Widget` to show in the `Diff View`
++ [x] Support `Web Worker` to improve performance
++ [x] Support `React` and `Vue` component
++ [x] Support compare by `@git-diff-view/core`(git diff) or `@git-diff-view/file`(file content)
++ [ ] Support `Virtual Scroll` to improve performance
++ [ ] Support `Diff Match Patch` to improve line diff
+
+
 ## Install
 
 ```shell
@@ -34,65 +54,101 @@ pnpm add @git-diff-view/react
 # In Vue Project
 pnpm add @git-diff-view/vue
 
-
 ```
 
-## Usage
+## Use in React
+
+#### There are two ways to use this component:
+
+#### 1. Use the `DiffView` component directly.
 
 ```tsx
-// React
-
+import { DiffView, DiffModeEnum } from "@git-diff-view/react";
 import "@git-diff-view/react/styles/diff-view.css";
-import { DiffFile } from "@git-diff-view/React";
 
-<DiffView
-  className
-  /* return a valid react element to show the widget, this element will render when you click the `addWidget` button in the diff view */
-
-  renderWidgetLine={({ onClose, side, lineNumber }) => jsx.element}
-  /* the diff data need to show, type `{ oldFile: {fileName?: string, content?: string}, newFile: {fileName?: string, content?: string}, hunks: string[] }`, you can only pass hunks data, and the component will generate the oldFile and newFile data automatically */
-
-  data={data[v]}
-  /* also support the outside `diffFile` to improve performance, so you can use `webWorker` to generate the diff data first, and then pass it to the component */
-
-  diffFile={diffFileInstance}
-  /* a list to store the extend data to show in the `Diff View` */
-  extendData={extend}
-  /* used to render extend data */
-
-  renderExtendLine={({ data }) => jsx.element}
-  /* diffView fontSize */
-
-  diffViewFontSize={fontSize}
-  /* syntax highlight */
-
-  diffViewHighlight={highlight}
-  /* diffView mode: SplitView / UnifiedView */
-
-  diffViewMode={mode}
-  /* diffView wrap: code line auto wrap */
-
-  diffViewWrap={wrap}
-  /* enable `addWidget` button */
-
+<DiffView<string>
+  // use data
+  data={{
+    oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+    newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+    hunks: string[];
+  }}
+  extendData={{oldFile: {10: {data: 'foo'}}, newFile: {20: {data: 'bar'}}}}
+  renderExtendLine={({ data }) => ReactNode}
+  diffViewFontSize={number}
+  diffViewHighlight={boolean}
+  diffViewMode={DiffModeEnum.Split | DiffModeEnum.Unified}
+  diffViewWrap={boolean}
   diffViewAddWidget
-  /* when the `addWidget` button clicked */
+  onAddWidgetClick={({ side, lineNumber }) => void}
+  renderWidgetLine={({ onClose, side, lineNumber }) => ReactNode}
+/>
 
-  onAddWidgetClick
-/>;
 ```
+
+#### 2. Use the `DiffView` component with `@git-diff-view/core`/`@git-diff-view/file`
 
 ```tsx
-// Vue
-import "@git-diff-view/vue/styles/diff-view.css";
-import { DiffFile } from "@git-diff-view/Vue";
+// with @git-diff-view/file
+import { DiffFile, generateDiffFile } from "@git-diff-view/file";
+const file = generateDiffFile(
+  data?.oldFile?.fileName || "",
+  data?.oldFile?.content || "",
+  data?.newFile?.fileName || "",
+  data?.newFile?.content || "",
+  data?.oldFile?.fileLang || "",
+  data?.newFile?.fileLang || ""
+);
+file.init();
+file.buildSplitDiffLines();
+file.buildUnifiedDiffLines();
 
-// the usage just like React side, but the `renderWidgetLine` and `renderExtendLine` props become the `widget` / `extend` slots
+// with @git-diff-view/core
+import { DiffView } from "@git-diff-view/core";
+const file = new DiffFile(
+  data?.oldFile?.fileName || "",
+  data?.oldFile?.content || "",
+  data?.newFile?.fileName || "",
+  data?.newFile?.content || "",
+  data?.hunks || [],
+  data?.oldFile?.fileLang || "",
+  data?.newFile?.fileLang || ""
+);
+file.init();
+file.buildSplitDiffLines();
+file.buildUnifiedDiffLines();
+
+// use current data to render
+<DiffView diffFile={file} {...props} />;
+// or use the bundle data to render, eg: postMessage/httpRequest
+const bundle = file.getBundle();
+const diffFile = DiffFile.createInstance(data || {}, bundle);
+<DiffView diffFile={diffFile} {...props} />;
 ```
+
+#### Props
+
+| Props  | Description  |
+| :--------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| data             | The diff data need to show, type: `{ oldFile: {fileName?: string, content?: string}, newFile: {fileName?: string, content?: string}, hunks: string[] }`, you can only pass hunks data, and the component will generate the oldFile and newFile data automatically |
+| diffFile         | the target data to render |
+| renderWidgetLine | return a valid `react` element to show the widget, this element will render when you click the `addWidget` button in the diff view  |
+| renderExtendLine | return a valid `react` element to show the extend data |
+| extendData       | a list to store the extend data to show in the `Diff View`, type: {oldFile: {lineNumber: {data: any}}, newFile: {lineNumber: {data: any}}}   |
+| diffViewFontSize | the fontSize for the DiffView component, type: number |
+| diffViewHighlight | enable syntax highlight, type: boolean |
+| diffViewMode     | the mode for the DiffView component, type: `DiffModeEnum.Split` or `DiffModeEnum.Unified` |
+| diffViewWrap     | enable code line auto wrap, type: boolean |
+| diffViewAddWidget| enable `addWidget` button, type: boolean |
+| onAddWidgetClick | when the `addWidget` button clicked, type: `({ side: "old" | "new", lineNumber: number }) => void` |
+
+## Use in Vue
+
+Same with the React, see [detail](https://github.com/MrWangJustToDo/git-diff-view/tree/main/packages/vue)
 
 ## Development
 
-```shell
+```bash
 # clone this project
 
 # pnpm install
@@ -102,8 +158,3 @@ import { DiffFile } from "@git-diff-view/Vue";
 # pnpm run dev:react / pnpm run dev:vue
 
 ```
-
-## TODO
-
-1. add `diff-match-patch` for better line diff
-2. add `virtual scroll` for better performance
