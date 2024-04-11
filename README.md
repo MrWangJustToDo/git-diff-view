@@ -5,9 +5,9 @@ a React/Vue component to show the `git diff`/`file diff` result, just like Githu
 [![Deploy](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml/badge.svg)](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml)
 
 ## Demo ---- git-diff / file-diff
-[git-mode](https://mrwangjusttodo.github.io/git-diff-view/?type=example&tab=git)
+[git-mode](https://mrwangjusttodo.github.io/git-diff-view/?type=try&tab=git)
 
-[file-mode](https://mrwangjusttodo.github.io/git-diff-view/?type=example&tab=file)
+[file-mode](https://mrwangjusttodo.github.io/git-diff-view/?type=try&tab=file)
 
 ## Packages
 
