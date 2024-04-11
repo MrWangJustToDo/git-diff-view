@@ -183,6 +183,8 @@ const DiffSplitHunkLineGitLab = defineComponent(
 
     const enableExpand = ref(props.diffFile.getExpandEnabled());
 
+    const lineSelector = computed(() => `tr[data-line="${props.lineNumber}-hunk"]`);
+
     const couldExpand = computed(() => enableExpand.value && currentHunk.value && currentHunk.value.splitInfo);
 
     const currentShowExpandAll = ref(
@@ -202,6 +204,16 @@ const DiffSplitHunkLineGitLab = defineComponent(
         currentHunk.value.splitInfo &&
         currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex
     );
+
+    const currentSyncHeightSide = computed(() => SplitSide[SplitSide.old]);
+
+    const currentEnableSyncHeight = computed(() => props.side === SplitSide.new && currentIsShow.value);
+
+    useSyncHeight({
+      selector: lineSelector,
+      side: currentSyncHeightSide,
+      enable: currentEnableSyncHeight,
+    });
 
     useSubscribeDiffFile(props, (diffFile) => {
       currentHunk.value = diffFile.getSplitHunkLine(props.index);

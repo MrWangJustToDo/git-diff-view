@@ -1,4 +1,4 @@
-## `git diff` for @git-diff-view Component
+## File content diff for @git-diff-view component
 
 ## Usage
 
@@ -8,7 +8,6 @@ const file = new DiffFile(
     data?.oldFile?.content || "",
     data?.newFile?.fileName || "",
     data?.newFile?.content || "",
-    data?.hunks || [],
     data?.oldFile?.fileLang || "",
     data?.newFile?.fileLang || ""
   );

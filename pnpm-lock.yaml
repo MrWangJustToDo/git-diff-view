@@ -82,6 +82,25 @@ importers:
         specifier: latest
         version: link:../lowlight
 
+  packages/file:
+    dependencies:
+      diff:
+        specifier: ^5.2.0
+        version: 5.2.0
+      lowlight:
+        specifier: ^3.1.0
+        version: 3.1.0
+    devDependencies:
+      '@git-diff-view/core':
+        specifier: latest
+        version: link:../core
+      '@git-diff-view/lowlight':
+        specifier: latest
+        version: link:../lowlight
+      '@types/diff':
+        specifier: ^5.0.9
+        version: 5.0.9
+
   packages/lowlight:
     dependencies:
       highlight.js:
@@ -1541,6 +1560,10 @@ packages:
       '@babel/types': 7.23.9
     dev: true
 
+  /@types/diff@5.0.9:
+    resolution: {integrity: sha512-RWVEhh/zGXpAVF/ZChwNnv7r4rvqzJ7lYNSmZSVTxjV0PBLf6Qu7RNg+SUtkpzxmiNkjCx0Xn2tPp7FIkshJwQ==}
+    dev: true
+
   /@types/estree@1.0.5:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
     dev: true
@@ -2815,6 +2838,11 @@ packages:
     resolution: {integrity: sha512-58lmxKSA4BNyLz+HHMUzlOEpg09FV+ev6ZMe3vJihgdxzgcwZ8VoEEPmALCZG9LmqfVoNMMKpttIYTVG6uDY7A==}
     engines: {node: '>=0.3.1'}
     dev: true
+
+  /diff@5.2.0:
+    resolution: {integrity: sha512-uIFDxqpRZGZ6ThOk84hEfqWoHx2devRFvpTZcTHur85vImfaxUbTW9Ryh4CpCuDnToOP1CEtXKIgytHBPVff5A==}
+    engines: {node: '>=0.3.1'}
+    dev: false
 
   /dir-glob@3.0.1:
     resolution: {integrity: sha512-WkrWp9GR4KXfKGYzOLmTuGVi1UWFfws377n9cc55/tb6DuqyF6pcQ5AbiHEshaDpY9v6oaSr2XCDidGmMwdzIA==}
