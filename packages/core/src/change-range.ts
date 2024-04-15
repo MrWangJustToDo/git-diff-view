@@ -70,29 +70,23 @@ export function relativeChanges(
 
   const hasNewLineChanged = addition.noTrailingNewLine !== deletion.noTrailingNewLine;
 
-  if (_stringA === _stringB && (hasNewLineChanged || aEndStr !== bEndStr)) {
+  const aSymbol =
+    aEndStr === "\r\n" ? NewLineSymbol.CRLF : aEndStr.endsWith("\r") ? NewLineSymbol.CR : NewLineSymbol.LF;
+
+  const bSymbol =
+    bEndStr === "\r\n" ? NewLineSymbol.CRLF : bEndStr.endsWith("\r") ? NewLineSymbol.CR : NewLineSymbol.LF;
+
+  if (_stringA === _stringB && (hasNewLineChanged || aSymbol !== bSymbol)) {
     return {
       stringARange: {
         location: _stringA.length,
         length: stringA.length - _stringA.length,
-        newLineSymbol: hasNewLineChanged
-          ? NewLineSymbol.NEWLINE
-          : aEndStr === "\r\n"
-            ? NewLineSymbol.CRLF
-            : aEndStr.endsWith("\r")
-              ? NewLineSymbol.CR
-              : NewLineSymbol.LF,
+        newLineSymbol: hasNewLineChanged ? NewLineSymbol.NEWLINE : aSymbol,
       },
       stringBRange: {
         location: _stringB.length,
         length: stringB.length - _stringB.length,
-        newLineSymbol: hasNewLineChanged
-          ? NewLineSymbol.NEWLINE
-          : bEndStr === "\r\n"
-            ? NewLineSymbol.CRLF
-            : bEndStr.endsWith("\r")
-              ? NewLineSymbol.CR
-              : NewLineSymbol.LF,
+        newLineSymbol: hasNewLineChanged ? NewLineSymbol.NEWLINE : bSymbol,
       },
     };
   }
