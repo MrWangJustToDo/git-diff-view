@@ -64,6 +64,12 @@ export function Example() {
 
   const [diffFileInstance, setDiffFileInstance] = useState<DiffFile>();
 
+  const { mode, setMode, highlight, setHighlight, wrap, setWrap, fontsize } = useDiffConfig();
+
+  const highlightRef = useRef(highlight);
+
+  highlightRef.current = highlight;
+
   const previous = usePrevious(diffFileInstance);
 
   const [extend, setExtend] = useState<DiffViewProps<string>["extendData"]>({
@@ -93,7 +99,7 @@ export function Example() {
     const _data = data[v];
     if (_data) {
       console.time("parse");
-      worker.postMessage({ type: "parse", data: _data });
+      worker.postMessage({ type: "parse", data: _data, highlight: highlightRef.current });
     }
   }, [v]);
 
@@ -109,7 +115,6 @@ export function Example() {
     }
   }, [expandAll]);
 
-  const { mode, setMode, highlight, setHighlight, wrap, setWrap, fontsize } = useDiffConfig();
 
   const reactElement = (
     <DiffViewReact<string>

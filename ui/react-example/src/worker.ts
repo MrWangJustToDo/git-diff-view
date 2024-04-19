@@ -6,6 +6,7 @@ import type { DiffViewProps } from "@git-diff-view/react";
 export type MessageData = {
   id: number;
   data: DiffViewProps<any>["data"];
+  highlight?: boolean;
   bundle: ReturnType<DiffFile["getBundle"]>;
 };
 
@@ -33,8 +34,10 @@ onmessage = (event: MessageEvent<MessageData>) => {
   file.initRaw();
 
   highlighterReady.then((highlighter) => {
-    file.initSyntax({ registerHighlighter: highlighter });
-    // file.initSyntax();
+    if (_data.highlight) {
+      file.initSyntax({ registerHighlighter: highlighter });
+      // file.initSyntax();
+    }
 
     file.buildSplitDiffLines();
 

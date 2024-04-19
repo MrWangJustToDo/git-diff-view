@@ -62,6 +62,30 @@ export class File {
 
   maxLineNumber: number = 0;
 
+  static createInstance(data: File) {
+    const file = new File(data?.raw, data?.lang, data?.fileName);
+
+    file.ast = data?.ast;
+
+    file.rawFile = data?.rawFile;
+
+    file.hasDoRaw = data?.hasDoRaw;
+
+    file.rawLength = data?.rawLength;
+
+    file.syntaxFile = data?.syntaxFile;
+
+    file.hasDoSyntax = data?.hasDoSyntax;
+
+    file.syntaxLength = data?.syntaxLength;
+
+    file.highlighterName = data?.highlighterName;
+
+    file.maxLineNumber = data?.maxLineNumber;
+
+    return file;
+  }
+
   constructor(
     readonly raw: string,
     readonly lang: string,

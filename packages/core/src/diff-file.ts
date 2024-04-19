@@ -3,10 +3,9 @@
 
 import { DiffLineType, DiffLine } from "./diff-line";
 import { parseInstance } from "./diff-parse";
-import { getFile } from "./file";
+import { getFile, File } from "./file";
 import { getDiffRange, getLang } from "./tool";
 
-import type { File } from "./file";
 import type { IRawDiff } from "./raw-diff";
 import type { highlighter } from "@git-diff-view/lowlight";
 
@@ -111,6 +110,10 @@ export class DiffFile {
 
   #composeByDiff: boolean = false;
 
+  #composeByMerge: boolean = false;
+
+  #composeByFullMerge: boolean = false;
+
   #highlighterName?: string;
 
   _version_ = __VERSION__;
@@ -129,11 +132,11 @@ export class DiffFile {
 
   unifiedLineLength: number = 0;
 
-  expandSplitAll: boolean = false;
+  hasExpandSplitAll: boolean = false;
 
-  expandUnifiedAll: boolean = false;
+  hasExpandUnifiedAll: boolean = false;
 
-  hasCollapsed: boolean = false;
+  hasSomeLineCollapsed: boolean = false;
 
   #id: string = "";
 
@@ -145,7 +148,7 @@ export class DiffFile {
       newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
       hunks?: string[];
     },
-    bundle?: ReturnType<DiffFile["getBundle"]>
+    bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>
   ) {
     const instance = new DiffFile(
       data?.oldFile?.fileName || "",
@@ -157,7 +160,11 @@ export class DiffFile {
       data?.newFile?.fileLang || ""
     );
     if (bundle) {
-      instance.mergeBundle(bundle);
+      if (bundle.isFullMerge) {
+        instance._mergeFullBundle(bundle as ReturnType<DiffFile["_getFullBundle"]>);
+      } else {
+        instance.mergeBundle(bundle);
+      }
     }
 
     return instance;
@@ -483,6 +490,15 @@ export class DiffFile {
 
   initSyntax({ registerHighlighter }: { registerHighlighter?: typeof highlighter } = {}) {
     if (this.#hasInitSyntax) return;
+
+    if (this.#composeByMerge && !this.#composeByFullMerge) {
+      __DEV__ &&
+        console.error(
+          `this instance can not do syntax because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'`
+        );
+      return;
+    }
+
     this.#composeSyntax({ registerHighlighter });
     this.#highlighterName =
       this.#oldFileResult?.highlighterName || this.#newFileResult?.highlighterName || this.#highlighterName;
@@ -591,7 +607,7 @@ export class DiffFile {
       }
 
       if (isHidden) {
-        this.hasCollapsed = true;
+        this.hasSomeLineCollapsed = true;
       }
 
       prevIsHidden = isHidden;
@@ -751,7 +767,7 @@ export class DiffFile {
       }
 
       if (isHidden) {
-        this.hasCollapsed = true;
+        this.hasSomeLineCollapsed = true;
       }
 
       prevIsHidden = isHidden;
@@ -987,12 +1003,12 @@ export class DiffFile {
       Object.keys(this.#splitHunksLines || {}).forEach((key) => {
         this.onSplitHunkExpand("all", +key, false);
       });
-      this.expandSplitAll = true;
+      this.hasExpandSplitAll = true;
     } else {
       Object.keys(this.#unifiedHunksLines || {}).forEach((key) => {
         this.onUnifiedHunkExpand("all", +key, false);
       });
-      this.expandUnifiedAll = true;
+      this.hasExpandUnifiedAll = true;
     }
 
     this.notifyAll();
@@ -1034,7 +1050,7 @@ export class DiffFile {
           this.#splitHunksLines![item.splitInfo.endHiddenIndex] = item;
         }
       });
-      this.expandSplitAll = false;
+      this.hasExpandSplitAll = false;
     } else {
       Object.values(this.#unifiedLines || {}).forEach((item) => {
         if (!item.isHidden && item._isHidden) {
@@ -1063,7 +1079,7 @@ export class DiffFile {
           this.#unifiedHunksLines![item.unifiedInfo.endHiddenIndex] = item;
         }
       });
-      this.expandUnifiedAll = false;
+      this.hasExpandUnifiedAll = false;
     }
 
     this.notifyAll();
@@ -1122,7 +1138,7 @@ export class DiffFile {
     const unifiedLineLength = this.unifiedLineLength;
     const composeByDiff = this.#composeByDiff;
     const highlighterName = this.#highlighterName;
-    const hasCollapsed = this.hasCollapsed;
+    const hasSomeLineCollapsed = this.hasSomeLineCollapsed;
 
     // split
     const splitLeftLines = this.#splitLeftLines;
@@ -1158,9 +1174,11 @@ export class DiffFile {
 
       highlighterName,
       composeByDiff,
-      hasCollapsed,
+      hasSomeLineCollapsed,
 
       version,
+
+      isFullMerge: false,
     };
   };
 
@@ -1182,7 +1200,7 @@ export class DiffFile {
     this.#newFilePlaceholderLines = data.newFilePlaceholderLines;
     this.splitLineLength = data.splitLineLength;
     this.unifiedLineLength = data.unifiedLineLength;
-    this.hasCollapsed = data.hasCollapsed;
+    this.hasSomeLineCollapsed = data.hasSomeLineCollapsed;
 
     this.#splitLeftLines = data.splitLeftLines;
     this.#splitRightLines = data.splitRightLines;
@@ -1190,6 +1208,9 @@ export class DiffFile {
 
     this.#unifiedLines = data.unifiedLines;
     this.#unifiedHunksLines = data.unifiedHunkLines;
+
+    // mark this instance as a merged instance
+    this.#composeByMerge = true;
 
     if (__DEV__ && this._version_ !== data.version) {
       console.error("the version of the `diffInstance` is not match, some error may happen!");
@@ -1243,15 +1264,26 @@ export class DiffFile {
       newFileResult,
       diffLines,
       diffListResults,
+      // get current instance is a fullMerge instance or not
+      isFullMerge: this.#composeByMerge ? this.#composeByFullMerge : true,
     };
   };
 
   _mergeFullBundle = (data: ReturnType<DiffFile["_getFullBundle"]>) => {
     this.mergeBundle(data);
-    this.#oldFileResult = data.oldFileResult;
-    this.#newFileResult = data.newFileResult;
-    this.#diffLines = data.diffLines;
-    this.#diffListResults = data.diffListResults;
+    try {
+      this.#oldFileResult = File.createInstance(data.oldFileResult);
+
+      this.#newFileResult = File.createInstance(data.newFileResult);
+
+      this.#diffLines = data.diffLines;
+
+      this.#diffListResults = data.diffListResults;
+
+      this.#composeByFullMerge = data.isFullMerge;
+    } catch {
+      void 0;
+    }
   };
 
   _destroy = () => {
