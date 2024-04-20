@@ -1,4 +1,6 @@
-import { DiffLineType, numIterator } from ".";
+import { DiffLineType } from "./parse";
+
+import { numIterator } from ".";
 
 import type { DiffHunkItem, SplitLineItem, UnifiedLineItem, DiffFile } from ".";
 

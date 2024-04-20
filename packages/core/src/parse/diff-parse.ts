@@ -14,8 +14,8 @@
 // In many versions of GNU diff, each range can omit the comma and trailing value s,
 
 import { DiffLine, DiffLineType } from "./diff-line";
+import { assertNever, getHunkHeaderExpansionType, getLargestLineNumber } from "./diff-tool";
 import { DiffHunk, DiffHunkHeader } from "./raw-diff";
-import { assertNever, getHunkHeaderExpansionType, getLargestLineNumber } from "./tool";
 
 import type { IRawDiff } from "./raw-diff";
 
@@ -428,4 +428,5 @@ export class DiffParser {
     }
   }
 }
+
 export const parseInstance = new DiffParser();

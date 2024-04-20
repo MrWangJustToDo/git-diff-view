@@ -6,7 +6,7 @@ import type { DiffLine } from "./diff-line";
 import type { DiffHunk, DiffHunkHeader } from "./raw-diff";
 
 /** How many new lines will be added to a diff hunk by default. */
-export const DefaultDiffExpansionStep = 20;
+export const DefaultDiffExpansionStep = 40;
 
 export function assertNever(_: never, message: string): never {
   throw new Error(message);

@@ -14,6 +14,8 @@ export type DiffHighlighter = {
   setIgnoreSyntaxHighlightList: (v: (string | RegExp)[]) => void;
   getAST: (raw: string, fileName?: string, lang?: string) => DiffAST;
   processAST: (ast: DiffAST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };
+  hasRegisteredCurrentLang: (lang: string) => boolean;
+  getHighlighterEngine: () => DePromise<ReturnType<typeof getHighlighter>> | null;
 };
 
 let internal: DePromise<ReturnType<typeof getHighlighter>> | null = null;
@@ -120,6 +122,18 @@ Object.defineProperty(instance, "processAST", {
     return processAST(ast);
   },
 });
+
+Object.defineProperty(instance, "hasRegisteredCurrentLang", {
+  value: (lang: string) => {
+    return internal?.getLanguage(lang) !== undefined;
+  }
+})
+
+Object.defineProperty(instance, "getHighlighterEngine", {
+  value: () => {
+    return internal;
+  }
+})
 
 const highlighter: DiffHighlighter = instance as DiffHighlighter;
 

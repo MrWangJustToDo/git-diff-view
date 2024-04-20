@@ -62,6 +62,8 @@ export type DiffHighlighter = {
   setIgnoreSyntaxHighlightList: (v: (string | RegExp)[]) => void;
   getAST: (raw: string, fileName?: string, lang?: string) => DiffAST;
   processAST: (ast: DiffAST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };
+  hasRegisteredCurrentLang: (lang: string) => boolean;
+  getHighlighterEngine: () => typeof lowlight;
 };
 
 const instance = { name: "lowlight" };
@@ -124,6 +126,12 @@ Object.defineProperty(instance, "getAST", {
 Object.defineProperty(instance, "processAST", {
   value: (ast: DiffAST) => {
     return processAST(ast);
+  },
+});
+
+Object.defineProperty(instance, "hasRegisteredCurrentLang", {
+  value: (lang: string) => {
+    return lowlight.registered(lang);
   },
 });
 

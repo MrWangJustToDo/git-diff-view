@@ -1,12 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable max-lines */
-
-import { DiffLineType, DiffLine } from "./diff-line";
-import { parseInstance } from "./diff-parse";
 import { getFile, File } from "./file";
-import { getDiffRange, getLang } from "./tool";
+import { DiffLine, DiffLineType, parseInstance, getDiffRange, getLang } from "./parse";
 
-import type { IRawDiff } from "./raw-diff";
+import type { IRawDiff } from "./parse";
 import type { highlighter } from "@git-diff-view/lowlight";
 
 export const composeLen = 40;
