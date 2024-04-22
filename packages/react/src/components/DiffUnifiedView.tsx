@@ -66,7 +66,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
     setWidget({});
   }, [diffFile, useWidget]);
 
-  const unifiedLineLength = diffFile.unifiedLineLength;
+  const unifiedLineLength = Math.max(diffFile.unifiedLineLength, diffFile.fileLineLength);
 
   const _width = useTextWidth({
     text: unifiedLineLength.toString(),

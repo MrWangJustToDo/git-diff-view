@@ -62,7 +62,7 @@ export const DiffSplitViewWrap = defineComponent(
 
     useSubscribeDiffFile(props, (diffFile) => {
       lines.value = getSplitContentLines(diffFile);
-      maxText.value = diffFile.splitLineLength.toString();
+      maxText.value = Math.max(diffFile.splitLineLength, diffFile.fileLineLength).toString();
     });
 
     const width = useTextWidth({ text: maxText, font });

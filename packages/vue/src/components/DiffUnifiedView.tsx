@@ -32,7 +32,7 @@ export const DiffUnifiedView = defineComponent(
 
     useSubscribeDiffFile(props, (diffFile) => {
       lines.value = getUnifiedContentLine(diffFile);
-      maxText.value = diffFile.splitLineLength.toString();
+      maxText.value = Math.max(diffFile.splitLineLength, diffFile.fileLineLength).toString();
     });
 
     const fontSize = useFontSize();

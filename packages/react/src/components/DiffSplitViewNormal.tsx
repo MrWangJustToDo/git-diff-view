@@ -68,7 +68,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
 
   const ref2 = useRef<HTMLDivElement>(null);
 
-  const splitLineLength = diffFile.splitLineLength;
+  const splitLineLength = Math.max(diffFile.splitLineLength, diffFile.fileLineLength);
 
   const { useDiffContext } = useDiffViewContext();
 

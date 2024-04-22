@@ -102,7 +102,7 @@ export const DiffSplitViewNormal = defineComponent(
     const maxText = ref(props.diffFile.splitLineLength.toString());
 
     useSubscribeDiffFile(props, (diffFile) => {
-      maxText.value = diffFile.splitLineLength.toString();
+      maxText.value = Math.max(diffFile.splitLineLength, diffFile.fileLineLength).toString();
     });
 
     const initSyncScroll = (onClean: (cb: () => void) => void) => {

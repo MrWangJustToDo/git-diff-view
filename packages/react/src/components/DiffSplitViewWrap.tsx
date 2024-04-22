@@ -38,7 +38,7 @@ const Style = ({
 };
 
 export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => {
-  const splitLineLength = diffFile.splitLineLength;
+  const splitLineLength = Math.max(diffFile.splitLineLength, diffFile.fileLineLength);
 
   const { useDiffContext } = useDiffViewContext();
 
