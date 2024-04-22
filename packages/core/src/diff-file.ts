@@ -212,14 +212,10 @@ export class DiffFile {
 
     if (this._oldFileContent) {
       this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang, this._oldFileName);
-
-      this.fileLineLength = Math.max(this.fileLineLength, this.#oldFileResult.maxLineNumber);
     }
 
     if (this._newFileContent) {
       this.#newFileResult = getFile(this._newFileContent, this._newFileLang, this._newFileName);
-
-      this.fileLineLength = Math.max(this.fileLineLength, this.#newFileResult.maxLineNumber);
     }
   }
 
@@ -231,6 +227,8 @@ export class DiffFile {
     this.#newFileResult?.doRaw();
 
     this.#newFileLines = this.#newFileResult?.rawFile;
+
+    this.fileLineLength = Math.max(this.fileLineLength, this.#oldFileResult?.maxLineNumber || 0, this.#newFileResult?.maxLineNumber || 0);
   }
 
   #composeFile() {
@@ -277,11 +275,6 @@ export class DiffFile {
       this.#newFileResult = getFile(this._newFileContent, this._newFileLang, this._newFileName);
       this.#oldFilePlaceholderLines = oldFilePlaceholderLines;
       this.#newFilePlaceholderLines = newFilePlaceholderLines;
-      this.fileLineLength = Math.max(
-        this.fileLineLength,
-        this.#oldFileResult.maxLineNumber,
-        this.#newFileResult.maxLineNumber
-      );
       // all of the file just compose by diff, so we can not do the expand action
       this.#composeByDiff = true;
     } else if (this.#oldFileResult) {
@@ -308,7 +301,6 @@ export class DiffFile {
       if (!hasSymbolChanged && newFileContent === this._oldFileContent) return;
       this._newFileContent = newFileContent;
       this.#newFileResult = getFile(this._newFileContent, this._newFileLang, this._newFileName);
-      this.fileLineLength = Math.max(this.fileLineLength, this.#newFileResult.maxLineNumber);
     } else if (this.#newFileResult) {
       let oldLineNumber = 1;
       let newLineNumber = 1;
@@ -333,7 +325,6 @@ export class DiffFile {
       if (!hasSymbolChanged && oldFileContent === this._newFileContent) return;
       this._oldFileContent = oldFileContent;
       this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang, this._oldFileName);
-      this.fileLineLength = Math.max(this.fileLineLength, this.#oldFileResult.maxLineNumber);
     }
 
     this.#composeRaw();
