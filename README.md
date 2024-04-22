@@ -104,7 +104,7 @@ file.buildSplitDiffLines();
 file.buildUnifiedDiffLines();
 
 // with @git-diff-view/core
-import { DiffView } from "@git-diff-view/core";
+import { DiffFile } from "@git-diff-view/core";
 const file = new DiffFile(
   data?.oldFile?.fileName || "",
   data?.oldFile?.content || "",

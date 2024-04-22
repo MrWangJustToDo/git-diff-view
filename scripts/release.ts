@@ -5,6 +5,7 @@ import { resolve } from "path";
 const pkgNameAlias = {
   "@git-diff-view/core": "core",
   "@git-diff-view/vue": "vue",
+  "@git-diff-view/file": "file",
   "@git-diff-view/react": "react",
   "@git-diff-view/lowlight": "lowlight",
   "@git-diff-view/shiki": "shiki",
@@ -66,6 +67,7 @@ const run = async () => {
   await release("@git-diff-view/react");
   await release("@git-diff-view/vue");
   await release("@git-diff-view/lowlight");
+  await release("@git-diff-view/file");
   await release("@git-diff-view/shiki");
 };
 
