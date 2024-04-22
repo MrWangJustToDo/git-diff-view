@@ -126,14 +126,14 @@ Object.defineProperty(instance, "processAST", {
 Object.defineProperty(instance, "hasRegisteredCurrentLang", {
   value: (lang: string) => {
     return internal?.getLanguage(lang) !== undefined;
-  }
-})
+  },
+});
 
 Object.defineProperty(instance, "getHighlighterEngine", {
   value: () => {
     return internal;
-  }
-})
+  },
+});
 
 const highlighter: DiffHighlighter = instance as DiffHighlighter;
 

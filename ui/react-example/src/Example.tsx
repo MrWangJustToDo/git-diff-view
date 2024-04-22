@@ -115,7 +115,6 @@ export function Example() {
     }
   }, [expandAll]);
 
-
   const reactElement = (
     <DiffViewReact<string>
       ref={ref}
