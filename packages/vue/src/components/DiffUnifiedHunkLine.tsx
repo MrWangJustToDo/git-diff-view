@@ -32,7 +32,7 @@ export const DiffUnifiedHunkLine = defineComponent(
         currentHunk.value.unifiedInfo.endHiddenIndex - currentHunk.value.unifiedInfo.startHiddenIndex < composeLen
     );
 
-    const currentIsFirstLine = ref(currentHunk.value && currentHunk.value.index === 0);
+    const currentIsFirstLine = ref(currentHunk.value && currentHunk.value.isFirst);
 
     const currentIsPureHunk = ref(currentHunk.value && !currentHunk.value.unifiedInfo);
 
@@ -53,7 +53,7 @@ export const DiffUnifiedHunkLine = defineComponent(
         currentHunk.value.unifiedInfo &&
         currentHunk.value.unifiedInfo.endHiddenIndex - currentHunk.value.unifiedInfo.startHiddenIndex < composeLen;
 
-      currentIsFirstLine.value = currentHunk.value && currentHunk.value.index === 0;
+      currentIsFirstLine.value = currentHunk.value && currentHunk.value.isFirst;
 
       currentIsLastLine.value = currentHunk.value && currentHunk.value.isLast;
 

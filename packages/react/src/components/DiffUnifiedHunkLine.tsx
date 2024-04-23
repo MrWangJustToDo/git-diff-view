@@ -34,7 +34,7 @@ const _DiffUnifiedHunkLine = ({
     currentHunk.unifiedInfo &&
     currentHunk.unifiedInfo.endHiddenIndex - currentHunk.unifiedInfo.startHiddenIndex < composeLen;
 
-  const isFirstLine = currentHunk && currentHunk.index === 0;
+  const isFirstLine = currentHunk && currentHunk.isFirst;
 
   const isLastLine = currentHunk && currentHunk.isLast;
 

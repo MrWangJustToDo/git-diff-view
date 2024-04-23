@@ -30,7 +30,7 @@ const DiffSplitHunkLineGitHub = defineComponent(
         currentHunk.value.splitInfo.endHiddenIndex - currentHunk.value.splitInfo.startHiddenIndex < composeLen
     );
 
-    const currentIsFirstLine = ref(currentHunk.value && currentHunk.value.index === 0);
+    const currentIsFirstLine = ref(currentHunk.value && currentHunk.value.isFirst);
 
     const currentIsPureHunk = ref(currentHunk.value && !currentHunk.value.splitInfo);
 
@@ -57,7 +57,7 @@ const DiffSplitHunkLineGitHub = defineComponent(
         currentHunk.value.splitInfo &&
         currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex;
 
-      currentIsFirstLine.value = currentHunk.value && currentHunk.value.index === 0;
+      currentIsFirstLine.value = currentHunk.value && currentHunk.value.isFirst;
 
       currentIsLastLine.value = currentHunk.value && currentHunk.value.isLast;
 
@@ -193,7 +193,7 @@ const DiffSplitHunkLineGitLab = defineComponent(
         currentHunk.value.splitInfo.endHiddenIndex - currentHunk.value.splitInfo.startHiddenIndex < composeLen
     );
 
-    const currentIsFirstLine = ref(currentHunk.value && currentHunk.value.index === 0);
+    const currentIsFirstLine = ref(currentHunk.value && currentHunk.value.isFirst);
 
     const currentIsPureHunk = ref(currentHunk.value && !currentHunk.value.splitInfo);
 
@@ -230,7 +230,7 @@ const DiffSplitHunkLineGitLab = defineComponent(
         currentHunk.value.splitInfo &&
         currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex;
 
-      currentIsFirstLine.value = currentHunk.value && currentHunk.value.index === 0;
+      currentIsFirstLine.value = currentHunk.value && currentHunk.value.isFirst;
 
       currentIsLastLine.value = currentHunk.value && currentHunk.value.isLast;
 

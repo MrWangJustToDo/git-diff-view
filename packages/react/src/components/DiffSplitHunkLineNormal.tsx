@@ -38,7 +38,7 @@ const _DiffSplitHunkLineGitHub = ({
     currentHunk.splitInfo &&
     currentHunk.splitInfo.endHiddenIndex - currentHunk.splitInfo.startHiddenIndex < composeLen;
 
-  const isFirstLine = currentHunk && currentHunk.index === 0;
+  const isFirstLine = currentHunk && currentHunk.isFirst;
 
   const isLastLine = currentHunk && currentHunk.isLast;
 
@@ -170,7 +170,7 @@ const _DiffSplitHunkLineGitLab = ({
     currentHunk.splitInfo &&
     currentHunk.splitInfo.endHiddenIndex - currentHunk.splitInfo.startHiddenIndex < composeLen;
 
-  const isFirstLine = currentHunk && currentHunk.index === 0;
+  const isFirstLine = currentHunk && currentHunk.isFirst;
 
   const isLastLine = currentHunk && currentHunk.isLast;
 
