@@ -183,6 +183,7 @@ export function Example() {
       diffViewMode={mode}
       diffViewWrap={wrap}
       diffViewAddWidget
+      onAddWidgetClick={console.log}
     />
   );
 

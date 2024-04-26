@@ -3,7 +3,7 @@
 import { DiffFile, _cacheMap } from "@git-diff-view/core";
 import { memo, useEffect, useMemo, forwardRef, useImperativeHandle } from "react";
 import * as React from "react";
-import { createStore, markRaw, ref } from "reactivity-store";
+import { createStore, ref } from "reactivity-store";
 
 import { useUnmount } from "../hooks/useUnmount";
 
@@ -155,10 +155,10 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
           (renderExtendLine.value = _renderExtendLine);
 
         // 避免无意义的订阅
-        const onAddWidgetClick = ref(markRaw({ current: props.onAddWidgetClick }));
+        const onAddWidgetClick = { current: props.onAddWidgetClick };
 
-        const setOnAddWidgetClick = (_onAddWidgetClick: typeof onAddWidgetClick.value) =>
-          (onAddWidgetClick.value.current = _onAddWidgetClick.current);
+        const setOnAddWidgetClick = (_onAddWidgetClick: typeof onAddWidgetClick) =>
+          (onAddWidgetClick.current = _onAddWidgetClick.current);
 
         return {
           id,

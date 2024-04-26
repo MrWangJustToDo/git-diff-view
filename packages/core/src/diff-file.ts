@@ -520,7 +520,7 @@ export class DiffFile {
     if (this.#hasBuildSplit) return;
     let oldFileLineNumber = 1;
     let newFileLineNumber = 1;
-    let prevIsHidden = false;
+    let prevIsHidden = true;
     let hideStart = Infinity;
     const maxOldFileLineNumber = this.#oldFileResult?.maxLineNumber || 0;
     const maxNewFileLineNumber = this.#newFileResult?.maxLineNumber || 0;
@@ -700,7 +700,7 @@ export class DiffFile {
     if (this.#hasBuildUnified) return;
     let oldFileLineNumber = 1;
     let newFileLineNumber = 1;
-    let prevIsHidden = false;
+    let prevIsHidden = true;
     let hideStart = Infinity;
     const maxOldFileLineNumber = this.#oldFileResult?.maxLineNumber || 0;
     const maxNewFileLineNumber = this.#newFileResult?.maxLineNumber || 0;
