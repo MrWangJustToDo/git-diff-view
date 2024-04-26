@@ -7,7 +7,11 @@ a React/Vue component to show the `git diff`/`file diff` result, just like Githu
 ## Demo ---- git-diff / file-diff
 [git-mode](https://mrwangjusttodo.github.io/git-diff-view/?type=try&tab=git)
 
+![git mode](gitMode.png)
+
 [file-mode](https://mrwangjusttodo.github.io/git-diff-view/?type=try&tab=file)
+
+![file mode](fileMode.png)
 
 ## Packages
 
@@ -30,6 +34,7 @@ a React/Vue component to show the `git diff`/`file diff` result, just like Githu
 ![Screenshot](1.png)
 ![Screenshot](2.png)
 ![Screenshot](3.png)
+
 
 ## Features
 
