@@ -627,12 +627,12 @@ export class DiffFile {
           prevHunkLine.splitInfo = {
             ...prevHunkLine.hunkInfo,
 
-            startHiddenIndex: 1,
-            endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex,
+            startHiddenIndex: 0,
+            endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
             plainText: prevHunkLine.text,
 
-            _startHiddenIndex: 1,
-            _endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex,
+            _startHiddenIndex: 0,
+            _endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
             _plainText: prevHunkLine.text,
           };
           hideStart = Infinity;
@@ -799,12 +799,12 @@ export class DiffFile {
           prevHunkLine.unifiedInfo = {
             ...prevHunkLine.hunkInfo,
 
-            startHiddenIndex: 1,
-            endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex,
+            startHiddenIndex: 0,
+            endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
             plainText: prevHunkLine.text,
 
-            _startHiddenIndex: 1,
-            _endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex,
+            _startHiddenIndex: 0,
+            _endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
             _plainText: prevHunkLine.text,
           };
           hideStart = Infinity;
