@@ -58,6 +58,8 @@ export function Example() {
 
   const [scrollBar, setScrollBar] = useState(true);
 
+  const [enableVUE, setEnableVUE] = useState(true);
+
   const ref = useRef<{ getDiffFileInstance: () => DiffFile }>(null);
 
   const vueApp = useRef<App>();
@@ -267,11 +269,11 @@ export function Example() {
   useEffect(() => {
     reactRef.current = document.getElementById("react")! as HTMLDivElement;
     vueRef.current = document.getElementById("vue")! as HTMLDivElement;
-  }, []);
+  }, [enableVUE]);
 
   useEffect(() => {
-    reactApp.current = reactApp.current || createRoot(reactRef.current!);
-  }, []);
+    reactApp.current = createRoot(reactRef.current!);
+  }, [enableVUE]);
 
   useEffect(() => {
     if (diffFileInstance) {
@@ -279,11 +281,12 @@ export function Example() {
       reactApp.current?.render?.(reactElement);
       // mount vue
       vueApp.current = createApp(vueElement);
-      vueApp.current.mount(vueRef.current!);
+
+      if (vueRef.current) vueApp.current.mount(vueRef.current);
 
       return () => vueApp.current?.unmount?.();
     }
-  }, [diffFileInstance, reactElement]);
+  }, [diffFileInstance, reactElement, enableVUE]);
 
   const eleString1 = useMemo(() => ({ __html: `<div id='react'></div>` }), []);
   const eleString2 = useMemo(() => ({ __html: `<div id='vue'></div>` }), []);
@@ -351,7 +354,7 @@ export function Example() {
         instanceArray.forEach((i) => i.destroy());
       };
     }
-  }, [diffFileInstance, scrollBar, wrap, mode]);
+  }, [diffFileInstance, scrollBar, wrap, mode, enableVUE]);
 
   return (
     <>
@@ -376,6 +379,12 @@ export function Example() {
       </div>
       <div className="w-[90%] m-auto mb-[1em] text-right text-[12px]">
         <div className="inline-flex gap-x-4">
+          <button
+            className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+            onClick={() => setEnableVUE(!enableVUE)}
+          >
+            {enableVUE ? "disable Vue" : "enable Vue"}
+          </button>
           {!wrap && (
             <button
               className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
@@ -431,30 +440,59 @@ export function Example() {
           <div className="ml-[6px]"></div>
           React Example:{" "}
         </div>
-        <div className="w-full flex items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            // xmlnsXlink="http://www.w3.org/1999/xlink"
-            aria-hidden="true"
-            role="img"
-            width="37.07"
-            height="36"
-            preserveAspectRatio="xMidYMid meet"
-            viewBox="0 0 256 198"
-          >
-            <path fill="#41B883" d="M204.8 0H256L128 220.8L0 0h97.92L128 51.2L157.44 0h47.36Z"></path>
-            <path fill="#41B883" d="m0 0l128 220.8L256 0h-51.2L128 132.48L50.56 0H0Z"></path>
-            <path fill="#35495E" d="M50.56 0L128 133.12L204.8 0h-47.36L128 51.2L97.92 0H50.56Z"></path>
-          </svg>
-          <div className="ml-[6px]"></div>
-          Vue Example:{" "}
-        </div>
+        {enableVUE && (
+          <div className="w-full flex items-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              // xmlnsXlink="http://www.w3.org/1999/xlink"
+              aria-hidden="true"
+              role="img"
+              width="37.07"
+              height="36"
+              preserveAspectRatio="xMidYMid meet"
+              viewBox="0 0 256 198"
+            >
+              <path fill="#41B883" d="M204.8 0H256L128 220.8L0 0h97.92L128 51.2L157.44 0h47.36Z"></path>
+              <path fill="#41B883" d="m0 0l128 220.8L256 0h-51.2L128 132.48L50.56 0H0Z"></path>
+              <path fill="#35495E" d="M50.56 0L128 133.12L204.8 0h-47.36L128 51.2L97.92 0H50.56Z"></path>
+            </svg>
+            <div className="ml-[6px]"></div>
+            Vue Example:{" "}
+          </div>
+        )}
       </div>
 
-      <div className="flex items-start w-[95vw] gap-x-1 m-auto">
-        <div ref={reactWrapRef} className=" flex-grow-0 w-[50%]">
+      {/* TODO: there are a bug for @my-react, use `key` filed to avoid */}
+      {enableVUE ? (
+        <div key={1} className="flex items-start w-[95vw] gap-x-1 m-auto">
+          <div ref={reactWrapRef} className=" flex-grow-0 w-[50%]">
+            <div
+              className="w-full border border-[#dadada] border-solid rounded-[5px] overflow-hidden"
+              dangerouslySetInnerHTML={eleString1}
+            />
+            <div data-scroll-target className="sticky bottom-0 w-full h-[6px] flex mt-[-6px]">
+              {mode & DiffModeEnum.Split ? (
+                <>
+                  <div data-left className="w-[50%] relative"></div>
+                  <div data-right className="w-[50%] relative"></div>
+                </>
+              ) : (
+                <div data-full></div>
+              )}
+            </div>
+          </div>
+          <div ref={vueWrapRef} className=" flex-grow-0 w-[50%]">
+            <div
+              className="w-full border border-[#dadada] border-solid rounded-[5px] overflow-hidden"
+              dangerouslySetInnerHTML={eleString2}
+            />
+            <div data-scroll-target className="sticky bottom-0"></div>
+          </div>
+        </div>
+      ) : (
+        <div key={2} ref={reactWrapRef} className="w-[95vw] m-auto">
           <div
-            className="w-full border border-[#c8c8c8] border-solid rounded-[5px] overflow-hidden"
+            className="w-full border border-[#dadada] border-solid rounded-[5px] overflow-hidden"
             dangerouslySetInnerHTML={eleString1}
           />
           <div data-scroll-target className="sticky bottom-0 w-full h-[6px] flex mt-[-6px]">
@@ -468,14 +506,8 @@ export function Example() {
             )}
           </div>
         </div>
-        <div ref={vueWrapRef} className=" flex-grow-0 w-[50%]">
-          <div
-            className="w-full border border-[#c8c8c8] border-solid rounded-[5px] overflow-hidden"
-            dangerouslySetInnerHTML={eleString2}
-          />
-          <div data-scroll-target className="sticky bottom-0"></div>
-        </div>
-      </div>
+      )}
+
       <div className="mb-[5em]" />
     </>
   );
