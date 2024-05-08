@@ -187,7 +187,7 @@ export const DiffView = defineComponent<
 
     useProvide(props, "extendData", extendDataSymbol, { deepWatch: true });
 
-    onUnmounted(() => diffFile.value._destroy?.());
+    onUnmounted(() => diffFile.value?._destroy?.());
 
     options.expose({ getDiffFileInstance: () => diffFile.value });
 
