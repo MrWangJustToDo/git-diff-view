@@ -29,6 +29,7 @@
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
     "autoprefixer": "^10.4.19",
+    "dts-bundle-generator": "^9.5.1",
     "eslint": "^8.57.0",
     "husky": "^8.0.2",
     "postcss": "^8.4.38",

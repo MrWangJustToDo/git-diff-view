@@ -6,7 +6,7 @@ export type SyntaxNode = {
   lineNumber: number;
   startIndex: number;
   endIndex: number;
-  properties?: { className?: string[] };
+  properties?: { className?: string[]; [key: string]: any };
   children?: SyntaxNode[];
 };
 

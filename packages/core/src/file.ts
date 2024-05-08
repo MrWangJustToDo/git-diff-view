@@ -2,7 +2,7 @@ import { highlighter } from "@git-diff-view/lowlight";
 
 import { Cache } from "./cache";
 
-import type { DiffAST } from "@git-diff-view/lowlight";
+import type { DiffAST, SyntaxLine } from "@git-diff-view/lowlight";
 
 const map = new Cache<string, File>();
 
@@ -25,23 +25,6 @@ if (__DEV__ && typeof globalThis !== "undefined") {
     globalThis[devKey] = [map];
   }
 }
-
-export type SyntaxNode = {
-  type: string;
-  value: string;
-  lineNumber: number;
-  startIndex: number;
-  endIndex: number;
-  properties?: { className?: string[]; style?: string };
-  children?: SyntaxNode[];
-};
-
-export type SyntaxLine = {
-  value: string;
-  lineNumber: number;
-  valueLength: number;
-  nodeList: { node: SyntaxNode; wrapper?: SyntaxNode }[];
-};
 
 export class File {
   ast?: DiffAST;

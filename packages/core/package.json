@@ -11,6 +11,9 @@
     "index.js",
     "index.d.ts"
   ],
+  "scripts": {
+    "gen:type": "dts-bundle-generator -o index.d.ts dist/types/index.d.ts"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MrWangJustToDo/git-diff-view.git",
@@ -52,6 +55,7 @@
     "lowlight": "^3.1.0"
   },
   "devDependencies": {
-    "@git-diff-view/lowlight": "latest"
+    "@git-diff-view/lowlight": "latest",
+    "@types/hast": "^3.0.0"
   }
 }

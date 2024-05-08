@@ -18,7 +18,8 @@
     "directory": "packages/vue"
   },
   "scripts": {
-    "build": "vue-tsc --noEmit && vite build"
+    "build": "vue-tsc --noEmit && vite build",
+    "gen:type": "dts-bundle-generator -o index.d.ts dist/index.d.ts"
   },
   "homepage": "https://github.com/MrWangJustToDo/git-diff-view",
   "exports": {
@@ -48,6 +49,7 @@
     "vue diff component"
   ],
   "dependencies": {
+    "@types/hast": "^3.0.0",
     "highlight.js": "^11.9.0",
     "lowlight": "^3.1.0"
   },

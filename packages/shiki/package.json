@@ -10,6 +10,9 @@
     "dist",
     "index.d.ts"
   ],
+  "scripts": {
+    "gen:type": "dts-bundle-generator -o index.d.ts dist/types/index.d.ts"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MrWangJustToDo/git-diff-view.git",
