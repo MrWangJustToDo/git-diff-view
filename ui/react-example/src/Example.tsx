@@ -361,7 +361,7 @@ export function Example() {
       <div className="w-[90%] m-auto mb-[1em] mt-[1em]">
         <h2 className=" text-[24px]">
           A <code className=" bg-slate-100 px-[4px] rounded-sm">React</code> /{" "}
-          <code className="bg-slate-100 px-[4px] rounded-sm">Vue</code> component to show the file diff (like Github)
+          <code className="bg-slate-100 px-[4px] rounded-sm">Vue</code> component to show the file/git diff
         </h2>
         <br />
         <p>
@@ -383,21 +383,21 @@ export function Example() {
             className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
             onClick={() => setEnableVUE(!enableVUE)}
           >
-            {enableVUE ? "disable Vue" : "enable Vue"}
+            {enableVUE ? "Disable Vue" : "Enable Vue"}
           </button>
           {!wrap && (
             <button
               className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
               onClick={() => setScrollBar(!scrollBar)}
             >
-              {scrollBar ? "toggle to disable scrollbar" : "toggle to enable scrollbar"}
+              {scrollBar ? "Toggle to disable scrollbar" : "Toggle to enable scrollbar"}
             </button>
           )}
           <button
             className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
             onClick={() => setExpandAll(!expandAll)}
           >
-            {expandAll ? "toggle to collapseAll" : "toggle to expandAll"}
+            {expandAll ? "Toggle to collapseAll" : "Toggle to expandAll"}
           </button>
           <button
             className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"

@@ -13,6 +13,10 @@ a React/Vue component to show the `git diff`/`file diff` result, just like Githu
 
 ![file mode](fileMode.png)
 
+[GitHub compare](https://mrwangjusttodo.github.io/MrWangJustToDo.io?overlay=open&playGround=GitHub)
+
+![GitHub compare](4.png)
+
 ## Packages
 
 | Package                                  | Version                                                                                                                    |

@@ -47,7 +47,7 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
   return (
     <div className="w-[90%] m-auto mt-[1em] mb-[1em]">
       <h2 className="text-[24px]">
-        PlayGround -- input a `git diff` string
+        PlayGround -- provide a `git diff` string
         <div className="ml-4 text-[14px] inline-block">
           <Button onClick={onClick}>go to `file mode`</Button>
         </div>
@@ -91,9 +91,7 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
           diffViewWrap
         />
       ) : (
-        <div className="border mt-[10px] rounded-[4px] p-[10px] text-orange-500 text-[22px]">
-          try to give a `git diff` input, and see the result
-        </div>
+        <div className="border mt-[10px] rounded-[4px] p-[10px] text-orange-500 text-[22px]">Empty</div>
       )}
     </div>
   );
@@ -139,7 +137,7 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
   return (
     <div className="w-[90%] m-auto mt-[1em] mb-[1em]">
       <h2 className="text-[24px]">
-        PlayGround -- provider two file
+        PlayGround -- provide two file content
         <div className="ml-4 text-[14px] inline-block">
           <Button onClick={onClick}>go to `git mode`</Button>
         </div>
@@ -196,9 +194,7 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
           diffViewWrap
         />
       ) : (
-        <div className="border mt-[10px] rounded-[4px] p-[10px] text-orange-500 text-[22px]">
-          Provider two file content, and see the result
-        </div>
+        <div className="border mt-[10px] rounded-[4px] p-[10px] text-orange-500 text-[22px]">Empty</div>
       )}
     </div>
   );
