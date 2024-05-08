@@ -11,7 +11,7 @@ import { DiffSplitView } from "./DiffSplitView";
 import { DiffUnifiedView } from "./DiffUnifiedView";
 import { DiffModeEnum, DiffViewContext } from "./DiffViewContext";
 
-import type { highlighter } from "@git-diff-view/core";
+import type { DiffHighlighter } from "@git-diff-view/core";
 import type { CSSProperties, ForwardedRef, ReactNode } from "react";
 
 export const diffFontSizeName = "--diff-font-size--";
@@ -37,7 +37,7 @@ export type DiffViewProps<T> = {
    * provide a custom highlighter
    * eg: lowlight, refractor, starry-night, shiki
    */
-  registerHighlighter?: typeof highlighter;
+  registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
   diffViewMode?: DiffModeEnum;
   diffViewWrap?: boolean;
   diffViewFontSize?: number;

@@ -4,7 +4,7 @@ import { getFile, File } from "./file";
 import { DiffLine, DiffLineType, parseInstance, getDiffRange, getLang } from "./parse";
 
 import type { IRawDiff } from "./parse";
-import type { highlighter } from "@git-diff-view/lowlight";
+import type { DiffHighlighter } from "@git-diff-view/lowlight";
 
 export const composeLen = 40;
 
@@ -434,7 +434,7 @@ export class DiffFile {
     });
   }
 
-  #composeSyntax({ registerHighlighter }: { registerHighlighter?: typeof highlighter }) {
+  #composeSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> }) {
     this.#oldFileResult?.doSyntax({ registerHighlighter });
 
     this.#oldFileSyntaxLines = this.#oldFileResult?.syntaxFile;
@@ -492,7 +492,7 @@ export class DiffFile {
     this.#hasInitRaw = true;
   }
 
-  initSyntax({ registerHighlighter }: { registerHighlighter?: typeof highlighter } = {}) {
+  initSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> } = {}) {
     if (this.#hasInitSyntax) return;
 
     if (this.#composeByMerge && !this.#composeByFullMerge) {

@@ -2,7 +2,7 @@ import { highlighter } from "@git-diff-view/lowlight";
 
 import { Cache } from "./cache";
 
-import type { DiffAST, SyntaxLine } from "@git-diff-view/lowlight";
+import type { DiffAST, DiffHighlighter, SyntaxLine } from "@git-diff-view/lowlight";
 
 const map = new Cache<string, File>();
 
@@ -77,7 +77,7 @@ export class File {
     Object.defineProperty(this, "__v_skip", { value: true });
   }
 
-  doSyntax({ registerHighlighter }: { registerHighlighter?: typeof highlighter }) {
+  doSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> }) {
     if (!this.raw || this.hasDoSyntax) return;
 
     const _highlighter = registerHighlighter || highlighter;

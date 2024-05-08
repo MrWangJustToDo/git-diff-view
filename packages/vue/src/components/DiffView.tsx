@@ -20,7 +20,7 @@ import { useProvide } from "../hooks/useProvide";
 import { DiffSplitView } from "./DiffSplitView";
 import { DiffUnifiedView } from "./DiffUnifiedView";
 
-import type { highlighter } from "@git-diff-view/core";
+import type { DiffHighlighter } from "@git-diff-view/core";
 import type { CSSProperties, SlotsType } from "vue";
 
 export enum DiffModeEnum {
@@ -47,7 +47,7 @@ export type DiffViewProps<T> = {
   diffFile?: DiffFile;
   class?: string;
   style?: CSSProperties;
-  registerHighlighter?: typeof highlighter;
+  registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
   diffViewMode?: DiffModeEnum;
   diffViewWrap?: boolean;
   diffViewFontSize?: number;
