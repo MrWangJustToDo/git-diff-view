@@ -19,7 +19,7 @@ export default defineConfig({
     },
     sourcemap: true,
     rollupOptions: {
-      external: ["vue", "lowlight"],
+      external: ["vue", "@git-diff-view/core"],
       output: {
         globals: {
           vue: "Vue",

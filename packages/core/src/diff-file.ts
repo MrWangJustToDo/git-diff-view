@@ -396,7 +396,13 @@ export class DiffFile {
           _newLength: Number(newNumLength),
         };
 
-        if (__DEV__ && typedI.isFirst && typedI.hunkInfo.oldStartIndex !== typedI.hunkInfo.newStartIndex) {
+        if (
+          __DEV__ &&
+          typedI.isFirst &&
+          typedI.hunkInfo.oldStartIndex &&
+          typedI.hunkInfo.newStartIndex &&
+          typedI.hunkInfo.oldStartIndex !== typedI.hunkInfo.newStartIndex
+        ) {
           console.warn("the first hunk should start with the same line number");
         }
 

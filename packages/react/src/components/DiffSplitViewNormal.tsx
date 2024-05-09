@@ -2,7 +2,7 @@
 import { getSplitContentLines, type DiffFile } from "@git-diff-view/core";
 import { Fragment, memo, useCallback, useEffect, useRef } from "react";
 import * as React from "react";
-import { useSyncExternalStore } from "use-sync-external-store/shim";
+import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
 import { useDiffViewContext } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";

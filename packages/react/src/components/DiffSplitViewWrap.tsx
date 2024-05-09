@@ -3,7 +3,8 @@ import { Fragment, memo, useCallback, useMemo } from "react";
 import * as React from "react";
 import { flushSync } from "react-dom";
 import { createStore, ref } from "reactivity-store";
-import { useSyncExternalStore } from "use-sync-external-store/shim";
+// SEE https://github.com/facebook/react/pull/25231
+import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
 import { useDiffViewContext, SplitSide, diffFontSizeName } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";

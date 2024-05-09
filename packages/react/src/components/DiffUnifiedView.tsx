@@ -3,7 +3,7 @@ import { getUnifiedContentLine } from "@git-diff-view/core";
 import * as React from "react";
 import { Fragment, memo, useEffect, useMemo, useCallback } from "react";
 import { createStore, ref } from "reactivity-store";
-import { useSyncExternalStore } from "use-sync-external-store/shim";
+import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
 import { diffFontSizeName, useDiffViewContext, type SplitSide } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";

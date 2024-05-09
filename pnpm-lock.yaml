@@ -55,7 +55,7 @@ importers:
         version: 3.2.5
       project-tool:
         specifier: https://github.com/MrWangJustToDo/project-tool.git
-        version: github.com/MrWangJustToDo/project-tool/3d77e6a336760fb6ca2850619d449bc36e9e0e49(typescript@5.3.3)
+        version: github.com/MrWangJustToDo/project-tool/5a0121bd4db160caf64dbc1a4f21ada18e63104a(typescript@5.3.3)
       rollup-plugin-postcss:
         specifier: ^4.0.2
         version: 4.0.2(postcss@8.4.38)(ts-node@10.9.2)
@@ -77,41 +77,9 @@ importers:
 
   packages/core:
     dependencies:
-      lowlight:
-        specifier: ^3.1.0
-        version: 3.1.0
-    devDependencies:
       '@git-diff-view/lowlight':
-        specifier: latest
+        specifier: ^0.0.14
         version: link:../lowlight
-      '@types/hast':
-        specifier: ^3.0.0
-        version: 3.0.4
-
-  packages/file:
-    dependencies:
-      diff:
-        specifier: ^5.2.0
-        version: 5.2.0
-      lowlight:
-        specifier: ^3.1.0
-        version: 3.1.0
-    devDependencies:
-      '@git-diff-view/core':
-        specifier: latest
-        version: link:../core
-      '@git-diff-view/lowlight':
-        specifier: latest
-        version: link:../lowlight
-      '@types/diff':
-        specifier: ^5.0.9
-        version: 5.0.9
-      '@types/hast':
-        specifier: ^3.0.0
-        version: 3.0.4
-
-  packages/lowlight:
-    dependencies:
       highlight.js:
         specifier: ^11.9.0
         version: 11.9.0
@@ -123,8 +91,45 @@ importers:
         specifier: ^3.0.0
         version: 3.0.4
 
+  packages/file:
+    dependencies:
+      '@git-diff-view/core':
+        specifier: v0.0.14
+        version: link:../core
+      diff:
+        specifier: ^5.2.0
+        version: 5.2.0
+      highlight.js:
+        specifier: ^11.9.0
+        version: 11.9.0
+      lowlight:
+        specifier: ^3.1.0
+        version: 3.1.0
+    devDependencies:
+      '@types/diff':
+        specifier: ^5.0.9
+        version: 5.0.9
+      '@types/hast':
+        specifier: ^3.0.0
+        version: 3.0.4
+
+  packages/lowlight:
+    dependencies:
+      '@types/hast':
+        specifier: ^3.0.0
+        version: 3.0.4
+      highlight.js:
+        specifier: ^11.9.0
+        version: 11.9.0
+      lowlight:
+        specifier: ^3.1.0
+        version: 3.1.0
+
   packages/react:
     dependencies:
+      '@git-diff-view/core':
+        specifier: v0.0.14
+        version: link:../core
       '@types/hast':
         specifier: ^3.0.0
         version: 3.0.4
@@ -144,9 +149,6 @@ importers:
         specifier: ^1.2.0
         version: 1.2.0(react@18.2.0)
     devDependencies:
-      '@git-diff-view/core':
-        specifier: latest
-        version: link:../core
       '@types/use-sync-external-store':
         specifier: ^0.0.3
         version: 0.0.3
@@ -174,6 +176,9 @@ importers:
 
   packages/vue:
     dependencies:
+      '@git-diff-view/core':
+        specifier: v0.0.14
+        version: link:../core
       '@types/hast':
         specifier: ^3.0.0
         version: 3.0.4
@@ -184,9 +189,6 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
     devDependencies:
-      '@git-diff-view/core':
-        specifier: latest
-        version: link:../core
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
         version: 11.1.6(tslib@2.6.2)(typescript@5.4.2)
@@ -6630,11 +6632,11 @@ packages:
       commander: 9.5.0
     dev: true
 
-  github.com/MrWangJustToDo/project-tool/3d77e6a336760fb6ca2850619d449bc36e9e0e49(typescript@5.3.3):
-    resolution: {tarball: https://codeload.github.com/MrWangJustToDo/project-tool/tar.gz/3d77e6a336760fb6ca2850619d449bc36e9e0e49}
-    id: github.com/MrWangJustToDo/project-tool/3d77e6a336760fb6ca2850619d449bc36e9e0e49
+  github.com/MrWangJustToDo/project-tool/5a0121bd4db160caf64dbc1a4f21ada18e63104a(typescript@5.3.3):
+    resolution: {tarball: https://codeload.github.com/MrWangJustToDo/project-tool/tar.gz/5a0121bd4db160caf64dbc1a4f21ada18e63104a}
+    id: github.com/MrWangJustToDo/project-tool/5a0121bd4db160caf64dbc1a4f21ada18e63104a
     name: project-tool
-    version: 0.2.10
+    version: 0.2.11
     engines: {node: '>=10'}
     peerDependencies:
       typescript: ^5.3.3

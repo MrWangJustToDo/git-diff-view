@@ -60,6 +60,7 @@
     "react diff component"
   ],
   "dependencies": {
+    "@git-diff-view/core": "v0.0.14",
     "@types/hast": "^3.0.0",
     "highlight.js": "^11.9.0",
     "lowlight": "^3.1.0",
@@ -67,7 +68,6 @@
     "use-sync-external-store": "^1.2.0"
   },
   "devDependencies": {
-    "@git-diff-view/core": "latest",
     "@types/use-sync-external-store": "^0.0.3",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.38",
@@ -76,13 +76,7 @@
     "tailwindcss": "^3.4.3"
   },
   "peerDependencies": {
-    "@git-diff-view/core": "latest",
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0",
     "react-dom": "^16.8.0 || ^17.0.0 || ^18.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@git-diff-view/core": {
-      "optional": true
-    }
   }
 }
