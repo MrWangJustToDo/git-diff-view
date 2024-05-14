@@ -143,8 +143,8 @@ importers:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0
         version: 18.2.0(react@18.2.0)
       reactivity-store:
-        specifier: ^0.3.2
-        version: 0.3.2(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.3.4
+        version: 0.3.4(react-dom@18.2.0)(react@18.2.0)
       use-sync-external-store:
         specifier: ^1.2.0
         version: 1.2.0(react@18.2.0)
@@ -256,8 +256,8 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
       reactivity-store:
-        specifier: ^0.3.2
-        version: 0.3.2(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.3.4
+        version: 0.3.4(react-dom@18.2.0)(react@18.2.0)
       vue:
         specifier: ^3.4.20
         version: 3.4.20(typescript@5.3.3)
@@ -2060,12 +2060,6 @@ packages:
       vue-template-compiler: 2.7.16
     dev: true
 
-  /@vue/reactivity@3.4.15:
-    resolution: {integrity: sha512-55yJh2bsff20K5O84MxSvXKPHHt17I2EomHznvFiJCAZpJTNW8IuLj1xZWMLELRhBK3kkFV/1ErZGHJfah7i7w==}
-    dependencies:
-      '@vue/shared': 3.4.15
-    dev: false
-
   /@vue/reactivity@3.4.20:
     resolution: {integrity: sha512-P5LJcxUkG6inlHr6MHVA4AVFAmRYJQ7ONGWJILNjMjoYuEXFhYviSCb9BEMyszSG/1kWCZbtWQlKSLasFRpThw==}
     dependencies:
@@ -2095,6 +2089,7 @@ packages:
 
   /@vue/shared@3.4.15:
     resolution: {integrity: sha512-KzfPTxVaWfB+eGcGdbSf4CWdaXcGDqckoeXUh7SB3fZdEtzPCK2Vq9B/lRRL3yutax/LWITz+SwvgyOxz5V75g==}
+    dev: true
 
   /@vue/shared@3.4.20:
     resolution: {integrity: sha512-KTEngal0aiUvNJ6I1Chk5Ew5XqChsFsxP4GKAYXWb99zKJWjNU72p2FWEOmZWHxHcqtniOJsgnpd3zizdpfEag==}
@@ -5372,14 +5367,14 @@ packages:
     dependencies:
       loose-envify: 1.4.0
 
-  /reactivity-store@0.3.2(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-1J7Ecq0klCiQ7pQeKHCbmBRRzJV5W8R8gluc9AL8B6L9+H5RN6FOfoDPMWKXn9ZWH5XB2hAvGQ8mPdroyC5y4g==}
+  /reactivity-store@0.3.4(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-xLZ+nHr1fiAL/jGE0VMFw1Z1tYtzFb6LXGq4IWQyvm1LntAvWBLf64AylnN7lvNiRMAPAjD/pwN15kHL6yceHA==}
     peerDependencies:
       react: ^17.0.2 || ^18.2.0
       react-dom: ^17.0.2 || ^18.2.0
     dependencies:
-      '@vue/reactivity': 3.4.15
-      '@vue/shared': 3.4.15
+      '@vue/reactivity': 3.4.20
+      '@vue/shared': 3.4.20
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       use-sync-external-store: 1.2.0(react@18.2.0)

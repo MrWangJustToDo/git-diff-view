@@ -64,7 +64,7 @@
     "@types/hast": "^3.0.0",
     "highlight.js": "^11.9.0",
     "lowlight": "^3.1.0",
-    "reactivity-store": "^0.3.2",
+    "reactivity-store": "^0.3.4",
     "use-sync-external-store": "^1.2.0"
   },
   "devDependencies": {

@@ -21,7 +21,7 @@
     "overlayscrollbars": "^2.6.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "reactivity-store": "^0.3.2",
+    "reactivity-store": "^0.3.4",
     "vue": "^3.4.20"
   },
   "devDependencies": {
