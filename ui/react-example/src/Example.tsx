@@ -272,6 +272,7 @@ export function Example() {
   }, [enableVUE]);
 
   useEffect(() => {
+    reactApp.current?.unmount();
     reactApp.current = createRoot(reactRef.current!);
   }, [enableVUE]);
 
