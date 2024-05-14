@@ -63,12 +63,12 @@ const release = async (pkgName: keyof typeof pkgNameAlias) => {
 
 const run = async () => {
   console.log("start release @git-dff-view packages");
+  await release("@git-diff-view/lowlight");
+  await release("@git-diff-view/shiki");
   await release("@git-diff-view/core");
+  await release("@git-diff-view/file");
   await release("@git-diff-view/react");
   await release("@git-diff-view/vue");
-  await release("@git-diff-view/lowlight");
-  await release("@git-diff-view/file");
-  await release("@git-diff-view/shiki");
 };
 
 run();
