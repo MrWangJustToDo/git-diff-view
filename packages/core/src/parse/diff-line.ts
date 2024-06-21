@@ -1,4 +1,5 @@
-import type { IRange } from "./change-range";
+import type { DiffRange, IRange } from "./change-range";
+
 
 /** indicate what a line in the diff represents */
 export enum DiffLineType {
@@ -20,7 +21,8 @@ export class DiffLine {
     public readonly newLineNumber: number | null,
     public readonly noTrailingNewLine: boolean = false,
     public needRematch: boolean = false,
-    public range?: IRange
+    public range?: IRange,
+    public diffRange?: DiffRange
   ) {}
 
   public withNoTrailingNewLine(noTrailingNewLine: boolean): DiffLine {
@@ -36,11 +38,6 @@ export class DiffLine {
 
   public isIncludeableLine() {
     return this.type === DiffLineType.Add || this.type === DiffLineType.Delete;
-  }
-
-  /** The content of the line, i.e., without the line type marker. */
-  public get content(): string {
-    return this.text.substring(1);
   }
 
   public equals(other: DiffLine) {

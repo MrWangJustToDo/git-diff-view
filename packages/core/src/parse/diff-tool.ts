@@ -1,4 +1,4 @@
-import { hasRelativeChange, relativeChanges } from "./change-range";
+import { diffChanges, hasRelativeChange, relativeChanges } from "./change-range";
 import { DiffLineType } from "./diff-line";
 import { DiffHunkExpansionType } from "./raw-diff";
 
@@ -100,10 +100,14 @@ export const getDiffRange = (additions: DiffLine[], deletions: DiffLine[]) => {
       const hasDiffRange = hasRelativeChange(addition, deletion);
       if (hasDiffRange) {
         const { stringARange, stringBRange } = relativeChanges(addition, deletion);
+        const { stringARange: _stringARange, stringBRange: _stringBRange } = diffChanges(addition, deletion);
         addition.needRematch = true;
         addition.range = stringARange;
         deletion.needRematch = true;
         deletion.range = stringBRange;
+        // TODO implement line diff
+        addition.diffRange = _stringARange;
+        deletion.diffRange = _stringBRange;
       }
     }
   }

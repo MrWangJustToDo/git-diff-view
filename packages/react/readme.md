@@ -30,7 +30,7 @@ import "@git-diff-view/react/styles/diff-view.css";
 
 ```
 
-2. Use the `DiffView` component with `@git-diff-view/core`/`@git-diff-view/file`
+2. Use the `DiffView` component with `@git-diff-view/core` or `@git-diff-view/file`
 
 ```tsx
 // with @git-diff-view/file

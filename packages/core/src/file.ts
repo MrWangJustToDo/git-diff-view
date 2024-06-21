@@ -156,8 +156,12 @@ export class File {
   }
 }
 
-export const getFile = (raw: string, lang: string, fileName?: string) => {
-  const key = raw + "--" + __VERSION__ + "--" + lang;
+export const getFile = (raw: string, lang: string, fileName?: string, uuid?: string) => {
+  let key = raw + "--" + __VERSION__ + "--" + lang;
+
+  if (uuid) {
+    key = uuid + "--" + __VERSION__ + "--" + lang;
+  }
 
   if (map.has(key)) return map.get(key);
 

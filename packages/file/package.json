@@ -52,7 +52,7 @@
     "diff parse"
   ],
   "dependencies": {
-    "@git-diff-view/core": "v0.0.14",
+    "@git-diff-view/core": "^0.0.14",
     "diff": "^5.2.0",
     "highlight.js": "^11.9.0",
     "lowlight": "^3.1.0"

@@ -59,13 +59,9 @@ a React/Vue component to show the `git diff`/`file diff` result, just like Githu
 ```shell
 # In React Project
 pnpm add @git-diff-view/react
-# full type need install
-pnpm add -D @git-diff-view/core
 
 # In Vue Project
 pnpm add @git-diff-view/vue
-# full type need install
-pnpm add -D @git-diff-view/core
 
 ```
 
@@ -99,7 +95,7 @@ import "@git-diff-view/react/styles/diff-view.css";
 
 ```
 
-#### 2. Use the `DiffView` component with `@git-diff-view/core`/`@git-diff-view/file`
+#### 2. Use the `DiffView` component with `@git-diff-view/core` or `@git-diff-view/file`
 
 ```tsx
 // with @git-diff-view/file

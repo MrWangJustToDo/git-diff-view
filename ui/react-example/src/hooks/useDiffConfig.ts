@@ -12,7 +12,7 @@ export const useDiffConfig = createState(
   () =>
     ({
       highlight: true,
-      wrap: true,
+      wrap: false,
       fontsize: 14,
       mode: DiffModeEnum.Split,
     }) as DiffConfig,

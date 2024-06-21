@@ -178,7 +178,8 @@ export class DiffFile {
     _newFileContent: string,
     readonly _diffList: string[],
     _oldFileLang?: string,
-    _newFileLang?: string
+    _newFileLang?: string,
+    readonly uuid?: string
   ) {
     Object.defineProperty(this, "__v_skip", { value: true });
     let oldContent = _oldFileContent;
@@ -213,11 +214,21 @@ export class DiffFile {
     if (!this._oldFileContent && !this._newFileContent) return;
 
     if (this._oldFileContent) {
-      this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang, this._oldFileName);
+      this.#oldFileResult = getFile(
+        this._oldFileContent,
+        this._oldFileLang,
+        this._oldFileName,
+        this.uuid ? this.uuid + "-old" : undefined
+      );
     }
 
     if (this._newFileContent) {
-      this.#newFileResult = getFile(this._newFileContent, this._newFileLang, this._newFileName);
+      this.#newFileResult = getFile(
+        this._newFileContent,
+        this._newFileLang,
+        this._newFileName,
+        this.uuid ? this.uuid + "-new" : undefined
+      );
     }
   }
 
@@ -277,8 +288,18 @@ export class DiffFile {
       if (!hasSymbolChanged && oldFileContent === newFileContent) return;
       this._oldFileContent = oldFileContent;
       this._newFileContent = newFileContent;
-      this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang, this._oldFileName);
-      this.#newFileResult = getFile(this._newFileContent, this._newFileLang, this._newFileName);
+      this.#oldFileResult = getFile(
+        this._oldFileContent,
+        this._oldFileLang,
+        this._oldFileName,
+        this.uuid ? this.uuid + "-old" : undefined
+      );
+      this.#newFileResult = getFile(
+        this._newFileContent,
+        this._newFileLang,
+        this._newFileName,
+        this.uuid ? this.uuid + "-new" : undefined
+      );
       this.#oldFilePlaceholderLines = oldFilePlaceholderLines;
       this.#newFilePlaceholderLines = newFilePlaceholderLines;
       // all of the file just compose by diff, so we can not do the expand action
@@ -306,7 +327,12 @@ export class DiffFile {
       }
       if (!hasSymbolChanged && newFileContent === this._oldFileContent) return;
       this._newFileContent = newFileContent;
-      this.#newFileResult = getFile(this._newFileContent, this._newFileLang, this._newFileName);
+      this.#newFileResult = getFile(
+        this._newFileContent,
+        this._newFileLang,
+        this._newFileName,
+        this.uuid ? this.uuid + "-new" : undefined
+      );
     } else if (this.#newFileResult) {
       let oldLineNumber = 1;
       let newLineNumber = 1;
@@ -330,7 +356,12 @@ export class DiffFile {
       }
       if (!hasSymbolChanged && oldFileContent === this._newFileContent) return;
       this._oldFileContent = oldFileContent;
-      this.#oldFileResult = getFile(this._oldFileContent, this._oldFileLang, this._oldFileName);
+      this.#oldFileResult = getFile(
+        this._oldFileContent,
+        this._oldFileLang,
+        this._oldFileName,
+        this.uuid ? this.uuid + "-old" : undefined
+      );
     }
 
     this.#composeRaw();

@@ -46,7 +46,7 @@ onmessage = (event: MessageEvent<MessageData>) => {
     const res: MessageData = {
       id: _data.id,
       data: _data.data,
-      bundle: file.getBundle(),
+      bundle: file._getFullBundle(),
     };
 
     file.clear();
