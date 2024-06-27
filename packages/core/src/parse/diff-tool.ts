@@ -97,17 +97,16 @@ export const getDiffRange = (additions: DiffLine[], deletions: DiffLine[]) => {
     for (let i = 0; i < len; i++) {
       const addition = additions[i];
       const deletion = deletions[i];
+      const { stringARange: _stringARange, stringBRange: _stringBRange } = diffChanges(addition, deletion);
+      addition.diffRange = _stringARange;
+      deletion.diffRange = _stringBRange;
       const hasDiffRange = hasRelativeChange(addition, deletion);
       if (hasDiffRange) {
         const { stringARange, stringBRange } = relativeChanges(addition, deletion);
-        const { stringARange: _stringARange, stringBRange: _stringBRange } = diffChanges(addition, deletion);
         addition.needRematch = true;
         addition.range = stringARange;
         deletion.needRematch = true;
         deletion.range = stringBRange;
-        // TODO implement line diff
-        addition.diffRange = _stringARange;
-        deletion.diffRange = _stringBRange;
       }
     }
   }

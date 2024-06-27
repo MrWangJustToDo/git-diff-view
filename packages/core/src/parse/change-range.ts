@@ -82,6 +82,11 @@ function checkNewLineSymbolChange(
       delSymbol: deletion.noTrailingNewLine ? NewLineSymbol.NEWLINE : NewLineSymbol.NORMAL,
     };
   }
+
+  if (aSymbol === bSymbol) {
+    return { addSymbol: undefined, delSymbol: undefined };
+  }
+
   return { addSymbol: aSymbol, delSymbol: bSymbol };
 }
 
@@ -210,8 +215,12 @@ export function diffChanges(
 
   const diffRange = fastDiff(_stringA, _stringB, 0, true);
 
+  const aRange = diffRange.filter((i) => i[0] === 1);
+
+  const bRange = diffRange.filter((i) => i[0] === -1);
+
   return {
-    stringARange: { range: diffRange, newLineSymbol: res.addSymbol },
-    stringBRange: { range: diffRange, newLineSymbol: res.delSymbol },
+    stringARange: { range: aRange, newLineSymbol: res.addSymbol },
+    stringBRange: { range: bRange, newLineSymbol: res.delSymbol },
   };
 }
