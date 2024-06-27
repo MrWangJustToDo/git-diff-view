@@ -5,6 +5,7 @@ import { addContentHighlightBGName, delContentHighlightBGName } from "./color";
 import { DiffNoNewLine } from "./DiffNoNewLine";
 import { diffFontSizeName } from "./DiffView";
 
+// TODO
 const DiffSyntax = ({
   rawLine,
   diffLine,
@@ -34,11 +35,11 @@ const DiffString = ({
   operator?: "add" | "del";
   enableWrap?: boolean;
 }) => {
-  const diffRange = diffLine?.diffRange;
+  const diffRange = diffLine?.diffChanges;
 
   const isAdd = operator === "add";
 
-  if (diffRange) {
+  if (diffRange.hasLineChange) {
     const targetRange = diffRange.range;
 
     const isNewLineSymbolChanged = diffRange.newLineSymbol;

@@ -44,15 +44,16 @@ const DiffString = ({
   operator?: "add" | "del";
   enableWrap?: boolean;
 }) => {
-  const range = diffLine?.range;
+  const changes = diffLine?.changes;
 
-  if (range) {
+  if (changes?.hasLineChange) {
+    const range = changes.range;
     const str1 = rawLine.slice(0, range.location);
     const str2 = rawLine.slice(range.location, range.location + range.length);
     const str3 = rawLine.slice(range.location + range.length);
     const isLast = str2.includes("\n");
     const _str2 = isLast ? str2.replace("\n", "") : str2;
-    const isNewLineSymbolChanged = range.newLineSymbol;
+    const isNewLineSymbolChanged = changes.newLineSymbol;
     return (
       <span className="diff-line-content-raw">
         <span data-range-start={range.location} data-range-end={range.location + range.length}>
@@ -79,7 +80,7 @@ const DiffString = ({
           </span>
           {str3}
         </span>
-        {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && diffLine.noTrailingNewLine && (
+        {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
           <span
             data-no-newline-at-end-of-file
             className={enableWrap ? "block text-red-500" : "inline-block align-middle text-red-500"}
@@ -115,10 +116,12 @@ const DiffSyntax = ({
     return <DiffString rawLine={rawLine} diffLine={diffLine} operator={operator} />;
   }
 
-  const range = diffLine?.range;
+  const changes = diffLine?.changes;
 
-  if (range) {
-    const isNewLineSymbolChanged = range.newLineSymbol;
+  if (changes?.hasLineChange) {
+    const isNewLineSymbolChanged = changes.newLineSymbol;
+
+    const range = changes.range;
 
     return (
       <span className="diff-line-syntax-raw">
@@ -184,7 +187,7 @@ const DiffSyntax = ({
             }
           })}
         </span>
-        {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && diffLine.noTrailingNewLine && (
+        {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
           <span
             data-no-newline-at-end-of-file
             className={enableWrap ? "block text-red-500" : "inline-block align-middle text-red-500"}

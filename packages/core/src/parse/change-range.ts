@@ -11,17 +11,23 @@ export enum NewLineSymbol {
 }
 
 export interface IRange {
-  /** The starting location for the range. */
-  readonly location: number;
+  readonly range: {
+    /** The starting location for the range. */
+    readonly location: number;
 
-  /** The length of the range. */
-  readonly length: number;
+    /** The length of the range. */
+    readonly length: number;
+  };
+
+  readonly hasLineChange?: boolean;
 
   readonly newLineSymbol?: NewLineSymbol;
 }
 
 export interface DiffRange {
-  readonly range: ReturnType<typeof fastDiff>;
+  readonly range: { type: 1 | -1 | 0; str: string; location: number; length: number }[];
+
+  readonly hasLineChange?: boolean;
 
   readonly newLineSymbol?: NewLineSymbol;
 }
@@ -29,12 +35,18 @@ export interface DiffRange {
 const maxLength = 1000;
 
 /** Get the maximum position in the range. */
-function rangeMax(range: IRange): number {
+function rangeMax(range: IRange["range"]): number {
   return range.location + range.length;
 }
 
 /** Get the length of the common substring between the two strings. */
-function commonLength(stringA: string, rangeA: IRange, stringB: string, rangeB: IRange, reverse: boolean): number {
+function commonLength(
+  stringA: string,
+  rangeA: IRange["range"],
+  stringB: string,
+  rangeB: IRange["range"],
+  reverse: boolean
+): number {
   const max = Math.min(rangeA.length, rangeB.length);
   const startA = reverse ? rangeMax(rangeA) - 1 : rangeA.location;
   const startB = reverse ? rangeMax(rangeB) - 1 : rangeB.location;
@@ -59,7 +71,7 @@ function isInValidString(s: string) {
 function checkNewLineSymbolChange(
   addition: DiffLine,
   deletion: DiffLine
-): { addSymbol: NewLineSymbol; delSymbol: NewLineSymbol } {
+): { addSymbol: NewLineSymbol; addString: string; delSymbol: NewLineSymbol; delString: string } {
   const stringA = addition.text;
 
   const stringB = deletion.text;
@@ -76,151 +88,132 @@ function checkNewLineSymbolChange(
 
   const hasNewLineChanged = addition.noTrailingNewLine !== deletion.noTrailingNewLine;
 
-  if (hasNewLineChanged) {
-    return {
-      addSymbol: addition.noTrailingNewLine ? NewLineSymbol.NEWLINE : NewLineSymbol.NORMAL,
-      delSymbol: deletion.noTrailingNewLine ? NewLineSymbol.NEWLINE : NewLineSymbol.NORMAL,
-    };
-  }
+  // if (hasNewLineChanged) {
+  //   return {
+  //     addSymbol: addition.noTrailingNewLine ? NewLineSymbol.NEWLINE : NewLineSymbol.NORMAL,
+  //     addString: addition.noTrailingNewLine ? stringA : stringA.slice(0, -1),
+  //     delSymbol: deletion.noTrailingNewLine ? NewLineSymbol.NEWLINE : NewLineSymbol.NORMAL,
+  //     delString: deletion.noTrailingNewLine ? stringB : stringB.slice(0, -1),
+  //   };
+  // }
 
   if (aSymbol === bSymbol) {
-    return { addSymbol: undefined, delSymbol: undefined };
+    return { addSymbol: undefined, addString: stringA, delSymbol: undefined, delString: stringB };
   }
 
-  return { addSymbol: aSymbol, delSymbol: bSymbol };
+  return {
+    addSymbol: hasNewLineChanged
+      ? addition.noTrailingNewLine
+        ? NewLineSymbol.NEWLINE
+        : NewLineSymbol.NORMAL
+      : aSymbol,
+    addString: aSymbol === NewLineSymbol.CRLF ? stringA.slice(0, -2) : stringA.slice(0, -1),
+    delSymbol: hasNewLineChanged
+      ? deletion.noTrailingNewLine
+        ? NewLineSymbol.NEWLINE
+        : NewLineSymbol.NORMAL
+      : bSymbol,
+    delString: bSymbol === NewLineSymbol.CRLF ? stringB.slice(0, -2) : stringB.slice(0, -1),
+  };
 }
 
 // TODO maybe could use the original content line
 /** Get the changed ranges in the strings, relative to each other. */
-export function relativeChanges(
-  addition: DiffLine,
-  deletion: DiffLine
-): { stringARange: IRange; stringBRange: IRange } {
+export function relativeChanges(addition: DiffLine, deletion: DiffLine): { addRange: IRange; delRange: IRange } {
   const stringA = addition.text;
 
   const stringB = deletion.text;
 
-  let bRange = { location: 0, length: stringB.length };
-  let aRange = { location: 0, length: stringA.length };
+  const { addString, delString, addSymbol, delSymbol } = checkNewLineSymbolChange(addition, deletion);
 
-  const _stringA = stringA.trimEnd();
-
-  const _stringB = stringB.trimEnd();
-
-  const aEndStr = stringA.slice(-2);
-
-  const bEndStr = stringB.slice(-2);
-
-  const hasNewLineChanged = addition.noTrailingNewLine !== deletion.noTrailingNewLine;
-
-  const aSymbol =
-    aEndStr === "\r\n" ? NewLineSymbol.CRLF : aEndStr.endsWith("\r") ? NewLineSymbol.CR : NewLineSymbol.LF;
-
-  const bSymbol =
-    bEndStr === "\r\n" ? NewLineSymbol.CRLF : bEndStr.endsWith("\r") ? NewLineSymbol.CR : NewLineSymbol.LF;
-
-  if (_stringA === _stringB && (hasNewLineChanged || aSymbol !== bSymbol)) {
+  if (addString === delString && addSymbol && delSymbol) {
     return {
-      stringARange: {
-        location: _stringA.length,
-        length: stringA.length - _stringA.length,
-        newLineSymbol: hasNewLineChanged ? NewLineSymbol.NEWLINE : aSymbol,
+      addRange: {
+        range: {
+          location: addString.length,
+          length: stringA.length - addString.length,
+        },
+        hasLineChange: true,
+        newLineSymbol: addSymbol,
       },
-      stringBRange: {
-        location: _stringB.length,
-        length: stringB.length - _stringB.length,
-        newLineSymbol: hasNewLineChanged ? NewLineSymbol.NEWLINE : bSymbol,
+      delRange: {
+        range: {
+          location: delString.length,
+          length: stringB.length - delString.length,
+        },
+        hasLineChange: true,
+        newLineSymbol: delSymbol,
       },
     };
   }
 
-  if (isInValidString(stringA) || isInValidString(stringB)) {
-    aRange.length = 0;
-    bRange.length = 0;
-
-    return { stringARange: aRange, stringBRange: bRange };
-  }
-
-  const prefixLength = commonLength(stringB, bRange, stringA, aRange, false);
-  bRange = {
-    location: bRange.location + prefixLength,
-    length: bRange.length - prefixLength,
-  };
-  aRange = {
-    location: aRange.location + prefixLength,
-    length: aRange.length - prefixLength,
-  };
-
-  const suffixLength = commonLength(stringB, bRange, stringA, aRange, true);
-  bRange.length -= suffixLength;
-  aRange.length -= suffixLength;
-
-  return { stringARange: aRange, stringBRange: bRange };
-}
-
-/** Check two string have a diff range */
-export function hasRelativeChange(addition: DiffLine, deletion: DiffLine): boolean {
-  const stringA = addition.text;
-
-  const stringB = deletion.text;
-
-  const _stringA = addition.text.trim();
-
-  const _stringB = deletion.text.trim();
-
-  const aEndStr = stringA.slice(-2);
-
-  const bEndStr = stringB.slice(-2);
-
-  const aSymbol =
-    aEndStr === "\r\n" ? NewLineSymbol.CRLF : aEndStr.endsWith("\r") ? NewLineSymbol.CR : NewLineSymbol.LF;
-
-  const bSymbol =
-    bEndStr === "\r\n" ? NewLineSymbol.CRLF : bEndStr.endsWith("\r") ? NewLineSymbol.CR : NewLineSymbol.LF;
-
-  if (_stringA === _stringB) {
-    return true;
-  }
-
-  if (
-    _stringA[0] === _stringB[0] ||
-    (_stringA[_stringA.length - 1] === _stringB[_stringB.length - 1] && aSymbol === bSymbol)
-  ) {
-    return true;
-  }
-
-  return false;
-}
-
-export function diffChanges(
-  addition: DiffLine,
-  deletion: DiffLine
-): { stringARange: DiffRange; stringBRange: DiffRange } {
-  const stringA = addition.text;
-
-  const stringB = deletion.text;
-
-  const _stringA = stringA.trimEnd();
-
-  const _stringB = stringB.trimEnd();
-
-  const res = checkNewLineSymbolChange(addition, deletion);
+  let delRange = { location: 0, length: delString.length };
+  let addRange = { location: 0, length: addString.length };
 
   if (isInValidString(stringA) || isInValidString(stringB)) {
+    addRange.length = 0;
+    delRange.length = 0;
+
     return {
-      stringARange: { range: [], newLineSymbol: res.addSymbol },
-      stringBRange: { range: [], newLineSymbol: res.delSymbol },
+      addRange: { range: addRange },
+      delRange: { range: delRange },
     };
   }
 
-  const diffRange = fastDiff(_stringA, _stringB, 0, true);
+  const prefixLength = commonLength(delString, delRange, addString, addRange, false);
 
-  const aRange = diffRange.filter((i) => i[0] === 1);
+  delRange = {
+    location: delRange.location + prefixLength,
+    length: delRange.length - prefixLength,
+  };
+  addRange = {
+    location: addRange.location + prefixLength,
+    length: addRange.length - prefixLength,
+  };
 
-  const bRange = diffRange.filter((i) => i[0] === -1);
+  const suffixLength = commonLength(delString, delRange, addString, addRange, true);
+
+  delRange.length -= suffixLength;
+
+  addRange.length -= suffixLength;
 
   return {
-    stringARange: { range: aRange, newLineSymbol: res.addSymbol },
-    stringBRange: { range: bRange, newLineSymbol: res.delSymbol },
+    addRange: {
+      range: addRange,
+      hasLineChange: addRange.length < addString.trim().length,
+    },
+    delRange: {
+      range: delRange,
+      hasLineChange: delRange.length < delString.trim().length,
+    },
+  };
+}
+
+export function diffChanges(addition: DiffLine, deletion: DiffLine): { addRange: DiffRange; delRange: DiffRange } {
+  const { addString, addSymbol, delString, delSymbol } = checkNewLineSymbolChange(addition, deletion);
+
+  if (isInValidString(addString) || isInValidString(delString)) {
+    return {
+      addRange: { range: [], hasLineChange: !!addSymbol, newLineSymbol: addSymbol },
+      delRange: { range: [], hasLineChange: !!delSymbol, newLineSymbol: delSymbol },
+    };
+  }
+
+  const diffRange = fastDiff(delString, addString, 0, true);
+
+  let aStart = 0;
+  let bStart = 0;
+
+  const aRange = diffRange
+    .filter((i) => i[0] === 1)
+    .map((i) => ({ type: i[0], str: i[1], location: aStart, length: (aStart += i[1].length) }));
+
+  const bRange = diffRange
+    .filter((i) => i[0] === -1)
+    .map((i) => ({ type: i[0], str: i[1], location: bStart, length: (bStart += i[1].length) }));
+
+  return {
+    addRange: { range: aRange, hasLineChange: aRange.length > 1 || !!addSymbol, newLineSymbol: addSymbol },
+    delRange: { range: bRange, hasLineChange: bRange.length > 1 || !!delSymbol, newLineSymbol: delSymbol },
   };
 }
