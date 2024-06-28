@@ -1,19 +1,18 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { type DiffFile, getSplitContentLines } from "@git-diff-view/core";
 import { Fragment, memo, useCallback, useMemo } from "react";
 import * as React from "react";
-import { flushSync } from "react-dom";
-import { createStore, ref } from "reactivity-store";
 // SEE https://github.com/facebook/react/pull/25231
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
-import { useDiffViewContext, SplitSide, diffFontSizeName } from "..";
+import { useDiffViewContext, SplitSide } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";
 
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineWrap";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineWrap";
 import { DiffSplitLine } from "./DiffSplitLineWrap";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineWrap";
-import { removeAllSelection } from "./tools";
+import { createDiffSplitConfigStore, diffAsideWidthName, diffFontSizeName, removeAllSelection } from "./tools";
 
 import type { MouseEventHandler } from "react";
 import type { Ref, UseSelectorWithStore } from "reactivity-store";
@@ -43,52 +42,36 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
 
   const { useDiffContext } = useDiffViewContext();
 
-  const splitSideInfo = useMemo(
-    () =>
-      createStore(() => {
-        const splitRef = ref<SplitSide>(undefined);
-
-        const setSplit = (side: SplitSide | undefined) => {
-          flushSync(() => {
-            splitRef.value = side;
-          });
-        };
-
-        return { splitRef, setSplit };
-      }),
-    []
-  );
-
-  const setSelectSide = splitSideInfo.getReadonlyState().setSplit;
+  const useSplitConfig = useMemo(() => createDiffSplitConfigStore(), []);
 
   const fontSize = useDiffContext(useCallback((s) => s.fontSize, []));
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);
 
-  const onMouseDown = useCallback<MouseEventHandler<HTMLTableSectionElement>>(
-    (e) => {
-      let ele = e.target;
+  const onMouseDown = useCallback<MouseEventHandler<HTMLTableSectionElement>>((e) => {
+    let ele = e.target;
 
-      // need remove all the selection
-      if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
+    const setSelectSide = useSplitConfig.getReadonlyState().setSplit;
+
+    // need remove all the selection
+    if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
+      removeAllSelection();
+      return;
+    }
+
+    while (ele && ele instanceof HTMLElement && ele.nodeName !== "TD") {
+      ele = ele.parentElement;
+    }
+
+    if (ele instanceof HTMLElement) {
+      const side = ele.getAttribute("data-side");
+      if (side) {
+        setSelectSide(SplitSide[side]);
         removeAllSelection();
-        return;
       }
-
-      while (ele && ele instanceof HTMLElement && ele.nodeName !== "TD") {
-        ele = ele.parentElement;
-      }
-
-      if (ele instanceof HTMLElement) {
-        const side = ele.getAttribute("data-side");
-        if (side) {
-          setSelectSide(SplitSide[side]);
-          removeAllSelection();
-        }
-      }
-    },
-    [setSelectSide]
-  );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const font = useMemo(() => ({ fontSize: fontSize + "px", fontFamily: "Menlo, Consolas, monospace" }), [fontSize]);
 
@@ -106,12 +89,14 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
       <div
         className="diff-table-wrapper w-full"
         style={{
+          // @ts-ignore
+          [diffAsideWidthName]: `${Math.round(width)}px`,
           fontFamily: "Menlo, Consolas, monospace",
           fontSize: `var(${diffFontSizeName})`,
         }}
       >
-        <Style useSelector={splitSideInfo} id={`diff-root${diffFile.getId()}`} />
-        <table className="diff-table border-collapse table-fixed w-full">
+        <Style useSelector={useSplitConfig} id={`diff-root${diffFile.getId()}`} />
+        <table className="diff-table w-full table-fixed border-collapse">
           <colgroup>
             <col className="diff-table-old-num-col" width={Math.round(width)} />
             <col className="diff-table-old-content-col" />

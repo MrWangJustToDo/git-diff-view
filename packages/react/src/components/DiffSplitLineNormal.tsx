@@ -7,7 +7,7 @@ import { emptyBGName, getContentBG, getLineNumberBG, plainLineNumberColorName } 
 import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import { useDiffWidgetContext } from "./DiffWidgetContext";
-import { asideWidth } from "./tools";
+import { diffAsideWidthName } from "./tools";
 
 const _DiffSplitLine = ({
   index,
@@ -71,13 +71,13 @@ const _DiffSplitLine = ({
       {hasContent ? (
         <>
           <td
-            className={`diff-line-${SplitSide[side]}-num sticky left-0 pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px]`}
+            className={`diff-line-${SplitSide[side]}-num sticky left-0 w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top`}
             style={{
               backgroundColor: lineNumberBG,
               color: `var(${plainLineNumberColorName})`,
-              width: `var(${asideWidth})`,
-              minWidth: `var(${asideWidth})`,
-              maxWidth: `var(${asideWidth})`,
+              width: `var(${diffAsideWidthName})`,
+              minWidth: `var(${diffAsideWidthName})`,
+              maxWidth: `var(${diffAsideWidthName})`,
             }}
           >
             {hasDiff && enableAddWidget && (
@@ -87,7 +87,7 @@ const _DiffSplitLine = ({
                 side={side}
                 diffFile={diffFile}
                 onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
-                className="absolute left-[100%] translate-x-[-50%] z-[1]"
+                className="absolute left-[100%] z-[1] translate-x-[-50%]"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
             )}

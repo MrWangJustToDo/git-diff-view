@@ -1,42 +1,25 @@
-import { memo, useEffect, useMemo } from "react";
+import { memo, useEffect, useMemo, useRef, useCallback } from "react";
 import * as React from "react";
-import { createStore, ref } from "reactivity-store";
 
 import { DiffSplitViewNormal } from "./DiffSplitViewNormal";
 import { DiffSplitViewWrap } from "./DiffSplitViewWrap";
 import { useDiffViewContext } from "./DiffViewContext";
 import { DiffWidgetContext } from "./DiffWidgetContext";
+import { createDiffWidgetStore } from "./tools";
 
-import type { SplitSide } from "./DiffView";
 import type { DiffFile } from "@git-diff-view/core";
 
 export const DiffSplitView = memo(({ diffFile }: { diffFile: DiffFile }) => {
   const { useDiffContext } = useDiffViewContext();
 
-  const enableWrap = useDiffContext(React.useCallback((s) => s.enableWrap, []));
+  const useDiffContextRef = useRef(useDiffContext);
+
+  useDiffContextRef.current = useDiffContext;
+
+  const enableWrap = useDiffContext(useCallback((s) => s.enableWrap, []));
 
   // performance optimization
-  const useWidget = useMemo(
-    () =>
-      createStore(() => {
-        const widgetSide = ref<SplitSide>(undefined);
-
-        const widgetLineNumber = ref<number>(undefined);
-
-        const setWidget = ({ side, lineNumber }: { side?: SplitSide; lineNumber?: number }) => {
-          const { renderWidgetLine } = useDiffContext.getReadonlyState();
-
-          if (typeof renderWidgetLine !== "function") return;
-
-          widgetSide.value = side;
-
-          widgetLineNumber.value = lineNumber;
-        };
-
-        return { widgetSide, widgetLineNumber, setWidget };
-      }),
-    [useDiffContext]
-  );
+  const useWidget = useMemo(() => createDiffWidgetStore(useDiffContextRef), []);
 
   const contextValue = useMemo(() => ({ useWidget }), [useWidget]);
 

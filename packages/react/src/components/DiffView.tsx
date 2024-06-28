@@ -1,20 +1,18 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { DiffFile, _cacheMap } from "@git-diff-view/core";
-import { memo, useEffect, useMemo, forwardRef, useImperativeHandle } from "react";
+import { memo, useEffect, useMemo, forwardRef, useImperativeHandle, useRef } from "react";
 import * as React from "react";
-import { createStore, ref } from "reactivity-store";
 
 import { useUnmount } from "../hooks/useUnmount";
 
 import { DiffSplitView } from "./DiffSplitView";
 import { DiffUnifiedView } from "./DiffUnifiedView";
 import { DiffModeEnum, DiffViewContext } from "./DiffViewContext";
+import { createDiffConfigStore, diffFontSizeName } from "./tools";
 
 import type { DiffHighlighter } from "@git-diff-view/core";
 import type { CSSProperties, ForwardedRef, ReactNode } from "react";
-
-export const diffFontSizeName = "--diff-font-size--";
 
 _cacheMap.name = "@git-diff-view/react";
 
@@ -90,99 +88,7 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
 
   // performance optimization
   const useDiffContext = useMemo(
-    () =>
-      createStore(() => {
-        const id = ref(diffFileId);
-
-        const setId = (_id: string) => (id.value = _id);
-
-        const mode = ref(props.diffViewMode);
-
-        const setMode = (_mode: DiffModeEnum) => (mode.value = _mode);
-
-        const enableWrap = ref(props.diffViewWrap);
-
-        const setEnableWrap = (_enableWrap: boolean) => (enableWrap.value = _enableWrap);
-
-        const enableAddWidget = ref(props.diffViewAddWidget);
-
-        const setEnableAddWidget = (_enableAddWidget: boolean) => (enableAddWidget.value = _enableAddWidget);
-
-        const enableHighlight = ref(props.diffViewHighlight);
-
-        const setEnableHighlight = (_enableHighlight: boolean) => (enableHighlight.value = _enableHighlight);
-
-        const fontSize = ref(props.diffViewFontSize);
-
-        const setFontSize = (_fontSize: number) => (fontSize.value = _fontSize);
-
-        const extendData = ref({
-          oldFile: { ...props.extendData?.oldFile },
-          newFile: { ...props.extendData?.newFile },
-        });
-
-        const setExtendData = (_extendData: DiffViewProps<any>["extendData"]) => {
-          const existOldKeys = Object.keys(extendData.value.oldFile || {});
-          const inComingOldKeys = Object.keys(_extendData.oldFile || {});
-          for (const key of existOldKeys) {
-            if (!inComingOldKeys.includes(key)) {
-              delete extendData.value.oldFile[key];
-            }
-          }
-          for (const key of inComingOldKeys) {
-            extendData.value.oldFile[key] = _extendData.oldFile[key];
-          }
-          const existNewKeys = Object.keys(extendData.value.newFile || {});
-          const inComingNewKeys = Object.keys(_extendData.newFile || {});
-          for (const key of existNewKeys) {
-            if (!inComingNewKeys.includes(key)) {
-              delete extendData.value.newFile[key];
-            }
-          }
-          for (const key of inComingNewKeys) {
-            extendData.value.newFile[key] = _extendData.newFile[key];
-          }
-        };
-
-        const renderWidgetLine = ref(props.renderWidgetLine);
-
-        const setRenderWidgetLine = (_renderWidgetLine: typeof renderWidgetLine.value) =>
-          (renderWidgetLine.value = _renderWidgetLine);
-
-        const renderExtendLine = ref(props.renderExtendLine);
-
-        const setRenderExtendLine = (_renderExtendLine: typeof renderExtendLine.value) =>
-          (renderExtendLine.value = _renderExtendLine);
-
-        // 避免无意义的订阅
-        const onAddWidgetClick = { current: props.onAddWidgetClick };
-
-        const setOnAddWidgetClick = (_onAddWidgetClick: typeof onAddWidgetClick) =>
-          (onAddWidgetClick.current = _onAddWidgetClick.current);
-
-        return {
-          id,
-          setId,
-          mode,
-          setMode,
-          enableWrap,
-          setEnableWrap,
-          enableAddWidget,
-          setEnableAddWidget,
-          enableHighlight,
-          setEnableHighlight,
-          fontSize,
-          setFontSize,
-          extendData,
-          setExtendData,
-          renderWidgetLine,
-          setRenderWidgetLine,
-          renderExtendLine,
-          setRenderExtendLine,
-          onAddWidgetClick,
-          setOnAddWidgetClick,
-        };
-      }),
+    () => createDiffConfigStore(props, diffFileId),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
@@ -294,6 +200,13 @@ const DiffViewWithRef = <T extends unknown>(
     }
     return null;
   }, [data, _diffFile]);
+
+  const diffFileRef = useRef(diffFile);
+
+  if (diffFileRef.current && diffFileRef.current !== diffFile) {
+    diffFileRef.current._destroy?.();
+    diffFileRef.current = diffFile;
+  }
 
   useEffect(() => {
     if (!diffFile) return;

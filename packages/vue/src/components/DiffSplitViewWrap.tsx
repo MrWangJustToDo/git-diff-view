@@ -1,7 +1,7 @@
 import { getSplitContentLines } from "@git-diff-view/core";
 import { Fragment, computed, defineComponent, ref } from "vue";
 
-import { SplitSide, diffFontSizeName } from "..";
+import { SplitSide } from "..";
 import { useFontSize } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useTextWidth } from "../hooks/useTextWidth";
@@ -10,7 +10,7 @@ import { DiffSplitExtendLine } from "./DiffSplitExtendLineWrap";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineWrap";
 import { DiffSplitLine } from "./DiffSplitLineWrap";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineWrap";
-import { removeAllSelection } from "./tools";
+import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
 
@@ -75,12 +75,13 @@ export const DiffSplitViewWrap = defineComponent(
           <div
             class="diff-table-wrapper w-full"
             style={{
+              [diffAsideWidthName]: `${Math.round(computedWidth.value)}px`,
               fontFamily: "Menlo, Consolas, monospace",
               fontSize: `var(${diffFontSizeName})`,
             }}
           >
             <Style splitSideInfo={splitSideInfo.value} id={`diff-root${props.diffFile.getId()}`} />
-            <table class="diff-table border-collapse table-fixed w-full">
+            <table class="diff-table w-full table-fixed border-collapse">
               <colgroup>
                 <col class="diff-table-old-num-col" width={Math.round(computedWidth.value)} />
                 <col class="diff-table-old-content-col" />

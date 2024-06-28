@@ -31,7 +31,7 @@ const TextArea = ({ onChange }: { onChange: (v: string) => void }) => {
 
   return (
     <textarea
-      className="w-full border min-h-[80px] !p-[2px]"
+      className="min-h-[80px] w-full border !p-[2px]"
       autoFocus
       value={val}
       onChange={(e) => setVal(e.target.value)}
@@ -58,7 +58,7 @@ export function Example() {
 
   const [scrollBar, setScrollBar] = useState(true);
 
-  const [enableVUE, setEnableVUE] = useState(true);
+  const [enableVUE, setEnableVUE] = useState(false);
 
   const ref = useRef<{ getDiffFileInstance: () => DiffFile }>(null);
 
@@ -121,12 +121,12 @@ export function Example() {
     <DiffViewReact<string>
       ref={ref}
       renderWidgetLine={({ onClose, side, lineNumber }) => (
-        <div className="border flex flex-col w-full px-[4px] py-[8px]">
+        <div className="flex w-full flex-col border px-[4px] py-[8px]">
           <TextArea onChange={(v) => (valRef.current = v)} />
           <div className="m-[5px] mt-[0.8em] text-right">
-            <div className="inline-flex gap-x-[12px] justify-end">
+            <div className="inline-flex justify-end gap-x-[12px]">
               <button
-                className="border !px-[12px] py-[6px] rounded-[4px]"
+                className="rounded-[4px] border !px-[12px] py-[6px]"
                 onClick={() => {
                   onClose();
                   valRef.current = "";
@@ -135,7 +135,7 @@ export function Example() {
                 cancel
               </button>
               <button
-                className="border !px-[12px] py-[6px] rounded-[4px]"
+                className="rounded-[4px] border !px-[12px] py-[6px]"
                 onClick={() => {
                   onClose();
                   if (valRef.current) {
@@ -163,17 +163,17 @@ export function Example() {
       extendData={extend}
       renderExtendLine={({ data }) => {
         return (
-          <div className="px-[8px] py-[6px] bg-slate-200">
-            <div className="border border-solid border-[rgb(200,200,200)] rounded-[4px]">
-              <div className="my-[5px] mx-[4px]">
-                <div className="w-[24px] h-[24px] inline-flex items-center justify-center rounded-full bg-slate-300">
+          <div className="bg-slate-200 px-[8px] py-[6px]">
+            <div className="rounded-[4px] border border-solid border-[rgb(200,200,200)]">
+              <div className="mx-[4px] my-[5px]">
+                <div className="inline-flex h-[24px] w-[24px] items-center justify-center rounded-full bg-slate-300">
                   @
                 </div>
-                <span className="text-[11px] mx-[4px] text-[grey]">:</span>
+                <span className="mx-[4px] text-[11px] text-[grey]">:</span>
                 <span className="text-[11px] text-[grey]">{new Date().toLocaleString()}</span>
               </div>
-              <div className="bg-[rgb(210,210,210)] h-[1px] my-[5px]"></div>
-              <div className="indent-1 my-[5px] mx-[4px]">
+              <div className="my-[5px] h-[1px] bg-[rgb(210,210,210)]"></div>
+              <div className="mx-[4px] my-[5px] indent-1">
                 <span className="text-[15px]">{data}</span>
               </div>
             </div>
@@ -359,15 +359,15 @@ export function Example() {
 
   return (
     <>
-      <div className="w-[90%] m-auto mb-[1em] mt-[1em]">
-        <h2 className=" text-[24px]">
-          A <code className=" bg-slate-100 px-[4px] rounded-sm">React</code> /{" "}
-          <code className="bg-slate-100 px-[4px] rounded-sm">Vue</code> component to show the file/git diff
+      <div className="m-auto mb-[1em] mt-[1em] w-[90%]">
+        <h2 className="text-[24px]">
+          A <code className="rounded-sm bg-slate-100 px-[4px]">React</code> /{" "}
+          <code className="rounded-sm bg-slate-100 px-[4px]">Vue</code> component to show the file/git diff
         </h2>
         <br />
         <p>
           Select a file to show the diff: &nbsp;
-          <select className="border rounded-sm" value={v} onChange={(e) => setV(e.target.value as K)}>
+          <select className="rounded-sm border" value={v} onChange={(e) => setV(e.target.value as K)}>
             <option value="a">diff 1</option>
             <option value="b">diff 2</option>
             <option value="c">diff 3</option>
@@ -378,42 +378,42 @@ export function Example() {
           </select>
         </p>
       </div>
-      <div className="w-[90%] m-auto mb-[1em] text-right text-[12px]">
+      <div className="m-auto mb-[1em] w-[90%] text-right text-[12px]">
         <div className="inline-flex gap-x-4">
           <button
-            className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+            className="rounded-full bg-sky-400 px-5 py-2 text-sm font-semibold leading-5 text-white hover:bg-sky-500"
             onClick={() => setEnableVUE(!enableVUE)}
           >
             {enableVUE ? "Disable Vue" : "Enable Vue"}
           </button>
           {!wrap && (
             <button
-              className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+              className="rounded-full bg-sky-400 px-5 py-2 text-sm font-semibold leading-5 text-white hover:bg-sky-500"
               onClick={() => setScrollBar(!scrollBar)}
             >
               {scrollBar ? "Toggle to disable scrollbar" : "Toggle to enable scrollbar"}
             </button>
           )}
           <button
-            className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+            className="rounded-full bg-sky-400 px-5 py-2 text-sm font-semibold leading-5 text-white hover:bg-sky-500"
             onClick={() => setExpandAll(!expandAll)}
           >
             {expandAll ? "Toggle to collapseAll" : "Toggle to expandAll"}
           </button>
           <button
-            className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+            className="rounded-full bg-sky-400 px-5 py-2 text-sm font-semibold leading-5 text-white hover:bg-sky-500"
             onClick={() => setWrap(!wrap)}
           >
             {wrap ? "Toggle to nowrap" : "Toggle to wrap"}
           </button>
           <button
-            className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+            className="rounded-full bg-sky-400 px-5 py-2 text-sm font-semibold leading-5 text-white hover:bg-sky-500"
             onClick={() => setHighlight(!highlight)}
           >
             {highlight ? "Toggle to disable highlight" : "Toggle to enable highlight"}
           </button>
           <button
-            className="bg-sky-400 hover:bg-sky-500 px-5 py-2 text-sm leading-5 rounded-full font-semibold text-white"
+            className="rounded-full bg-sky-400 px-5 py-2 text-sm font-semibold leading-5 text-white hover:bg-sky-500"
             onClick={() => setMode(mode & DiffModeEnum.Split ? DiffModeEnum.Unified : DiffModeEnum.SplitGitHub)}
           >
             {mode & DiffModeEnum.Split ? "Toggle to UnifiedMode" : "Toggle to SplitMode"}
@@ -421,8 +421,8 @@ export function Example() {
         </div>
       </div>
 
-      <div className="flex w-[95%] m-auto mb-2">
-        <div className="w-full flex items-center">
+      <div className="m-auto mb-2 flex w-[95%]">
+        <div className="flex w-full items-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             // xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -442,7 +442,7 @@ export function Example() {
           React Example:{" "}
         </div>
         {enableVUE && (
-          <div className="w-full flex items-center">
+          <div className="flex w-full items-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               // xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -465,42 +465,42 @@ export function Example() {
 
       {/* TODO: there are a bug for @my-react, use `key` filed to avoid */}
       {enableVUE ? (
-        <div key={1} className="flex items-start w-[95vw] gap-x-1 m-auto">
-          <div ref={reactWrapRef} className=" flex-grow-0 w-[50%]">
+        <div key={1} className="m-auto flex w-[95vw] items-start gap-x-1">
+          <div ref={reactWrapRef} className="w-[50%] flex-grow-0">
             <div
-              className="w-full border border-[#dadada] border-solid rounded-[5px] overflow-hidden"
+              className="w-full overflow-hidden rounded-[5px] border border-solid border-[#dadada]"
               dangerouslySetInnerHTML={eleString1}
             />
-            <div data-scroll-target className="sticky bottom-0 w-full h-[6px] flex mt-[-6px]">
+            <div data-scroll-target className="sticky bottom-0 mt-[-6px] flex h-[6px] w-full">
               {mode & DiffModeEnum.Split ? (
                 <>
-                  <div data-left className="w-[50%] relative"></div>
-                  <div data-right className="w-[50%] relative"></div>
+                  <div data-left className="relative w-[50%]"></div>
+                  <div data-right className="relative w-[50%]"></div>
                 </>
               ) : (
                 <div data-full></div>
               )}
             </div>
           </div>
-          <div ref={vueWrapRef} className=" flex-grow-0 w-[50%]">
+          <div ref={vueWrapRef} className="w-[50%] flex-grow-0">
             <div
-              className="w-full border border-[#dadada] border-solid rounded-[5px] overflow-hidden"
+              className="w-full overflow-hidden rounded-[5px] border border-solid border-[#dadada]"
               dangerouslySetInnerHTML={eleString2}
             />
             <div data-scroll-target className="sticky bottom-0"></div>
           </div>
         </div>
       ) : (
-        <div key={2} ref={reactWrapRef} className="w-[95vw] m-auto">
+        <div key={2} ref={reactWrapRef} className="m-auto w-[95vw]">
           <div
-            className="w-full border border-[#dadada] border-solid rounded-[5px] overflow-hidden"
+            className="w-full overflow-hidden rounded-[5px] border border-solid border-[#dadada]"
             dangerouslySetInnerHTML={eleString1}
           />
-          <div data-scroll-target className="sticky bottom-0 w-full h-[6px] flex mt-[-6px]">
+          <div data-scroll-target className="sticky bottom-0 mt-[-6px] flex h-[6px] w-full">
             {mode & DiffModeEnum.Split ? (
               <>
-                <div data-left className="w-[50%] relative"></div>
-                <div data-right className="w-[50%] relative"></div>
+                <div data-left className="relative w-[50%]"></div>
+                <div data-right className="relative w-[50%]"></div>
               </>
             ) : (
               <div data-full></div>

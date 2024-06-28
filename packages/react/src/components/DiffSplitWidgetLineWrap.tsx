@@ -49,7 +49,7 @@ const _DiffSplitWidgetLine = ({
         </td>
       ) : (
         <td
-          className="diff-line-widget-old-placeholder p-0 select-none"
+          className="diff-line-widget-old-placeholder select-none p-0"
           style={{ backgroundColor: `var(${emptyBGName})` }}
           colSpan={2}
         >
@@ -57,7 +57,7 @@ const _DiffSplitWidgetLine = ({
         </td>
       )}
       {newLineWidget ? (
-        <td className="diff-line-widget-new-content p-0 border-l-[1px] border-l-[rgb(222,222,222)]" colSpan={2}>
+        <td className="diff-line-widget-new-content border-l-[1px] border-l-[rgb(222,222,222)] p-0" colSpan={2}>
           <div className="diff-line-widget-wrapper">
             {renderWidgetLine?.({
               diffFile,
@@ -69,7 +69,7 @@ const _DiffSplitWidgetLine = ({
         </td>
       ) : (
         <td
-          className="diff-line-widget-new-placeholder p-0 border-l-[1px] border-l-[rgb(222,222,222)] select-none"
+          className="diff-line-widget-new-placeholder select-none border-l-[1px] border-l-[rgb(222,222,222)] p-0"
           style={{ backgroundColor: `var(${emptyBGName})` }}
           colSpan={2}
         >

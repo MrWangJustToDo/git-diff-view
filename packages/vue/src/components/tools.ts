@@ -29,4 +29,6 @@ export const syncScroll = (left: HTMLElement, right: HTMLElement) => {
   };
 };
 
-export const asideWidth = "--diff-aside-width--";
+export const diffFontSizeName = "--diff-font-size--";
+
+export const diffAsideWidthName = "--diff-aside-width--";

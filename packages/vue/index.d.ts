@@ -672,7 +672,6 @@ export type DiffViewProps<T> = {
 	diffViewHighlight?: boolean;
 	diffViewAddWidget?: boolean;
 };
-export declare const diffFontSizeName = "--diff-font-size--";
 export type typeSlots = SlotsType<{
 	widget: {
 		lineNumber: number;

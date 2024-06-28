@@ -62,7 +62,7 @@ export const DiffSplitWidgetLine = defineComponent(
             </td>
           ) : (
             <td
-              class="diff-line-widget-old-placeholder p-0 select-none"
+              class="diff-line-widget-old-placeholder select-none p-0"
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >
@@ -70,7 +70,7 @@ export const DiffSplitWidgetLine = defineComponent(
             </td>
           )}
           {newLineWidget.value ? (
-            <td class="diff-line-widget-new-content p-0 border-l-[1px] border-l-[rgb(222,222,222)]" colspan={2}>
+            <td class="diff-line-widget-new-content border-l-[1px] border-l-[rgb(222,222,222)] p-0" colspan={2}>
               <div class="diff-line-widget-wrapper">
                 {slots.widget?.({
                   diffFile: props.diffFile,
@@ -82,7 +82,7 @@ export const DiffSplitWidgetLine = defineComponent(
             </td>
           ) : (
             <td
-              class="diff-line-widget-new-placeholder p-0 border-l-[1px] border-l-[rgb(222,222,222)] select-none"
+              class="diff-line-widget-new-placeholder select-none border-l-[1px] border-l-[rgb(222,222,222)] p-0"
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >

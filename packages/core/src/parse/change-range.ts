@@ -88,15 +88,6 @@ function checkNewLineSymbolChange(
 
   const hasNewLineChanged = addition.noTrailingNewLine !== deletion.noTrailingNewLine;
 
-  // if (hasNewLineChanged) {
-  //   return {
-  //     addSymbol: addition.noTrailingNewLine ? NewLineSymbol.NEWLINE : NewLineSymbol.NORMAL,
-  //     addString: addition.noTrailingNewLine ? stringA : stringA.slice(0, -1),
-  //     delSymbol: deletion.noTrailingNewLine ? NewLineSymbol.NEWLINE : NewLineSymbol.NORMAL,
-  //     delString: deletion.noTrailingNewLine ? stringB : stringB.slice(0, -1),
-  //   };
-  // }
-
   if (aSymbol === bSymbol) {
     return { addSymbol: undefined, addString: stringA, delSymbol: undefined, delString: stringB };
   }
@@ -180,11 +171,15 @@ export function relativeChanges(addition: DiffLine, deletion: DiffLine): { addRa
   return {
     addRange: {
       range: addRange,
-      hasLineChange: addRange.length < addString.trim().length,
+      hasLineChange:
+        (addString.slice(0, addRange.location) + addString.slice(addRange.location + addRange.length)).trim().length >
+        0,
     },
     delRange: {
       range: delRange,
-      hasLineChange: delRange.length < delString.trim().length,
+      hasLineChange:
+        (delString.slice(0, delRange.location) + delString.slice(delRange.location + delRange.length)).trim().length >
+        0,
     },
   };
 }

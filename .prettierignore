@@ -2,6 +2,7 @@
 **/dist
 **/dev
 **/*.md
+**/*.d.ts
 package.json
 tsconfig.json
 pnpm-lock.yaml

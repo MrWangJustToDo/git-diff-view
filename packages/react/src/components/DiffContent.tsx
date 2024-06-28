@@ -3,8 +3,7 @@ import * as React from "react";
 
 import { addContentHighlightBGName, delContentHighlightBGName } from "./color";
 import { DiffNoNewLine } from "./DiffNoNewLine";
-import { diffFontSizeName } from "./DiffView";
-import { memoFunc } from "./tools";
+import { diffFontSizeName, memoFunc } from "./tools";
 
 const temp = {};
 
@@ -251,7 +250,7 @@ export const DiffContent = ({
     >
       <span
         data-operator={isAdded ? "+" : isDelete ? "-" : undefined}
-        className="diff-line-content-operator inline-block w-[1.5em] ml-[-1.5em] indent-[0.2em] select-none"
+        className="diff-line-content-operator ml-[-1.5em] inline-block w-[1.5em] select-none indent-[0.2em]"
       >
         {isAdded ? "+" : isDelete ? "-" : " "}
       </span>

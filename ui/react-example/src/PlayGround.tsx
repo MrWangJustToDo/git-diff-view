@@ -45,17 +45,17 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
   }, [diffString, content, lang]);
 
   return (
-    <div className="w-[90%] m-auto mt-[1em] mb-[1em]">
+    <div className="m-auto mb-[1em] mt-[1em] w-[90%]">
       <h2 className="text-[24px]">
         PlayGround -- provide a `git diff` string
-        <div className="ml-4 text-[14px] inline-block">
+        <div className="ml-4 inline-block text-[14px]">
           <Button onClick={onClick}>go to `file mode`</Button>
         </div>
       </h2>
-      <div className="flex flex-col gap-y-[10px] mt-[10px]">
+      <div className="mt-[10px] flex flex-col gap-y-[10px]">
         <span className="border-b p-[3px]">Lang: </span>
         <input
-          className="border-2 border-[#888] p-[4px] text-[14px] rounded-[4px]"
+          className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
           type=""
           placeholder="input syntax lang"
           value={lang}
@@ -66,7 +66,7 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
           cols={10}
           rows={5}
           autoFocus
-          className="border-2 border-[#888] p-[4px] text-[14px] rounded-[4px]"
+          className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
           placeholder="give a `git diff` output"
           value={diffString}
           onChange={(e) => setDiffString(e.target.value)}
@@ -75,7 +75,7 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
         <textarea
           cols={10}
           rows={5}
-          className="border-2 border-[#888] p-[4px] text-[14px] rounded-[4px]"
+          className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
           placeholder="give a raw file content (optional)"
           value={content}
           onChange={(e) => setContent(e.target.value)}
@@ -84,14 +84,14 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
 
       {diffInstance ? (
         <DiffView<string>
-          className="mt-[10px] border rounded-[4px] overflow-hidden"
+          className="mt-[10px] overflow-hidden rounded-[4px] border"
           diffFile={diffInstance}
           diffViewFontSize={13}
           diffViewHighlight={true}
           diffViewWrap
         />
       ) : (
-        <div className="border mt-[10px] rounded-[4px] p-[10px] text-orange-500 text-[22px]">Empty</div>
+        <div className="mt-[10px] rounded-[4px] border p-[10px] text-[22px] text-orange-500">Empty</div>
       )}
     </div>
   );
@@ -135,18 +135,18 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
   }, [file1, file2, lang1, lang2]);
 
   return (
-    <div className="w-[90%] m-auto mt-[1em] mb-[1em]">
+    <div className="m-auto mb-[1em] mt-[1em] w-[90%]">
       <h2 className="text-[24px]">
         PlayGround -- provide two file content
-        <div className="ml-4 text-[14px] inline-block">
+        <div className="ml-4 inline-block text-[14px]">
           <Button onClick={onClick}>go to `git mode`</Button>
         </div>
       </h2>
-      <div className="flex gap-x-[10px] mt-[10px]">
-        <div className="flex flex-col w-[50%]">
+      <div className="mt-[10px] flex gap-x-[10px]">
+        <div className="flex w-[50%] flex-col">
           <span className="border-b p-[3px]">lang: </span>
           <input
-            className="border-2 border-[#888] p-[4px] text-[14px] rounded-[4px]"
+            className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
             type=""
             placeholder="input syntax lang"
             value={lang1}
@@ -157,16 +157,16 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
             cols={10}
             rows={5}
             autoFocus
-            className="border-2 border-[#888] p-[4px] text-[14px] rounded-[4px]"
+            className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
             placeholder="provider a file content"
             value={file1}
             onChange={(e) => setFile1(e.target.value)}
           />
         </div>
-        <div className="flex flex-col w-[50%]">
+        <div className="flex w-[50%] flex-col">
           <span className="border-b p-[3px]">lang: </span>
           <input
-            className="border-2 border-[#888] p-[4px] text-[14px] rounded-[4px]"
+            className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
             type=""
             placeholder="input syntax lang"
             value={lang2}
@@ -177,7 +177,7 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
             cols={10}
             rows={5}
             autoFocus
-            className="border-2 border-[#888] p-[4px] text-[14px] rounded-[4px]"
+            className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
             placeholder="provider a file content"
             value={file2}
             onChange={(e) => setFile2(e.target.value)}
@@ -187,14 +187,14 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
 
       {diffInstance ? (
         <DiffView<string>
-          className="mt-[10px] border rounded-[4px] overflow-hidden"
+          className="mt-[10px] overflow-hidden rounded-[4px] border"
           diffFile={diffInstance}
           diffViewFontSize={13}
           diffViewHighlight={true}
           diffViewWrap
         />
       ) : (
-        <div className="border mt-[10px] rounded-[4px] p-[10px] text-orange-500 text-[22px]">Empty</div>
+        <div className="mt-[10px] rounded-[4px] border p-[10px] text-[22px] text-orange-500">Empty</div>
       )}
     </div>
   );

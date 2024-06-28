@@ -10,8 +10,8 @@ import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
 import { DiffSplitLine } from "./DiffSplitLineNormal";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
-import { SplitSide, diffFontSizeName } from "./DiffView";
-import { asideWidth, removeAllSelection, syncScroll } from "./tools";
+import { SplitSide } from "./DiffView";
+import { diffAsideWidthName, diffFontSizeName, removeAllSelection, syncScroll } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
 
@@ -37,7 +37,7 @@ const DiffSplitViewTable = defineComponent(
 
     return () => {
       return (
-        <table class={className.value + " border-collapse w-full"} data-mode={SplitSide[props.side]}>
+        <table class={className.value + " w-full border-collapse"} data-mode={SplitSide[props.side]}>
           <colgroup>
             <col class={`diff-table-${SplitSide[props.side]}-num-col`} />
             <col class={`diff-table-${SplitSide[props.side]}-content-col`} />
@@ -126,12 +126,12 @@ export const DiffSplitViewNormal = defineComponent(
 
     return () => {
       return (
-        <div class="split-diff-view split-diff-view-wrap w-full flex basis-[50%]">
+        <div class="split-diff-view split-diff-view-wrap flex w-full basis-[50%]">
           <div
-            class="old-diff-table-wrapper overflow-x-auto overflow-y-hidden w-full scrollbar-hide"
+            class="old-diff-table-wrapper scrollbar-hide w-full overflow-x-auto overflow-y-hidden"
             ref={ref1}
             style={{
-              [asideWidth]: `${Math.round(computedWidth.value)}px`,
+              [diffAsideWidthName]: `${Math.round(computedWidth.value)}px`,
               overscrollBehaviorX: "none",
               fontFamily: "Menlo, Consolas, monospace",
               fontSize: `var(${diffFontSizeName})`,
@@ -141,10 +141,10 @@ export const DiffSplitViewNormal = defineComponent(
           </div>
           <div class="diff-split-line w-[1.5px] bg-[rgb(222,222,222)]" />
           <div
-            class="new-diff-table-wrapper overflow-x-auto overflow-y-hidden w-full scrollbar-hide"
+            class="new-diff-table-wrapper scrollbar-hide w-full overflow-x-auto overflow-y-hidden"
             ref={ref2}
             style={{
-              [asideWidth]: `${Math.round(computedWidth.value)}px`,
+              [diffAsideWidthName]: `${Math.round(computedWidth.value)}px`,
               overscrollBehaviorX: "none",
               fontFamily: "Menlo, Consolas, monospace",
               fontSize: `var(${diffFontSizeName})`,

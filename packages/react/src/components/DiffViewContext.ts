@@ -1,7 +1,6 @@
 import { createContext, useContext } from "react";
 
-import type { DiffViewProps } from "..";
-import type { Ref, UseSelectorWithStore } from "reactivity-store";
+import type { createDiffConfigStore } from "./tools";
 
 export enum DiffModeEnum {
   // github like
@@ -13,18 +12,7 @@ export enum DiffModeEnum {
 }
 
 export const DiffViewContext = createContext<{
-  useDiffContext: UseSelectorWithStore<{
-    id: Ref<string>;
-    mode: Ref<DiffModeEnum>;
-    enableWrap: Ref<boolean>;
-    enableAddWidget: Ref<boolean>;
-    enableHighlight: Ref<boolean>;
-    fontSize: Ref<number>;
-    renderWidgetLine: Ref<DiffViewProps<any>["renderWidgetLine"]>;
-    extendData: Ref<DiffViewProps<any>["extendData"]>;
-    renderExtendLine: Ref<DiffViewProps<any>["renderExtendLine"]>;
-    onAddWidgetClick: { current: DiffViewProps<any>["onAddWidgetClick"] };
-  }>;
+  useDiffContext: ReturnType<typeof createDiffConfigStore>;
 }>(null);
 
 DiffViewContext.displayName = "DiffViewContext";

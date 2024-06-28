@@ -59,7 +59,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
       {hasOldLine ? (
         <>
           <td
-            className="diff-line-old-num group relative pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px]"
+            className="diff-line-old-num group relative w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top"
             data-side={SplitSide[SplitSide.old]}
             style={{ backgroundColor: oldLineNumberBG, color: `var(${plainLineNumberColorName})` }}
           >
@@ -70,7 +70,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 side={SplitSide.old}
                 diffFile={diffFile}
                 onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
-                className="absolute left-[100%] translate-x-[-50%] z-[1]"
+                className="absolute left-[100%] z-[1] translate-x-[-50%]"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
             )}
@@ -90,7 +90,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 side={SplitSide.old}
                 diffFile={diffFile}
                 onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
-                className="absolute right-[100%] translate-x-[50%] z-[1] select-none"
+                className="absolute right-[100%] z-[1] translate-x-[50%] select-none"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
             )}
@@ -117,7 +117,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
       {hasNewLine ? (
         <>
           <td
-            className="diff-line-new-num group relative pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px] border-l-[1px] border-l-[rgb(222,222,222)]"
+            className="diff-line-new-num group relative w-[1%] min-w-[40px] select-none border-l-[1px] border-l-[rgb(222,222,222)] pl-[10px] pr-[10px] text-right align-top"
             data-side={SplitSide[SplitSide.new]}
             style={{ backgroundColor: newLineNumberBG, color: `var(${plainLineNumberColorName})` }}
           >
@@ -128,7 +128,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 side={SplitSide.new}
                 diffFile={diffFile}
                 onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
-                className="absolute left-[100%] translate-x-[-50%] z-[1]"
+                className="absolute left-[100%] z-[1] translate-x-[-50%]"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
             )}
@@ -148,7 +148,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 side={SplitSide.new}
                 diffFile={diffFile}
                 onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
-                className="absolute right-[100%] translate-x-[50%] z-[1] select-none"
+                className="absolute right-[100%] z-[1] translate-x-[50%] select-none"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
             )}

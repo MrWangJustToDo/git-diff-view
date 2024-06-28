@@ -35,6 +35,7 @@
     "postcss": "^8.4.38",
     "postcss-prefix-selector": "^1.16.0",
     "prettier": "^3.2.5",
+    "prettier-plugin-tailwindcss": "^0.6.5",
     "project-tool": "https://github.com/MrWangJustToDo/project-tool.git",
     "rollup-plugin-postcss": "^4.0.2",
     "tailwind-scrollbar-hide": "^1.1.7",

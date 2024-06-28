@@ -100,7 +100,7 @@ export const DiffSplitWidgetLine = defineComponent(
             </td>
           ) : (
             <td
-              class={`diff-line-widget-${SplitSide[props.side]}-placeholder p-0 select-none`}
+              class={`diff-line-widget-${SplitSide[props.side]}-placeholder select-none p-0`}
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >

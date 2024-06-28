@@ -1,5 +1,6 @@
 import { addWidgetBGName, addWidgetColorName } from "./color";
-import { diffFontSizeName, type SplitSide } from "./DiffView";
+import { type SplitSide } from "./DiffView";
+import { diffFontSizeName } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
 
@@ -27,11 +28,9 @@ export const DiffSplitAddWidget = ({
       }}
     >
       <button
-        class="diff-add-widget w-full h-full invisible cursor-pointer rounded-md flex items-center justify-center transition-transform origin-center group-hover:visible hover:scale-110"
+        class="diff-add-widget invisible z-[1] flex h-full w-full origin-center cursor-pointer items-center justify-center rounded-md text-[1.2em] transition-transform hover:scale-110 group-hover:visible"
         style={{
           color: `var(${addWidgetColorName})`,
-          zIndex: 1,
-          fontSize: `1.2em`,
           backgroundColor: `var(${addWidgetBGName})`,
         }}
         onClick={() => {
@@ -67,11 +66,9 @@ export const DiffUnifiedAddWidget = ({
       }}
     >
       <button
-        class="diff-add-widget w-full h-full invisible cursor-pointer rounded-md flex items-center justify-center transition-transform origin-center group-hover:visible hover:scale-110"
+        class="diff-add-widget invisible z-[1] flex h-full w-full origin-center cursor-pointer items-center justify-center rounded-md text-[1.2em] transition-transform hover:scale-110 group-hover:visible"
         style={{
           color: `var(${addWidgetColorName})`,
-          zIndex: 1,
-          fontSize: `1.2em`,
           backgroundColor: `var(${addWidgetBGName})`,
         }}
         onClick={() => {

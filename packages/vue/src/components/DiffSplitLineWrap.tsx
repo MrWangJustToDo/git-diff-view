@@ -80,7 +80,7 @@ export const DiffSplitLine = defineComponent(
           {hasOldLine ? (
             <>
               <td
-                class="diff-line-old-num group relative pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px]"
+                class="diff-line-old-num group relative w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top"
                 style={{ backgroundColor: oldLineNumberBG, color: `var(${plainLineNumberColorName})` }}
               >
                 {hasDiff.value && enableAddWidget.value && (
@@ -90,7 +90,7 @@ export const DiffSplitLine = defineComponent(
                     side={SplitSide.old}
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
-                    className="absolute left-[100%] translate-x-[-50%] z-[1]"
+                    className="absolute left-[100%] z-[1] translate-x-[-50%]"
                     onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
                   />
                 )}
@@ -110,7 +110,7 @@ export const DiffSplitLine = defineComponent(
                     side={SplitSide.old}
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
-                    className="absolute right-[100%] translate-x-[50%] z-[1] select-none"
+                    className="absolute right-[100%] z-[1] translate-x-[50%] select-none"
                     onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
                   />
                 )}
@@ -136,7 +136,7 @@ export const DiffSplitLine = defineComponent(
           {hasNewLine ? (
             <>
               <td
-                class="diff-line-new-num group relative pl-[10px] pr-[10px] text-right align-top select-none w-[1%] min-w-[40px] border-l-[1px] border-l-[rgb(222,222,222)]"
+                class="diff-line-new-num group relative w-[1%] min-w-[40px] select-none border-l-[1px] border-l-[rgb(222,222,222)] pl-[10px] pr-[10px] text-right align-top"
                 style={{ backgroundColor: newLineNumberBG, color: `var(${plainLineNumberColorName})` }}
               >
                 {hasDiff.value && enableAddWidget.value && (
@@ -146,7 +146,7 @@ export const DiffSplitLine = defineComponent(
                     side={SplitSide.new}
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
-                    className="absolute left-[100%] translate-x-[-50%] z-[1]"
+                    className="absolute left-[100%] z-[1] translate-x-[-50%]"
                     onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
                   />
                 )}
@@ -166,7 +166,7 @@ export const DiffSplitLine = defineComponent(
                     side={SplitSide.new}
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
-                    className="absolute right-[100%] translate-x-[50%] z-[1] select-none"
+                    className="absolute right-[100%] z-[1] translate-x-[50%] select-none"
                     onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
                   />
                 )}
@@ -182,7 +182,7 @@ export const DiffSplitLine = defineComponent(
             </>
           ) : (
             <td
-              class="diff-line-new-placeholder border-l-[1px] border-l-[rgb(222,222,222)] select-none"
+              class="diff-line-new-placeholder select-none border-l-[1px] border-l-[rgb(222,222,222)]"
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >

@@ -73,7 +73,7 @@ const _DiffSplitExtendLine = ({
         </td>
       ) : (
         <td
-          className={`diff-line-extend-${SplitSide[side]}-placeholder p-0 select-none`}
+          className={`diff-line-extend-${SplitSide[side]}-placeholder select-none p-0`}
           style={{ backgroundColor: `var(${emptyBGName})` }}
           colSpan={2}
         >

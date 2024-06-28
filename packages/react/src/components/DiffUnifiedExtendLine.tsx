@@ -34,7 +34,7 @@ const _DiffUnifiedExtendLine = ({
 
   return (
     <tr data-line={`${lineNumber}-extend`} data-state="extend" className="diff-line diff-line-extend">
-      <td className="diff-line-extend-content align-top p-0" colSpan={2}>
+      <td className="diff-line-extend-content p-0 align-top" colSpan={2}>
         <div className="diff-line-extend-wrapper sticky left-0" style={{ width }}>
           {width > 0 &&
             oldLineExtend?.data &&

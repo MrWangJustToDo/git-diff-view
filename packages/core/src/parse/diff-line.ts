@@ -1,6 +1,5 @@
 import type { DiffRange, IRange } from "./change-range";
 
-
 /** indicate what a line in the diff represents */
 export enum DiffLineType {
   Context,

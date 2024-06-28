@@ -6,7 +6,7 @@ import { useDiffViewContext } from "..";
 
 import { hunkContentBGName, hunkContentColorName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
-import { asideWidth } from "./tools";
+import { diffAsideWidthName } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
 
@@ -41,19 +41,19 @@ const _DiffUnifiedHunkLine = ({
   return (
     <tr data-line={`${lineNumber}-hunk`} data-state="hunk" className="diff-line diff-line-hunk">
       <td
-        className="diff-line-hunk-action sticky left-0 p-[1px] w-[1%] min-w-[100px] select-none"
+        className="diff-line-hunk-action sticky left-0 w-[1%] min-w-[100px] select-none p-[1px]"
         style={{
           backgroundColor: `var(${hunkLineNumberBGName})`,
           color: `var(${plainLineNumberColorName})`,
-          width: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
-          maxWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
-          minWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+          width: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
+          maxWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
+          minWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
         }}
       >
         {couldExpand ? (
           isFirstLine ? (
             <button
-              className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+              className="diff-widget-tooltip flex w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px] hover:bg-blue-300"
               title="Expand Up"
               data-title="Expand Up"
               onClick={() => diffFile.onUnifiedHunkExpand("up", index)}
@@ -62,7 +62,7 @@ const _DiffUnifiedHunkLine = ({
             </button>
           ) : isLastLine ? (
             <button
-              className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+              className="diff-widget-tooltip flex w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px] hover:bg-blue-300"
               title="Expand Down"
               data-title="Expand Down"
               onClick={() => diffFile.onUnifiedHunkExpand("down", index)}
@@ -71,7 +71,7 @@ const _DiffUnifiedHunkLine = ({
             </button>
           ) : isExpandAll ? (
             <button
-              className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[6px] cursor-pointer rounded-[2px]"
+              className="diff-widget-tooltip flex w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px] hover:bg-blue-300"
               title="Expand All"
               data-title="Expand All"
               onClick={() => diffFile.onUnifiedHunkExpand("all", index)}
@@ -81,7 +81,7 @@ const _DiffUnifiedHunkLine = ({
           ) : (
             <>
               <button
-                className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
+                className="diff-widget-tooltip flex w-full cursor-pointer items-center justify-center rounded-[2px] py-[2px] hover:bg-blue-300"
                 title="Expand Down"
                 data-title="Expand Down"
                 onClick={() => diffFile.onUnifiedHunkExpand("down", index)}
@@ -89,7 +89,7 @@ const _DiffUnifiedHunkLine = ({
                 <ExpandDown className="fill-current" />
               </button>
               <button
-                className="w-full diff-widget-tooltip hover:bg-blue-300 flex justify-center items-center py-[2px] cursor-pointer rounded-[2px]"
+                className="diff-widget-tooltip flex w-full cursor-pointer items-center justify-center rounded-[2px] py-[2px] hover:bg-blue-300"
                 title="Expand Up"
                 data-title="Expand Up"
                 onClick={() => diffFile.onUnifiedHunkExpand("up", index)}

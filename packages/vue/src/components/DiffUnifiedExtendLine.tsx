@@ -41,7 +41,7 @@ export const DiffUnifiedExtendLine = defineComponent(
 
       return (
         <tr data-line={`${props.lineNumber}-extend`} data-state="extend" class="diff-line diff-line-extend">
-          <td class="diff-line-extend-content align-top p-0" colspan={2}>
+          <td class="diff-line-extend-content p-0 align-top" colspan={2}>
             <div class="diff-line-extend-wrapper sticky left-0" style={{ width: width.value + "px" }}>
               {width.value > 0 &&
                 oldExtend.value &&

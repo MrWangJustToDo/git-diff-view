@@ -17,7 +17,7 @@ import {
 import { DiffUnifiedAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import { useDiffWidgetContext } from "./DiffWidgetContext";
-import { asideWidth } from "./tools";
+import { diffAsideWidthName } from "./tools";
 
 import type { DiffViewProps } from "..";
 
@@ -49,13 +49,13 @@ const DiffUnifiedOldLine = ({
   return (
     <tr data-line={index} data-state="diff" className="diff-line group">
       <td
-        className="diff-line-num sticky left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
+        className="diff-line-num sticky left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
         style={{
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${delLineNumberBGName})`,
-          width: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
-          maxWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
-          minWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+          width: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
+          maxWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
+          minWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
         }}
       >
         {enableAddWidget && (
@@ -118,13 +118,13 @@ const DiffUnifiedNewLine = ({
   return (
     <tr data-line={index} data-state="diff" className="diff-line group">
       <td
-        className="diff-line-num sticky left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
+        className="diff-line-num sticky left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
         style={{
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${addLineNumberBGName})`,
-          width: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
-          maxWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
-          minWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+          width: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
+          maxWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
+          minWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
         }}
       >
         {enableAddWidget && (
@@ -139,7 +139,7 @@ const DiffUnifiedNewLine = ({
         )}
         <div className="flex">
           <span className="inline-block w-[50%]" />
-          <span className="shrink-0 w-[10px]" />
+          <span className="w-[10px] shrink-0" />
           <span data-line-new-num={lineNumber} className="inline-block w-[50%]">
             {lineNumber}
           </span>
@@ -237,12 +237,12 @@ const _DiffUnifiedLine = memo(
       return (
         <tr data-line={lineNumber} data-state={unifiedLine.diff ? "diff" : "plain"} className="diff-line group">
           <td
-            className="diff-line-num sticky left-0 pl-[10px] pr-[10px] text-right select-none w-[1%] min-w-[100px] whitespace-nowrap align-top"
+            className="diff-line-num sticky left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
             style={{
               color: `var(${plainLineNumberColorName})`,
-              width: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
-              maxWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
-              minWidth: `calc(calc(var(${asideWidth}) + 5px) * 2)`,
+              width: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
+              maxWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
+              minWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
               backgroundColor: hasDiff ? `var(${plainLineNumberBGName})` : `var(${expandContentBGName})`,
             }}
           >
