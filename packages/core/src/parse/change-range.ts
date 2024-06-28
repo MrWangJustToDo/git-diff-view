@@ -200,15 +200,23 @@ export function diffChanges(addition: DiffLine, deletion: DiffLine): { addRange:
   let bStart = 0;
 
   const aRange = diffRange
-    .filter((i) => i[0] === 1)
-    .map((i) => ({ type: i[0], str: i[1], location: aStart, length: (aStart += i[1].length) }));
+    .filter((i) => i[0] !== -1)
+    .map((i) => ({ type: i[0], str: i[1], location: aStart, length: ((aStart += i[1].length), i[1].length) }));
 
   const bRange = diffRange
-    .filter((i) => i[0] === -1)
-    .map((i) => ({ type: i[0], str: i[1], location: bStart, length: (bStart += i[1].length) }));
+    .filter((i) => i[0] !== 1)
+    .map((i) => ({ type: i[0], str: i[1], location: bStart, length: ((bStart += i[1].length), i[1].length) }));
 
   return {
-    addRange: { range: aRange, hasLineChange: aRange.length > 1 || !!addSymbol, newLineSymbol: addSymbol },
-    delRange: { range: bRange, hasLineChange: bRange.length > 1 || !!delSymbol, newLineSymbol: delSymbol },
+    addRange: {
+      range: aRange,
+      hasLineChange: aRange.some((i) => i.type === 0 && i.str.trim().length > 0),
+      newLineSymbol: addSymbol,
+    },
+    delRange: {
+      range: bRange,
+      hasLineChange: aRange.some((i) => i.type === 0 && i.str.trim().length > 0),
+      newLineSymbol: delSymbol,
+    },
   };
 }

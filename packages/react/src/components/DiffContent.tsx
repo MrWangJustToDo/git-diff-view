@@ -19,7 +19,7 @@ const formatStringToCamelCase = (str: string) => {
   );
 };
 
-const getStyleObjectFromString = memoFunc((str: string) => {
+export const getStyleObjectFromString = memoFunc((str: string) => {
   if (!str) return temp;
   const style = {};
   str.split(";").forEach((el) => {
@@ -81,7 +81,7 @@ const DiffString = ({
         </span>
         {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
           <span
-            data-no-newline-at-end-of-file
+            data-no-newline-at-end-of-file-symbol
             className={enableWrap ? "block text-red-500" : "inline-block align-middle text-red-500"}
             style={{
               width: `var(${diffFontSizeName})`,
@@ -188,7 +188,7 @@ const DiffSyntax = ({
         </span>
         {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
           <span
-            data-no-newline-at-end-of-file
+            data-no-newline-at-end-of-file-symbol
             className={enableWrap ? "block text-red-500" : "inline-block align-middle text-red-500"}
             style={{
               width: `var(${diffFontSizeName})`,

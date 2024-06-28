@@ -53,7 +53,7 @@ const DiffString = ({
         </span>
         {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
           <span
-            data-no-newline-at-end-of-file
+            data-no-newline-at-end-of-file-symbol
             class={enableWrap ? "block text-red-500" : "inline-block align-middle text-red-500"}
             style={{
               width: `var(${diffFontSizeName})`,
@@ -160,7 +160,7 @@ const DiffSyntax = ({
         </span>
         {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
           <span
-            data-no-newline-at-end-of-file
+            data-no-newline-at-end-of-file-symbol
             class={enableWrap ? "block text-red-500" : "inline-block align-middle text-red-500"}
             style={{
               width: `var(${diffFontSizeName})`,

@@ -1,9 +1,90 @@
-import { DiffLineType, NewLineSymbol, type DiffFile, type DiffLine, type SyntaxLine } from "@git-diff-view/core";
+import {
+  DiffLineType,
+  NewLineSymbol,
+  type DiffFile,
+  type DiffLine,
+  type diffChanges,
+  type SyntaxLine,
+} from "@git-diff-view/core";
 import * as React from "react";
 
 import { addContentHighlightBGName, delContentHighlightBGName } from "./color";
+import { getStyleObjectFromString } from "./DiffContent";
 import { DiffNoNewLine } from "./DiffNoNewLine";
 import { diffFontSizeName } from "./tools";
+
+const RenderRange = ({
+  str,
+  startIndex,
+  endIndex,
+  ranges,
+  isAdd,
+  indexRef,
+}: {
+  str: string;
+  startIndex: number;
+  endIndex: number;
+  isAdd: boolean;
+  ranges: ReturnType<typeof diffChanges>["addRange"]["range"];
+  indexRef: { current: number };
+}) => {
+  if (!str) return null;
+
+  const index = indexRef.current;
+
+  const range = ranges[index];
+
+  if (!range || endIndex < range.location || range.location + range.length < startIndex) return str.replace("\n", "");
+
+  const index1 = range.location - startIndex;
+  const index2 = index1 < 0 ? 0 : index1;
+  const str1 = str.slice(0, index2);
+  const str2 = str.slice(index2, index1 + range.length);
+  const str3 = str.slice(index1 + range.length);
+  const isStart = str1.length || range.location === startIndex;
+
+  const isEnd = str3.length || endIndex === range.location + range.length - 1;
+
+  if (isEnd && str3.length) indexRef.current++;
+
+  const isLast = str2.includes("\n");
+
+  const _str2 = isLast ? str2.replace("\n", "") : str2;
+
+  return (
+    <span
+      data-range-start={range.location}
+      data-range-end={range.location + range.length}
+      data-total={ranges.length}
+      data-index={index}
+    >
+      <span data-start={startIndex} data-end={endIndex}>
+        {str1}
+        <span
+          data-diff-highlight
+          style={{
+            backgroundColor: isAdd ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`,
+            borderTopLeftRadius: isStart ? "0.2em" : undefined,
+            borderBottomLeftRadius: isStart ? "0.2em" : undefined,
+            borderTopRightRadius: isEnd || isLast ? "0.2em" : undefined,
+            borderBottomRightRadius: isEnd || isLast ? "0.2em" : undefined,
+          }}
+        >
+          {_str2}
+        </span>
+        {/* 可能会出现一个node跨越多个range的情况 */}
+        <RenderRange
+          str={str3}
+          startIndex={startIndex + str1.length + str2.length}
+          endIndex={endIndex}
+          ranges={ranges}
+          isAdd={isAdd}
+          indexRef={indexRef}
+        />
+      </span>
+    </span>
+  );
+};
 
 // TODO
 const DiffSyntax = ({
@@ -11,6 +92,7 @@ const DiffSyntax = ({
   diffLine,
   operator,
   syntaxLine,
+  enableWrap,
 }: {
   rawLine: string;
   diffLine?: DiffLine;
@@ -21,25 +103,13 @@ const DiffSyntax = ({
   if (!syntaxLine) {
     return <DiffString rawLine={rawLine} diffLine={diffLine} operator={operator} />;
   }
-};
 
-const DiffString = ({
-  rawLine,
-  diffLine,
-  operator,
-  enableWrap,
-}: {
-  rawLine: string;
-  diffLine?: DiffLine;
-  operator?: "add" | "del";
-  enableWrap?: boolean;
-}) => {
   const diffRange = diffLine?.diffChanges;
 
-  const isAdd = operator === "add";
+  if (diffRange?.hasLineChange) {
+    const isAdd = operator === "add";
 
-  if (diffRange.hasLineChange) {
-    const targetRange = diffRange.range;
+    const targetRange = diffRange.range.filter((i) => i.type === (isAdd ? 1 : -1));
 
     const isNewLineSymbolChanged = diffRange.newLineSymbol;
 
@@ -54,24 +124,41 @@ const DiffString = ({
 
     const hasNoTrailingNewLine = isNewLineSymbolChanged === NewLineSymbol.NEWLINE;
 
+    const rangeIndexRef = { current: 0 };
+
     return (
-      <span className="diff-line-content-raw">
-        {targetRange.map((item, index) => {
-          const type = item[0];
-          const str = item[1];
-          if (type === 0) {
-            return <span key={index}>{str}</span>;
+      <span className="diff-line-syntax-raw">
+        {syntaxLine.nodeList?.map(({ node, wrapper }, index) => {
+          const range = targetRange[rangeIndexRef.current];
+          if (!range || node.endIndex < range.location || range.location + range.length < node.startIndex) {
+            return (
+              <span
+                key={index}
+                data-start={node.startIndex}
+                data-end={node.endIndex}
+                className={wrapper?.properties?.className?.join(" ")}
+                style={getStyleObjectFromString(wrapper?.properties?.style || "")}
+              >
+                {node.value.replace("\n", "")}
+              </span>
+            );
           } else {
             return (
               <span
                 key={index}
-                data-diff-highlight
-                className="rounded-[0.2em]"
-                style={{
-                  backgroundColor: isAdd ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`,
-                }}
+                data-start={node.startIndex}
+                data-end={node.endIndex}
+                className={wrapper?.properties?.className?.join(" ")}
+                style={getStyleObjectFromString(wrapper?.properties?.style || "")}
               >
-                {str}
+                <RenderRange
+                  str={node.value}
+                  startIndex={node.startIndex}
+                  endIndex={node.endIndex}
+                  ranges={targetRange}
+                  isAdd={isAdd}
+                  indexRef={rangeIndexRef}
+                />
               </span>
             );
           }
@@ -92,7 +179,106 @@ const DiffString = ({
 
         {hasNoTrailingNewLine && (
           <span
-            data-no-newline-at-end-of-file
+            data-no-newline-at-end-of-file-symbol
+            className={enableWrap ? "block text-red-500" : "inline-block align-middle text-red-500"}
+            style={{
+              width: `var(${diffFontSizeName})`,
+              height: `var(${diffFontSizeName})`,
+            }}
+          >
+            <DiffNoNewLine />
+          </span>
+        )}
+      </span>
+    );
+  }
+
+  return (
+    <span className="diff-line-syntax-raw">
+      {syntaxLine?.nodeList?.map(({ node, wrapper }, index) => (
+        <span
+          key={index}
+          data-start={node.startIndex}
+          data-end={node.endIndex}
+          className={wrapper?.properties?.className?.join(" ")}
+          style={getStyleObjectFromString(wrapper?.properties?.style || "")}
+        >
+          {node.value}
+        </span>
+      ))}
+    </span>
+  );
+};
+
+const DiffString = ({
+  rawLine,
+  diffLine,
+  operator,
+  enableWrap,
+}: {
+  rawLine: string;
+  diffLine?: DiffLine;
+  operator?: "add" | "del";
+  enableWrap?: boolean;
+}) => {
+  const diffRange = diffLine?.diffChanges;
+
+  const isAdd = operator === "add";
+
+  if (diffRange?.hasLineChange) {
+    const targetRange = diffRange.range;
+
+    const isNewLineSymbolChanged = diffRange.newLineSymbol;
+
+    const newLineSymbol =
+      isNewLineSymbolChanged === NewLineSymbol.CRLF
+        ? "␍␊"
+        : isNewLineSymbolChanged === NewLineSymbol.CR
+          ? "␍"
+          : isNewLineSymbolChanged === NewLineSymbol.LF
+            ? "␊"
+            : "";
+
+    const hasNoTrailingNewLine = isNewLineSymbolChanged === NewLineSymbol.NEWLINE;
+
+    return (
+      <span className="diff-line-content-raw">
+        {targetRange.map(({ type, str, location, length }, index) => {
+          if (type === 0) {
+            return <span key={index}>{str}</span>;
+          } else {
+            return (
+              <span key={index} data-range-start={location} data-range-end={location + length}>
+                <span
+                  data-diff-highlight
+                  className="rounded-[0.2em]"
+                  style={{
+                    backgroundColor: isAdd ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`,
+                  }}
+                >
+                  {str}
+                </span>
+              </span>
+            );
+          }
+        })}
+
+        {newLineSymbol && (
+          <span
+            data-newline-symbol
+            data-diff-highlight
+            className="rounded-[0.2em]"
+            style={{
+              backgroundColor: isAdd ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`,
+            }}
+          >
+            {newLineSymbol}
+          </span>
+        )}
+
+        {hasNoTrailingNewLine && (
+          <span
+            data-no-newline-at-end-of-file-symbol
             className={enableWrap ? "block text-red-500" : "inline-block align-middle text-red-500"}
             style={{
               width: `var(${diffFontSizeName})`,
