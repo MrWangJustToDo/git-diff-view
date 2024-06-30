@@ -73,14 +73,14 @@ const RenderRange = ({
           {_str2}
         </span>
         {/* 可能会出现一个node跨越多个range的情况 */}
-        <RenderRange
-          str={str3}
-          startIndex={startIndex + str1.length + str2.length}
-          endIndex={endIndex}
-          ranges={ranges}
-          isAdd={isAdd}
-          indexRef={indexRef}
-        />
+        {RenderRange({
+          str: str3,
+          startIndex: startIndex + str1.length + str2.length,
+          endIndex,
+          ranges,
+          isAdd,
+          indexRef,
+        })}
       </span>
     </span>
   );
@@ -151,14 +151,15 @@ const DiffSyntax = ({
                 className={wrapper?.properties?.className?.join(" ")}
                 style={getStyleObjectFromString(wrapper?.properties?.style || "")}
               >
-                <RenderRange
-                  str={node.value}
-                  startIndex={node.startIndex}
-                  endIndex={node.endIndex}
-                  ranges={targetRange}
-                  isAdd={isAdd}
-                  indexRef={rangeIndexRef}
-                />
+                {/* 将组件转换为函数调用，避免同级渲染时后续组件的index没有正确更新的问题 */}
+                {RenderRange({
+                  str: node.value,
+                  startIndex: node.startIndex,
+                  endIndex: node.endIndex,
+                  ranges: targetRange,
+                  isAdd,
+                  indexRef: rangeIndexRef,
+                })}
               </span>
             );
           }
