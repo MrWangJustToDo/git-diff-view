@@ -360,9 +360,9 @@ export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[]
 export declare const getFile: (raw: string, lang: string, fileName?: string, uuid?: string) => File$1;
 export declare const getLang: (fileName: string) => string;
 export declare const getSplitContentLines: (diffFile: DiffFile) => DiffSplitContentLineItem[];
-export declare const getSplitLines: (diffFile: DiffFile, options: Options) => DiffSplitLineItem[];
+export declare const getSplitLines: (diffFile: DiffFile) => DiffSplitLineItem[];
 export declare const getUnifiedContentLine: (diffFile: DiffFile) => DiffUnifiedContentLineItem[];
-export declare const getUnifiedLines: (diffFile: DiffFile, options: Options) => DiffUnifiedLineItem[];
+export declare const getUnifiedLines: (diffFile: DiffFile) => DiffUnifiedLineItem[];
 export declare const highlighter: DiffHighlighter;
 export declare const numIterator: <T>(num: number, cb: (index: number) => T) => T[];
 export declare const parseInstance: DiffParser;
@@ -543,18 +543,6 @@ export type DiffSplitLineItem = {
 	type: DiffFileLineType;
 	index: number;
 	lineNumber: number;
-	splitLine?: {
-		left: SplitLineItem;
-		right: SplitLineItem;
-	};
-	widgetLine?: {
-		side: "left" | "right";
-	};
-	extendLine?: {
-		side: "left" | "right";
-		data?: any;
-	};
-	hunkLine?: DiffHunkItem;
 };
 export type DiffUnifiedContentLineItem = {
 	type: DiffFileLineType.content;
@@ -566,15 +554,6 @@ export type DiffUnifiedLineItem = {
 	type: DiffFileLineType;
 	index: number;
 	lineNumber: number;
-	unifiedLine?: UnifiedLineItem;
-	widgetLine?: {
-		side: "left" | "right";
-	};
-	extendLine?: {
-		side: "left" | "right";
-		data?: any;
-	};
-	hunkLine?: DiffHunkItem;
 };
 export type HunkInfo = {
 	oldStartIndex: number;
@@ -593,21 +572,6 @@ export type HunkLineInfo = {
 	_startHiddenIndex: number;
 	_endHiddenIndex: number;
 	_plainText: string;
-};
-export type Options = {
-	hasRenderWidget?: boolean;
-	hasRenderExtend?: boolean;
-	widgetData?: {
-		[lineNumber: number]: {
-			side: "left" | "right";
-		};
-	};
-	extendData?: {
-		[lineNumber: number]: {
-			side: "left" | "right";
-			data: any;
-		};
-	};
 };
 export type SyntaxLine = {
 	value: string;

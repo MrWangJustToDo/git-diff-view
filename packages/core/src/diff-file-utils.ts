@@ -1,6 +1,6 @@
 import { numIterator } from ".";
 
-import type { DiffHunkItem, SplitLineItem, UnifiedLineItem, DiffFile } from ".";
+import type { SplitLineItem, UnifiedLineItem, DiffFile } from ".";
 
 export enum DiffFileLineType {
   hunk = 1,
@@ -27,45 +27,45 @@ export type DiffSplitLineItem = {
   type: DiffFileLineType;
   index: number;
   lineNumber: number;
-  splitLine?: { left: SplitLineItem; right: SplitLineItem };
-  widgetLine?: { side: "left" | "right" };
-  extendLine?: { side: "left" | "right"; data?: any };
-  hunkLine?: DiffHunkItem;
 };
 
 export type DiffUnifiedLineItem = {
   type: DiffFileLineType;
   index: number;
   lineNumber: number;
-  unifiedLine?: UnifiedLineItem;
-  widgetLine?: { side: "left" | "right" };
-  extendLine?: { side: "left" | "right"; data?: any };
-  hunkLine?: DiffHunkItem;
 };
 
-type Options = {
-  hasRenderWidget?: boolean;
-  hasRenderExtend?: boolean;
-  widgetData?: { [lineNumber: number]: { side: "left" | "right" } };
-  extendData?: { [lineNumber: number]: { side: "left" | "right"; data: any } };
-};
-
-export const getSplitLines = (diffFile: DiffFile, options: Options): DiffSplitLineItem[] => {
+export const getSplitLines = (diffFile: DiffFile): DiffSplitLineItem[] => {
   const splitLineLength = diffFile.splitLineLength;
 
   const splitLines: DiffSplitLineItem[] = [];
 
   numIterator(splitLineLength, (index) => {
-    const hunkLine = diffFile.getSplitHunkLine(index);
-    const splitLeftLine = diffFile.getSplitLeftLine(index);
-    const splitRightLine = diffFile.getSplitRightLine(index);
-    const widgetLine = options?.hasRenderWidget && options.widgetData?.[index + 1];
-    const extendLine = options?.hasRenderExtend && options.extendData?.[index + 1];
+    splitLines.push({ type: DiffFileLineType.hunk, index, lineNumber: index + 1 });
 
-    hunkLine &&
-      hunkLine.splitInfo &&
-      hunkLine.splitInfo.startHiddenIndex < hunkLine.splitInfo.endHiddenIndex &&
-      splitLines.push({ type: DiffFileLineType.hunk, index, lineNumber: index + 1, hunkLine: hunkLine });
+    splitLines.push({
+      type: DiffFileLineType.content,
+      index,
+      lineNumber: index + 1,
+    });
+
+    splitLines.push({ type: DiffFileLineType.widget, index, lineNumber: index + 1 });
+
+    splitLines.push({ type: DiffFileLineType.extend, index, lineNumber: index + 1 });
+  });
+
+  return splitLines;
+};
+
+export const getSplitContentLines = (diffFile: DiffFile): DiffSplitContentLineItem[] => {
+  const splitLineLength = diffFile.splitLineLength;
+
+  const splitLines: DiffSplitContentLineItem[] = [];
+
+  numIterator(splitLineLength, (index) => {
+    const splitLeftLine = diffFile.getSplitLeftLine(index);
+
+    const splitRightLine = diffFile.getSplitRightLine(index);
 
     !splitLeftLine?.isHidden &&
       !splitRightLine?.isHidden &&
@@ -75,54 +75,40 @@ export const getSplitLines = (diffFile: DiffFile, options: Options): DiffSplitLi
         lineNumber: index + 1,
         splitLine: { left: splitLeftLine, right: splitRightLine },
       });
-
-    widgetLine &&
-      splitLines.push({ type: DiffFileLineType.widget, index, lineNumber: index + 1, widgetLine: widgetLine });
-
-    extendLine &&
-      splitLines.push({ type: DiffFileLineType.extend, index, lineNumber: index + 1, extendLine: extendLine });
   });
 
   return splitLines;
 };
 
-export const getSplitContentLines = (diffFile: DiffFile): DiffSplitContentLineItem[] => {
-  const lines = getSplitLines(diffFile, {});
-
-  return lines.filter((line) => line.type === DiffFileLineType.content) as DiffSplitContentLineItem[];
-};
-
-export const getUnifiedLines = (diffFile: DiffFile, options: Options): DiffUnifiedLineItem[] => {
+export const getUnifiedLines = (diffFile: DiffFile): DiffUnifiedLineItem[] => {
   const unifiedLineLength = diffFile.unifiedLineLength;
 
   const unifiedLines: DiffUnifiedLineItem[] = [];
 
   numIterator(unifiedLineLength, (index) => {
-    const hunkLine = diffFile.getUnifiedHunkLine(index);
-    const unifiedLine = diffFile.getUnifiedLine(index);
-    const widgetLine = options?.hasRenderWidget && options.widgetData?.[index + 1];
-    const extendLine = options?.hasRenderExtend && options.extendData?.[index + 1];
+    unifiedLines.push({ type: DiffFileLineType.hunk, index, lineNumber: index + 1 });
 
-    hunkLine &&
-      hunkLine.unifiedInfo &&
-      hunkLine.unifiedInfo.startHiddenIndex < hunkLine.unifiedInfo.endHiddenIndex &&
-      unifiedLines.push({ type: DiffFileLineType.hunk, index, lineNumber: index + 1, hunkLine: hunkLine });
+    unifiedLines.push({ type: DiffFileLineType.content, index, lineNumber: index + 1 });
 
-    !unifiedLine.isHidden &&
-      unifiedLines.push({ type: DiffFileLineType.content, index, lineNumber: index + 1, unifiedLine: unifiedLine });
+    unifiedLines.push({ type: DiffFileLineType.widget, index, lineNumber: index + 1 });
 
-    widgetLine &&
-      unifiedLines.push({ type: DiffFileLineType.widget, index, lineNumber: index + 1, widgetLine: widgetLine });
-
-    extendLine &&
-      unifiedLines.push({ type: DiffFileLineType.extend, index, lineNumber: index + 1, extendLine: extendLine });
+    unifiedLines.push({ type: DiffFileLineType.extend, index, lineNumber: index + 1 });
   });
 
   return unifiedLines;
 };
 
 export const getUnifiedContentLine = (diffFile: DiffFile): DiffUnifiedContentLineItem[] => {
-  const lines = getUnifiedLines(diffFile, {});
+  const unifiedLineLength = diffFile.unifiedLineLength;
 
-  return lines.filter((line) => line.type === DiffFileLineType.content) as DiffUnifiedContentLineItem[];
+  const unifiedLines: DiffUnifiedContentLineItem[] = [];
+
+  numIterator(unifiedLineLength, (index) => {
+    const unifiedLine = diffFile.getUnifiedLine(index);
+
+    !unifiedLine.isHidden &&
+      unifiedLines.push({ type: DiffFileLineType.content, index, lineNumber: index + 1, unifiedLine: unifiedLine });
+  });
+
+  return unifiedLines;
 };

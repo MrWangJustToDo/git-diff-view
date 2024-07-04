@@ -6,6 +6,7 @@ import { SplitSide, useDiffViewContext } from "..";
 import { emptyBGName, getContentBG, getLineNumberBG, plainLineNumberColorName } from "./color";
 import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
+// import { DiffContent_v2 } from "./DiffContent_v2";
 import { useDiffWidgetContext } from "./DiffWidgetContext";
 
 const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
@@ -90,7 +91,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 side={SplitSide.old}
                 diffFile={diffFile}
                 onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
-                className="absolute right-[100%] z-[1] translate-x-[50%] select-none"
+                className="absolute right-[100%] z-[1] translate-x-[50%]"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
             )}
@@ -148,7 +149,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 side={SplitSide.new}
                 diffFile={diffFile}
                 onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
-                className="absolute right-[100%] z-[1] translate-x-[50%] select-none"
+                className="absolute right-[100%] z-[1] translate-x-[50%]"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
             )}

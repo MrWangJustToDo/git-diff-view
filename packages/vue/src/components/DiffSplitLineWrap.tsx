@@ -110,7 +110,7 @@ export const DiffSplitLine = defineComponent(
                     side={SplitSide.old}
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
-                    className="absolute right-[100%] z-[1] translate-x-[50%] select-none"
+                    className="absolute right-[100%] z-[1] translate-x-[50%]"
                     onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
                   />
                 )}
@@ -166,7 +166,7 @@ export const DiffSplitLine = defineComponent(
                     side={SplitSide.new}
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
-                    className="absolute right-[100%] z-[1] translate-x-[50%] select-none"
+                    className="absolute right-[100%] z-[1] translate-x-[50%]"
                     onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
                   />
                 )}

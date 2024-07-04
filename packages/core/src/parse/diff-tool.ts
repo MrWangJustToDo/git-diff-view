@@ -1,4 +1,4 @@
-import { diffChanges, relativeChanges } from "./change-range";
+import { relativeChanges } from "./change-range";
 import { DiffLineType } from "./diff-line";
 import { DiffHunkExpansionType } from "./raw-diff";
 
@@ -97,12 +97,13 @@ export const getDiffRange = (additions: DiffLine[], deletions: DiffLine[]) => {
     for (let i = 0; i < len; i++) {
       const addition = additions[i];
       const deletion = deletions[i];
-      const { addRange: _addRange, delRange: _delRange } = diffChanges(addition, deletion);
-      addition.diffChanges = _addRange;
-      deletion.diffChanges = _delRange;
       const { addRange, delRange } = relativeChanges(addition, deletion);
       addition.changes = addRange;
       deletion.changes = delRange;
+      // full diff
+      // const { addRange: _addRange, delRange: _delRange } = diffChanges(addition, deletion);
+      // addition.diffChanges = _addRange;
+      // deletion.diffChanges = _delRange;
     }
   }
 };

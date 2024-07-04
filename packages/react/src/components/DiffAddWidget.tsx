@@ -23,14 +23,17 @@ export const DiffSplitAddWidget = ({
 }) => {
   return (
     <div
-      className={"diff-add-widget-wrapper" + (className ? " " + className : "")}
+      className={
+        "diff-add-widget-wrapper invisible select-none transition-transform hover:scale-110 group-hover:visible" +
+        (className ? " " + className : "")
+      }
       style={{
         width: `calc(var(${diffFontSizeName}) * 1.4)`,
         height: `calc(var(${diffFontSizeName}) * 1.4)`,
       }}
     >
       <button
-        className="diff-add-widget invisible z-[1] flex h-full w-full origin-center cursor-pointer items-center justify-center rounded-md text-[1.2em] transition-transform hover:scale-110 group-hover:visible"
+        className="diff-add-widget z-[1] flex h-full w-full origin-center cursor-pointer items-center justify-center rounded-md text-[1.2em]"
         style={{
           color: `var(${addWidgetColorName})`,
           backgroundColor: `var(${addWidgetBGName})`,
@@ -61,14 +64,14 @@ export const DiffUnifiedAddWidget = ({
 }) => {
   return (
     <div
-      className="diff-add-widget-wrapper absolute left-[100%] top-[1px] translate-x-[-50%]"
+      className="diff-add-widget-wrapper invisible absolute left-[100%] top-[1px] translate-x-[-50%] select-none transition-transform hover:scale-110 group-hover:visible"
       style={{
         width: `calc(var(${diffFontSizeName}) * 1.4)`,
         height: `calc(var(${diffFontSizeName}) * 1.4)`,
       }}
     >
       <button
-        className="diff-add-widget invisible z-[1] flex h-full w-full origin-center cursor-pointer items-center justify-center rounded-md text-[1.2em] transition-transform hover:scale-110 group-hover:visible"
+        className="diff-add-widget z-[1] flex h-full w-full origin-center cursor-pointer items-center justify-center rounded-md text-[1.2em]"
         style={{
           color: `var(${addWidgetColorName})`,
           backgroundColor: `var(${addWidgetBGName})`,
