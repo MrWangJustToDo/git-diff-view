@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 
 // !NOTE: ALL of the diff parse logic copy from desktop, SEE https://github.com/desktop/desktop
+// With mirror change
 
 // https://en.wikipedia.org/wiki/Diff_utility
 //
