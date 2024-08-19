@@ -8,7 +8,7 @@ import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 import { useTextWidth } from "../../hooks/useTextWidth";
 import { SplitSide } from "../DiffView";
 import { useDiffViewContext } from "../DiffViewContext";
-import { createDiffSplitConfigStore, removeAllSelection, diffFontSizeName } from "../tools";
+import { createDiffSplitConfigStore, removeAllSelection, diffFontSizeName, diffAsideWidthName } from "../tools";
 
 import { DiffSplitViewLine } from "./DiffSplitViewLineWrap_v2";
 

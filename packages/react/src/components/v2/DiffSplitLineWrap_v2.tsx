@@ -7,6 +7,7 @@ import { DiffContent } from "../DiffContent";
 import { SplitSide } from "../DiffView";
 import { useDiffViewContext } from "../DiffViewContext";
 import { useDiffWidgetContext } from "../DiffWidgetContext";
+import { diffAsideWidthName } from "../tools";
 
 const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
   const oldLine = diffFile.getSplitLeftLine(index);
@@ -55,13 +56,19 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
   const newLineNumberBG = getLineNumberBG(newLineIsAdded, false, hasDiff);
 
   return (
-    <div data-line={lineNumber} data-state={hasDiff ? "diff" : "plain"} className="diff-line">
+    <div data-line={lineNumber} data-state={hasDiff ? "diff" : "plain"} className="diff-line flex">
       {hasOldLine ? (
         <>
           <div
-            className="diff-line-old-num group relative w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top"
+            className="diff-line-old-num group relative flex w-[1%] min-w-[40px] select-none items-start px-[10px] text-right"
             data-side={SplitSide[SplitSide.old]}
-            style={{ backgroundColor: oldLineNumberBG, color: `var(${plainLineNumberColorName})` }}
+            style={{
+              backgroundColor: oldLineNumberBG,
+              color: `var(${plainLineNumberColorName})`,
+              width: `var(${diffAsideWidthName})`,
+              minWidth: `var(${diffAsideWidthName})`,
+              maxWidth: `var(${diffAsideWidthName})`,
+            }}
           >
             {hasDiff && enableAddWidget && (
               <DiffSplitAddWidget
@@ -74,12 +81,16 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
             )}
-            <span data-line-num={oldLine.lineNumber} style={{ opacity: hasChange ? undefined : 0.5 }}>
+            <span
+              className="w-full"
+              data-line-num={oldLine.lineNumber}
+              style={{ opacity: hasChange ? undefined : 0.5 }}
+            >
               {oldLine.lineNumber}
             </span>
           </div>
           <div
-            className="diff-line-old-content group relative pr-[10px] align-top"
+            className="diff-line-old-content group relative flex w-[50%] items-center pr-[10px]"
             data-side={SplitSide[SplitSide.old]}
             style={{ backgroundColor: oldLineContentBG }}
           >
@@ -90,7 +101,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 side={SplitSide.old}
                 diffFile={diffFile}
                 onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
-                className="absolute right-[100%] z-[1] translate-x-[50%]"
+                className="absolute right-[100%] top-0 z-[1] translate-x-[50%]"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
             )}
@@ -105,21 +116,41 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
           </div>
         </>
       ) : (
-        <div
-          className="diff-line-old-placeholder w-[50%] select-none"
-          data-side={SplitSide[SplitSide.old]}
-          style={{ backgroundColor: `var(${emptyBGName})` }}
-        >
-          <span>&ensp;</span>
-        </div>
+        <>
+          <div
+            className="diff-line-old-num-placeholder w-[1%] min-w-[40px] select-none px-[10px]"
+            data-side={SplitSide[SplitSide.old]}
+            style={{
+              backgroundColor: `var(${emptyBGName})`,
+              width: `var(${diffAsideWidthName})`,
+              minWidth: `var(${diffAsideWidthName})`,
+              maxWidth: `var(${diffAsideWidthName})`,
+            }}
+          >
+            &ensp;
+          </div>
+          <div
+            className="diff-line-old-placeholder w-[50%] select-none pr-[10px]"
+            data-side={SplitSide[SplitSide.old]}
+            style={{ backgroundColor: `var(${emptyBGName})` }}
+          >
+            &ensp;
+          </div>
+        </>
       )}
-      <div className="diff-split-line w-[1px] bg-[rgb(222,222,222)]" />
+      <div className="diff-split-line w-[1px] flex-shrink-0 bg-[rgb(222,222,222)]" />
       {hasNewLine ? (
         <>
           <div
-            className="diff-line-new-num group relative w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top"
+            className="diff-line-new-num group relative flex w-[1%] min-w-[40px] select-none items-start px-[10px] text-right"
             data-side={SplitSide[SplitSide.new]}
-            style={{ backgroundColor: newLineNumberBG, color: `var(${plainLineNumberColorName})` }}
+            style={{
+              backgroundColor: newLineNumberBG,
+              color: `var(${plainLineNumberColorName})`,
+              width: `var(${diffAsideWidthName})`,
+              minWidth: `var(${diffAsideWidthName})`,
+              maxWidth: `var(${diffAsideWidthName})`,
+            }}
           >
             {hasDiff && enableAddWidget && (
               <DiffSplitAddWidget
@@ -132,12 +163,16 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
             )}
-            <span data-line-num={newLine.lineNumber} style={{ opacity: hasChange ? undefined : 0.5 }}>
+            <span
+              className="w-full"
+              data-line-num={newLine.lineNumber}
+              style={{ opacity: hasChange ? undefined : 0.5 }}
+            >
               {newLine.lineNumber}
             </span>
           </div>
           <div
-            className="diff-line-new-content group relative pr-[10px] align-top"
+            className="diff-line-new-content group relative flex w-[50%] items-center pr-[10px]"
             data-side={SplitSide[SplitSide.new]}
             style={{ backgroundColor: newLineContentBG }}
           >
@@ -148,7 +183,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
                 side={SplitSide.new}
                 diffFile={diffFile}
                 onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
-                className="absolute right-[100%] z-[1] translate-x-[50%]"
+                className="absolute right-[100%] top-0 z-[1] translate-x-[50%]"
                 onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
               />
             )}
@@ -163,13 +198,27 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
           </div>
         </>
       ) : (
-        <div
-          className="diff-line-new-placeholder w-[50%] select-none"
-          style={{ backgroundColor: `var(${emptyBGName})` }}
-          data-side={SplitSide[SplitSide.new]}
-        >
-          <span>&ensp;</span>
-        </div>
+        <>
+          <div
+            className="diff-line-new-num-placeholder w-[1%] min-w-[40px] select-none px-[10px]"
+            data-side={SplitSide[SplitSide.new]}
+            style={{
+              backgroundColor: `var(${emptyBGName})`,
+              width: `var(${diffAsideWidthName})`,
+              minWidth: `var(${diffAsideWidthName})`,
+              maxWidth: `var(${diffAsideWidthName})`,
+            }}
+          >
+            &ensp;
+          </div>
+          <div
+            className="diff-line-new-placeholder w-[50%] select-none pr-[10px]"
+            data-side={SplitSide[SplitSide.new]}
+            style={{ backgroundColor: `var(${emptyBGName})` }}
+          >
+            &ensp;
+          </div>
+        </>
       )}
     </div>
   );

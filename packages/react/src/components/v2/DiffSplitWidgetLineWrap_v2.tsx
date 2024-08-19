@@ -55,7 +55,7 @@ const _DiffSplitWidgetLine = ({
           <span>&ensp;</span>
         </div>
       )}
-      <div className="diff-split-line w-[1px] bg-[rgb(222,222,222)]" />
+      <div className="diff-split-line w-[1px] bg-[rgb(222,222,222)] flex-shrink-0" />
       {newLineWidget ? (
         <div className="diff-line-widget-new-content w-[50%] p-0">
           <div className="diff-line-widget-wrapper">

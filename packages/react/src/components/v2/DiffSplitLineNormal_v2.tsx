@@ -117,7 +117,9 @@ const _DiffSplitLine = ({
         <div
           className={`diff-line-${SplitSide[side]}-placeholder w-full select-none`}
           style={{ backgroundColor: `var(${emptyBGName})` }}
-        />
+        >
+          &ensp;
+        </div>
       )}
     </div>
   );
