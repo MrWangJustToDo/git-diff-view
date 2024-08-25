@@ -17,7 +17,7 @@ if (__DEV__ && typeof globalThis !== "undefined") {
     globalThis[devKey] = globalThis[devKey].filter((i) => i !== map);
 
     if (globalThis[devKey].length > 0) {
-      console.warn("there are multiple instance of @git-diff-view/core in the one environment!");
+      console.warn("there are multiple instance of @git-diff-view/core in current environment!");
     }
 
     globalThis[devKey].push(map);
