@@ -712,6 +712,7 @@ export type DiffViewProps<T> = {
 	registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
 	diffViewMode?: DiffModeEnum;
 	diffViewWrap?: boolean;
+	diffViewTheme?: "github" | "github-dark";
 	diffViewFontSize?: number;
 	diffViewHighlight?: boolean;
 	diffViewAddWidget?: boolean;

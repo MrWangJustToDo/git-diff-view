@@ -38,6 +38,7 @@ export type DiffViewProps<T> = {
   registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
   diffViewMode?: DiffModeEnum;
   diffViewWrap?: boolean;
+  diffViewTheme?: "github" | "github-dark";
   diffViewFontSize?: number;
   diffViewHighlight?: boolean;
   diffViewAddWidget?: boolean;
@@ -75,6 +76,7 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
     style,
     diffViewMode,
     diffViewWrap,
+    diffViewTheme,
     diffViewFontSize,
     diffViewHighlight,
     renderWidgetLine,
@@ -147,6 +149,7 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
       <div
         className="diff-tailwindcss-wrapper"
         data-component="git-diff-view"
+        data-theme={diffViewTheme}
         data-version={`${__VERSION__}`}
         data-highlighter={diffFile._getHighlighterName()}
       >
@@ -243,6 +246,7 @@ const DiffViewWithRef = <T extends unknown>(
       key={diffFile.getId()}
       {...restProps}
       diffFile={diffFile}
+      diffViewTheme={restProps.diffViewTheme || "github"}
       diffViewMode={restProps.diffViewMode || DiffModeEnum.SplitGitHub}
       diffViewFontSize={restProps.diffViewFontSize || 14}
     />

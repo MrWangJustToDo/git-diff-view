@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.diff-style-root {
+[data-theme="github"] .diff-style-root {
   --diff-add-content--: #e6ffec;
   --diff-del-content--: #ffebe9;
   --diff-add-lineNumber--: #ccffd8;
@@ -19,6 +19,29 @@
   --diff-add-widget-color--: #ffffff;
   --diff-empty-content--: #fafafa;
   --diff-hunk-content-color--: #777777;
+
+  color: black;
+}
+
+[data-theme="github-dark"] .diff-style-root {
+  --diff-add-content--: #002b36;
+  --diff-del-content--: #451916;
+  --diff-add-lineNumber--: #073642;
+  --diff-del-lineNumber--: #87302a;
+  --diff-plain-content--: #0d1117;
+  --diff-expand-content--: #161b22;
+  --diff-plain-lineNumber--: #161b22;
+  --diff-plain-lineNumber-color--: #a0aaab;
+  --diff-hunk-content--: #13243b;
+  --diff-hunk-lineNumber--: #183765;
+  --diff-add-content-highlight--: #073642;
+  --diff-del-content-highlight--: #010102;
+  --diff-add-widget--: #0969d2;
+  --diff-add-widget-color--: #ffffff;
+  --diff-empty-content--: #002b36;
+  --diff-hunk-content-color--: #839496;
+
+  color: white;
 }
 
 /* For Webkit-based browsers (Chrome, Safari and Opera) */
