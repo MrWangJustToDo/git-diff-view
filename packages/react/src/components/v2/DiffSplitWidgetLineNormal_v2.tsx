@@ -25,16 +25,14 @@ const _DiffSplitWidgetLine = ({
   currentWidget: boolean;
   setWidget: (props: { side?: SplitSide; lineNumber?: number }) => void;
 }) => {
-  const otherSide = side === SplitSide.old ? SplitSide.new : SplitSide.old;
-
   const { useDiffContext } = useDiffViewContext();
 
   const renderWidgetLine = useDiffContext(React.useCallback((s) => s.renderWidgetLine, []));
 
   useSyncHeight({
     selector: `div[data-state="widget"][data-line="${lineNumber}-widget"]`,
-    side: currentWidget ? SplitSide[side] : SplitSide[otherSide],
-    enable: side === SplitSide.new && typeof renderWidgetLine === "function",
+    side: SplitSide[side],
+    enable: currentWidget && typeof renderWidgetLine === "function",
   });
 
   const width = useDomWidth({

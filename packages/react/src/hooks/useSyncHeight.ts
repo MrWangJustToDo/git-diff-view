@@ -4,6 +4,7 @@ import { useDiffViewContext } from "../components/DiffViewContext";
 
 import { useSafeLayout } from "./useSafeLayout";
 
+// TODO
 export const useSyncHeight = ({ selector, side, enable }: { selector: string; side: string; enable: boolean }) => {
   const { useDiffContext } = useDiffViewContext();
 
@@ -21,8 +22,6 @@ export const useSyncHeight = ({ selector, side, enable }: { selector: string; si
 
         const target = ele1.getAttribute("data-side") === side ? ele1 : ele2;
 
-        const synced = ele1.getAttribute("data-side") !== side ? ele1 : ele2;
-
         const cb = () => {
           ele1.style.height = "auto";
           ele2.style.height = "auto";
@@ -30,7 +29,8 @@ export const useSyncHeight = ({ selector, side, enable }: { selector: string; si
           const rect2 = ele2.getBoundingClientRect();
           if (rect1.height !== rect2.height) {
             const maxHeight = Math.max(rect1.height, rect2.height);
-            synced.style.height = maxHeight + "px";
+            ele1.style.height = maxHeight + "px";
+            ele2.style.height = maxHeight + "px";
             ele1.setAttribute("data-sync-height", String(maxHeight));
             ele2.setAttribute("data-sync-height", String(maxHeight));
           } else {

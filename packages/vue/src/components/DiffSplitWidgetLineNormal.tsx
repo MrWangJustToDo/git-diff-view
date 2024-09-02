@@ -50,17 +50,14 @@ export const DiffSplitWidgetLine = defineComponent(
       props.side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper"
     );
 
-    const otherSide = computed(() => (props.side === SplitSide.old ? SplitSide.new : SplitSide.old));
+    const observeSide = computed(() => SplitSide[props.side]);
 
-    const observeSide = computed(() => (currentWidget.value ? SplitSide[props.side] : SplitSide[otherSide.value]));
-
-    const currentIsShow = computed(() => !!oldLineWidget.value || !!newLineWidget.value);
+    const currentIsShow = computed(
+      () => (!!oldLineWidget.value || !!newLineWidget.value) && !currentLine.value.isHidden && !!slots.widget
+    );
 
     const currentWidget = computed(
-      () =>
-        (props.side === SplitSide.old ? oldLineWidget.value : newLineWidget.value) &&
-        !!currentIsShow.value &&
-        !!slots.widget
+      () => (props.side === SplitSide.old ? oldLineWidget.value : newLineWidget.value) && !!currentIsShow.value
     );
 
     const onCloseWidget = () => setWidget({});
@@ -68,7 +65,7 @@ export const DiffSplitWidgetLine = defineComponent(
     useSyncHeight({
       selector: lineSelector,
       side: observeSide,
-      enable: currentWidget,
+      enable: currentIsShow,
     });
 
     const width = useDomWidth({
@@ -77,7 +74,7 @@ export const DiffSplitWidgetLine = defineComponent(
     });
 
     return () => {
-      if (!currentIsShow.value || !slots.widget) return null;
+      if (!currentIsShow.value) return null;
 
       return (
         <tr

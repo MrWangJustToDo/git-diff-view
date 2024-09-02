@@ -18,10 +18,6 @@ export const DiffSplitExtendLine = defineComponent(
 
     const currentSide = computed(() => SplitSide[props.side]);
 
-    const otherSide = computed(() =>
-      props.side === SplitSide.old ? SplitSide[SplitSide.new] : SplitSide[SplitSide.old]
-    );
-
     const lineSelector = computed(() => `tr[data-line="${props.lineNumber}-extend"]`);
 
     const wrapperSelector = computed(() =>
@@ -66,16 +62,14 @@ export const DiffSplitExtendLine = defineComponent(
       )
     );
 
-    const currentSideIsNew = computed(() => props.side === SplitSide.new && currentIsShow.value);
-
     const currentEnable = computed(
       () => (props.side === SplitSide.old ? !!oldLineExtend.value : !!newLineExtend.value) && currentIsShow.value
     );
 
     useSyncHeight({
       selector: lineSelector,
-      side: currentExtend.value ? currentSide : otherSide,
-      enable: currentSideIsNew,
+      side: currentSide,
+      enable: currentIsShow,
     });
 
     const width = useDomWidth({

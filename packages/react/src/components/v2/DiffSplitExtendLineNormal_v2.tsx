@@ -35,17 +35,15 @@ const _DiffSplitExtendLine = ({
 
   const currentLineNumber = side === SplitSide.old ? oldLine.lineNumber : newLine.lineNumber;
 
-  const otherSide = side === SplitSide.old ? SplitSide.new : SplitSide.old;
-
   useSyncHeight({
     selector: `div[data-state="extend"][data-line="${lineNumber}-extend"]`,
-    side: currentExtend ? SplitSide[side] : SplitSide[otherSide],
-    enable: side === SplitSide.new && typeof renderExtendLine === "function",
+    side: SplitSide[side],
+    enable: !!currentExtend?.data && typeof renderExtendLine === "function",
   });
 
   const width = useDomWidth({
     selector: side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper",
-    enable: !!currentExtend && typeof renderExtendLine === "function",
+    enable: !!currentExtend?.data && typeof renderExtendLine === "function",
   });
 
   if (!renderExtendLine) return null;
