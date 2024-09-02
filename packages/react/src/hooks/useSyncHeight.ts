@@ -5,7 +5,17 @@ import { useDiffViewContext } from "../components/DiffViewContext";
 import { useSafeLayout } from "./useSafeLayout";
 
 // TODO
-export const useSyncHeight = ({ selector, side, enable }: { selector: string; side: string; enable: boolean }) => {
+export const useSyncHeight = ({
+  selector,
+  wrapper,
+  side,
+  enable,
+}: {
+  selector: string;
+  wrapper?: string;
+  side: string;
+  enable: boolean;
+}) => {
   const { useDiffContext } = useDiffViewContext();
 
   const id = useDiffContext(useCallback((s) => s.id, []));
@@ -16,9 +26,14 @@ export const useSyncHeight = ({ selector, side, enable }: { selector: string; si
 
       const elements = Array.from(container?.querySelectorAll(selector) || []);
 
-      if (elements.length === 2) {
+      const wrappers = wrapper ? Array.from(container?.querySelectorAll(wrapper) || []) : elements;
+
+      if (elements.length === 2 && wrappers.length === 2) {
         const ele1 = elements[0] as HTMLElement;
         const ele2 = elements[1] as HTMLElement;
+
+        const wrapper1 = wrappers[0] as HTMLElement;
+        const wrapper2 = wrappers[1] as HTMLElement;
 
         const target = ele1.getAttribute("data-side") === side ? ele1 : ele2;
 
@@ -29,13 +44,13 @@ export const useSyncHeight = ({ selector, side, enable }: { selector: string; si
           const rect2 = ele2.getBoundingClientRect();
           if (rect1.height !== rect2.height) {
             const maxHeight = Math.max(rect1.height, rect2.height);
-            ele1.style.height = maxHeight + "px";
-            ele2.style.height = maxHeight + "px";
-            ele1.setAttribute("data-sync-height", String(maxHeight));
-            ele2.setAttribute("data-sync-height", String(maxHeight));
+            wrapper1.style.height = maxHeight + "px";
+            wrapper2.style.height = maxHeight + "px";
+            wrapper1.setAttribute("data-sync-height", String(maxHeight));
+            wrapper2.setAttribute("data-sync-height", String(maxHeight));
           } else {
-            ele1.removeAttribute("data-sync-height");
-            ele2.removeAttribute("data-sync-height");
+            wrapper1.removeAttribute("data-sync-height");
+            wrapper2.removeAttribute("data-sync-height");
           }
         };
 
@@ -53,5 +68,5 @@ export const useSyncHeight = ({ selector, side, enable }: { selector: string; si
         };
       }
     }
-  }, [selector, enable, side, id]);
+  }, [selector, enable, side, id, wrapper]);
 };

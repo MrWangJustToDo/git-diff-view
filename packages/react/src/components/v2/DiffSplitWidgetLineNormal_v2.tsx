@@ -30,7 +30,8 @@ const _DiffSplitWidgetLine = ({
   const renderWidgetLine = useDiffContext(React.useCallback((s) => s.renderWidgetLine, []));
 
   useSyncHeight({
-    selector: `div[data-state="widget"][data-line="${lineNumber}-widget"]`,
+    wrapper: `div[data-state="widget"][data-line="${lineNumber}-widget"]`,
+    selector: `div[data-line="${lineNumber}-widget-content"]`,
     side: SplitSide[side],
     enable: currentWidget && typeof renderWidgetLine === "function",
   });
@@ -51,7 +52,12 @@ const _DiffSplitWidgetLine = ({
     >
       {currentWidget ? (
         <div className={`diff-line-widget-${SplitSide[side]}-content p-0`}>
-          <div className="diff-line-widget-wrapper sticky left-0" style={{ width }}>
+          <div
+            data-line={`${lineNumber}-widget-content`}
+            data-side={SplitSide[side]}
+            className="diff-line-widget-wrapper sticky left-0"
+            style={{ width }}
+          >
             {width > 0 &&
               renderWidgetLine?.({
                 diffFile,
@@ -65,7 +71,9 @@ const _DiffSplitWidgetLine = ({
         <div
           className={`diff-line-widget-${SplitSide[side]}-placeholder h-full select-none p-0`}
           style={{ backgroundColor: `var(${emptyBGName})` }}
-        />
+        >
+          <div data-line={`${lineNumber}-widget-content`} data-side={SplitSide[side]} />
+        </div>
       )}
     </div>
   );
