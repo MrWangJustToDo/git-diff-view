@@ -244,11 +244,11 @@ importers:
         specifier: workspace:*
         version: link:../../packages/vue
       '@my-react/react':
-        specifier: 0.3.1
-        version: 0.3.1
+        specifier: 0.3.2
+        version: 0.3.2
       '@my-react/react-dom':
-        specifier: 0.3.1
-        version: 0.3.1(@my-react/react@0.3.1)
+        specifier: 0.3.2
+        version: 0.3.2(@my-react/react@0.3.2)
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -269,11 +269,11 @@ importers:
         version: 3.4.38(typescript@5.3.3)
     devDependencies:
       '@my-react/react-refresh':
-        specifier: 0.3.1
-        version: 0.3.1(@my-react/react-dom@0.3.1)(@my-react/react@0.3.1)
+        specifier: 0.3.2
+        version: 0.3.2(@my-react/react@0.3.2)
       '@my-react/react-vite':
-        specifier: 0.0.4
-        version: 0.0.4(@my-react/react-refresh@0.3.1)(vite@5.4.2)
+        specifier: 0.0.5
+        version: 0.0.5(@my-react/react-refresh@0.3.2)(vite@5.4.2)
       '@types/lodash':
         specifier: ^4.17.7
         version: 4.17.7
@@ -741,16 +741,6 @@ packages:
       '@babel/helper-plugin-utils': 7.22.5
     dev: true
 
-  /@babel/plugin-transform-react-jsx-self@7.23.3(@babel/core@7.23.9):
-    resolution: {integrity: sha512-qXRvbeKDSfwnlJnanVRp0SfuWE5DQhwQr5xtLBzp56Wabyo+4CMosF6Kfp+eOD/4FYpql64XVJ2W0pVLlJZxOQ==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.23.9
-      '@babel/helper-plugin-utils': 7.22.5
-    dev: true
-
   /@babel/plugin-transform-react-jsx-self@7.24.7(@babel/core@7.25.2):
     resolution: {integrity: sha512-fOPQYbGSgH0HUp4UJO4sMBFjY6DuWq+2i8rixyUMb3CdGixs/gccURvYOAhajBdKDoGajFr3mUq5rH3phtkGzw==}
     engines: {node: '>=6.9.0'}
@@ -759,16 +749,6 @@ packages:
     dependencies:
       '@babel/core': 7.25.2
       '@babel/helper-plugin-utils': 7.24.8
-    dev: true
-
-  /@babel/plugin-transform-react-jsx-source@7.23.3(@babel/core@7.23.9):
-    resolution: {integrity: sha512-91RS0MDnAWDNvGC6Wio5XYkyWI39FMFO+JK9+4AlgaTH+yWwVTsw7/sn6LK0lH7c5F+TFkpv/3LfCJ1Ydwof/g==}
-    engines: {node: '>=6.9.0'}
-    peerDependencies:
-      '@babel/core': ^7.0.0-0
-    dependencies:
-      '@babel/core': 7.23.9
-      '@babel/helper-plugin-utils': 7.22.5
     dev: true
 
   /@babel/plugin-transform-react-jsx-source@7.24.7(@babel/core@7.25.2):
@@ -1291,49 +1271,48 @@ packages:
     resolution: {integrity: sha512-9b8mPpKrfeGRuhFH5iO1iwCLeIIsV6+H1sRfxbkoGXIyQE2BTsPd9zqSqQJ+pv5sJ/hT5M1zvOFL02MnEezFug==}
     dev: true
 
-  /@my-react/react-dom@0.3.1(@my-react/react@0.3.1):
-    resolution: {integrity: sha512-xT+bjMOqerBEcGl1BSmYV9KPUe0ZzCeBSOFHOQaKJV3Fv5NDRQsjkW6poIh+wjEUeusUpEb0jJC5crbDlUYYYg==}
+  /@my-react/react-dom@0.3.2(@my-react/react@0.3.2):
+    resolution: {integrity: sha512-HI5RrN2nPyUVwMQDMqRPsVjLAzT7b+Ow679STvfafoY9FCDREGElvn6RuyZj471otRJWuGxXHX4HlFA/UA0FBw==}
     peerDependencies:
       '@my-react/react': '>=0.3.1'
     dependencies:
-      '@my-react/react': 0.3.1
+      '@my-react/react': 0.3.2
+    dev: false
 
-  /@my-react/react-jsx@0.3.1(@my-react/react@0.3.1):
-    resolution: {integrity: sha512-nw8uXn3yD5ioO5jZLatmSFfsSUlpFqDrParixL86NioQxBVpuG3X1P3eylwzZvZSymdDcMOem9fp2fb1AWrJOw==}
+  /@my-react/react-jsx@0.3.2(@my-react/react@0.3.2):
+    resolution: {integrity: sha512-Ze8W/Pggw+pRK5FYkXqsrKmfPPGa2vUMmcg28YkcDFuJYcPW/C81tjbZrGkR2BrP8J39sMWWY/C/20OhqpDc5w==}
     peerDependencies:
       '@my-react/react': '>=0.3.1'
     dependencies:
-      '@my-react/react': 0.3.1
+      '@my-react/react': 0.3.2
 
-  /@my-react/react-refresh@0.3.1(@my-react/react-dom@0.3.1)(@my-react/react@0.3.1):
-    resolution: {integrity: sha512-Fax2nbXgnAUSvHPA0Yz32O35cauui0W5M2Q50o0B/2u8KJCH/U10lXe4pIRDPXEImo9I/s9ULquvqQsDenbEuQ==}
+  /@my-react/react-refresh@0.3.2(@my-react/react@0.3.2):
+    resolution: {integrity: sha512-MF2QYEZQoy3+jWUF+LbItUhBKYXgGXhkFFR7IaN4HWWYhsmzb315VqiYj78/1W/sWxrLOZt65A2pesmXN0wJdg==}
     peerDependencies:
       '@my-react/react': '>=0.3.1'
-      '@my-react/react-dom': '>=0.3.1'
     dependencies:
-      '@my-react/react': 0.3.1
-      '@my-react/react-dom': 0.3.1(@my-react/react@0.3.1)
+      '@my-react/react': 0.3.2
     dev: true
 
-  /@my-react/react-vite@0.0.4(@my-react/react-refresh@0.3.1)(vite@5.4.2):
-    resolution: {integrity: sha512-Q+9MUclF2lgRx+duJZPeRyZ7RAJS9r7dsEbX74flsL7PCqeqsUlbI+bgVbown55omCNZS5Wo1+DU883AY4mkiA==}
+  /@my-react/react-vite@0.0.5(@my-react/react-refresh@0.3.2)(vite@5.4.2):
+    resolution: {integrity: sha512-ukRJ2KrqkdzxOQHUKG0i6mADSAJjvyEN5w/iudIpkX7fFhaN+oURwzo4czBMH2snbzvsxZVnpxoW4Fm8olWkzQ==}
     peerDependencies:
       '@my-react/react-refresh': '>=0.3.1'
-      vite: ^4.2.0 || ^5.0.0 || ^5.1.0 || ^5.2.0
+      vite: ^4.2.0 || ^5.0.0 || ^5.1.0 || ^5.2.0 || ^5.3.0 || ^5.4.0
     dependencies:
-      '@babel/core': 7.23.9
-      '@babel/plugin-transform-react-jsx-self': 7.23.3(@babel/core@7.23.9)
-      '@babel/plugin-transform-react-jsx-source': 7.23.3(@babel/core@7.23.9)
-      '@my-react/react-refresh': 0.3.1(@my-react/react-dom@0.3.1)(@my-react/react@0.3.1)
+      '@babel/core': 7.25.2
+      '@babel/plugin-transform-react-jsx-self': 7.24.7(@babel/core@7.25.2)
+      '@babel/plugin-transform-react-jsx-source': 7.24.7(@babel/core@7.25.2)
+      '@my-react/react-refresh': 0.3.2(@my-react/react@0.3.2)
       vite: 5.4.2(@types/node@20.12.12)
     transitivePeerDependencies:
       - supports-color
     dev: true
 
-  /@my-react/react@0.3.1:
-    resolution: {integrity: sha512-3w3Mc012uptL5ho715T50V6dBKpPbFHyn7WBtoXB1RBv+Q3HmEk3T6fRDXzQ6dyQscL1WcXjFfAfE2PJzINCNA==}
+  /@my-react/react@0.3.2:
+    resolution: {integrity: sha512-VjqTVeZOCriccWnzbo6Kj5nfk06BLTP9tVNG0PORRzXfPmerjZ9LPBdn6J8i+cpwEIpoAn5eWULu4HthPiP/qw==}
     dependencies:
-      '@my-react/react-jsx': 0.3.1(@my-react/react@0.3.1)
+      '@my-react/react-jsx': 0.3.2(@my-react/react@0.3.2)
 
   /@nodelib/fs.scandir@2.1.5:
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
