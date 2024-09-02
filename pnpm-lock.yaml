@@ -81,7 +81,7 @@ importers:
   packages/core:
     dependencies:
       '@git-diff-view/lowlight':
-        specifier: ^0.0.14
+        specifier: ^0.0.16
         version: link:../lowlight
       highlight.js:
         specifier: ^11.9.0
@@ -100,7 +100,7 @@ importers:
   packages/file:
     dependencies:
       '@git-diff-view/core':
-        specifier: ^0.0.14
+        specifier: ^0.0.16
         version: link:../core
       diff:
         specifier: ^5.2.0
@@ -134,7 +134,7 @@ importers:
   packages/react:
     dependencies:
       '@git-diff-view/core':
-        specifier: ^0.0.14
+        specifier: ^0.0.16
         version: link:../core
       '@types/hast':
         specifier: ^3.0.0
@@ -183,7 +183,7 @@ importers:
   packages/vue:
     dependencies:
       '@git-diff-view/core':
-        specifier: ^0.0.14
+        specifier: ^0.0.16
         version: link:../core
       '@types/hast':
         specifier: ^3.0.0
