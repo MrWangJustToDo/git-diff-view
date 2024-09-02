@@ -7,11 +7,12 @@
   "scripts": {
     "dev:packages": "ts-node ./scripts/dev.ts",
     "build:packages": "ts-node ./scripts/build.ts",
+    "start:release": "ts-node ./scripts/release.ts",
     "dev:react": "cd ui/react-example && pnpm run dev",
     "dev:vue": "cd ui/vue-example && pnpm run dev",
     "build:react": "cd ui/react-example && pnpm run build",
     "pre:release": "pnpm run lint && pnpm run prettier && pnpm run clean && pnpm run build:packages",
-    "release": "pnpm run pre:release && ts-node ./scripts/release.ts",
+    "release": "pnpm run pre:release && pnpm run start:release",
     "lint": "eslint --cache --ext ts,tsx .",
     "lint:fix": "pnpm run lint --fix",
     "prettier": "prettier --ignore-path .prettierignore --write .",

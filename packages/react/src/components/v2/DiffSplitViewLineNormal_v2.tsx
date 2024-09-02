@@ -1,7 +1,6 @@
 import { DiffFileLineType } from "@git-diff-view/core";
 import * as React from "react";
 
-
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal_v2";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal_v2";
 import { DiffSplitLine } from "./DiffSplitLineNormal_v2";

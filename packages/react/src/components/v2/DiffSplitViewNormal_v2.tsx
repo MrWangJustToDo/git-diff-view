@@ -4,7 +4,6 @@ import { memo, useCallback, useEffect, useRef } from "react";
 import * as React from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
-
 import { useTextWidth } from "../../hooks/useTextWidth";
 import { SplitSide } from "../DiffView";
 import { useDiffViewContext } from "../DiffViewContext";
