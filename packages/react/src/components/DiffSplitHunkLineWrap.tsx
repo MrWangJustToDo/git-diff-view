@@ -3,7 +3,13 @@ import * as React from "react";
 
 import { DiffModeEnum, useDiffViewContext } from "..";
 
-import { hunkContentBGName, hunkContentColorName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
+import {
+  borderColorName,
+  hunkContentBGName,
+  hunkContentColorName,
+  hunkLineNumberBGName,
+  plainLineNumberColorName,
+} from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 
 const DiffSplitHunkLineGitHub = ({
@@ -226,10 +232,11 @@ const DiffSplitHunkLineGitLab = ({
         </div>
       </td>
       <td
-        className="diff-line-hunk-action relative w-[1%] min-w-[40px] select-none border-l-[1px] border-l-[rgb(222,222,222)] p-[1px]"
+        className="diff-line-hunk-action relative w-[1%] min-w-[40px] select-none border-l-[1px] p-[1px]"
         style={{
           backgroundColor: `var(${hunkLineNumberBGName})`,
           color: `var(${plainLineNumberColorName})`,
+          borderLeftColor: `var(${borderColorName})`,
         }}
       >
         {couldExpand ? (

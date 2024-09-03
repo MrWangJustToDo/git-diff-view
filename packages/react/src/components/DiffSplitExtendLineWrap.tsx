@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { useDiffViewContext, SplitSide } from "..";
 
-import { emptyBGName } from "./color";
+import { borderColorName, emptyBGName } from "./color";
 
 import type { DiffFile } from "@git-diff-view/core";
 
@@ -55,7 +55,11 @@ const _DiffSplitExtendLine = ({
         </td>
       )}
       {newLineExtend ? (
-        <td className="diff-line-extend-new-content border-l-[1px] border-l-[rgb(222,222,222)] p-0" colSpan={2}>
+        <td
+          className="diff-line-extend-new-content border-l-[1px] p-0"
+          style={{ borderLeftColor: `var(${borderColorName})` }}
+          colSpan={2}
+        >
           <div className="diff-line-extend-wrapper">
             {newLineExtend?.data &&
               renderExtendLine?.({
@@ -69,8 +73,8 @@ const _DiffSplitExtendLine = ({
         </td>
       ) : (
         <td
-          className="diff-line-extend-new-placeholder select-none border-l-[1px] border-l-[rgb(222,222,222)] p-0"
-          style={{ backgroundColor: `var(${emptyBGName})` }}
+          className="diff-line-extend-new-placeholder select-none border-l-[1px] p-0"
+          style={{ backgroundColor: `var(${emptyBGName})`, borderLeftColor: `var(${borderColorName})` }}
           colSpan={2}
         >
           <span>&ensp;</span>
