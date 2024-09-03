@@ -44,7 +44,9 @@ export const DiffSplitWidgetLine = defineComponent(
 
     const currentLine = computed(() => (props.side === SplitSide.old ? oldLine.value : newLine.value));
 
-    const lineSelector = computed(() => `tr[data-line="${props.lineNumber}-widget"]`);
+    const lineSelector = computed(() => `div[data-line="${props.lineNumber}-widget-content"]`);
+
+    const lineWrapperSelector = computed(() => `tr[data-line="${props.lineNumber}-widget"]`);
 
     const wrapperSelector = computed(() =>
       props.side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper"
@@ -64,6 +66,7 @@ export const DiffSplitWidgetLine = defineComponent(
 
     useSyncHeight({
       selector: lineSelector,
+      wrapper: lineWrapperSelector,
       side: observeSide,
       enable: currentIsShow,
     });
@@ -85,7 +88,12 @@ export const DiffSplitWidgetLine = defineComponent(
         >
           {currentWidget.value ? (
             <td class={`diff-line-widget-${SplitSide[props.side]}-content p-0`} colspan={2}>
-              <div class="diff-line-widget-wrapper sticky left-0" style={{ width: width.value + "px" }}>
+              <div
+                data-line={`${props.lineNumber}-widget-content`}
+                data-side={SplitSide[props.side]}
+                class="diff-line-widget-wrapper sticky left-0"
+                style={{ width: width.value + "px" }}
+              >
                 {width.value > 0 &&
                   slots.widget?.({
                     diffFile: props.diffFile,
@@ -101,7 +109,9 @@ export const DiffSplitWidgetLine = defineComponent(
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >
-              <span>&ensp;</span>
+              <div data-line={`${props.lineNumber}-widget-content`} data-side={SplitSide[props.side]}>
+                &ensp;
+              </div>
             </td>
           )}
         </tr>

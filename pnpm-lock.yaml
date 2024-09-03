@@ -83,6 +83,9 @@ importers:
       '@git-diff-view/lowlight':
         specifier: ^0.0.16
         version: link:../lowlight
+      fast-diff:
+        specifier: ^1.3.0
+        version: 1.3.0
       highlight.js:
         specifier: ^11.9.0
         version: 11.9.0
@@ -93,9 +96,6 @@ importers:
       '@types/hast':
         specifier: ^3.0.0
         version: 3.0.4
-      fast-diff:
-        specifier: ^1.3.0
-        version: 1.3.0
 
   packages/file:
     dependencies:
@@ -105,6 +105,9 @@ importers:
       diff:
         specifier: ^5.2.0
         version: 5.2.0
+      fast-diff:
+        specifier: ^1.3.0
+        version: 1.3.0
       highlight.js:
         specifier: ^11.9.0
         version: 11.9.0
@@ -139,6 +142,9 @@ importers:
       '@types/hast':
         specifier: ^3.0.0
         version: 3.0.4
+      fast-diff:
+        specifier: ^1.3.0
+        version: 1.3.0
       highlight.js:
         specifier: ^11.9.0
         version: 11.9.0
@@ -188,6 +194,9 @@ importers:
       '@types/hast':
         specifier: ^3.0.0
         version: 3.0.4
+      fast-diff:
+        specifier: ^1.3.0
+        version: 1.3.0
       highlight.js:
         specifier: ^11.9.0
         version: 11.9.0
@@ -3716,7 +3725,6 @@ packages:
 
   /fast-diff@1.3.0:
     resolution: {integrity: sha512-VxPP4NqbUjj6MaAOafWeUn2cXWLcCtljklUtZf0Ind4XQ+QPtmA0b18zZy0jIQx+ExRVCR/ZQpBmik5lXshNsw==}
-    dev: true
 
   /fast-glob@3.3.2:
     resolution: {integrity: sha512-oX2ruAFQwf/Orj8m737Y5adxDQO0LAB7/S5MnxCdTNDd4p6BsyIVsv9JQsATbTSq8KHRpLwIHbVlUNatxd+1Ow==}

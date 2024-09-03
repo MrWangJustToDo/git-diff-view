@@ -68,6 +68,7 @@ const DiffSplitHunkLineGitHub = defineComponent(
 
     useSyncHeight({
       selector: lineSelector,
+      wrapper: lineSelector,
       side: currentSyncHeightSide,
       enable: currentEnableSyncHeight,
     });
@@ -211,6 +212,7 @@ const DiffSplitHunkLineGitLab = defineComponent(
 
     useSyncHeight({
       selector: lineSelector,
+      wrapper: lineSelector,
       side: currentSyncHeightSide,
       enable: currentEnableSyncHeight,
     });

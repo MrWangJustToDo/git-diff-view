@@ -18,7 +18,9 @@ export const DiffSplitExtendLine = defineComponent(
 
     const currentSide = computed(() => SplitSide[props.side]);
 
-    const lineSelector = computed(() => `tr[data-line="${props.lineNumber}-extend"]`);
+    const lineSelector = computed(() => `div[data-line="${props.lineNumber}-extend-content"]`);
+
+    const lineWrapperSelector = computed(() => `tr[data-line="${props.lineNumber}-extend"]`);
 
     const wrapperSelector = computed(() =>
       props.side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper"
@@ -68,6 +70,7 @@ export const DiffSplitExtendLine = defineComponent(
 
     useSyncHeight({
       selector: lineSelector,
+      wrapper: lineWrapperSelector,
       side: currentSide,
       enable: currentIsShow,
     });
@@ -89,7 +92,12 @@ export const DiffSplitExtendLine = defineComponent(
         >
           {currentExtend.value ? (
             <td class={`diff-line-extend-${SplitSide[props.side]}-content p-0`} colspan={2}>
-              <div class="diff-line-extend-wrapper sticky left-0" style={{ width: width.value + "px" }}>
+              <div
+                data-line={`${props.lineNumber}-extend-content`}
+                data-side={SplitSide[props.side]}
+                class="diff-line-extend-wrapper sticky left-0"
+                style={{ width: width.value + "px" }}
+              >
                 {width.value > 0 &&
                   slots.extend?.({
                     diffFile: props.diffFile,
@@ -106,7 +114,9 @@ export const DiffSplitExtendLine = defineComponent(
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >
-              <span>&ensp;</span>
+              <div data-line={`${props.lineNumber}-extend-content`} data-side={SplitSide[props.side]}>
+                &ensp;
+              </div>
             </td>
           )}
         </tr>
