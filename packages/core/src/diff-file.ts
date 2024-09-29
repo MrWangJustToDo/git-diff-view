@@ -115,6 +115,8 @@ export class DiffFile {
 
   #highlighterName?: string;
 
+  #theme?: "light" | "dark";
+
   _version_ = __VERSION__;
 
   _oldFileContent: string = "";
@@ -471,12 +473,18 @@ export class DiffFile {
     });
   }
 
-  #composeSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> }) {
-    this.#oldFileResult?.doSyntax({ registerHighlighter });
+  #composeSyntax({
+    registerHighlighter,
+    theme,
+  }: {
+    registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
+    theme?: "light" | "dark";
+  }) {
+    this.#oldFileResult?.doSyntax({ registerHighlighter, theme });
 
     this.#oldFileSyntaxLines = this.#oldFileResult?.syntaxFile;
 
-    this.#newFileResult?.doSyntax({ registerHighlighter });
+    this.#newFileResult?.doSyntax({ registerHighlighter, theme });
 
     this.#newFileSyntaxLines = this.#newFileResult?.syntaxFile;
   }
@@ -529,8 +537,11 @@ export class DiffFile {
     this.#hasInitRaw = true;
   }
 
-  initSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> } = {}) {
-    if (this.#hasInitSyntax) return;
+  initSyntax({
+    registerHighlighter,
+    theme = "light",
+  }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">; theme?: "light" | "dark" } = {}) {
+    if (this.#hasInitSyntax && this.#theme === theme) return;
 
     if (this.#composeByMerge && !this.#composeByFullMerge) {
       __DEV__ &&
@@ -540,12 +551,14 @@ export class DiffFile {
       return;
     }
 
-    this.#composeSyntax({ registerHighlighter });
+    this.#composeSyntax({ registerHighlighter, theme });
 
     this.#highlighterName =
       this.#oldFileResult?.highlighterName || this.#newFileResult?.highlighterName || this.#highlighterName;
 
     this.#hasInitSyntax = true;
+
+    this.#theme = theme;
   }
 
   init() {

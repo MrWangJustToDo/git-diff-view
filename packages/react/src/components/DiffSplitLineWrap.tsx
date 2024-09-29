@@ -3,7 +3,7 @@ import * as React from "react";
 
 import { SplitSide, useDiffViewContext } from "..";
 
-import { emptyBGName, getContentBG, getLineNumberBG, plainLineNumberColorName } from "./color";
+import { borderColorName, emptyBGName, getContentBG, getLineNumberBG, plainLineNumberColorName } from "./color";
 import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 // import { DiffContent_v2 } from "./DiffContent_v2";
@@ -118,9 +118,13 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
       {hasNewLine ? (
         <>
           <td
-            className="diff-line-new-num group relative w-[1%] min-w-[40px] select-none border-l-[1px] border-l-[rgb(222,222,222)] pl-[10px] pr-[10px] text-right align-top"
+            className="diff-line-new-num group relative w-[1%] min-w-[40px] select-none border-l-[1px] pl-[10px] pr-[10px] text-right align-top"
             data-side={SplitSide[SplitSide.new]}
-            style={{ backgroundColor: newLineNumberBG, color: `var(${plainLineNumberColorName})` }}
+            style={{
+              backgroundColor: newLineNumberBG,
+              color: `var(${plainLineNumberColorName})`,
+              borderLeftColor: `var(${borderColorName})`,
+            }}
           >
             {hasDiff && enableAddWidget && (
               <DiffSplitAddWidget
@@ -165,8 +169,8 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
         </>
       ) : (
         <td
-          className="diff-line-new-placeholder select-none border-l-[1px] border-l-[rgb(222,222,222)]"
-          style={{ backgroundColor: `var(${emptyBGName})` }}
+          className="diff-line-new-placeholder select-none border-l-[1px]"
+          style={{ backgroundColor: `var(${emptyBGName})`, borderLeftColor: `var(${borderColorName})` }}
           data-side={SplitSide[SplitSide.new]}
           colSpan={2}
         >

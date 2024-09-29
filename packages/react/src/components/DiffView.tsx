@@ -221,10 +221,10 @@ const DiffViewWithRef = <T extends unknown>(
   useEffect(() => {
     if (!diffFile) return;
     if (props.diffViewHighlight) {
-      diffFile.initSyntax({ registerHighlighter });
+      diffFile.initSyntax({ registerHighlighter, theme: props.diffViewTheme === "github-dark" ? "dark" : "light" });
       diffFile.notifyAll();
     }
-  }, [diffFile, props.diffViewHighlight, registerHighlighter]);
+  }, [diffFile, props.diffViewHighlight, registerHighlighter, props.diffViewTheme]);
 
   useEffect(() => {
     if (_diffFile && diffFile) {

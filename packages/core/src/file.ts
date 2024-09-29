@@ -77,7 +77,13 @@ export class File {
     Object.defineProperty(this, "__v_skip", { value: true });
   }
 
-  doSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> }) {
+  doSyntax({
+    registerHighlighter,
+    theme,
+  }: {
+    registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
+    theme?: "light" | "dark";
+  }) {
     if (!this.raw || this.hasDoSyntax) return;
 
     const _highlighter = registerHighlighter || highlighter;
@@ -92,7 +98,7 @@ export class File {
       return;
     }
 
-    this.ast = _highlighter.getAST(this.raw, this.fileName, this.lang);
+    this.ast = _highlighter.getAST(this.raw, this.fileName, this.lang, theme);
 
     if (!this.ast) return;
 

@@ -3,17 +3,18 @@
 @tailwind utilities;
 
 [data-theme="github"] .diff-style-root {
+  --diff-border--: #dedede;
   --diff-add-content--: #e6ffec;
   --diff-del-content--: #ffebe9;
   --diff-add-lineNumber--: #ccffd8;
   --diff-del-lineNumber--: #ffd7d5;
-  --diff-border-color--: #dedede;
   --diff-plain-content--: #ffffff;
   --diff-expand-content--: #fafafa;
   --diff-plain-lineNumber--: #fafafa;
   --diff-plain-lineNumber-color--: #555555;
   --diff-hunk-content--: #ddf4ff;
   --diff-hunk-lineNumber--: #c7ecff;
+  --diff-hunk-lineNumber-hover--: #9dc4f8;
   --diff-add-content-highlight--: #abf2bc;
   --diff-del-content-highlight--: #ffb3ad;
   --diff-add-widget--: #0969d2;
@@ -25,22 +26,24 @@
 }
 
 [data-theme="github-dark"] .diff-style-root {
-  --diff-add-content--: #002b36;
-  --diff-del-content--: #451916;
-  --diff-add-lineNumber--: #073642;
-  --diff-del-lineNumber--: #87302a;
+  --diff-border--: #3D444D;
+  --diff-add-content--: #14261f;
+  --diff-del-content--: #311b1f;
+  --diff-add-lineNumber--: #1f4429;
+  --diff-del-lineNumber--: #552527;
   --diff-plain-content--: #0d1117;
   --diff-expand-content--: #161b22;
   --diff-plain-lineNumber--: #161b22;
   --diff-plain-lineNumber-color--: #a0aaab;
-  --diff-hunk-content--: #13243b;
-  --diff-hunk-lineNumber--: #183765;
-  --diff-add-content-highlight--: #073642;
-  --diff-del-content-highlight--: #010102;
+  --diff-hunk-content--: #131d2e;
+  --diff-hunk-lineNumber--: #204274;
+  --diff-hunk-lineNumber-hover--: #386de3;
+  --diff-add-content-highlight--: #1f572d;
+  --diff-del-content-highlight--: #80312f;
   --diff-add-widget--: #0969d2;
   --diff-add-widget-color--: #ffffff;
-  --diff-empty-content--: #002b36;
-  --diff-hunk-content-color--: #839496;
+  --diff-empty-content--: #161b22;
+  --diff-hunk-content-color--: #9298a0;
 
   color: white;
 }
@@ -91,6 +94,10 @@
   transform: translateY(-50%);
   border: 6px solid transparent;
   border-right-color: #555555;
+}
+
+.diff-widget-tooltip:hover {
+  background-color: var(--diff-hunk-lineNumber-hover--);
 }
 
 .diff-widget-tooltip:hover::before {

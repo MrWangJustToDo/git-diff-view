@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { emptyBGName } from "../color";
+import { borderColorName, emptyBGName } from "../color";
 import { SplitSide } from "../DiffView";
 import { useDiffViewContext } from "../DiffViewContext";
 import { useDiffWidgetContext } from "../DiffWidgetContext";
@@ -55,7 +55,10 @@ const _DiffSplitWidgetLine = ({
           <span>&ensp;</span>
         </div>
       )}
-      <div className="diff-split-line w-[1px] flex-shrink-0 bg-[rgb(222,222,222)]" />
+      <div
+        className="diff-split-line w-[1px] flex-shrink-0"
+        style={{ backgroundColor: `var(${borderColorName})` }}
+      />
       {newLineWidget ? (
         <div className="diff-line-widget-new-content w-[50%] p-0">
           <div className="diff-line-widget-wrapper">

@@ -64,7 +64,7 @@ const _DiffSplitHunkLineGitHub = ({
             {couldExpand ? (
               isFirstLine ? (
                 <button
-                  className="diff-widget-tooltip flex h-full w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px] hover:bg-blue-300"
+                  className="diff-widget-tooltip flex h-full w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px]"
                   title="Expand Up"
                   data-title="Expand Up"
                   onClick={() => diffFile.onSplitHunkExpand("up", index)}
@@ -73,7 +73,7 @@ const _DiffSplitHunkLineGitHub = ({
                 </button>
               ) : isLastLine ? (
                 <button
-                  className="diff-widget-tooltip relative flex h-full w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px] hover:bg-blue-300"
+                  className="diff-widget-tooltip relative flex h-full w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px]"
                   title="Expand Down"
                   data-title="Expand Down"
                   onClick={() => {
@@ -84,7 +84,7 @@ const _DiffSplitHunkLineGitHub = ({
                 </button>
               ) : isExpandAll ? (
                 <button
-                  className="diff-widget-tooltip flex h-full w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px] hover:bg-blue-300"
+                  className="diff-widget-tooltip flex h-full w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px]"
                   title="Expand All"
                   data-title="Expand All"
                   onClick={() => diffFile.onSplitHunkExpand("all", index)}
@@ -94,7 +94,7 @@ const _DiffSplitHunkLineGitHub = ({
               ) : (
                 <>
                   <button
-                    className="diff-widget-tooltip flex h-[50%] w-full cursor-pointer items-center justify-center rounded-[2px] py-[2px] hover:bg-blue-300"
+                    className="diff-widget-tooltip flex h-[50%] w-full cursor-pointer items-center justify-center rounded-[2px] py-[2px]"
                     title="Expand Down"
                     data-title="Expand Down"
                     onClick={() => diffFile.onSplitHunkExpand("down", index)}
@@ -102,7 +102,7 @@ const _DiffSplitHunkLineGitHub = ({
                     <ExpandDown className="fill-current" />
                   </button>
                   <button
-                    className="diff-widget-tooltip flex h-[50%] w-full cursor-pointer items-center justify-center rounded-[2px] py-[2px] hover:bg-blue-300"
+                    className="diff-widget-tooltip flex h-[50%] w-full cursor-pointer items-center justify-center rounded-[2px] py-[2px]"
                     title="Expand Up"
                     data-title="Expand Up"
                     onClick={() => diffFile.onSplitHunkExpand("up", index)}
@@ -184,7 +184,7 @@ const _DiffSplitHunkLineGitLab = ({
         {couldExpand ? (
           isFirstLine ? (
             <button
-              className="diff-widget-tooltip flex h-full w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px] hover:bg-blue-300"
+              className="diff-widget-tooltip flex h-full w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px]"
               title="Expand Up"
               data-title="Expand Up"
               onClick={() => diffFile.onSplitHunkExpand("up", index)}
@@ -193,7 +193,7 @@ const _DiffSplitHunkLineGitLab = ({
             </button>
           ) : isLastLine ? (
             <button
-              className="diff-widget-tooltip relative flex h-full w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px] hover:bg-blue-300"
+              className="diff-widget-tooltip relative flex h-full w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px]"
               title="Expand Down"
               data-title="Expand Down"
               onClick={() => {
@@ -204,7 +204,7 @@ const _DiffSplitHunkLineGitLab = ({
             </button>
           ) : isExpandAll ? (
             <button
-              className="diff-widget-tooltip flex h-full w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px] hover:bg-blue-300"
+              className="diff-widget-tooltip flex h-full w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px]"
               title="Expand All"
               data-title="Expand All"
               onClick={() => diffFile.onSplitHunkExpand("all", index)}
@@ -214,7 +214,7 @@ const _DiffSplitHunkLineGitLab = ({
           ) : (
             <>
               <button
-                className="diff-widget-tooltip flex h-[50%] w-full cursor-pointer items-center justify-center rounded-[2px] py-[2px] hover:bg-blue-300"
+                className="diff-widget-tooltip flex h-[50%] w-full cursor-pointer items-center justify-center rounded-[2px] py-[2px]"
                 title="Expand Down"
                 data-title="Expand Down"
                 onClick={() => diffFile.onSplitHunkExpand("down", index)}
@@ -222,7 +222,7 @@ const _DiffSplitHunkLineGitLab = ({
                 <ExpandDown className="fill-current" />
               </button>
               <button
-                className="diff-widget-tooltip flex h-[50%] w-full cursor-pointer items-center justify-center rounded-[2px] py-[2px] hover:bg-blue-300"
+                className="diff-widget-tooltip flex h-[50%] w-full cursor-pointer items-center justify-center rounded-[2px] py-[2px]"
                 title="Expand Up"
                 data-title="Expand Up"
                 onClick={() => diffFile.onSplitHunkExpand("up", index)}

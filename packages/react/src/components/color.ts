@@ -2,7 +2,7 @@ export const addContentBGName = "--diff-add-content--";
 
 export const delContentBGName = "--diff-del-content--";
 
-export const borderColorName = "--diff-border-color--";
+export const borderColorName = "--diff-border--";
 
 export const addLineNumberBGName = "--diff-add-lineNumber--";
 
@@ -21,6 +21,8 @@ export const hunkContentBGName = "--diff-hunk-content--";
 export const hunkContentColorName = "--diff-hunk-content-color--";
 
 export const hunkLineNumberBGName = "--diff-hunk-lineNumber--";
+
+export const hunkLineNumberBGHoverName = "--diff-hunk-lineNumber-hover--";
 
 export const addContentHighlightBGName = "--diff-add-content-highlight--";
 

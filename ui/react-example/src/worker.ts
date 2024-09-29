@@ -7,6 +7,7 @@ export type MessageData = {
   id: number;
   data: DiffViewProps<any>["data"];
   highlight?: boolean;
+  theme?: 'light' | 'dark';
   bundle: ReturnType<DiffFile["getBundle"]>;
 };
 
@@ -35,7 +36,7 @@ onmessage = (event: MessageEvent<MessageData>) => {
 
   highlighterReady.then((highlighter) => {
     if (_data.highlight) {
-      file.initSyntax({ registerHighlighter: highlighter });
+      file.initSyntax({ registerHighlighter: highlighter, theme: _data.theme });
       // file.initSyntax();
     }
 
