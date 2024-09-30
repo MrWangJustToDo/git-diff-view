@@ -3,7 +3,7 @@ import { computed, defineComponent, ref } from "vue";
 import { useExtendData, useSlots } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 
-import { emptyBGName } from "./color";
+import { borderColorName, emptyBGName } from "./color";
 import { SplitSide } from "./DiffView";
 
 import type { DiffFile } from "@git-diff-view/core";
@@ -70,7 +70,11 @@ export const DiffSplitExtendLine = defineComponent(
             </td>
           )}
           {newLineExtend.value ? (
-            <td class="diff-line-extend-new-content border-l-[1px] border-l-[rgb(222,222,222)] p-0" colspan={2}>
+            <td
+              class="diff-line-extend-new-content border-l-[1px] p-0"
+              colspan={2}
+              style={{ borderLeftColor: `var(${borderColorName})` }}
+            >
               <div class="diff-line-extend-wrapper">
                 {slots.extend?.({
                   diffFile: props.diffFile,
@@ -83,8 +87,8 @@ export const DiffSplitExtendLine = defineComponent(
             </td>
           ) : (
             <td
-              class="diff-line-extend-new-placeholder select-none border-l-[1px] border-l-[rgb(222,222,222)] p-0"
-              style={{ backgroundColor: `var(${emptyBGName})` }}
+              class="diff-line-extend-new-placeholder select-none border-l-[1px] p-0"
+              style={{ backgroundColor: `var(${emptyBGName})`, borderLeftColor: `var(${borderColorName})` }}
               colspan={2}
             >
               <span>&ensp;</span>

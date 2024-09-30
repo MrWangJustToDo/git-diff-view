@@ -7,6 +7,7 @@ import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 import { useDiffViewContext } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";
 
+import { borderColorName } from "./color";
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
 import { DiffSplitLine } from "./DiffSplitLineNormal";
@@ -110,7 +111,10 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
       >
         <DiffSplitViewTable side={SplitSide.old} diffFile={diffFile} />
       </div>
-      <div className="diff-split-line w-[1.5px] bg-[rgb(222,222,222)]" />
+      <div
+        className="diff-split-line w-[1.5px]"
+        style={{ backgroundColor: `var(${borderColorName})` }}
+      />
       <div
         className="new-diff-table-wrapper scrollbar-hide scrollbar-disable w-full overflow-x-auto overflow-y-hidden"
         ref={ref2}

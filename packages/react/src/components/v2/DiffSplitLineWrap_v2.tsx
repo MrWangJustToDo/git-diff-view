@@ -1,7 +1,7 @@
 import { DiffLineType, type DiffFile, checkDiffLineIncludeChange } from "@git-diff-view/core";
 import * as React from "react";
 
-import { getContentBG, getLineNumberBG, plainLineNumberColorName, emptyBGName } from "../color";
+import { getContentBG, getLineNumberBG, plainLineNumberColorName, emptyBGName, borderColorName } from "../color";
 import { DiffSplitAddWidget } from "../DiffAddWidget";
 import { DiffContent } from "../DiffContent";
 import { SplitSide } from "../DiffView";
@@ -138,7 +138,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
           </div>
         </>
       )}
-      <div className="diff-split-line w-[1px] flex-shrink-0 bg-[rgb(222,222,222)]" />
+      <div className="diff-split-line w-[1px] flex-shrink-0" style={{ backgroundColor: `var(${borderColorName})` }} />
       {hasNewLine ? (
         <>
           <div

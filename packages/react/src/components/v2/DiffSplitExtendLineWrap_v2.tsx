@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { emptyBGName } from "../color";
+import { borderColorName, emptyBGName } from "../color";
 import { SplitSide } from "../DiffView";
 import { useDiffViewContext } from "../DiffViewContext";
 
@@ -53,7 +53,7 @@ const _DiffSplitExtendLine = ({
           <span>&ensp;</span>
         </div>
       )}
-      <div className="diff-split-line w-[1px] bg-[rgb(222,222,222)]" />
+      <div className="diff-split-line w-[1px]" style={{ backgroundColor: `var(${borderColorName})` }} />
       {newLineExtend ? (
         <div className="diff-line-extend-new-content w-[50%] p-0">
           <div className="diff-line-extend-wrapper">

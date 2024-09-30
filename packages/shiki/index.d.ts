@@ -35,7 +35,7 @@ export type DiffHighlighter = {
 	setMaxLineToIgnoreSyntax: (v: number) => void;
 	ignoreSyntaxHighlightList: (string | RegExp)[];
 	setIgnoreSyntaxHighlightList: (v: (string | RegExp)[]) => void;
-	getAST: (raw: string, fileName?: string, lang?: string) => DiffAST;
+	getAST: (raw: string, fileName?: string, lang?: string, theme?: "light" | "dark") => DiffAST;
 	processAST: (ast: DiffAST) => {
 		syntaxFileObject: Record<number, SyntaxLine>;
 		syntaxFileLineNumber: number;

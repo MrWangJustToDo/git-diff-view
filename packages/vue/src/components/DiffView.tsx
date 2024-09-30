@@ -24,6 +24,8 @@ import { diffFontSizeName } from "./tools";
 import type { DiffHighlighter } from "@git-diff-view/core";
 import type { CSSProperties, SlotsType } from "vue";
 
+_cacheMap.name = "@git-diff-view/vue";
+
 export enum DiffModeEnum {
   // github like
   SplitGitHub = 1,
@@ -51,12 +53,11 @@ export type DiffViewProps<T> = {
   registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
   diffViewMode?: DiffModeEnum;
   diffViewWrap?: boolean;
+  diffViewTheme?: "light" | "dark";
   diffViewFontSize?: number;
   diffViewHighlight?: boolean;
   diffViewAddWidget?: boolean;
 };
-
-_cacheMap.name = "@git-diff-view/vue";
 
 type typeSlots = SlotsType<{
   widget: { lineNumber: number; side: SplitSide; diffFile: DiffFile; onClose: () => void };
@@ -96,11 +97,15 @@ export const DiffView = defineComponent<
 
     const widgetState = ref<{ side?: SplitSide; lineNumber?: number }>({});
 
+    const wrapperRef = ref<HTMLDivElement>();
+
     const setWidget = (v: { side?: SplitSide; lineNumber?: number }) => {
       typeof options.slots.widget === "function" && (widgetState.value = v);
     };
 
     const enableHighlight = computed(() => props.diffViewHighlight ?? true);
+
+    const theme = computed(() => props.diffViewTheme);
 
     watch(
       () => props.diffFile,
@@ -137,6 +142,7 @@ export const DiffView = defineComponent<
     const initDiff = () => {
       if (!isMounted.value || !diffFile.value) return;
       const instance = diffFile.value;
+      instance.initTheme(theme.value);
       instance.initRaw();
       instance.buildSplitDiffLines();
       instance.buildUnifiedDiffLines();
@@ -144,9 +150,22 @@ export const DiffView = defineComponent<
 
     const initSyntax = () => {
       if (!isMounted.value || !enableHighlight.value || !diffFile.value) return;
+      // hack to track the value change
+      theme.value;
       const instance = diffFile.value;
-      instance.initSyntax({ registerHighlighter: props.registerHighlighter });
+      instance.initSyntax({
+        registerHighlighter: props.registerHighlighter,
+      });
       instance.notifyAll();
+    };
+
+    const initTheme = (onClean: (cb: () => void) => void) => {
+      if (!isMounted.value || !diffFile.value || !wrapperRef.value) return;
+      const instance = diffFile.value;
+      const cb = instance.subscribe(() => {
+        wrapperRef.value?.setAttribute("data-theme", instance._getTheme() || "light");
+      });
+      onClean(() => cb());
     };
 
     const initId = (onClean: (cb: () => void) => void) => {
@@ -161,6 +180,8 @@ export const DiffView = defineComponent<
     watchEffect(() => initSyntax());
 
     watchEffect((onClean) => initId(onClean));
+
+    watchEffect((onClean) => initTheme(onClean));
 
     watchEffect((onClean) => initSubscribe(onClean));
 
@@ -197,8 +218,10 @@ export const DiffView = defineComponent<
         <div
           class="diff-tailwindcss-wrapper"
           data-component="git-diff-view"
+          data-theme={diffFile.value._getTheme() || "light"}
           data-version={__VERSION__}
           data-highlighter={diffFile.value._getHighlighterName()}
+          ref={wrapperRef}
         >
           <div class="diff-style-root" style={{ [diffFontSizeName]: (props.diffViewFontSize || 14) + "px" }}>
             <div
@@ -228,6 +251,7 @@ export const DiffView = defineComponent<
       "diffViewHighlight",
       "diffViewMode",
       "diffViewWrap",
+      "diffViewTheme",
       "extendData",
       "registerHighlighter",
       "style",

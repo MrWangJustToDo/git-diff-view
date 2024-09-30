@@ -6,6 +6,7 @@ import { useIsMounted } from "../hooks/useIsMounted";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useTextWidth } from "../hooks/useTextWidth";
 
+import { borderColorName } from "./color";
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
 import { DiffSplitLine } from "./DiffSplitLineNormal";
@@ -139,7 +140,10 @@ export const DiffSplitViewNormal = defineComponent(
           >
             <DiffSplitViewTable side={SplitSide.old} diffFile={props.diffFile} />
           </div>
-          <div class="diff-split-line w-[1.5px] bg-[rgb(222,222,222)]" />
+          <div
+            class="diff-split-line w-[1.5px]"
+            style={{ backgroundColor: `var(${borderColorName})` }}
+          />
           <div
             class="new-diff-table-wrapper scrollbar-hide w-full overflow-x-auto overflow-y-hidden"
             ref={ref2}

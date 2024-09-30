@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-.diff-style-root {
+[data-theme="light"] .diff-style-root {
+  --diff-border--: #dedede;
   --diff-add-content--: #e6ffec;
   --diff-del-content--: #ffebe9;
   --diff-add-lineNumber--: #ccffd8;
@@ -13,12 +14,49 @@
   --diff-plain-lineNumber-color--: #555555;
   --diff-hunk-content--: #ddf4ff;
   --diff-hunk-lineNumber--: #c7ecff;
+  --diff-hunk-lineNumber-hover--: #9dc4f8;
   --diff-add-content-highlight--: #abf2bc;
   --diff-del-content-highlight--: #ffb3ad;
   --diff-add-widget--: #0969d2;
   --diff-add-widget-color--: #ffffff;
   --diff-empty-content--: #fafafa;
   --diff-hunk-content-color--: #777777;
+
+  color: black;
+}
+
+[data-theme="dark"] .diff-style-root {
+  --diff-border--: #3D444D;
+  --diff-add-content--: #14261f;
+  --diff-del-content--: #311b1f;
+  --diff-add-lineNumber--: #1f4429;
+  --diff-del-lineNumber--: #552527;
+  --diff-plain-content--: #0d1117;
+  --diff-expand-content--: #161b22;
+  --diff-plain-lineNumber--: #161b22;
+  --diff-plain-lineNumber-color--: #a0aaab;
+  --diff-hunk-content--: #131d2e;
+  --diff-hunk-lineNumber--: #204274;
+  --diff-hunk-lineNumber-hover--: #386de3;
+  --diff-add-content-highlight--: #1f572d;
+  --diff-del-content-highlight--: #80312f;
+  --diff-add-widget--: #0969d2;
+  --diff-add-widget-color--: #ffffff;
+  --diff-empty-content--: #161b22;
+  --diff-hunk-content-color--: #9298a0;
+
+  color: white;
+}
+
+/* For Webkit-based browsers (Chrome, Safari and Opera) */
+.scrollbar-disable::-webkit-scrollbar {
+  display: none;
+}
+
+/* For IE, Edge and Firefox */
+.scrollbar-disable {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 .diff-style-root tr {
@@ -58,10 +96,22 @@
   border-right-color: #555555;
 }
 
+.diff-widget-tooltip:hover {
+  background-color: var(--diff-hunk-lineNumber-hover--);
+}
+
 .diff-widget-tooltip:hover::before {
   display: block;
 }
 
 .diff-widget-tooltip:hover::after {
   display: block;
+}
+
+.diff-line-extend-wrapper * {
+  color: initial;
+}
+
+.diff-line-widget-wrapper * {
+  color: initial;
 }

@@ -4,7 +4,7 @@ import { defineComponent, ref } from "vue";
 import { useEnableAddWidget, useEnableHighlight, useOnAddWidgetClick, useSetWidget } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 
-import { emptyBGName, getContentBG, getLineNumberBG, plainLineNumberColorName } from "./color";
+import { borderColorName, emptyBGName, getContentBG, getLineNumberBG, plainLineNumberColorName } from "./color";
 import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import { SplitSide } from "./DiffView";
@@ -136,8 +136,12 @@ export const DiffSplitLine = defineComponent(
           {hasNewLine ? (
             <>
               <td
-                class="diff-line-new-num group relative w-[1%] min-w-[40px] select-none border-l-[1px] border-l-[rgb(222,222,222)] pl-[10px] pr-[10px] text-right align-top"
-                style={{ backgroundColor: newLineNumberBG, color: `var(${plainLineNumberColorName})` }}
+                class="diff-line-new-num group relative w-[1%] min-w-[40px] select-none border-l-[1px] pl-[10px] pr-[10px] text-right align-top"
+                style={{
+                  backgroundColor: newLineNumberBG,
+                  color: `var(${plainLineNumberColorName})`,
+                  borderLeftColor: `var(${borderColorName})`,
+                }}
               >
                 {hasDiff.value && enableAddWidget.value && (
                   <DiffSplitAddWidget
@@ -182,8 +186,8 @@ export const DiffSplitLine = defineComponent(
             </>
           ) : (
             <td
-              class="diff-line-new-placeholder select-none border-l-[1px] border-l-[rgb(222,222,222)]"
-              style={{ backgroundColor: `var(${emptyBGName})` }}
+              class="diff-line-new-placeholder select-none border-l-[1px]"
+              style={{ backgroundColor: `var(${emptyBGName})`, borderLeftColor: `var(${borderColorName})` }}
               colspan={2}
             >
               <span>&ensp;</span>

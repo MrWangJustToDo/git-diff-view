@@ -14,7 +14,7 @@ export type DiffHighlighter = {
   setMaxLineToIgnoreSyntax: (v: number) => void;
   ignoreSyntaxHighlightList: (string | RegExp)[];
   setIgnoreSyntaxHighlightList: (v: (string | RegExp)[]) => void;
-  getAST: (raw: string, fileName?: string, lang?: string) => DiffAST;
+  getAST: (raw: string, fileName?: string, lang?: string, theme?: "light" | "dark") => DiffAST;
   processAST: (ast: DiffAST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };
   hasRegisteredCurrentLang: (lang: string) => boolean;
   getHighlighterEngine: () => DePromise<ReturnType<typeof getHighlighter>> | null;
@@ -92,7 +92,7 @@ Object.defineProperty(instance, "setIgnoreSyntaxHighlightList", {
 });
 
 Object.defineProperty(instance, "getAST", {
-  value: (raw: string, fileName?: string, lang?: string) => {
+  value: (raw: string, fileName?: string, lang?: string, theme?: "light" | "dark") => {
     if (
       fileName &&
       highlighter.ignoreSyntaxHighlightList.some((item) =>
@@ -107,7 +107,11 @@ Object.defineProperty(instance, "getAST", {
     }
 
     try {
-      return internal?.codeToHast(raw, { lang: lang, theme: "github-light", mergeWhitespaces: false });
+      return internal?.codeToHast(raw, {
+        lang: lang,
+        theme: theme === "dark" ? "github-dark" : "github-light",
+        mergeWhitespaces: false,
+      });
     } catch (e) {
       if (__DEV__) {
         console.error(e);

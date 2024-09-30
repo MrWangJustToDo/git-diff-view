@@ -10,6 +10,7 @@ import { DiffSplitView } from "./DiffSplitView";
 import { DiffUnifiedView } from "./DiffUnifiedView";
 import { DiffModeEnum, DiffViewContext } from "./DiffViewContext";
 import { createDiffConfigStore, diffFontSizeName } from "./tools";
+// import { DiffSplitView } from "./v2/DiffSplitView_v2";
 
 import type { DiffHighlighter } from "@git-diff-view/core";
 import type { CSSProperties, ForwardedRef, ReactNode } from "react";
@@ -38,6 +39,7 @@ export type DiffViewProps<T> = {
   registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
   diffViewMode?: DiffModeEnum;
   diffViewWrap?: boolean;
+  diffViewTheme?: "light" | "dark";
   diffViewFontSize?: number;
   diffViewHighlight?: boolean;
   diffViewAddWidget?: boolean;
@@ -85,6 +87,8 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
   } = props;
 
   const diffFileId = useMemo(() => diffFile.getId(), [diffFile]);
+
+  const wrapperRef = useRef<HTMLDivElement>();
 
   // performance optimization
   const useDiffContext = useMemo(
@@ -140,6 +144,14 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
     onAddWidgetClick,
   ]);
 
+  useEffect(() => {
+    const cb = diffFile.subscribe(() => {
+      wrapperRef.current?.setAttribute("data-theme", diffFile._getTheme() || "light");
+    });
+
+    return cb;
+  }, [diffFile]);
+
   const value = useMemo(() => ({ useDiffContext }), [useDiffContext]);
 
   return (
@@ -147,8 +159,10 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
       <div
         className="diff-tailwindcss-wrapper"
         data-component="git-diff-view"
-        data-version={`${__VERSION__}`}
+        data-theme={diffFile._getTheme() || "light"}
+        data-version={__VERSION__}
         data-highlighter={diffFile._getHighlighterName()}
+        ref={wrapperRef}
       >
         <div
           className="diff-style-root"
@@ -180,7 +194,7 @@ const DiffViewWithRef = <T extends unknown>(
   props: DiffViewProps<T>,
   ref: ForwardedRef<{ getDiffFileInstance: () => DiffFile }>
 ) => {
-  const { registerHighlighter, data, diffFile: _diffFile, ...restProps } = props;
+  const { registerHighlighter, data, diffViewTheme, diffFile: _diffFile, ...restProps } = props;
 
   const diffFile = useMemo(() => {
     if (_diffFile) {
@@ -210,10 +224,11 @@ const DiffViewWithRef = <T extends unknown>(
 
   useEffect(() => {
     if (!diffFile) return;
+    diffFile.initTheme(diffViewTheme);
     diffFile.initRaw();
     diffFile.buildSplitDiffLines();
     diffFile.buildUnifiedDiffLines();
-  }, [diffFile]);
+  }, [diffFile, diffViewTheme]);
 
   useEffect(() => {
     if (!diffFile) return;
@@ -221,7 +236,7 @@ const DiffViewWithRef = <T extends unknown>(
       diffFile.initSyntax({ registerHighlighter });
       diffFile.notifyAll();
     }
-  }, [diffFile, props.diffViewHighlight, registerHighlighter]);
+  }, [diffFile, props.diffViewHighlight, registerHighlighter, diffViewTheme]);
 
   useEffect(() => {
     if (_diffFile && diffFile) {

@@ -7,6 +7,7 @@ export type MessageData = {
   id: number;
   data: DiffViewProps<any>["data"];
   highlight?: boolean;
+  theme?: 'light' | 'dark';
   bundle: ReturnType<DiffFile["getBundle"]>;
 };
 
@@ -30,6 +31,8 @@ onmessage = (event: MessageEvent<MessageData>) => {
     data?.oldFile?.fileLang || "",
     data?.newFile?.fileLang || ""
   );
+
+  file.initTheme(_data.theme);
 
   file.initRaw();
 
