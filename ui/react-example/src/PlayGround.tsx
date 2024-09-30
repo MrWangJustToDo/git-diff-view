@@ -87,7 +87,7 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
           className="mt-[10px] overflow-hidden rounded-[4px] border"
           diffFile={diffInstance}
           diffViewFontSize={13}
-          diffViewTheme="light"
+          diffViewTheme='dark'
           diffViewHighlight={true}
           diffViewWrap
         />

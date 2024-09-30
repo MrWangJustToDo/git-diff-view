@@ -36,6 +36,7 @@ a React/Vue component to show the `git diff`/`file diff` result, just like Githu
 ## Screen Shot
 
 ![Screenshot](1.png)
+![Screenshot](theme.png)
 ![Screenshot](2.png)
 ![Screenshot](3.png)
 
@@ -44,14 +45,16 @@ a React/Vue component to show the `git diff`/`file diff` result, just like Githu
 
 + [x] Show the `git diff` result 
 + [x] Support `Split View` and `Unified View`
-+ [x] Support `Syntax Highlight`
++ [x] Support `Warp` / `UnWarp` the code line
++ [x] Support `light` / `dark` theme by default
++ [x] Support `Syntax Highlight` with <b>`full syntax context`</b> (base on `hast` AST)
 + [x] Support `Extend Data` to show in the `Diff View`
 + [x] Support `Widget` to show in the `Diff View`
-+ [x] Support `Web Worker` to improve performance
++ [x] Support `Web Worker` / `Node Server` to improve performance
 + [x] Support `React` and `Vue` component
 + [x] Support compare by `@git-diff-view/core`(git diff) or `@git-diff-view/file`(file content)
++ [x] Support `Diff Match Patch` to improve line diff
 + [ ] Support `Virtual Scroll` to improve performance
-+ [ ] Support `Diff Match Patch` to improve line diff
 
 
 ## Install
