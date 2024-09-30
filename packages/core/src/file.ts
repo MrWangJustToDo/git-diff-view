@@ -86,29 +86,29 @@ export class File {
   }) {
     if (!this.raw || this.hasDoSyntax) return;
 
-    const _highlighter = registerHighlighter || highlighter;
+    const finalHighlighter = registerHighlighter || highlighter;
 
     if (this.syntaxLength) {
       __DEV__ && console.error("current file already doSyntax before!");
       return;
     }
 
-    if (this.rawLength > _highlighter.maxLineToIgnoreSyntax) {
+    if (this.rawLength > finalHighlighter.maxLineToIgnoreSyntax) {
       __DEV__ && console.warn(`ignore syntax for current file, because the rawLength is too long: ${this.rawLength}`);
       return;
     }
 
-    this.ast = _highlighter.getAST(this.raw, this.fileName, this.lang, theme);
+    this.ast = finalHighlighter.getAST(this.raw, this.fileName, this.lang, theme);
 
     if (!this.ast) return;
 
-    const { syntaxFileObject, syntaxFileLineNumber } = _highlighter.processAST(this.ast);
+    const { syntaxFileObject, syntaxFileLineNumber } = finalHighlighter.processAST(this.ast);
 
     this.syntaxFile = syntaxFileObject;
 
     this.syntaxLength = syntaxFileLineNumber;
 
-    this.highlighterName = _highlighter.name;
+    this.highlighterName = finalHighlighter.name;
 
     if (__DEV__) {
       this.#doCheck();
@@ -162,14 +162,29 @@ export class File {
   }
 }
 
-export const getFile = (raw: string, lang: string, fileName?: string, uuid?: string) => {
-  let key = raw + "--" + __VERSION__ + "--" + lang;
+// TODO add highlight engine key to cache key
+export const getFile = (raw: string, lang: string, theme: "light" | "dark", fileName?: string, uuid?: string) => {
+  let key = raw + "--" + __VERSION__ + "--" + theme + "--" + lang;
 
   if (uuid) {
-    key = uuid + "--" + __VERSION__ + "--" + lang;
+    key = uuid + "--" + __VERSION__ + "--" + theme + "--" + lang;
+  }
+
+  let otherThemeKey = raw + "--" + __VERSION__ + "--" + (theme === "light" ? "dark" : "light") + "--" + lang;
+
+  if (uuid) {
+    otherThemeKey = uuid + "--" + __VERSION__ + "--" + (theme === "light" ? "dark" : "light") + "--" + lang;
   }
 
   if (map.has(key)) return map.get(key);
+
+  if (map.has(otherThemeKey)) {
+    const cacheFile = map.get(otherThemeKey);
+    // 基于css的语法数不需要重新生成
+    if (cacheFile.highlighterName === highlighter.name) {
+      return cacheFile;
+    }
+  }
 
   const file = new File(raw, lang, fileName);
 

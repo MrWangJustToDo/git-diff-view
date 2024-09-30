@@ -115,7 +115,9 @@ export class DiffFile {
 
   #highlighterName?: string;
 
-  #theme?: "light" | "dark";
+  #theme: "light" | "dark" = "light";
+
+  _prevTheme?: "light" | "dark";
 
   _version_ = __VERSION__;
 
@@ -219,6 +221,7 @@ export class DiffFile {
       this.#oldFileResult = getFile(
         this._oldFileContent,
         this._oldFileLang,
+        this.#theme,
         this._oldFileName,
         this.uuid ? this.uuid + "-old" : undefined
       );
@@ -228,6 +231,7 @@ export class DiffFile {
       this.#newFileResult = getFile(
         this._newFileContent,
         this._newFileLang,
+        this.#theme,
         this._newFileName,
         this.uuid ? this.uuid + "-new" : undefined
       );
@@ -293,12 +297,14 @@ export class DiffFile {
       this.#oldFileResult = getFile(
         this._oldFileContent,
         this._oldFileLang,
+        this.#theme,
         this._oldFileName,
         this.uuid ? this.uuid + "-old" : undefined
       );
       this.#newFileResult = getFile(
         this._newFileContent,
         this._newFileLang,
+        this.#theme,
         this._newFileName,
         this.uuid ? this.uuid + "-new" : undefined
       );
@@ -332,6 +338,7 @@ export class DiffFile {
       this.#newFileResult = getFile(
         this._newFileContent,
         this._newFileLang,
+        this.#theme,
         this._newFileName,
         this.uuid ? this.uuid + "-new" : undefined
       );
@@ -361,6 +368,7 @@ export class DiffFile {
       this.#oldFileResult = getFile(
         this._oldFileContent,
         this._oldFileLang,
+        this.#theme,
         this._oldFileName,
         this.uuid ? this.uuid + "-old" : undefined
       );
@@ -473,18 +481,12 @@ export class DiffFile {
     });
   }
 
-  #composeSyntax({
-    registerHighlighter,
-    theme,
-  }: {
-    registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
-    theme?: "light" | "dark";
-  }) {
-    this.#oldFileResult?.doSyntax({ registerHighlighter, theme });
+  #composeSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> }) {
+    this.#oldFileResult?.doSyntax({ registerHighlighter, theme: this.#theme });
 
     this.#oldFileSyntaxLines = this.#oldFileResult?.syntaxFile;
 
-    this.#newFileResult?.doSyntax({ registerHighlighter, theme });
+    this.#newFileResult?.doSyntax({ registerHighlighter, theme: this.#theme });
 
     this.#newFileSyntaxLines = this.#newFileResult?.syntaxFile;
   }
@@ -527,6 +529,11 @@ export class DiffFile {
     idSet.delete(this.#id);
   }
 
+  initTheme(theme?: "light" | "dark") {
+    this._prevTheme = this.#theme;
+    this.#theme = theme || this.#theme || "light";
+  }
+
   initRaw() {
     if (this.#hasInitRaw) return;
     this.#doDiff();
@@ -537,11 +544,8 @@ export class DiffFile {
     this.#hasInitRaw = true;
   }
 
-  initSyntax({
-    registerHighlighter,
-    theme = "light",
-  }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">; theme?: "light" | "dark" } = {}) {
-    if (this.#hasInitSyntax && this.#theme === theme) return;
+  initSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> } = {}) {
+    if (this.#hasInitSyntax && (!this._prevTheme || this.#theme === this._prevTheme)) return;
 
     if (this.#composeByMerge && !this.#composeByFullMerge) {
       __DEV__ &&
@@ -551,14 +555,12 @@ export class DiffFile {
       return;
     }
 
-    this.#composeSyntax({ registerHighlighter, theme });
+    this.#composeSyntax({ registerHighlighter });
 
     this.#highlighterName =
       this.#oldFileResult?.highlighterName || this.#newFileResult?.highlighterName || this.#highlighterName;
 
     this.#hasInitSyntax = true;
-
-    this.#theme = theme;
   }
 
   init() {
@@ -1232,6 +1234,7 @@ export class DiffFile {
     const unifiedHunkLines = this.#unifiedHunksLines;
 
     const version = this._version_;
+    const theme = this.#theme;
 
     return {
       hasInitRaw,
@@ -1260,6 +1263,8 @@ export class DiffFile {
       hasSomeLineCollapsed,
 
       version,
+
+      theme,
 
       isFullMerge: false,
     };
@@ -1293,6 +1298,8 @@ export class DiffFile {
     this.#unifiedLines = data.unifiedLines;
     this.#unifiedHunksLines = data.unifiedHunkLines;
 
+    this.#theme = data.theme;
+
     // mark this instance as a merged instance
     this.#composeByMerge = true;
 
@@ -1306,6 +1313,8 @@ export class DiffFile {
   _getHighlighterName = () => this.#highlighterName;
 
   _getIsPureDiffRender = () => this.#composeByDiff;
+
+  _getTheme = () => this.#theme;
 
   _addClonedInstance = (instance: DiffFile) => {
     const updateFunc = () => {
@@ -1394,5 +1403,6 @@ export class DiffFile {
     this.#splitRightLines = null;
     this.#unifiedHunksLines = null;
     this.#unifiedLines = null;
+    this.#theme = undefined;
   };
 }

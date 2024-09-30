@@ -48,6 +48,7 @@ export declare class DiffFile {
 	readonly _newFileName: string;
 	readonly _diffList: string[];
 	readonly uuid?: string;
+	_prevTheme?: "light" | "dark";
 	_version_: string;
 	_oldFileContent: string;
 	_oldFileLang: string;
@@ -77,10 +78,10 @@ export declare class DiffFile {
 	initId(): void;
 	getId(): string;
 	clearId(): void;
+	initTheme(theme?: "light" | "dark"): void;
 	initRaw(): void;
-	initSyntax({ registerHighlighter, theme, }?: {
+	initSyntax({ registerHighlighter }?: {
 		registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
-		theme?: "light" | "dark";
 	}): void;
 	init(): void;
 	buildSplitDiffLines(): void;
@@ -127,11 +128,13 @@ export declare class DiffFile {
 		composeByDiff: boolean;
 		hasSomeLineCollapsed: boolean;
 		version: string;
+		theme: "light" | "dark";
 		isFullMerge: boolean;
 	};
 	mergeBundle: (data: ReturnType<DiffFile["getBundle"]>) => void;
 	_getHighlighterName: () => string;
 	_getIsPureDiffRender: () => boolean;
+	_getTheme: () => "light" | "dark";
 	_addClonedInstance: (instance: DiffFile) => void;
 	_notifyOthers: (instance: DiffFile) => void;
 	_delClonedInstance: (instance: DiffFile) => void;
@@ -165,6 +168,7 @@ export declare class DiffFile {
 		composeByDiff: boolean;
 		hasSomeLineCollapsed: boolean;
 		version: string;
+		theme: "light" | "dark";
 	};
 	_mergeFullBundle: (data: ReturnType<DiffFile["_getFullBundle"]>) => void;
 	_destroy: () => void;
@@ -358,7 +362,7 @@ export declare const _cacheMap: Cache$1<string, File$1>;
 export declare const checkDiffLineIncludeChange: (diffLine?: DiffLine) => boolean;
 export declare const composeLen = 40;
 export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[]) => void;
-export declare const getFile: (raw: string, lang: string, fileName?: string, uuid?: string) => File$1;
+export declare const getFile: (raw: string, lang: string, theme: "light" | "dark", fileName?: string, uuid?: string) => File$1;
 export declare const getLang: (fileName: string) => string;
 export declare const getSplitContentLines: (diffFile: DiffFile) => DiffSplitContentLineItem[];
 export declare const getSplitLines: (diffFile: DiffFile) => DiffSplitLineItem[];
@@ -714,7 +718,7 @@ export type DiffViewProps<T> = {
 	registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
 	diffViewMode?: DiffModeEnum;
 	diffViewWrap?: boolean;
-	diffViewTheme?: "github" | "github-dark";
+	diffViewTheme?: "light" | "dark";
 	diffViewFontSize?: number;
 	diffViewHighlight?: boolean;
 	diffViewAddWidget?: boolean;

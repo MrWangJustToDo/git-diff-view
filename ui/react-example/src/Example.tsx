@@ -60,6 +60,8 @@ export function Example() {
 
   const [enableVUE, setEnableVUE] = useState(false);
 
+  const [darkMode, setDarkMode] = useState(false);
+
   const ref = useRef<{ getDiffFileInstance: () => DiffFile }>(null);
 
   const vueApp = useRef<App>();
@@ -101,9 +103,14 @@ export function Example() {
     const _data = data[v];
     if (_data) {
       console.time("parse");
-      worker.postMessage({ type: "parse", data: _data, highlight: highlightRef.current });
+      worker.postMessage({
+        type: "parse",
+        data: _data,
+        highlight: highlightRef.current,
+        theme: darkMode ? "dark" : "light",
+      });
     }
-  }, [v]);
+  }, [v, darkMode]);
 
   useEffect(() => {
     if (expandAll) {
@@ -269,25 +276,30 @@ export function Example() {
   useEffect(() => {
     reactRef.current = document.getElementById("react")! as HTMLDivElement;
     vueRef.current = document.getElementById("vue")! as HTMLDivElement;
-  }, [enableVUE]);
+  }, [enableVUE, diffFileInstance]);
 
   useEffect(() => {
-    reactApp.current?.unmount();
+    // @ts-ignore
+    if (reactApp.current?.__container__) {
+      reactApp.current?.unmount();
+    }
     reactApp.current = createRoot(reactRef.current!);
-  }, [enableVUE]);
+  }, [enableVUE, diffFileInstance]);
 
   useEffect(() => {
     if (diffFileInstance) {
       // mount react
       reactApp.current?.render?.(reactElement);
-      // mount vue
-      vueApp.current = createApp(vueElement);
 
-      if (vueRef.current) vueApp.current.mount(vueRef.current);
+      if (vueRef.current) {
+        // mount vue
+        vueApp.current = createApp(vueElement);
+        vueApp.current.mount(vueRef.current);
+      }
 
       return () => vueApp.current?.unmount?.();
     }
-  }, [diffFileInstance, reactElement, enableVUE]);
+  }, [diffFileInstance, reactElement, vueElement, enableVUE]);
 
   const eleString1 = useMemo(() => ({ __html: `<div id='react'></div>` }), []);
   const eleString2 = useMemo(() => ({ __html: `<div id='vue'></div>` }), []);
@@ -380,6 +392,12 @@ export function Example() {
       </div>
       <div className="m-auto mb-[1em] w-[90%] text-right text-[12px]">
         <div className="inline-flex gap-x-4">
+          <button
+            className="rounded-full bg-sky-400 px-5 py-2 text-sm font-semibold leading-5 text-white hover:bg-sky-500"
+            onClick={() => setDarkMode(!darkMode)}
+          >
+            {darkMode ? "Dark Theme" : "Light theme"}
+          </button>
           <button
             className="rounded-full bg-sky-400 px-5 py-2 text-sm font-semibold leading-5 text-white hover:bg-sky-500"
             onClick={() => setEnableVUE(!enableVUE)}

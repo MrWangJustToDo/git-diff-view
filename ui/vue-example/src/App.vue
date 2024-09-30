@@ -55,7 +55,7 @@ watch(
 watch(
   _data,
   () => {
-    worker.postMessage({ data: _data.value });
+    worker.postMessage({ data: _data.value, theme: 'dark' });
   },
   { immediate: true }
 );

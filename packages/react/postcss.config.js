@@ -11,9 +11,9 @@ module.exports = {
         }
         if (filePath.includes('node_modules')) {
           if (filePath.includes('github.css')) {
-            return `${prefix}[data-theme="github"] ${selector}`;
+            return `${prefix}[data-theme="light"] ${selector}`;
           } else if (filePath.includes('github-dark.css')) {
-            return `${prefix}[data-theme="github-dark"] ${selector}`;
+            return `${prefix}[data-theme="dark"] ${selector}`;
           }
         } else {
           return prefixedSelector;

@@ -5,6 +5,7 @@ import type { DiffViewProps } from "@git-diff-view/vue";
 export type MessageData = {
   id: number;
   data: DiffViewProps<any>["data"];
+  theme?: "light" | "dark";
   bundle: ReturnType<DiffFile["getBundle"]>;
 };
 
@@ -25,7 +26,11 @@ onmessage = (event: MessageEvent<MessageData>) => {
     data?.newFile?.fileLang || ""
   );
 
-  file.init();
+  file.initTheme(_data.theme);
+
+  file.initRaw();
+
+  file.initSyntax();
 
   file.buildSplitDiffLines();
 

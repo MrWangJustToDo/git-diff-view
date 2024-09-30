@@ -32,11 +32,13 @@ onmessage = (event: MessageEvent<MessageData>) => {
     data?.newFile?.fileLang || ""
   );
 
+  file.initTheme(_data.theme);
+
   file.initRaw();
 
   highlighterReady.then((highlighter) => {
     if (_data.highlight) {
-      file.initSyntax({ registerHighlighter: highlighter, theme: _data.theme });
+      file.initSyntax({ registerHighlighter: highlighter });
       // file.initSyntax();
     }
 
