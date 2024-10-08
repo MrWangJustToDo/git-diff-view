@@ -6,7 +6,6 @@ declare class Cache$1<K, V> extends Map<K, V> {
 	name: string;
 	setMaxLength(length: number): void;
 	set(key: K, value: V): this;
-	_checkLength(): void;
 }
 declare class File$1 {
 	readonly raw: string;
@@ -48,7 +47,6 @@ export declare class DiffFile {
 	readonly _newFileName: string;
 	readonly _diffList: string[];
 	readonly uuid?: string;
-	_prevTheme?: "light" | "dark";
 	_version_: string;
 	_oldFileContent: string;
 	_oldFileLang: string;

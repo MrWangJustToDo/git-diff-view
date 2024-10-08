@@ -218,7 +218,7 @@ const DiffViewWithRef = <T extends unknown>(
   const diffFileRef = useRef(diffFile);
 
   if (diffFileRef.current && diffFileRef.current !== diffFile) {
-    diffFileRef.current._destroy?.();
+    diffFileRef.current.clear?.();
     diffFileRef.current = diffFile;
   }
 
@@ -247,7 +247,7 @@ const DiffViewWithRef = <T extends unknown>(
     }
   }, [diffFile, _diffFile]);
 
-  useUnmount(() => diffFile?._destroy?.(), [diffFile]);
+  useUnmount(() => diffFile?.clear?.(), [diffFile]);
 
   useImperativeHandle(ref, () => ({ getDiffFileInstance: () => diffFile }), [diffFile]);
 

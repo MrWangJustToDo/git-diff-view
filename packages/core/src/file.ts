@@ -180,7 +180,7 @@ export const getFile = (raw: string, lang: string, theme: "light" | "dark", file
 
   if (map.has(otherThemeKey)) {
     const cacheFile = map.get(otherThemeKey);
-    // 基于css的语法数不需要重新生成
+    // 基于className的ast不需要重新生成
     if (cacheFile.highlighterName === highlighter.name) {
       return cacheFile;
     }

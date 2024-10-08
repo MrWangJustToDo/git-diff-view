@@ -117,7 +117,7 @@ export class DiffFile {
 
   #theme: "light" | "dark" = "light";
 
-  _prevTheme?: "light" | "dark";
+  #_theme?: "light" | "dark";
 
   _version_ = __VERSION__;
 
@@ -530,7 +530,7 @@ export class DiffFile {
   }
 
   initTheme(theme?: "light" | "dark") {
-    this._prevTheme = this.#theme;
+    this.#_theme = this.#theme;
     this.#theme = theme || this.#theme || "light";
   }
 
@@ -545,7 +545,7 @@ export class DiffFile {
   }
 
   initSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> } = {}) {
-    if (this.#hasInitSyntax && (!this._prevTheme || this.#theme === this._prevTheme)) return;
+    if (this.#hasInitSyntax && (!this.#_theme || this.#theme === this.#_theme)) return;
 
     if (this.#composeByMerge && !this.#composeByFullMerge) {
       __DEV__ &&

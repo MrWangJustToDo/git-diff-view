@@ -110,7 +110,7 @@ export const DiffView = defineComponent<
     watch(
       () => props.diffFile,
       () => {
-        diffFile.value?._destroy?.();
+        diffFile.value?.clear?.();
         diffFile.value = getInstance();
       },
       { immediate: true }
@@ -119,7 +119,7 @@ export const DiffView = defineComponent<
     watch(
       () => props.data,
       () => {
-        diffFile.value?._destroy?.();
+        diffFile.value?.clear?.();
         diffFile.value = getInstance();
       },
       { immediate: true, deep: true }
@@ -207,7 +207,7 @@ export const DiffView = defineComponent<
 
     useProvide(props, "extendData", extendDataSymbol, { deepWatch: true });
 
-    onUnmounted(() => diffFile.value?._destroy?.());
+    onUnmounted(() => diffFile.value?.clear?.());
 
     options.expose({ getDiffFileInstance: () => diffFile.value });
 

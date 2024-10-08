@@ -4,7 +4,7 @@ import { processAST, type SyntaxLine } from "./processAST";
 
 import type { codeToHast } from "shiki";
 
-type DePromise<T> = T extends Promise<infer U> ? U : T;
+type DePromise<T> = T extends Promise<infer U> ? DePromise<U> : T;
 
 export type DiffAST = DePromise<ReturnType<typeof codeToHast>>;
 

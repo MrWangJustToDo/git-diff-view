@@ -27,7 +27,7 @@ export declare const processAST: (ast: DiffAST) => {
 	syntaxFileObject: Record<number, SyntaxLine>;
 	syntaxFileLineNumber: number;
 };
-export type DePromise<T> = T extends Promise<infer U> ? U : T;
+export type DePromise<T> = T extends Promise<infer U> ? DePromise<U> : T;
 export type DiffAST = DePromise<ReturnType<typeof codeToHast>>;
 export type DiffHighlighter = {
 	name: string;

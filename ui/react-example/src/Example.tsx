@@ -279,17 +279,12 @@ export function Example() {
   }, [enableVUE, diffFileInstance]);
 
   useEffect(() => {
-    // @ts-ignore
-    if (reactApp.current?.__container__) {
-      reactApp.current?.unmount();
-    }
-    reactApp.current = createRoot(reactRef.current!);
-  }, [enableVUE, diffFileInstance]);
-
-  useEffect(() => {
     if (diffFileInstance) {
       // mount react
+      // console.log("mount react");
+      reactApp.current = createRoot(reactRef.current!);
       reactApp.current?.render?.(reactElement);
+      // const ele = reactRef.current;
 
       if (vueRef.current) {
         // mount vue
@@ -297,7 +292,15 @@ export function Example() {
         vueApp.current.mount(vueRef.current);
       }
 
-      return () => vueApp.current?.unmount?.();
+      return () => {
+        vueApp.current?.unmount?.();
+        // TODO! fix unmount
+        // @ts-ignore
+        // if (ele.__container__ && ele.__container__.isAppMounted) {
+        //   console.log('unmount react');
+        //   reactApp.current?.unmount?.();
+        // }
+      };
     }
   }, [diffFileInstance, reactElement, vueElement, enableVUE]);
 

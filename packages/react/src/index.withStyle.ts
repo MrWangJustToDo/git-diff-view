@@ -1,3 +1,4 @@
+// could be overwritten by the user
 import "highlight.js/styles/github.css";
 import "highlight.js/styles/github-dark.css";
 import "./tailwind.css";

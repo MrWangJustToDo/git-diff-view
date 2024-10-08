@@ -7,8 +7,6 @@ declare global {
       NODE_ENV: "development" | "production" | "test";
     }
   }
-
-  export type DePromise<T> = T extends Promise<infer U> ? U : T;
 }
 
 export {};
