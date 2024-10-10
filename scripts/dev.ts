@@ -22,7 +22,6 @@ const start = async () => {
           plugins: [
             tailwindcss({
               content: [`${absolutePath}/src/**/*.{js,ts,jsx,tsx}`],
-              plugins: [require("tailwind-scrollbar-hide")],
             }),
           ],
           minimize: true,
@@ -40,7 +39,6 @@ const start = async () => {
           plugins: [
             tailwindcss({
               content: [`${absolutePath}/src/**/*.{js,ts,jsx,tsx}`],
-              plugins: [require("tailwind-scrollbar-hide")],
             }),
           ],
           minimize: true,
@@ -58,7 +56,6 @@ const start = async () => {
           plugins: [
             tailwindcss({
               content: [`${absolutePath}/src/**/*.{js,ts,jsx,tsx}`],
-              plugins: [require("tailwind-scrollbar-hide")],
             }),
           ],
           minimize: true,

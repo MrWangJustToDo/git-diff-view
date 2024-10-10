@@ -8,11 +8,12 @@ export const generateDiffFile = (
   oldFileContent: string,
   newFileName: string,
   newFileContent: string,
-  option?: LinesOptions
+  option?: LinesOptions,
+  uuid?: string
 ) => {
   const diffString = createTwoFilesPatch(oldFileName, newFileName, oldFileContent, newFileContent, "", "", option);
 
-  return new DiffFile(oldFileName, oldFileContent, newFileName, newFileContent, [diffString]);
+  return new DiffFile(oldFileName, oldFileContent, newFileName, newFileContent, [diffString], uuid);
 };
 
 export * from "@git-diff-view/core";

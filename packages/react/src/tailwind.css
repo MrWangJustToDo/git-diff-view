@@ -48,17 +48,6 @@
   color: white;
 }
 
-/* For Webkit-based browsers (Chrome, Safari and Opera) */
-.scrollbar-disable::-webkit-scrollbar {
-  display: none;
-}
-
-/* For IE, Edge and Firefox */
-.scrollbar-disable {
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-}
-
 .diff-style-root tr {
   content-visibility: auto;
 }

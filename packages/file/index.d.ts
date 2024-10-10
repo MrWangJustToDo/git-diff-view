@@ -598,7 +598,7 @@ export type SyntaxNode = {
 	};
 	children?: SyntaxNode[];
 };
-export declare const generateDiffFile: (oldFileName: string, oldFileContent: string, newFileName: string, newFileContent: string, option?: LinesOptions) => DiffFile;
+export declare const generateDiffFile: (oldFileName: string, oldFileContent: string, newFileName: string, newFileContent: string, option?: LinesOptions, uuid?: string) => DiffFile;
 
 export {
 	File$1 as File,

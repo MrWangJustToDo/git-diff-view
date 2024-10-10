@@ -62,9 +62,6 @@ importers:
       rollup-plugin-postcss:
         specifier: ^4.0.2
         version: 4.0.2(postcss@8.4.43)(ts-node@10.9.2)
-      tailwind-scrollbar-hide:
-        specifier: ^1.1.7
-        version: 1.1.7
       tailwindcss:
         specifier: ^3.4.10
         version: 3.4.10(ts-node@10.9.2)
@@ -173,9 +170,6 @@ importers:
       react:
         specifier: ^18.0.0
         version: 18.2.0
-      tailwind-scrollbar-hide:
-        specifier: ^1.1.7
-        version: 1.1.7
       tailwindcss:
         specifier: ^3.4.10
         version: 3.4.10(ts-node@10.9.2)
@@ -219,9 +213,6 @@ importers:
       postcss:
         specifier: ^8.4.43
         version: 8.4.43
-      tailwind-scrollbar-hide:
-        specifier: ^1.1.7
-        version: 1.1.7
       tailwindcss:
         specifier: ^3.4.10
         version: 3.4.10(ts-node@10.9.2)
@@ -6471,10 +6462,6 @@ packages:
       slice-ansi: 4.0.0
       string-width: 4.2.3
       strip-ansi: 6.0.1
-    dev: true
-
-  /tailwind-scrollbar-hide@1.1.7:
-    resolution: {integrity: sha512-X324n9OtpTmOMqEgDUEA/RgLrNfBF/jwJdctaPZDzB3mppxJk7TLIDmOreEDm1Bq4R9LSPu4Epf8VSdovNU+iA==}
     dev: true
 
   /tailwindcss@3.4.10(ts-node@10.9.2):

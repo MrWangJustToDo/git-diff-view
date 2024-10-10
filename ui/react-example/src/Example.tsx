@@ -317,7 +317,7 @@ export function Example() {
           const leftScrollbar = reactWrapRef.current?.querySelector("[data-left]") as HTMLDivElement;
           const rightScrollbar = reactWrapRef.current?.querySelector("[data-right]") as HTMLDivElement;
           const scrollContainers = Array.from(
-            reactRef.current?.querySelectorAll(".scrollbar-hide") || []
+            reactRef.current?.querySelectorAll(".diff-table-scroll-container") || []
           ) as HTMLDivElement[];
           const [left, right] = scrollContainers;
           if (left && right) {
@@ -349,7 +349,7 @@ export function Example() {
           }
         } else {
           const scrollBarContainer = reactWrapRef.current?.querySelector("[data-full]") as HTMLDivElement;
-          const scrollContainer = reactRef.current?.querySelector(".scrollbar-hide") as HTMLDivElement;
+          const scrollContainer = reactRef.current?.querySelector(".diff-table-scroll-container") as HTMLDivElement;
           if (scrollContainer) {
             const i = OverlayScrollbars(
               { target: scrollContainer, scrollbars: { slot: scrollBarContainer } },
