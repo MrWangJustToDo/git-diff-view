@@ -157,7 +157,7 @@ const DiffUnifiedNewLine = ({
   );
 };
 
-export const DiffUnifiedLine = defineComponent(
+export const DiffUnifiedContentLine = defineComponent(
   (props: { index: number; diffFile: DiffFile; lineNumber: number }) => {
     const unifiedItem = ref(props.diffFile.getUnifiedLine(props.index));
 
@@ -295,5 +295,5 @@ export const DiffUnifiedLine = defineComponent(
       }
     };
   },
-  { name: "DiffUnifiedLine", props: ["diffFile", "index", "lineNumber"] }
+  { name: "DiffUnifiedContentLine", props: ["diffFile", "index", "lineNumber"] }
 );

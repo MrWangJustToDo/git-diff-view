@@ -224,7 +224,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
   );
 };
 
-export const DiffSplitLine = ({
+export const DiffSplitContentLine = ({
   index,
   diffFile,
   lineNumber,

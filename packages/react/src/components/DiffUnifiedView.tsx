@@ -7,9 +7,9 @@ import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 import { useDiffViewContext } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";
 
+import { DiffUnifiedContentLine } from "./DiffUnifiedContentLine";
 import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
 import { DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
-import { DiffUnifiedLine } from "./DiffUnifiedLine";
 import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
 import { DiffWidgetContext } from "./DiffWidgetContext";
 import { createDiffWidgetStore, diffAsideWidthName, diffFontSizeName, removeAllSelection } from "./tools";
@@ -87,7 +87,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
               {lines.map((item) => (
                 <Fragment key={item.index}>
                   <DiffUnifiedHunkLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
-                  <DiffUnifiedLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
+                  <DiffUnifiedContentLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
                   <DiffUnifiedWidgetLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
                   <DiffUnifiedExtendLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
                 </Fragment>

@@ -8,9 +8,9 @@ import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 import { useDiffViewContext, SplitSide } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";
 
+import { DiffSplitContentLine } from "./DiffSplitContentLineWrap";
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineWrap";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineWrap";
-import { DiffSplitLine } from "./DiffSplitLineWrap";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineWrap";
 import { createDiffSplitConfigStore, diffAsideWidthName, diffFontSizeName, removeAllSelection } from "./tools";
 
@@ -115,7 +115,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
             {lines.map((line) => (
               <Fragment key={line.index}>
                 <DiffSplitHunkLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
-                <DiffSplitLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
+                <DiffSplitContentLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
                 <DiffSplitWidgetLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
                 <DiffSplitExtendLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
               </Fragment>

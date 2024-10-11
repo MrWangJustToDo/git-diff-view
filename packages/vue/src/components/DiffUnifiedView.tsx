@@ -5,9 +5,9 @@ import { useFontSize } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useTextWidth } from "../hooks/useTextWidth";
 
+import { DiffUnifiedContentLine } from "./DiffUnifiedContentLine";
 import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
 import { DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
-import { DiffUnifiedLine } from "./DiffUnifiedLine";
 import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
 import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from "./tools";
 
@@ -67,7 +67,7 @@ export const DiffUnifiedView = defineComponent(
               {lines.value.map((item) => (
                 <Fragment key={item.index}>
                   <DiffUnifiedHunkLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
-                  <DiffUnifiedLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
+                  <DiffUnifiedContentLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
                   <DiffUnifiedWidgetLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
                   <DiffUnifiedExtendLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
                 </Fragment>

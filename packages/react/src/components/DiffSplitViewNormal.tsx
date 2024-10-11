@@ -8,9 +8,9 @@ import { useDiffViewContext } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";
 
 import { borderColorName } from "./color";
+import { DiffSplitContentLine } from "./DiffSplitContentLineNormal";
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
-import { DiffSplitLine } from "./DiffSplitLineNormal";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
 import { SplitSide } from "./DiffView";
 import { diffAsideWidthName, diffFontSizeName, removeAllSelection, syncScroll } from "./tools";
@@ -48,7 +48,7 @@ const DiffSplitViewTable = ({ side, diffFile }: { side: SplitSide; diffFile: Dif
         {lines.map((line) => (
           <Fragment key={line.index}>
             <DiffSplitHunkLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
-            <DiffSplitLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
+            <DiffSplitContentLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
             <DiffSplitWidgetLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
             <DiffSplitExtendLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
           </Fragment>

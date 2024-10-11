@@ -1,14 +1,15 @@
 import { DiffFileLineType } from "@git-diff-view/core";
 import * as React from "react";
 
-import { DiffSplitContentLine } from "./DiffSplitContentLineNormal_v2";
-import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal_v2";
-import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal_v2";
-import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal_v2";
+import { DiffSplitContentLine } from "./DiffSplitContentLineNormal";
+import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal";
+import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
+import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
 
-import type { SplitSide } from "../DiffView";
+import type { SplitSide } from "./DiffView";
 import type { DiffFile, DiffSplitLineItem } from "@git-diff-view/core";
 
+// TODO 可能存在的性能问题，暂时不用这个方案
 export const DiffSplitViewLine = ({
   line,
   side,

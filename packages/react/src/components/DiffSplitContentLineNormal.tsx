@@ -123,7 +123,7 @@ const _DiffSplitLine = ({
   );
 };
 
-export const DiffSplitLine = ({
+export const DiffSplitContentLine = ({
   index,
   diffFile,
   lineNumber,

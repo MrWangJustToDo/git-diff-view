@@ -289,7 +289,7 @@ const _DiffUnifiedLine = memo(
 
 _DiffUnifiedLine.displayName = "_DiffUnifiedLine";
 
-export const DiffUnifiedLine = ({
+export const DiffUnifiedContentLine = ({
   index,
   diffFile,
   lineNumber,

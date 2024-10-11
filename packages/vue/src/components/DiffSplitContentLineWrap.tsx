@@ -9,7 +9,7 @@ import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import { SplitSide } from "./DiffView";
 
-export const DiffSplitLine = defineComponent(
+export const DiffSplitContentLine = defineComponent(
   (props: { index: number; diffFile: DiffFile; lineNumber: number }) => {
     const setWidget = useSetWidget();
 
@@ -197,5 +197,5 @@ export const DiffSplitLine = defineComponent(
       );
     };
   },
-  { name: "DiffSplitLine", props: ["diffFile", "index", "lineNumber"] }
+  { name: "DiffSplitContentLine", props: ["diffFile", "index", "lineNumber"] }
 );

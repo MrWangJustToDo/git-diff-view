@@ -7,9 +7,9 @@ import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useTextWidth } from "../hooks/useTextWidth";
 
 import { borderColorName } from "./color";
+import { DiffSplitContentLine } from "./DiffSplitContentLineNormal";
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
-import { DiffSplitLine } from "./DiffSplitLineNormal";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
 import { SplitSide } from "./DiffView";
 import { diffAsideWidthName, diffFontSizeName, removeAllSelection, syncScroll } from "./tools";
@@ -58,7 +58,7 @@ const DiffSplitViewTable = defineComponent(
                   lineNumber={item.lineNumber}
                   diffFile={props.diffFile}
                 />
-                <DiffSplitLine
+                <DiffSplitContentLine
                   index={item.index}
                   side={props.side}
                   lineNumber={item.lineNumber}

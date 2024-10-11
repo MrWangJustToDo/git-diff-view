@@ -6,9 +6,9 @@ import { useFontSize } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useTextWidth } from "../hooks/useTextWidth";
 
+import { DiffSplitContentLine } from "./DiffSplitContentLineWrap";
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineWrap";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineWrap";
-import { DiffSplitLine } from "./DiffSplitLineWrap";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineWrap";
 import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from "./tools";
 
@@ -100,7 +100,7 @@ export const DiffSplitViewWrap = defineComponent(
                 {lines.value.map((item) => (
                   <Fragment key={item.index}>
                     <DiffSplitHunkLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
-                    <DiffSplitLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
+                    <DiffSplitContentLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
                     <DiffSplitWidgetLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
                     <DiffSplitExtendLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
                   </Fragment>
