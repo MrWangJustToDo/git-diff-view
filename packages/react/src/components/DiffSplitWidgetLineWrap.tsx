@@ -26,7 +26,7 @@ const _DiffSplitWidgetLine = ({
 
   const { useDiffContext } = useDiffViewContext();
 
-  const renderWidgetLine = useDiffContext(React.useCallback((s) => s.renderWidgetLine, []));
+  const renderWidgetLine = useDiffContext.useShallowStableSelector((s) => s.renderWidgetLine);
 
   const oldLine = diffFile.getSplitLeftLine(index);
 
@@ -95,9 +95,10 @@ export const DiffSplitWidgetLine = ({
 }) => {
   const { useWidget } = useDiffWidgetContext();
 
-  const { widgetLineNumber, widgetSide } = useWidget(
-    React.useCallback((s) => ({ widgetLineNumber: s.widgetLineNumber, widgetSide: s.widgetSide }), [])
-  );
+  const { widgetLineNumber, widgetSide } = useWidget((s) => ({
+    widgetLineNumber: s.widgetLineNumber,
+    widgetSide: s.widgetSide,
+  }));
 
   const oldLine = diffFile.getSplitLeftLine(index);
 

@@ -26,7 +26,7 @@ const _DiffSplitExtendLine = ({
   const newLine = diffFile.getSplitRightLine(index);
 
   // 需要显示的时候才进行方法订阅，可以大幅度提高性能
-  const renderExtendLine = useDiffContext(React.useCallback((s) => s.renderExtendLine, []));
+  const renderExtendLine = useDiffContext.useShallowStableSelector((s) => s.renderExtendLine);
 
   if (!renderExtendLine) return null;
 

@@ -48,6 +48,11 @@
   color: white;
 }
 
+table, tr, td {
+  border-color: transparent;
+  border-width: 0px;
+}
+
 .diff-style-root tr {
   content-visibility: auto;
 }

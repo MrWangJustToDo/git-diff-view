@@ -21,7 +21,7 @@ const _DiffUnifiedExtendLine = ({
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
-  const renderExtendLine = useDiffContext(useCallback((s) => s.renderExtendLine, []));
+  const renderExtendLine = useDiffContext.useShallowStableSelector((s) => s.renderExtendLine);
 
   const unifiedItem = diffFile.getUnifiedLine(index);
 

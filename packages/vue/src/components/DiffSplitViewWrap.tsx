@@ -71,7 +71,7 @@ export const DiffSplitViewWrap = defineComponent(
 
     return () => {
       return (
-        <div class="split-diff-view split-diff-view-normal w-full">
+        <div class="split-diff-view split-diff-view-warp w-full">
           <div
             class="diff-table-wrapper w-full"
             style={{
@@ -81,7 +81,7 @@ export const DiffSplitViewWrap = defineComponent(
             }}
           >
             <Style splitSideInfo={splitSideInfo.value} id={`diff-root${props.diffFile.getId()}`} />
-            <table class="diff-table w-full table-fixed border-collapse">
+            <table class="diff-table w-full table-fixed border-collapse border-spacing-0">
               <colgroup>
                 <col class="diff-table-old-num-col" width={Math.round(computedWidth.value)} />
                 <col class="diff-table-old-content-col" />

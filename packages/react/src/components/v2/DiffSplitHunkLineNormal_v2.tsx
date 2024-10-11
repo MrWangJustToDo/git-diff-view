@@ -258,7 +258,7 @@ const _DiffSplitHunkLine = ({
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
-  const diffViewMode = useDiffContext(React.useCallback((s) => s.mode, []));
+  const diffViewMode = useDiffContext.useShallowStableSelector((s) => s.mode);
 
   if (
     diffViewMode === DiffModeEnum.SplitGitHub ||

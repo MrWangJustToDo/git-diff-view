@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { getSplitContentLines, type DiffFile } from "@git-diff-view/core";
-import { Fragment, memo, useCallback, useEffect, useRef } from "react";
+import { Fragment, memo, useEffect, useRef } from "react";
 import * as React from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
@@ -33,7 +33,7 @@ const DiffSplitViewTable = ({ side, diffFile }: { side: SplitSide; diffFile: Dif
   const lines = getSplitContentLines(diffFile);
 
   return (
-    <table className={className + " w-full border-collapse"} data-mode={SplitSide[side]}>
+    <table className={className + " w-full border-collapse border-spacing-0"} data-mode={SplitSide[side]}>
       <colgroup>
         <col className={`diff-table-${SplitSide[side]}-num-col`} />
         <col className={`diff-table-${SplitSide[side]}-content-col`} />
@@ -73,7 +73,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
 
   const { useDiffContext } = useDiffViewContext();
 
-  const fontSize = useDiffContext(useCallback((s) => s.fontSize, []));
+  const fontSize = useDiffContext.useShallowStableSelector((s) => s.fontSize);
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);
 
@@ -97,7 +97,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
   const width = Math.max(40, _width + 25);
 
   return (
-    <div className="split-diff-view split-diff-view-wrap flex w-full basis-[50%]">
+    <div className="split-diff-view split-diff-view-normal flex w-full basis-[50%]">
       <div
         className="old-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
         ref={ref1}

@@ -1,6 +1,5 @@
 import { composeLen } from "@git-diff-view/core";
 import * as React from "react";
-import { useCallback } from "react";
 
 import { useDiffViewContext } from "..";
 
@@ -25,7 +24,7 @@ const _DiffUnifiedHunkLine = ({
 
   const { useDiffContext } = useDiffViewContext();
 
-  const enableWrap = useDiffContext(useCallback((s) => s.enableWrap, []));
+  const enableWrap = useDiffContext.useShallowStableSelector((s) => s.enableWrap);
 
   const couldExpand = expandEnabled && currentHunk && currentHunk.unifiedInfo;
 

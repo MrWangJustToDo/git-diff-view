@@ -1,4 +1,4 @@
-import { memo, useEffect, useMemo, useRef, useCallback } from "react";
+import { memo, useEffect, useMemo, useRef } from "react";
 import * as React from "react";
 
 import { DiffSplitViewNormal } from "./DiffSplitViewNormal";
@@ -16,7 +16,7 @@ export const DiffSplitView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   useDiffContextRef.current = useDiffContext;
 
-  const enableWrap = useDiffContext(useCallback((s) => s.enableWrap, []));
+  const enableWrap = useDiffContext.useShallowStableSelector((s) => s.enableWrap);
 
   // performance optimization
   const useWidget = useMemo(() => createDiffWidgetStore(useDiffContextRef), []);

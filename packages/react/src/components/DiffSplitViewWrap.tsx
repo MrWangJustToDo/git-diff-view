@@ -44,7 +44,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
 
   const useSplitConfig = useMemo(() => createDiffSplitConfigStore(), []);
 
-  const fontSize = useDiffContext(useCallback((s) => s.fontSize, []));
+  const fontSize = useDiffContext.useShallowStableSelector((s) => s.fontSize);
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);
 
@@ -85,7 +85,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
   const lines = getSplitContentLines(diffFile);
 
   return (
-    <div className="split-diff-view split-diff-view-normal w-full">
+    <div className="split-diff-view split-diff-view-wrap w-full">
       <div
         className="diff-table-wrapper w-full"
         style={{
@@ -96,7 +96,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
         }}
       >
         <Style useSelector={useSplitConfig} id={`diff-root${diffFile.getId()}`} />
-        <table className="diff-table w-full table-fixed border-collapse">
+        <table className="diff-table w-full table-fixed border-collapse border-spacing-0">
           <colgroup>
             <col className="diff-table-old-num-col" width={Math.round(width)} />
             <col className="diff-table-old-content-col" />

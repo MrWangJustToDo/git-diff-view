@@ -165,16 +165,13 @@ const _DiffUnifiedLine = memo(
 
     const { useDiffContext } = useDiffViewContext();
 
-    const { enableWrap, enableHighlight, enableAddWidget, onAddWidgetClick } = useDiffContext(
-      React.useCallback(
-        (s) => ({
-          enableWrap: s.enableWrap,
-          enableHighlight: s.enableHighlight,
-          enableAddWidget: s.enableAddWidget,
-          onAddWidgetClick: s.onAddWidgetClick,
-        }),
-        []
-      )
+    const { enableWrap, enableHighlight, enableAddWidget, onAddWidgetClick } = useDiffContext.useShallowStableSelector(
+      (s) => ({
+        enableWrap: s.enableWrap,
+        enableHighlight: s.enableHighlight,
+        enableAddWidget: s.enableAddWidget,
+        onAddWidgetClick: s.onAddWidgetClick,
+      })
     );
 
     const { useWidget } = useDiffWidgetContext();

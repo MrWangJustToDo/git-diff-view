@@ -32,18 +32,9 @@ const DiffSplitHunkLineGitHub = ({
     currentHunk.splitInfo &&
     currentHunk.splitInfo.endHiddenIndex - currentHunk.splitInfo.startHiddenIndex < composeLen;
 
-  const currentIsShow =
-    currentHunk &&
-    currentHunk.splitInfo &&
-    currentHunk.splitInfo.startHiddenIndex < currentHunk.splitInfo.endHiddenIndex;
-
-  const currentIsPureHunk = currentHunk && diffFile._getIsPureDiffRender() && !currentHunk.splitInfo;
-
   const isFirstLine = currentHunk && currentHunk.isFirst;
 
   const isLastLine = currentHunk && currentHunk.isLast;
-
-  if (!currentIsShow && !currentIsPureHunk) return null;
 
   return (
     <div data-line={`${lineNumber}-hunk`} data-state="hunk" className="diff-line diff-line-hunk flex">
@@ -139,18 +130,9 @@ const DiffSplitHunkLineGitLab = ({
     currentHunk.splitInfo &&
     currentHunk.splitInfo.endHiddenIndex - currentHunk.splitInfo.startHiddenIndex < composeLen;
 
-  const currentIsShow =
-    currentHunk &&
-    currentHunk.splitInfo &&
-    currentHunk.splitInfo.startHiddenIndex < currentHunk.splitInfo.endHiddenIndex;
-
-  const currentIsPureHunk = currentHunk && diffFile._getIsPureDiffRender() && !currentHunk.splitInfo;
-
   const isFirstLine = currentHunk && currentHunk.isFirst;
 
   const isLastLine = currentHunk && currentHunk.isLast;
-
-  if (!currentIsShow && !currentIsPureHunk) return null;
 
   return (
     <div data-line={`${lineNumber}-hunk`} data-state="hunk" className="diff-line diff-line-hunk flex">
@@ -222,10 +204,7 @@ const DiffSplitHunkLineGitLab = ({
       >
         {currentHunk.splitInfo?.plainText || currentHunk.text}
       </div>
-      <div
-        className="diff-split-line w-[1px] flex-shrink-0"
-        style={{ backgroundColor: `var(${borderColorName})` }}
-      />
+      <div className="diff-split-line w-[1px] flex-shrink-0" style={{ backgroundColor: `var(${borderColorName})` }} />
       <div
         className="diff-line-hunk-action flex w-[1%] min-w-[40px] select-none flex-col items-center justify-center p-[1px]"
         style={{
@@ -298,7 +277,7 @@ const DiffSplitHunkLineGitLab = ({
   );
 };
 
-export const DiffSplitHunkLine = ({
+const _DiffSplitHunkLine = ({
   index,
   diffFile,
   lineNumber,
@@ -309,7 +288,7 @@ export const DiffSplitHunkLine = ({
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
-  const diffViewMode = useDiffContext(React.useCallback((s) => s.mode, []));
+  const diffViewMode = useDiffContext.useShallowStableSelector((s) => s.mode);
 
   if (
     diffViewMode === DiffModeEnum.SplitGitHub ||
@@ -320,4 +299,27 @@ export const DiffSplitHunkLine = ({
   } else {
     return <DiffSplitHunkLineGitLab index={index} diffFile={diffFile} lineNumber={lineNumber} />;
   }
+};
+
+export const DiffSplitHunkLine = ({
+  index,
+  diffFile,
+  lineNumber,
+}: {
+  index: number;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
+  const currentHunk = diffFile.getSplitHunkLine(index);
+
+  const currentIsShow =
+    currentHunk &&
+    currentHunk.splitInfo &&
+    currentHunk.splitInfo.startHiddenIndex < currentHunk.splitInfo.endHiddenIndex;
+
+  const currentIsPureHunk = currentHunk && diffFile._getIsPureDiffRender() && !currentHunk.splitInfo;
+
+  if (!currentIsShow && !currentIsPureHunk) return null;
+
+  return <_DiffSplitHunkLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
 };

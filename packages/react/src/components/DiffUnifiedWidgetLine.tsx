@@ -1,5 +1,4 @@
 import * as React from "react";
-import { useCallback } from "react";
 
 import { useDiffViewContext, SplitSide } from "..";
 import { useDomWidth } from "../hooks/useDomWidth";
@@ -30,7 +29,7 @@ const _DiffUnifiedWidgetLine = ({
   const { useDiffContext } = useDiffViewContext();
 
   // 需要显示的时候才进行方法订阅，可以大幅度提高性能
-  const renderWidgetLine = useDiffContext(useCallback((s) => s.renderWidgetLine, []));
+  const renderWidgetLine = useDiffContext.useShallowStableSelector((s) => s.renderWidgetLine);
 
   const width = useDomWidth({
     selector: ".unified-diff-table-wrapper",
@@ -66,12 +65,11 @@ export const DiffUnifiedWidgetLine = ({
 }) => {
   const { useWidget } = useDiffWidgetContext();
 
-  const { widgetSide, widgetLineNumber, setWidget } = useWidget(
-    React.useCallback(
-      (s) => ({ widgetLineNumber: s.widgetLineNumber, widgetSide: s.widgetSide, setWidget: s.setWidget }),
-      []
-    )
-  );
+  const { widgetSide, widgetLineNumber, setWidget } = useWidget.useShallowStableSelector((s) => ({
+    widgetLineNumber: s.widgetLineNumber,
+    widgetSide: s.widgetSide,
+    setWidget: s.setWidget,
+  }));
 
   const unifiedItem = diffFile.getUnifiedLine(index);
 

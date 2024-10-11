@@ -29,7 +29,7 @@ const _DiffSplitExtendLine = ({
 
   const newLine = diffFile.getSplitRightLine(index);
 
-  const renderExtendLine = useDiffContext(React.useCallback((s) => s.renderExtendLine, []));
+  const renderExtendLine = useDiffContext.useShallowStableSelector((s) => s.renderExtendLine);
 
   const currentExtend = side === SplitSide.old ? oldLineExtend : newLineExtend;
 

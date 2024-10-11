@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { DiffFileLineType, getSplitLines, type DiffFile } from "@git-diff-view/core";
-import { memo, useCallback, useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 import * as React from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
@@ -54,7 +54,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
 
   const { useDiffContext } = useDiffViewContext();
 
-  const fontSize = useDiffContext(useCallback((s) => s.fontSize, []));
+  const fontSize = useDiffContext.useShallowStableSelector((s) => s.fontSize);
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);
 
@@ -78,7 +78,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
   const width = Math.max(40, _width + 25);
 
   return (
-    <div className="split-diff-view split-diff-view-wrap flex w-full basis-[50%]">
+    <div className="split-diff-view split-diff-view-normal flex w-full basis-[50%]">
       <div
         className="old-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
         ref={ref1}
@@ -92,10 +92,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
       >
         <DiffSplitViewTable side={SplitSide.old} diffFile={diffFile} />
       </div>
-      <div
-        className="diff-split-line w-[1.5px]"
-        style={{ backgroundColor: `var(${borderColorName})` }}
-      />
+      <div className="diff-split-line w-[1.5px]" style={{ backgroundColor: `var(${borderColorName})` }} />
       <div
         className="new-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
         ref={ref2}

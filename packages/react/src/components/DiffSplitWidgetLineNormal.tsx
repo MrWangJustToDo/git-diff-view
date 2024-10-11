@@ -27,7 +27,7 @@ const _DiffSplitWidgetLine = ({
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
-  const renderWidgetLine = useDiffContext(React.useCallback((s) => s.renderWidgetLine, []));
+  const renderWidgetLine = useDiffContext.useShallowStableSelector((s) => s.renderWidgetLine);
 
   useSyncHeight({
     selector: `div[data-line="${lineNumber}-widget-content"]`,
@@ -95,12 +95,11 @@ export const DiffSplitWidgetLine = ({
 }) => {
   const { useWidget } = useDiffWidgetContext();
 
-  const { widgetLineNumber, widgetSide, setWidget } = useWidget(
-    React.useCallback(
-      (s) => ({ widgetLineNumber: s.widgetLineNumber, widgetSide: s.widgetSide, setWidget: s.setWidget }),
-      []
-    )
-  );
+  const { widgetLineNumber, widgetSide, setWidget } = useWidget.useShallowStableSelector((s) => ({
+    widgetLineNumber: s.widgetLineNumber,
+    widgetSide: s.widgetSide,
+    setWidget: s.setWidget,
+  }));
 
   const oldLine = diffFile.getSplitLeftLine(index);
 

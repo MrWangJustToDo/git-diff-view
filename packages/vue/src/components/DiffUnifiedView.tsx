@@ -1,7 +1,7 @@
 import { getUnifiedContentLine } from "@git-diff-view/core";
 import { Fragment, computed, defineComponent, ref } from "vue";
 
-import { useFontSize } from "../context";
+import { useEnableWrap, useFontSize } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useTextWidth } from "../hooks/useTextWidth";
 
@@ -36,6 +36,8 @@ export const DiffUnifiedView = defineComponent(
 
     const fontSize = useFontSize();
 
+    const enableWrap = useEnableWrap();
+
     const font = computed(() => ({ fontSize: fontSize.value + "px", fontFamily: "Menlo, Consolas, monospace" }));
 
     const width = useTextWidth({ text: maxText, font });
@@ -43,7 +45,9 @@ export const DiffUnifiedView = defineComponent(
     const computedWidth = computed(() => Math.max(40, width.value + 10));
 
     return () => (
-      <div class="unified-diff-view w-full">
+      <div
+        class={`unified-diff-view ${enableWrap.value ? "unified-diff-view-wrap" : "unified-diff-view-normal"} w-full`}
+      >
         <div
           class="unified-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
           style={{
@@ -52,7 +56,9 @@ export const DiffUnifiedView = defineComponent(
             fontSize: `var(${diffFontSizeName})`,
           }}
         >
-          <table class="unified-diff-table w-full border-collapse">
+          <table
+            class={`unified-diff-table w-full border-collapse border-spacing-0 ${enableWrap.value ? "table-fixed" : ""}`}
+          >
             <colgroup>
               <col class="unified-diff-table-num-col" />
               <col class="unified-diff-table-content-col" />

@@ -40,16 +40,11 @@ const _DiffSplitLine = ({
 
   const { useDiffContext } = useDiffViewContext();
 
-  const { enableHighlight, enableAddWidget, onAddWidgetClick } = useDiffContext(
-    React.useCallback(
-      (s) => ({
-        enableHighlight: s.enableHighlight,
-        enableAddWidget: s.enableAddWidget,
-        onAddWidgetClick: s.onAddWidgetClick,
-      }),
-      []
-    )
-  );
+  const { enableHighlight, enableAddWidget, onAddWidgetClick } = useDiffContext.useShallowStableSelector((s) => ({
+    enableHighlight: s.enableHighlight,
+    enableAddWidget: s.enableAddWidget,
+    onAddWidgetClick: s.onAddWidgetClick,
+  }));
 
   const { useWidget } = useDiffWidgetContext();
 

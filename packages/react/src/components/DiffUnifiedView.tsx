@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { getUnifiedContentLine } from "@git-diff-view/core";
 import * as React from "react";
-import { Fragment, memo, useEffect, useMemo, useCallback, useRef } from "react";
+import { Fragment, memo, useEffect, useMemo, useRef } from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
 import { useDiffViewContext } from "..";
@@ -39,7 +39,10 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const contextValue = useMemo(() => ({ useWidget }), [useWidget]);
 
-  const fontSize = useDiffContext(useCallback((s) => s.fontSize, []));
+  const { fontSize, enableWrap } = useDiffContext.useShallowStableSelector((s) => ({
+    fontSize: s.fontSize,
+    enableWrap: s.enableWrap,
+  }));
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);
 
@@ -62,7 +65,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   return (
     <DiffWidgetContext.Provider value={contextValue}>
-      <div className="unified-diff-view w-full">
+      <div className={`unified-diff-view ${enableWrap ? "unified-diff-view-wrap" : "unified-diff-view-normal"} w-full`}>
         <div
           className="unified-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
           style={{
@@ -72,7 +75,9 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
             fontSize: `var(${diffFontSizeName})`,
           }}
         >
-          <table className="unified-diff-table w-full border-collapse">
+          <table
+            className={`unified-diff-table w-full border-collapse border-spacing-0 ${enableWrap ? "table-fixed" : ""}`}
+          >
             <colgroup>
               <col className="unified-diff-table-num-col" />
               <col className="unified-diff-table-content-col" />

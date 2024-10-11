@@ -38,7 +38,7 @@ const DiffSplitViewTable = defineComponent(
 
     return () => {
       return (
-        <table class={className.value + " w-full border-collapse"} data-mode={SplitSide[props.side]}>
+        <table class={className.value + " w-full border-collapse border-spacing-0"} data-mode={SplitSide[props.side]}>
           <colgroup>
             <col class={`diff-table-${SplitSide[props.side]}-num-col`} />
             <col class={`diff-table-${SplitSide[props.side]}-content-col`} />
@@ -127,7 +127,7 @@ export const DiffSplitViewNormal = defineComponent(
 
     return () => {
       return (
-        <div class="split-diff-view split-diff-view-wrap flex w-full basis-[50%]">
+        <div class="split-diff-view split-diff-view-normal flex w-full basis-[50%]">
           <div
             class="old-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
             ref={ref1}

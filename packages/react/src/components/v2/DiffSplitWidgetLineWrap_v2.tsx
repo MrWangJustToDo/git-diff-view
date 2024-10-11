@@ -26,7 +26,7 @@ const _DiffSplitWidgetLine = ({
 
   const { useDiffContext } = useDiffViewContext();
 
-  const renderWidgetLine = useDiffContext(React.useCallback((s) => s.renderWidgetLine, []));
+  const renderWidgetLine = useDiffContext.useShallowStableSelector((s) => s.renderWidgetLine);
 
   const oldLine = diffFile.getSplitLeftLine(index);
 
@@ -55,10 +55,7 @@ const _DiffSplitWidgetLine = ({
           <span>&ensp;</span>
         </div>
       )}
-      <div
-        className="diff-split-line w-[1px] flex-shrink-0"
-        style={{ backgroundColor: `var(${borderColorName})` }}
-      />
+      <div className="diff-split-line w-[1px] flex-shrink-0" style={{ backgroundColor: `var(${borderColorName})` }} />
       {newLineWidget ? (
         <div className="diff-line-widget-new-content w-[50%] p-0">
           <div className="diff-line-widget-wrapper">
@@ -93,9 +90,10 @@ export const DiffSplitWidgetLine = ({
 }) => {
   const { useWidget } = useDiffWidgetContext();
 
-  const { widgetLineNumber, widgetSide } = useWidget(
-    React.useCallback((s) => ({ widgetLineNumber: s.widgetLineNumber, widgetSide: s.widgetSide }), [])
-  );
+  const { widgetLineNumber, widgetSide } = useWidget.useShallowStableSelector((s) => ({
+    widgetLineNumber: s.widgetLineNumber,
+    widgetSide: s.widgetSide,
+  }));
 
   const oldLine = diffFile.getSplitLeftLine(index);
 
