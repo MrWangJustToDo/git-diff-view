@@ -140,10 +140,7 @@ export const DiffSplitViewNormal = defineComponent(
           >
             <DiffSplitViewTable side={SplitSide.old} diffFile={props.diffFile} />
           </div>
-          <div
-            class="diff-split-line w-[1.5px]"
-            style={{ backgroundColor: `var(${borderColorName})` }}
-          />
+          <div class="diff-split-line w-[1.5px]" style={{ backgroundColor: `var(${borderColorName})` }} />
           <div
             class="new-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
             ref={ref2}

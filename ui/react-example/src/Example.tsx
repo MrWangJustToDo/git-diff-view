@@ -394,7 +394,7 @@ export function Example() {
         </p>
       </div>
       <div className="m-auto mb-[1em] w-[90%] text-right text-[12px]">
-        <div className="inline-flex gap-x-4 flex-wrap gap-y-2">
+        <div className="inline-flex flex-wrap gap-x-4 gap-y-2">
           <button
             className="rounded-full bg-sky-400 px-5 py-2 text-sm font-semibold leading-5 text-white hover:bg-sky-500"
             onClick={() => setDarkMode(!darkMode)}

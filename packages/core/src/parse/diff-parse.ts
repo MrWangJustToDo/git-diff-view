@@ -328,7 +328,7 @@ export class DiffParser {
       // is not a "no newline" marker. Otherwise, we'll end up with a wrong
       // `diffLineNumber` for the next line. This could happen if the last line
       // in the file doesn't have a newline before the change.
-      diffLineNumber++
+      diffLineNumber++;
 
       let diffLine: DiffLine;
 

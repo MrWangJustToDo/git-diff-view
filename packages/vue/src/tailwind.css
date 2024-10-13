@@ -26,7 +26,7 @@
 }
 
 [data-theme="dark"] .diff-style-root {
-  --diff-border--: #3D444D;
+  --diff-border--: #3d444d;
   --diff-add-content--: #14261f;
   --diff-del-content--: #311b1f;
   --diff-add-lineNumber--: #1f4429;
@@ -48,7 +48,9 @@
   color: white;
 }
 
-table, tr, td {
+table,
+tr,
+td {
   border-color: transparent;
   border-width: 0px;
 }

@@ -7,7 +7,7 @@ export type MessageData = {
   id: number;
   data: DiffViewProps<any>["data"];
   highlight?: boolean;
-  theme?: 'light' | 'dark';
+  theme?: "light" | "dark";
   bundle: ReturnType<DiffFile["getBundle"]>;
 };
 
