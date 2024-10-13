@@ -3,7 +3,7 @@
   "description": "@git-diff-view/shiki",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "types": "index.d.ts",
   "type": "module",
   "files": [

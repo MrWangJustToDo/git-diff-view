@@ -152,8 +152,8 @@ importers:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0
         version: 18.2.0(react@18.2.0)
       reactivity-store:
-        specifier: ^0.3.5
-        version: 0.3.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.3.6
+        version: 0.3.6(react-dom@18.2.0)(react@18.2.0)
       use-sync-external-store:
         specifier: ^1.2.2
         version: 1.2.2(react@18.2.0)
@@ -268,8 +268,8 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
       reactivity-store:
-        specifier: ^0.3.5
-        version: 0.3.5(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^0.3.6
+        version: 0.3.6(react-dom@18.2.0)(react@18.2.0)
       vue:
         specifier: ^3.4.38
         version: 3.4.38(typescript@5.3.3)
@@ -5872,8 +5872,8 @@ packages:
     dependencies:
       loose-envify: 1.4.0
 
-  /reactivity-store@0.3.5(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-LYcmC0Qukuosg9x+nrYEKUMFRuqbLVSn0Bd4dY5XXKx2Q/HQBHVXU+GchtrkJS39iIdusN+7QMAzBPWZGJOU0g==}
+  /reactivity-store@0.3.6(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-tZGkyrDZxzuOqSLIuHuOq10U7hV7BAEy5J5bJi6y+d/qMMf+FxTm/E6092i8DylxXtmy7wxSUo6ksWxB7Hg/jw==}
     peerDependencies:
       react: ^17.0.2 || ^18.2.0
       react-dom: ^17.0.2 || ^18.2.0
