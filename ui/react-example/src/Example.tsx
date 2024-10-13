@@ -280,14 +280,10 @@ export function Example() {
 
   useEffect(() => {
     if (diffFileInstance) {
-      // mount react
-      // console.log("mount react");
       reactApp.current = createRoot(reactRef.current!);
       reactApp.current?.render?.(reactElement);
-      // const ele = reactRef.current;
 
       if (vueRef.current) {
-        // mount vue
         vueApp.current = createApp(vueElement);
         vueApp.current.mount(vueRef.current);
       }
@@ -295,11 +291,7 @@ export function Example() {
       return () => {
         vueApp.current?.unmount?.();
         // TODO! fix unmount
-        // @ts-ignore
-        // if (ele.__container__ && ele.__container__.isAppMounted) {
-        //   console.log('unmount react');
-        //   reactApp.current?.unmount?.();
-        // }
+        // reactApp.current?.unmount?.();
       };
     }
   }, [diffFileInstance, reactElement, vueElement, enableVUE]);
