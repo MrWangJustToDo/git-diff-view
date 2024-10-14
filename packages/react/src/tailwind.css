@@ -25,6 +25,11 @@
   color: black;
 }
 
+.diff-style-root .diff-line-syntax-raw *,
+[data-theme="light"] .diff-line-syntax-raw * {
+  color: var(--diff-view-light, inherit);
+}
+
 [data-theme="dark"] .diff-style-root {
   --diff-border--: #3d444d;
   --diff-add-content--: #14261f;
@@ -46,6 +51,10 @@
   --diff-hunk-content-color--: #9298a0;
 
   color: white;
+}
+
+[data-theme="dark"] .diff-line-syntax-raw * {
+  color: var(--diff-view-dark, inherit);
 }
 
 table,

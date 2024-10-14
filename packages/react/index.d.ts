@@ -18,7 +18,8 @@ declare class File$1 {
 	syntaxFile: Record<number, SyntaxLine>;
 	hasDoSyntax: boolean;
 	syntaxLength?: number;
-	highlighterName?: string;
+	highlighterName?: DiffHighlighter["name"];
+	highlighterType?: DiffHighlighter["type"];
 	maxLineNumber: number;
 	static createInstance(data: File$1): File$1;
 	constructor(raw: string, lang: string, fileName?: string);
@@ -521,6 +522,7 @@ export interface UnifiedLineItem {
 export type DiffAST = ReturnType<typeof lowlight.highlight>;
 export type DiffHighlighter = {
 	name: string;
+	type: "class" | "style" | string;
 	maxLineToIgnoreSyntax: number;
 	setMaxLineToIgnoreSyntax: (v: number) => void;
 	ignoreSyntaxHighlightList: (string | RegExp)[];

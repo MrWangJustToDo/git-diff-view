@@ -56,6 +56,7 @@ export type DiffAST = ReturnType<typeof lowlight.highlight>;
 
 export type DiffHighlighter = {
   name: string;
+  type: "class" | "style" | string;
   maxLineToIgnoreSyntax: number;
   setMaxLineToIgnoreSyntax: (v: number) => void;
   ignoreSyntaxHighlightList: (string | RegExp)[];
@@ -134,6 +135,8 @@ Object.defineProperty(instance, "hasRegisteredCurrentLang", {
     return lowlight.registered(lang);
   },
 });
+
+Object.defineProperty(instance, "type", { value: "class" });
 
 export { processAST } from "./processAST";
 

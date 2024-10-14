@@ -13,9 +13,9 @@ module.exports = {
         }
         if (filePath.includes("node_modules")) {
           if (filePath.includes("dark.css")) {
-            return `${prefix}[data-theme="dark"] ${selector}`;
+            return `${prefix}[data-theme="dark"] .diff-line-syntax-raw ${selector}`;
           } else {
-            return `${prefix}[data-theme="light"] ${selector}`;
+            return `${prefix}[data-theme="light"] .diff-line-syntax-raw ${selector}`;
           }
         } else {
           return prefixedSelector;

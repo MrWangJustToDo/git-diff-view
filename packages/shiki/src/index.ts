@@ -1,4 +1,4 @@
-import { getHighlighter } from "shiki";
+import { createHighlighter } from "shiki";
 
 import { processAST, type SyntaxLine } from "./processAST";
 
@@ -10,6 +10,7 @@ export type DiffAST = DePromise<ReturnType<typeof codeToHast>>;
 
 export type DiffHighlighter = {
   name: string;
+  type: "class" | "style" | string;
   maxLineToIgnoreSyntax: number;
   setMaxLineToIgnoreSyntax: (v: number) => void;
   ignoreSyntaxHighlightList: (string | RegExp)[];
@@ -17,13 +18,13 @@ export type DiffHighlighter = {
   getAST: (raw: string, fileName?: string, lang?: string, theme?: "light" | "dark") => DiffAST;
   processAST: (ast: DiffAST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };
   hasRegisteredCurrentLang: (lang: string) => boolean;
-  getHighlighterEngine: () => DePromise<ReturnType<typeof getHighlighter>> | null;
+  getHighlighterEngine: () => DePromise<ReturnType<typeof createHighlighter>> | null;
 };
 
-let internal: DePromise<ReturnType<typeof getHighlighter>> | null = null;
+let internal: DePromise<ReturnType<typeof createHighlighter>> | null = null;
 
 const getDefaultHighlighter = async () =>
-  await getHighlighter({
+  await createHighlighter({
     themes: ["github-light", "github-dark"],
     langs: [
       "cpp",
@@ -92,7 +93,7 @@ Object.defineProperty(instance, "setIgnoreSyntaxHighlightList", {
 });
 
 Object.defineProperty(instance, "getAST", {
-  value: (raw: string, fileName?: string, lang?: string, theme?: "light" | "dark") => {
+  value: (raw: string, fileName?: string, lang?: string) => {
     if (
       fileName &&
       highlighter.ignoreSyntaxHighlightList.some((item) =>
@@ -109,7 +110,12 @@ Object.defineProperty(instance, "getAST", {
     try {
       return internal?.codeToHast(raw, {
         lang: lang,
-        theme: theme === "dark" ? "github-dark" : "github-light",
+        themes: {
+          dark: "github-dark",
+          light: "github-light",
+        },
+        cssVariablePrefix: "--diff-view-",
+        defaultColor: false,
         mergeWhitespaces: false,
       });
     } catch (e) {
@@ -140,6 +146,8 @@ Object.defineProperty(instance, "getHighlighterEngine", {
     return internal;
   },
 });
+
+Object.defineProperty(instance, "type", { value: "class" });
 
 const highlighter: DiffHighlighter = instance as DiffHighlighter;
 

@@ -42,6 +42,7 @@ declare const lowlight: {
 export type DiffAST = ReturnType<typeof lowlight.highlight>;
 export type DiffHighlighter = {
 	name: string;
+	type: "class" | "style" | string;
 	maxLineToIgnoreSyntax: number;
 	setMaxLineToIgnoreSyntax: (v: number) => void;
 	ignoreSyntaxHighlightList: (string | RegExp)[];

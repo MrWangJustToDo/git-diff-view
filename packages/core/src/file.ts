@@ -41,7 +41,9 @@ export class File {
 
   syntaxLength?: number;
 
-  highlighterName?: string;
+  highlighterName?: DiffHighlighter["name"];
+
+  highlighterType?: DiffHighlighter["type"];
 
   maxLineNumber: number = 0;
 
@@ -63,6 +65,8 @@ export class File {
     file.syntaxLength = data?.syntaxLength;
 
     file.highlighterName = data?.highlighterName;
+
+    file.highlighterType = data?.highlighterType;
 
     file.maxLineNumber = data?.maxLineNumber;
 
@@ -109,6 +113,8 @@ export class File {
     this.syntaxLength = syntaxFileLineNumber;
 
     this.highlighterName = finalHighlighter.name;
+
+    this.highlighterType = finalHighlighter.type;
 
     if (__DEV__) {
       this.#doCheck();
@@ -181,7 +187,7 @@ export const getFile = (raw: string, lang: string, theme: "light" | "dark", file
   if (map.has(otherThemeKey)) {
     const cacheFile = map.get(otherThemeKey);
     // 基于className的ast不需要重新生成
-    if (cacheFile.highlighterName === highlighter.name) {
+    if (cacheFile.highlighterType === 'class') {
       return cacheFile;
     }
   }

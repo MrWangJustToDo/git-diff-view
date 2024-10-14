@@ -282,7 +282,7 @@ export function Example() {
             ]),
           ]),
         ]),
-      extend: ({ data, side, lineNumber }: { data: string[], side: SplitSide, lineNumber: number }) => {
+      extend: ({ data, side, lineNumber }: { data: string[]; side: SplitSide; lineNumber: number }) => {
         return h(
           VFragment,
           null,
