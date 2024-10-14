@@ -319,7 +319,7 @@ export const DiffContent_v2 = ({
   return (
     <div
       className="diff-line-content-item pl-[2.0em]"
-      data-val={rawLine}
+      // data-val={rawLine}
       style={{
         whiteSpace: enableWrap ? "pre-wrap" : "pre",
         wordBreak: enableWrap ? "break-all" : "initial",
