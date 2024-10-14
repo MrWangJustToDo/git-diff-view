@@ -8,7 +8,7 @@ import { diffFontSizeName, memoFunc } from "./tools";
 const temp = {};
 
 const formatStringToCamelCase = (str: string) => {
-  if (str.startsWith('--')) return str;
+  if (str.startsWith("--")) return str;
   const splitted = str.split("-");
   if (splitted.length === 1) return splitted[0];
   return (
