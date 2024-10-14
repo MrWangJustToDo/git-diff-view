@@ -109,9 +109,7 @@ export const DiffSplitWidgetLine = defineComponent(
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >
-              <div data-line={`${props.lineNumber}-widget-content`} data-side={SplitSide[props.side]}>
-                &ensp;
-              </div>
+              <div data-line={`${props.lineNumber}-widget-content`} data-side={SplitSide[props.side]} />
             </td>
           )}
         </tr>

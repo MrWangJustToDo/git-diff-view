@@ -81,9 +81,7 @@ const _DiffSplitExtendLine = ({
           style={{ backgroundColor: `var(${emptyBGName})` }}
           colSpan={2}
         >
-          <div data-line={`${lineNumber}-extend-content`} data-side={SplitSide[side]}>
-            &ensp;
-          </div>
+          <div data-line={`${lineNumber}-extend-content`} data-side={SplitSide[side]} />
         </td>
       )}
     </tr>

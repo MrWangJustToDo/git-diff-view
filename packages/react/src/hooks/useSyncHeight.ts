@@ -42,16 +42,11 @@ export const useSyncHeight = ({
           ele2.style.height = "auto";
           const rect1 = ele1.getBoundingClientRect();
           const rect2 = ele2.getBoundingClientRect();
-          if (rect1.height !== rect2.height) {
-            const maxHeight = Math.max(rect1.height, rect2.height);
-            wrapper1.style.height = maxHeight + "px";
-            wrapper2.style.height = maxHeight + "px";
-            wrapper1.setAttribute("data-sync-height", String(maxHeight));
-            wrapper2.setAttribute("data-sync-height", String(maxHeight));
-          } else {
-            wrapper1.removeAttribute("data-sync-height");
-            wrapper2.removeAttribute("data-sync-height");
-          }
+          const maxHeight = Math.max(rect1.height, rect2.height);
+          wrapper1.style.height = maxHeight + "px";
+          wrapper2.style.height = maxHeight + "px";
+          wrapper1.setAttribute("data-sync-height", String(maxHeight));
+          wrapper2.setAttribute("data-sync-height", String(maxHeight));
         };
 
         cb();

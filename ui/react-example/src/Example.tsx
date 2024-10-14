@@ -4,7 +4,7 @@ import { DiffView as DiffViewVue } from "@git-diff-view/vue";
 import { OverlayScrollbars } from "overlayscrollbars";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createRoot } from "react-dom/client";
-import { createApp, h, ref } from "vue";
+import { createApp, Fragment as VFragment, h, ref } from "vue";
 import "overlayscrollbars/overlayscrollbars.css";
 
 import * as data from "./data";
@@ -76,9 +76,9 @@ export function Example() {
 
   const previous = usePrevious(diffFileInstance);
 
-  const [extend, setExtend] = useState<DiffViewProps<string>["extendData"]>({
-    oldFile: { "80": { data: "hello world!" } },
-    newFile: { "87": { data: "line have been changed!" } },
+  const [extend, setExtend] = useState<DiffViewProps<string[]>["extendData"]>({
+    oldFile: { "80": { data: ["hello world!"] } },
+    newFile: { "87": { data: ["line have been changed!"] } },
   });
 
   const valRef = useRef("");
@@ -125,7 +125,7 @@ export function Example() {
   }, [expandAll]);
 
   const reactElement = (
-    <DiffViewReact<string>
+    <DiffViewReact<string[]>
       ref={ref}
       renderWidgetLine={({ onClose, side, lineNumber }) => (
         <div className="flex w-full flex-col border px-[4px] py-[8px]">
@@ -149,7 +149,13 @@ export function Example() {
                     const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
                     setExtend((prev) => {
                       const res = { ...prev };
-                      res[sideKey] = { ...res[sideKey], [lineNumber]: { lineNumber, data: valRef.current } };
+                      res[sideKey] = {
+                        ...res[sideKey],
+                        [lineNumber]: {
+                          lineNumber,
+                          data: [...(res[sideKey]?.[lineNumber]?.data || []), valRef.current],
+                        },
+                      };
                       return res;
                     });
                     setTimeout(() => {
@@ -168,23 +174,40 @@ export function Example() {
       // data={data[v]}
       diffFile={diffFileInstance}
       extendData={extend}
-      renderExtendLine={({ data }) => {
+      renderExtendLine={({ data, side, lineNumber }) => {
         return (
-          <div className="bg-slate-200 px-[8px] py-[6px]">
-            <div className="rounded-[4px] border border-solid border-[rgb(200,200,200)]">
-              <div className="mx-[4px] my-[5px]">
-                <div className="inline-flex h-[24px] w-[24px] items-center justify-center rounded-full bg-slate-300">
-                  @
+          <>
+            {data.map((i, index) => (
+              <div className="bg-slate-200 px-[8px] py-[6px]" key={i + index}>
+                <div className="rounded-[4px] border border-solid border-[rgb(200,200,200)]">
+                  <div className="mx-[4px] my-[5px]">
+                    <div className="inline-flex h-[24px] w-[24px] items-center justify-center rounded-full bg-slate-300">
+                      @
+                    </div>
+                    <span className="mx-[4px] text-[11px] text-[grey]">:</span>
+                    <span className="text-[11px] text-[grey]">{new Date().toLocaleString()}</span>
+                    <button
+                      className="float-right rounded-[4px] border border-white !p-[6px] !py-[2px]"
+                      onClick={() =>
+                        setExtend((last) => {
+                          const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
+                          const res = { ...last };
+                          res[sideKey]![lineNumber].data.splice(index, 1);
+                          return res;
+                        })
+                      }
+                    >
+                      x
+                    </button>
+                  </div>
+                  <div className="my-[5px] h-[1px] bg-[rgb(210,210,210)]"></div>
+                  <div className="mx-[4px] my-[5px] indent-1">
+                    <span className="text-[15px]">{i}</span>
+                  </div>
                 </div>
-                <span className="mx-[4px] text-[11px] text-[grey]">:</span>
-                <span className="text-[11px] text-[grey]">{new Date().toLocaleString()}</span>
               </div>
-              <div className="my-[5px] h-[1px] bg-[rgb(210,210,210)]"></div>
-              <div className="mx-[4px] my-[5px] indent-1">
-                <span className="text-[15px]">{data}</span>
-              </div>
-            </div>
-          </div>
+            ))}
+          </>
         );
       }}
       diffViewFontSize={fontsize}
@@ -239,7 +262,13 @@ export function Example() {
                       const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
                       setExtend((prev) => {
                         const res = { ...prev };
-                        res[sideKey] = { ...res[sideKey], [lineNumber]: { lineNumber, data: vRef.value } };
+                        res[sideKey] = {
+                          ...res[sideKey],
+                          [lineNumber]: {
+                            lineNumber,
+                            data: [...(res[sideKey]?.[lineNumber]?.data || []), vRef.value],
+                          },
+                        };
                         return res;
                       });
                       setTimeout(() => {
@@ -253,22 +282,43 @@ export function Example() {
             ]),
           ]),
         ]),
-      extend: ({ data }: { data: string }) => {
-        return h("div", { class: "px-[8px] py-[6px] bg-slate-200" }, [
-          h("div", { class: "border border-solid border-[rgb(200,200,200)] rounded-[4px]" }, [
-            h("div", { class: "my-[5px] mx-[4px]" }, [
-              h(
-                "div",
-                { class: "w-[24px] h-[24px] inline-flex items-center justify-center rounded-full bg-slate-300" },
-                "@"
-              ),
-              h("span", { class: "text-[11px] mx-[4px] text-[grey]" }, ":"),
-              h("span", { class: "text-[11px] text-[grey]" }, new Date().toLocaleString()),
-            ]),
-            h("div", { class: "bg-[rgb(210,210,210)] h-[1px] my-[5px]" }),
-            h("div", { class: "indent-1 my-[5px] mx-[4px]" }, [h("span", { class: "text-[15px]" }, data)]),
-          ]),
-        ]);
+      extend: ({ data, side, lineNumber }: { data: string[], side: SplitSide, lineNumber: number }) => {
+        return h(
+          VFragment,
+          null,
+          data.map((i, index) =>
+            h("div", { class: "px-[8px] py-[6px] bg-slate-200", key: `${i}-${index}` }, [
+              h("div", { class: "border border-solid border-[rgb(200,200,200)] rounded-[4px]" }, [
+                h("div", { class: "my-[5px] mx-[4px]" }, [
+                  h(
+                    "div",
+                    { class: "w-[24px] h-[24px] inline-flex items-center justify-center rounded-full bg-slate-300" },
+                    "@"
+                  ),
+                  h("span", { class: "text-[11px] mx-[4px] text-[grey]" }, ":"),
+                  h("span", { class: "text-[11px] text-[grey]" }, new Date().toLocaleString()),
+                  h(
+                    "button",
+                    {
+                      class: "float-right rounded-[4px] border border-white !p-[6px] !py-[2px]",
+                      onClick: () => {
+                        setExtend((last) => {
+                          const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
+                          const res = { ...last };
+                          res[sideKey]![lineNumber].data.splice(index, 1);
+                          return res;
+                        });
+                      },
+                    },
+                    "x"
+                  ),
+                ]),
+                h("div", { class: "bg-[rgb(210,210,210)] h-[1px] my-[5px]" }),
+                h("div", { class: "indent-1 my-[5px] mx-[4px]" }, [h("span", { class: "text-[15px]" }, i)]),
+              ]),
+            ])
+          )
+        );
       },
     }
   );
