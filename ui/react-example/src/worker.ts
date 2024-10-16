@@ -1,4 +1,4 @@
-import { DiffFile } from "@git-diff-view/react";
+import { DiffFile, highlighter as buildInHighlighter } from "@git-diff-view/react";
 import { highlighterReady } from "@git-diff-view/shiki";
 
 import type { DiffViewProps } from "@git-diff-view/react";
@@ -13,7 +13,7 @@ export type MessageData = {
 
 const post = (d: MessageData) => postMessage(d);
 
-// highlighter.setMaxLineToIgnoreSyntax(60000);
+buildInHighlighter.setMaxLineToIgnoreSyntax(60000);
 
 // highlighter.setIgnoreSyntaxHighlightList([/.vue$/])
 
@@ -38,8 +38,23 @@ onmessage = (event: MessageEvent<MessageData>) => {
 
   highlighterReady.then((highlighter) => {
     if (_data.highlight) {
-      file.initSyntax({ registerHighlighter: highlighter });
-      // file.initSyntax();
+      // check current lang has registered
+      let hasRegister = true;
+      if (hasRegister && file._oldFileLang) {
+        try {
+          hasRegister = highlighter.hasRegisteredCurrentLang(file._oldFileLang);
+        } catch {
+          hasRegister = false;
+        }
+      }
+      if (hasRegister && file._newFileLang) {
+        try {
+          hasRegister = highlighter.hasRegisteredCurrentLang(file._newFileLang);
+        } catch {
+          hasRegister = false;
+        }
+      }
+      file.initSyntax({ registerHighlighter: hasRegister ? highlighter : undefined });
     }
 
     file.buildSplitDiffLines();

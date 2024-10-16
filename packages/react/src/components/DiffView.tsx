@@ -248,7 +248,7 @@ const DiffViewWithRef = <T extends unknown>(
   }, [diffFile, _diffFile]);
 
   // fix react strict mode error
-  useUnmount(() => diffFile?._destroy?.(), [diffFile]);
+  useUnmount(() => (__DEV__ ? diffFile?._destroy?.() : diffFile?.clear?.()), [diffFile]);
 
   useImperativeHandle(ref, () => ({ getDiffFileInstance: () => diffFile }), [diffFile]);
 
