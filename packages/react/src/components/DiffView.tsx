@@ -198,6 +198,8 @@ const DiffViewWithRef = <T extends unknown>(
 
   const diffFile = useMemo(() => {
     if (_diffFile) {
+      // TODO! missing data for plain file render
+      // fix for next release
       const diffFile = DiffFile.createInstance({});
       diffFile._mergeFullBundle(_diffFile._getFullBundle());
       return diffFile;

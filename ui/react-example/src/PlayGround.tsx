@@ -1,7 +1,8 @@
-import { DiffView, DiffFile } from "@git-diff-view/react";
 import { generateDiffFile } from "@git-diff-view/file";
+import { DiffView, DiffFile } from "@git-diff-view/react";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
+
 import { Button } from "./components/Button";
 
 const temp =

@@ -15,8 +15,11 @@
     "@git-diff-view/react": "workspace:*",
     "@git-diff-view/shiki": "workspace:*",
     "@git-diff-view/vue": "workspace:*",
+    "@mantine/core": "^7.13.2",
+    "@mantine/hooks": "^7.13.2",
     "@my-react/react": "0.3.3",
     "@my-react/react-dom": "0.3.3",
+    "@tabler/icons-react": "^3.19.0",
     "lodash": "^4.17.21",
     "overlayscrollbars": "^2.10.0",
     "react": "^18.2.0",
@@ -38,8 +41,9 @@
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.12",
     "postcss": "^8.4.43",
+    "postcss-preset-mantine": "^1.17.0",
     "tailwindcss": "^3.4.14",
-    "typescript": "5.4.2",
+    "typescript": "5.3.3",
     "vite": "^5.4.9",
     "vite-tsconfig-paths": "^5.0.1"
   }
