@@ -1,4 +1,15 @@
-import { AppShell, Group, Title, Button, Flex, Burger, Space, useMantineColorScheme, Container } from "@mantine/core";
+import {
+  AppShell,
+  Group,
+  Title,
+  Button,
+  Flex,
+  Burger,
+  Space,
+  useMantineColorScheme,
+  Container,
+  em,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconMoon, IconSun } from "@tabler/icons-react";
 
@@ -38,10 +49,14 @@ function App() {
               href="https://github.com/MrWangJustToDo/git-diff-view"
               target="_blank"
             >
-              <Github className="w-[1.42em] text-gray-400" />
+              <Github className="!w-[1.42em] text-gray-400" />
             </Button>
             <Button variant="light" className="text-sm" onClick={toggleColorScheme} color="blue">
-              {colorScheme === "light" ? <IconSun /> : <IconMoon />}
+              {colorScheme === "light" ? (
+                <IconSun style={{ width: em(20), height: em(20) }} />
+              ) : (
+                <IconMoon style={{ width: em(20), height: em(20) }} />
+              )}
             </Button>
           </Flex>
           <Button variant="light" className="text-sm" hiddenFrom="sm" onClick={toggleColorScheme} color="blue">
@@ -65,7 +80,7 @@ function App() {
           href="https://github.com/MrWangJustToDo/git-diff-view"
           target="_blank"
         >
-          <Github className="w-[1.45em] text-gray-400" />
+          <Github className="!w-[1.45em] text-gray-400" />
         </Button>
       </AppShell.Navbar>
       <AppShell.Main>

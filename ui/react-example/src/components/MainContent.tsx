@@ -19,8 +19,11 @@ import {
   Card,
   CloseButton,
   Highlight,
+  useMantineTheme,
+  alpha,
+  getThemeColor,
 } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { DiffViewWithScrollBar } from "./DiffViewWithScrollBar";
 import { temp1, temp2 } from "./MainContentData";
@@ -44,9 +47,15 @@ const Textarea = ({ onChange }: { onChange: (v: string) => void }) => {
 };
 
 export const MainContent = () => {
+  const theme = useMantineTheme();
+
   const { colorScheme } = useMantineColorScheme();
 
   const [str, setStr] = useState("");
+
+  const color = useMemo(() => alpha(getThemeColor("yellow", theme), 0.5), [theme]);
+
+  const bdColor = useMemo(() => getThemeColor("dark.4", theme), [theme]);
 
   const [extend, setExtend] = useState<DiffViewProps<string[]>["extendData"]>({
     oldFile: {},
@@ -88,9 +97,9 @@ export const MainContent = () => {
         <Space h="40" />
         <Title>Git Diff View</Title>
         <Space h="12" />
-        <Text size="lg">
+        <Text size="lg" component="div">
           A <Code>Diff</Code> view component for React / Vue,
-          <Highlight highlight={["easy to use", "feature complete"]} color="blue">
+          <Highlight highlight={["easy to use", "feature complete"]} color={color}>
             the most one component what easy to use and feature complete.
           </Highlight>
         </Text>
@@ -148,7 +157,7 @@ export const MainContent = () => {
           renderWidgetLine={({ side, lineNumber, onClose }) => {
             // render scope have a high level tailwind default style, next release should fix this
             return (
-              <Box p="lg" className="widget border-b border-t border-solid">
+              <Box p="lg" className="widget border-b border-t border-solid" style={{ borderColor: bdColor }}>
                 <Textarea onChange={(v) => setStr(v)} />
                 <Group mt="lg" justify="flex-end">
                   <Button onClick={onClose} color="gray" className="text-white" size="xs">
@@ -182,7 +191,7 @@ export const MainContent = () => {
           renderExtendLine={({ data, side, lineNumber }) => {
             if (!data || !data.length) return null;
             return (
-              <Box className="border-b border-t border-solid" p="sm">
+              <Box className="border-b border-t border-solid" p="sm" style={{ borderColor: bdColor }}>
                 <Stack>
                   {data.map((d, i) => (
                     <Card key={i} withBorder className="relative">
