@@ -9,6 +9,7 @@ module.exports = {
       transform: function (prefix, selector, prefixedSelector, _filePath, rule) {
         const filePath = rule.source?.input?.file;
         // ignore base css
+        // TODO next release update
         if (rule.source?.start?.line === 1 && rule.source?.start?.column === 1) {
           return selector;
         }

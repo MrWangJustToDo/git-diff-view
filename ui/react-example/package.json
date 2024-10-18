@@ -11,6 +11,7 @@
   },
   "packageManager": "pnpm@8.9.0",
   "dependencies": {
+    "@codesandbox/sandpack-react": "^2.19.9",
     "@git-diff-view/file": "workspace:*",
     "@git-diff-view/react": "workspace:*",
     "@git-diff-view/shiki": "workspace:*",

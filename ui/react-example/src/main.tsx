@@ -6,7 +6,7 @@ import * as ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import { theme } from "./theme.ts";
 
-import '@mantine/core/styles.css';
+import "@mantine/core/styles.css";
 import "overlayscrollbars/overlayscrollbars.css";
 import "@git-diff-view/react/styles/diff-view.css";
 import "./index.css";

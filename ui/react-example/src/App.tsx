@@ -1,25 +1,26 @@
-import {
-  AppShell,
-  Group,
-  Title,
-  Button,
-  Flex,
-  Burger,
-  Space,
-  useMantineColorScheme,
-  Container,
-  em,
-} from "@mantine/core";
+import { AppShell, Group, Title, Button, Flex, Burger, Space, useMantineColorScheme, em } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconMoon, IconSun } from "@tabler/icons-react";
 
+import { ExampleContent } from "./components/ExampleContent";
 import { Github } from "./components/icons";
 import { MainContent } from "./components/MainContent";
+import { PlayGround } from "./components/PlayGroundContent";
+import { usePreviewTypeWithRouter } from "./hooks/usePreviewType";
 
 function App() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
-  const [opened, { toggle }] = useDisclosure();
+  const type = usePreviewTypeWithRouter();
+
+  const [opened, { toggle, close }] = useDisclosure();
+
+  const goto = (type: "main" | "example" | "try") => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("type", type);
+    window.history.pushState({}, "", url.toString());
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
 
   return (
     <AppShell
@@ -36,10 +37,13 @@ function App() {
             </Title>
           </Flex>
           <Flex columnGap="16" visibleFrom="sm">
-            <Button variant="light" color="gray">
+            <Button variant="light" color={type === "main" ? "blue" : "gray"} onClick={() => goto("main")}>
+              Main
+            </Button>
+            <Button variant="light" color={type === "example" ? "blue" : "gray"} onClick={() => goto("example")}>
               Example
             </Button>
-            <Button variant="light" color="gray">
+            <Button variant="light" color={type === "try" ? "blue" : "gray"} onClick={() => goto("try")}>
               Playground
             </Button>
             <Button
@@ -51,7 +55,7 @@ function App() {
             >
               <Github className="!w-[1.42em] text-gray-400" />
             </Button>
-            <Button variant="light" className="text-sm" onClick={toggleColorScheme} color="blue">
+            <Button variant="light" className="text-sm" onClick={toggleColorScheme} color="violet">
               {colorScheme === "light" ? (
                 <IconSun style={{ width: em(20), height: em(20) }} />
               ) : (
@@ -59,17 +63,42 @@ function App() {
               )}
             </Button>
           </Flex>
-          <Button variant="light" className="text-sm" hiddenFrom="sm" onClick={toggleColorScheme} color="blue">
+          <Button variant="light" className="text-sm" hiddenFrom="sm" onClick={toggleColorScheme} color="violet">
             {colorScheme === "light" ? <IconSun /> : <IconMoon />}
           </Button>
         </Group>
       </AppShell.Header>
       <AppShell.Navbar py="md" px={4}>
-        <Button variant="light" color="gray">
+        <Button
+          variant="light"
+          color={type === "main" ? "blue" : "gray"}
+          onClick={() => {
+            close();
+            goto("main");
+          }}
+        >
+          Main
+        </Button>
+        <Space h="14" />
+        <Button
+          variant="light"
+          color={type === "example" ? "blue" : "gray"}
+          onClick={() => {
+            close();
+            goto("example");
+          }}
+        >
           Example
         </Button>
         <Space h="14" />
-        <Button variant="light" color="gray">
+        <Button
+          variant="light"
+          color={type === "try" ? "blue" : "gray"}
+          onClick={() => {
+            close();
+            goto("try");
+          }}
+        >
           Playground
         </Button>
         <Space h="14" />
@@ -84,9 +113,11 @@ function App() {
         </Button>
       </AppShell.Navbar>
       <AppShell.Main>
-        <Container size="xl">
-          <MainContent />
-        </Container>
+        {type === "main" && <MainContent />}
+        {type === "example" && (
+          <ExampleContent className="border-color h-[calc(100vh-60px-32px)] w-full overflow-hidden rounded-md border" />
+        )}
+        {type === "try" && <PlayGround />}
       </AppShell.Main>
     </AppShell>
   );
