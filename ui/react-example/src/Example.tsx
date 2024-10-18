@@ -100,7 +100,8 @@ export function Example() {
   }, []);
 
   useEffect(() => {
-    const _data = data[v];
+    const typedData = data as any;
+    const _data = typedData[v];
     if (_data) {
       console.time("parse");
       worker.postMessage({

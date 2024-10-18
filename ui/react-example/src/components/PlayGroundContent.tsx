@@ -1,9 +1,8 @@
 import { generateDiffFile } from "@git-diff-view/file";
 import { DiffView, DiffFile } from "@git-diff-view/react";
+import { Button, Code, useMantineColorScheme } from "@mantine/core";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
-
-import { Button } from "./components/Button";
 
 const temp =
   'diff --git a/packages/myreact-reactivity/src/reactive/feature.ts b/packages/myreact-reactivity/src/reactive/feature.ts\nindex 5b301628..15aac42f 100644\n--- a/packages/myreact-reactivity/src/reactive/feature.ts\n+++ b/packages/myreact-reactivity/src/reactive/feature.ts\n@@ -74,7 +74,7 @@ export function createReactive<P extends Record<string, unknown>, S extends Reco\n \n     componentWillUnmount(): void {\n       this.props.$$__instance__$$.onUnmounted.forEach((f) => f());\n-      this.effect.stop();\n+      this.reactiveEffect.stop();\n     }\n \n     shouldComponentUpdate(): boolean {\n@@ -84,7 +84,7 @@ export function createReactive<P extends Record<string, unknown>, S extends Reco\n       return true;\n     }\n \n-    effect = new ReactiveEffect(() => {\n+    reactiveEffect = new ReactiveEffect(() => {\n       const { children, $$__trigger__$$, $$__reactiveState__$$, $$__instance__$$, ...last } = this.props;\n       const targetRender = (render || children) as (props: UnwrapRef<S> & P) => LikeReactNode;\n       const element = targetRender?.({ ...last, ...$$__reactiveState__$$ } as UnwrapRef<S> & P) || null;\n@@ -92,7 +92,7 @@ export function createReactive<P extends Record<string, unknown>, S extends Reco\n     }, this.props.$$__trigger__$$);\n \n     render() {\n-      return createElement(ForBeforeMount, { ["$$__instance__$$"]: this.props.$$__instance__$$, children: this.effect.run() });\n+      return createElement(ForBeforeMount, { ["$$__instance__$$"]: this.props.$$__instance__$$, children: this.reactiveEffect.run() });\n     }\n   }\n \n@@ -104,10 +104,10 @@ export function createReactive<P extends Record<string, unknown>, S extends Reco\n     } & P\n   > {\n     componentWillUnmount(): void {\n-      this.effect.stop();\n+      this.reactiveEffect.stop();\n     }\n \n-    effect = new ReactiveEffect(() => {\n+    reactiveEffect = new ReactiveEffect(() => {\n       const { children, $$__trigger__$$, $$__reactiveState__$$, $$__instance__$$, ...last } = this.props;\n       const targetRender = (render || children) as (props: UnwrapRef<S> & P) => LikeReactNode;\n       const element = targetRender?.({ ...last, ...$$__reactiveState__$$ } as UnwrapRef<S> & P) || null;\n@@ -115,7 +115,7 @@ export function createReactive<P extends Record<string, unknown>, S extends Reco\n     }, this.props.$$__trigger__$$);\n \n     render() {\n-      return this.effect.run();\n+      return this.reactiveEffect.run();\n     }\n   }\n';
@@ -13,6 +12,8 @@ const rawTemp =
 
 const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
   const [lang, setLang] = useState("ts");
+
+  const { colorScheme } = useMantineColorScheme();
 
   const [diffInstance, setDiffInstance] = useState<DiffFile>();
 
@@ -48,35 +49,36 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
   return (
     <div className="m-auto mb-[1em] mt-[1em] w-[90%]">
       <h2 className="text-[24px]">
-        PlayGround -- provide a `git diff` string
+        <Code className="text-[24px]">Git diff</Code> mode
         <div className="ml-4 inline-block text-[14px]">
-          <Button onClick={onClick}>go to `file mode`</Button>
+          <Button onClick={onClick}>Go to `File Diff` mode</Button>
         </div>
       </h2>
       <div className="mt-[10px] flex flex-col gap-y-[10px]">
-        <span className="border-b p-[3px]">Lang: </span>
+        <span className="border-color border-b p-[3px]">Lang: </span>
         <input
-          className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
+          className="font-reset border-color rounded-[4px] border-2 p-[4px] text-[14px]"
           type=""
           placeholder="input syntax lang"
           value={lang}
           onChange={(e) => setLang(e.target.value)}
         />
-        <span className="border-b p-[3px]">`git diff`: </span>
+        <span className="border-color border-b p-[3px]">Git diff: </span>
         <textarea
           cols={10}
-          rows={5}
+          rows={8}
           autoFocus
-          className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
+          className="font-reset border-color rounded-[6px] border-2 p-[4px] text-[14px]"
           placeholder="give a `git diff` output"
           value={diffString}
+          // onValueChange={(value) => setDiffString(value)}
           onChange={(e) => setDiffString(e.target.value)}
         />
-        <span className="border-b p-[3px]">Original file content (optional): </span>
+        <span className="border-color border-b p-[3px]">Original file content (optional): </span>
         <textarea
           cols={10}
-          rows={5}
-          className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
+          rows={8}
+          className="font-reset border-color rounded-[6px] border-2 p-[4px] text-[14px]"
           placeholder="give a raw file content (optional)"
           value={content}
           onChange={(e) => setContent(e.target.value)}
@@ -85,14 +87,15 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
 
       {diffInstance ? (
         <DiffView<string>
-          className="mt-[10px] overflow-hidden rounded-[4px] border"
+          className="border-color mt-[10px] overflow-hidden rounded-[4px] border"
           diffFile={diffInstance}
+          diffViewTheme={colorScheme === "dark" ? "dark" : "light"}
           diffViewFontSize={13}
           diffViewHighlight={true}
           diffViewWrap
         />
       ) : (
-        <div className="mt-[10px] rounded-[4px] border p-[10px] text-[22px] text-orange-500">Empty</div>
+        <div className="mt-[10px] rounded-[4px] border border-color p-[10px] text-[22px] text-orange-500">Empty</div>
       )}
     </div>
   );
@@ -144,7 +147,7 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
         </div>
       </h2>
       <div className="mt-[10px] flex gap-x-[10px]">
-        <div className="flex w-[50%] flex-col">
+        <div className="font-reset flex w-[50%] flex-col">
           <span className="border-b p-[3px]">lang: </span>
           <input
             className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
@@ -164,7 +167,7 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
             onChange={(e) => setFile1(e.target.value)}
           />
         </div>
-        <div className="flex w-[50%] flex-col">
+        <div className="font-reset flex w-[50%] flex-col">
           <span className="border-b p-[3px]">lang: </span>
           <input
             className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
