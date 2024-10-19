@@ -24,7 +24,7 @@ import {
   Container,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconCode, IconPlayerPlay, IconRefresh } from "@tabler/icons-react";
+import { IconBrandReact, IconBrandVue, IconCode, IconPlayerPlay, IconRefresh } from "@tabler/icons-react";
 import { startTransition, useEffect, useMemo, useState } from "react";
 
 import { useDiffConfig } from "../hooks/useDiffConfig";
@@ -65,6 +65,8 @@ export const MainContent = () => {
   const { colorScheme } = useMantineColorScheme();
 
   const [code, { toggle }] = useDisclosure();
+
+  const [platform, setPlatform] = useState<"react" | "vue">("react");
 
   const [str, setStr] = useState("");
 
@@ -119,21 +121,37 @@ export const MainContent = () => {
         >
           <Group className="fixed right-6 top-2 z-10">
             <Tooltip label={`show the ${!code ? "code" : "preview"}`}>
-              <Button variant="light" size="compact-sm" onClick={toggle}>
+              <Button variant="light" size="compact-sm" onClick={toggle} color="grape">
                 {!code ? <IconCode className="w-[1.2em]" /> : <IconPlayerPlay className="w-[1.2em]" />}
               </Button>
             </Tooltip>
 
-            <Tooltip label="refresh">
-              <Button variant="light" disabled={code} size="compact-sm" color="yellow" onClick={refreshFile}>
-                <IconRefresh className="w-[1.2em]" />
-              </Button>
-            </Tooltip>
+            {!code ? (
+              <Tooltip label="refresh">
+                <Button variant="light" size="compact-sm" onClick={refreshFile}>
+                  <IconRefresh className="w-[1.2em]" />
+                </Button>
+              </Tooltip>
+            ) : (
+              <Tooltip label="platform">
+                <Button
+                  variant="light"
+                  size="compact-sm"
+                  onClick={() => setPlatform(platform === "react" ? "vue" : "react")}
+                >
+                  {platform === "react" ? (
+                    <IconBrandReact className="w-[1.2em]" />
+                  ) : (
+                    <IconBrandVue className="w-[1.2em]" />
+                  )}
+                </Button>
+              </Tooltip>
+            )}
           </Group>
 
           <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
           {code ? (
-            <MainContentCode />
+            <MainContentCode type={platform} />
           ) : (
             <Box className="h-full overflow-auto">
               <DiffViewWithScrollBar

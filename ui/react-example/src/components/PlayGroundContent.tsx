@@ -68,7 +68,7 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
         <span className="border-color border-b p-[3px]">Git diff: </span>
         <textarea
           cols={10}
-          rows={8}
+          rows={5}
           autoFocus
           className="font-reset border-color rounded-[6px] border-2 p-[4px] text-[14px]"
           placeholder="give a `git diff` output"
@@ -78,7 +78,7 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
         <span className="border-color border-b p-[3px]">Original file content (optional): </span>
         <textarea
           cols={10}
-          rows={8}
+          rows={5}
           className="font-reset border-color rounded-[6px] border-2 p-[4px] text-[14px]"
           placeholder="give a raw file content (optional)"
           value={content}
