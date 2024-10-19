@@ -151,6 +151,7 @@ Object.defineProperty(instance, "type", { value: "class" });
 
 const highlighter: DiffHighlighter = instance as DiffHighlighter;
 
+// TODO: change to use function
 export const highlighterReady = new Promise<DiffHighlighter>((r) => {
   if (internal) {
     r(highlighter);

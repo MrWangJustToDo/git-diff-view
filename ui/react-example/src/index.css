@@ -21,3 +21,7 @@
 .font-reset * {
   font-family: inherit;
 }
+
+.cm-gutter.cm-lineNumbers {
+  font-size: .875em !important;
+}

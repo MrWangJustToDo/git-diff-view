@@ -1270,7 +1270,7 @@ export class DiffFile {
     };
   };
 
-  mergeBundle = (data: ReturnType<DiffFile["getBundle"]>) => {
+  mergeBundle = (data: ReturnType<DiffFile["getBundle"]>, notifyUpdate = true) => {
     this.#hasInitRaw = data.hasInitRaw;
     this.#hasInitSyntax = data.hasInitSyntax;
     this.#hasBuildSplit = data.hasBuildSplit;
@@ -1307,7 +1307,9 @@ export class DiffFile {
       console.error("the version of the `diffInstance` is not match, some error may happen!");
     }
 
-    this.notifyAll();
+    if (notifyUpdate) {
+      this.notifyAll();
+    }
   };
 
   _getHighlighterName = () => this.#highlighterName;
@@ -1319,6 +1321,8 @@ export class DiffFile {
   _addClonedInstance = (instance: DiffFile) => {
     const updateFunc = () => {
       this._notifyOthers(instance);
+      // sync state from child instance trigger update
+      this._mergeFullBundle(instance._getFullBundle(), false);
     };
 
     updateFunc.isSyncExternal = true;
@@ -1362,8 +1366,8 @@ export class DiffFile {
     };
   };
 
-  _mergeFullBundle = (data: ReturnType<DiffFile["_getFullBundle"]>) => {
-    this.mergeBundle(data);
+  _mergeFullBundle = (data: ReturnType<DiffFile["_getFullBundle"]>, notifyUpdate = true) => {
+    this.mergeBundle(data, notifyUpdate);
     try {
       this.#oldFileResult = File.createInstance(data.oldFileResult);
 

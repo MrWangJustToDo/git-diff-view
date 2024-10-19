@@ -225,6 +225,15 @@ const DiffViewWithRef = <T extends unknown>(
   }
 
   useEffect(() => {
+    if (_diffFile && diffFile) {
+      _diffFile._addClonedInstance(diffFile);
+      return () => {
+        _diffFile._delClonedInstance(diffFile);
+      };
+    }
+  }, [diffFile, _diffFile]);
+
+  useEffect(() => {
     if (!diffFile) return;
     diffFile.initTheme(diffViewTheme);
     diffFile.initRaw();
@@ -239,15 +248,6 @@ const DiffViewWithRef = <T extends unknown>(
       diffFile.notifyAll();
     }
   }, [diffFile, props.diffViewHighlight, registerHighlighter, diffViewTheme]);
-
-  useEffect(() => {
-    if (_diffFile && diffFile) {
-      _diffFile._addClonedInstance(diffFile);
-      return () => {
-        _diffFile._delClonedInstance(diffFile);
-      };
-    }
-  }, [diffFile, _diffFile]);
 
   // fix react strict mode error
   useUnmount(() => (__DEV__ ? diffFile?._destroy?.() : diffFile?.clear?.()), [diffFile]);

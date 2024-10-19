@@ -131,7 +131,7 @@ export declare class DiffFile {
 		theme: "light" | "dark";
 		isFullMerge: boolean;
 	};
-	mergeBundle: (data: ReturnType<DiffFile["getBundle"]>) => void;
+	mergeBundle: (data: ReturnType<DiffFile["getBundle"]>, notifyUpdate?: boolean) => void;
 	_getHighlighterName: () => string;
 	_getIsPureDiffRender: () => boolean;
 	_getTheme: () => "light" | "dark";
@@ -170,7 +170,7 @@ export declare class DiffFile {
 		version: string;
 		theme: "light" | "dark";
 	};
-	_mergeFullBundle: (data: ReturnType<DiffFile["_getFullBundle"]>) => void;
+	_mergeFullBundle: (data: ReturnType<DiffFile["_getFullBundle"]>, notifyUpdate?: boolean) => void;
 	_destroy: () => void;
 	clear: () => void;
 }

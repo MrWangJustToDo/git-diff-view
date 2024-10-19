@@ -6,6 +6,7 @@ type DiffConfig = {
   wrap: boolean;
   fontsize: number;
   mode: DiffModeEnum;
+  engine: "lowlight" | "shiki";
 };
 
 export const useDiffConfig = createState(
@@ -13,8 +14,9 @@ export const useDiffConfig = createState(
     ({
       highlight: true,
       wrap: false,
-      fontsize: 14,
+      fontsize: 12,
       mode: DiffModeEnum.Split,
+      engine: "lowlight",
     }) as DiffConfig,
   {
     withActions(state) {
@@ -37,6 +39,11 @@ export const useDiffConfig = createState(
         setMode: (v: DiffModeEnum) => {
           if (v !== state.mode) {
             state.mode = v;
+          }
+        },
+        setEngine: (v: "lowlight" | "shiki") => {
+          if (v !== state.engine) {
+            state.engine = v;
           }
         },
       };

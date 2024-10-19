@@ -46,19 +46,31 @@ export const DiffSplitExtendLine = defineComponent(
     return () => {
       if (!currentIsShow.value) return null;
 
+      const oldExtendRendered = oldLineExtend.value
+        ? slots.extend?.({
+            diffFile: props.diffFile,
+            side: SplitSide.old,
+            lineNumber: oldLine.value.lineNumber,
+            data: oldLineExtend.value.data,
+            onUpdate: props.diffFile.notifyAll,
+          })
+        : null;
+
+      const newExtendRendered = newLineExtend.value
+        ? slots.extend?.({
+            diffFile: props.diffFile,
+            side: SplitSide.new,
+            lineNumber: newLine.value.lineNumber,
+            data: newLineExtend.value.data,
+            onUpdate: props.diffFile.notifyAll,
+          })
+        : null;
+
       return (
         <tr data-line={`${props.lineNumber}-extend`} data-state="extend" class="diff-line diff-line-extend">
-          {oldLineExtend.value ? (
+          {oldExtendRendered ? (
             <td class="diff-line-extend-old-content p-0" colspan={2}>
-              <div class="diff-line-extend-wrapper">
-                {slots.extend?.({
-                  diffFile: props.diffFile,
-                  side: SplitSide.old,
-                  lineNumber: oldLine.value.lineNumber,
-                  data: oldLineExtend.value.data,
-                  onUpdate: props.diffFile.notifyAll,
-                })}
-              </div>
+              <div class="diff-line-extend-wrapper">{oldExtendRendered}</div>
             </td>
           ) : (
             <td
@@ -66,24 +78,16 @@ export const DiffSplitExtendLine = defineComponent(
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >
-              <span>&ensp;</span>
+              {newExtendRendered && <span>&ensp;</span>}
             </td>
           )}
-          {newLineExtend.value ? (
+          {newExtendRendered ? (
             <td
               class="diff-line-extend-new-content border-l-[1px] p-0"
               colspan={2}
               style={{ borderLeftColor: `var(${borderColorName})` }}
             >
-              <div class="diff-line-extend-wrapper">
-                {slots.extend?.({
-                  diffFile: props.diffFile,
-                  side: SplitSide.new,
-                  lineNumber: newLine.value.lineNumber,
-                  data: newLineExtend.value.data,
-                  onUpdate: props.diffFile.notifyAll,
-                })}
-              </div>
+              <div class="diff-line-extend-wrapper">{newExtendRendered}</div>
             </td>
           ) : (
             <td
@@ -91,7 +95,7 @@ export const DiffSplitExtendLine = defineComponent(
               style={{ backgroundColor: `var(${emptyBGName})`, borderLeftColor: `var(${borderColorName})` }}
               colspan={2}
             >
-              <span>&ensp;</span>
+              {oldExtendRendered && <span>&ensp;</span>}
             </td>
           )}
         </tr>

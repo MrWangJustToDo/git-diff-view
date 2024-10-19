@@ -175,6 +175,8 @@ export const DiffView = defineComponent<
       onClean(() => instance.clearId());
     };
 
+    watchEffect((onClean) => initSubscribe(onClean));
+
     watchEffect(() => initDiff());
 
     watchEffect(() => initSyntax());
@@ -182,8 +184,6 @@ export const DiffView = defineComponent<
     watchEffect((onClean) => initId(onClean));
 
     watchEffect((onClean) => initTheme(onClean));
-
-    watchEffect((onClean) => initSubscribe(onClean));
 
     provide(idSymbol, id);
 

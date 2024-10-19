@@ -29,16 +29,25 @@ const _DiffSplitWidgetLine = ({
 
   const renderWidgetLine = useDiffContext.useShallowStableSelector((s) => s.renderWidgetLine);
 
+  const currentWidgetRendered =
+    currentWidget &&
+    renderWidgetLine?.({
+      diffFile,
+      side,
+      lineNumber: currentLine.lineNumber,
+      onClose: () => setWidget({}),
+    });
+
   useSyncHeight({
     selector: `div[data-line="${lineNumber}-widget-content"]`,
     wrapper: `tr[data-line="${lineNumber}-widget"]`,
     side: SplitSide[side],
-    enable: currentWidget && typeof renderWidgetLine === "function",
+    enable: currentWidgetRendered && typeof renderWidgetLine === "function",
   });
 
   const width = useDomWidth({
     selector: side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper",
-    enable: !!currentWidget && typeof renderWidgetLine === "function",
+    enable: !!currentWidgetRendered && typeof renderWidgetLine === "function",
   });
 
   if (!renderWidgetLine) return null;
@@ -58,13 +67,7 @@ const _DiffSplitWidgetLine = ({
             className="diff-line-widget-wrapper sticky left-0"
             style={{ width }}
           >
-            {width > 0 &&
-              renderWidgetLine?.({
-                diffFile,
-                side,
-                lineNumber: currentLine.lineNumber,
-                onClose: () => setWidget({}),
-              })}
+            {width > 0 && currentWidgetRendered}
           </div>
         </td>
       ) : (
