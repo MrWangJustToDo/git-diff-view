@@ -18,6 +18,7 @@ function App() {
   const goto = (type: "main" | "example" | "try") => {
     const url = new URL(window.location.href);
     url.searchParams.set("type", type);
+    url.searchParams.delete("tab");
     window.history.pushState({}, "", url.toString());
     window.dispatchEvent(new PopStateEvent("popstate"));
   };
