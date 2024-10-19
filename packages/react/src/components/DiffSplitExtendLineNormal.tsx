@@ -49,12 +49,12 @@ const _DiffSplitExtendLine = ({
     selector: `div[data-line="${lineNumber}-extend-content"]`,
     wrapper: `tr[data-line="${lineNumber}-extend"]`,
     side: SplitSide[side],
-    enable: !!currentExtendRendered && typeof renderExtendLine === "function",
+    enable: !!currentExtend?.data && typeof renderExtendLine === "function",
   });
 
   const width = useDomWidth({
     selector: side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper",
-    enable: !!currentExtendRendered && typeof renderExtendLine === "function",
+    enable: !!currentExtend?.data && typeof renderExtendLine === "function",
   });
 
   if (!renderExtendLine) return null;
@@ -66,7 +66,7 @@ const _DiffSplitExtendLine = ({
       data-side={SplitSide[side]}
       className="diff-line diff-line-extend"
     >
-      {currentExtend ? (
+      {currentExtend?.data ? (
         <td className={`diff-line-extend-${SplitSide[side]}-content p-0`} colSpan={2}>
           <div
             data-line={`${lineNumber}-extend-content`}

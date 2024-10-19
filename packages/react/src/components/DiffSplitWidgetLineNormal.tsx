@@ -42,12 +42,12 @@ const _DiffSplitWidgetLine = ({
     selector: `div[data-line="${lineNumber}-widget-content"]`,
     wrapper: `tr[data-line="${lineNumber}-widget"]`,
     side: SplitSide[side],
-    enable: currentWidgetRendered && typeof renderWidgetLine === "function",
+    enable: !!currentWidget && typeof renderWidgetLine === "function",
   });
 
   const width = useDomWidth({
     selector: side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper",
-    enable: !!currentWidgetRendered && typeof renderWidgetLine === "function",
+    enable: !!currentWidget && typeof renderWidgetLine === "function",
   });
 
   if (!renderWidgetLine) return null;

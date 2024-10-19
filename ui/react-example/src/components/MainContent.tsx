@@ -133,7 +133,7 @@ export const MainContent = () => {
                 </Button>
               </Tooltip>
             ) : (
-              <Tooltip label="platform">
+              <Tooltip label="switch the platform">
                 <Button
                   variant="light"
                   size="compact-sm"

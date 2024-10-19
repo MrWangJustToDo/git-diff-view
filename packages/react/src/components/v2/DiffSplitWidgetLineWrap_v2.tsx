@@ -34,45 +34,49 @@ const _DiffSplitWidgetLine = ({
 
   if (!renderWidgetLine) return null;
 
+  const oldWidgetRendered =
+    oldLineWidget &&
+    renderWidgetLine?.({
+      diffFile,
+      side: SplitSide.old,
+      lineNumber: oldLine.lineNumber,
+      onClose: () => setWidget({}),
+    });
+
+  const newWidgetRendered =
+    newLineWidget &&
+    renderWidgetLine?.({
+      diffFile,
+      side: SplitSide.new,
+      lineNumber: newLine.lineNumber,
+      onClose: () => setWidget({}),
+    });
+
   return (
     <div data-line={`${lineNumber}-widget`} data-state="widget" className="diff-line diff-line-widget flex">
-      {oldLineWidget ? (
+      {oldWidgetRendered ? (
         <div className="diff-line-widget-old-content w-[50%] p-0">
-          <div className="diff-line-widget-wrapper">
-            {renderWidgetLine?.({
-              diffFile,
-              side: SplitSide.old,
-              lineNumber: oldLine.lineNumber,
-              onClose: () => setWidget({}),
-            })}
-          </div>
+          <div className="diff-line-widget-wrapper">{oldWidgetRendered}</div>
         </div>
       ) : (
         <div
           className="diff-line-widget-old-placeholder w-[50%] select-none p-0"
           style={{ backgroundColor: `var(${emptyBGName})` }}
         >
-          <span>&ensp;</span>
+          {newWidgetRendered && <span>&ensp;</span>}
         </div>
       )}
       <div className="diff-split-line w-[1px] flex-shrink-0" style={{ backgroundColor: `var(${borderColorName})` }} />
-      {newLineWidget ? (
+      {newWidgetRendered ? (
         <div className="diff-line-widget-new-content w-[50%] p-0">
-          <div className="diff-line-widget-wrapper">
-            {renderWidgetLine?.({
-              diffFile,
-              side: SplitSide.new,
-              lineNumber: newLine.lineNumber,
-              onClose: () => setWidget({}),
-            })}
-          </div>
+          <div className="diff-line-widget-wrapper">{newWidgetRendered}</div>
         </div>
       ) : (
         <div
           className="diff-line-widget-new-placeholder w-[50%] select-none p-0"
           style={{ backgroundColor: `var(${emptyBGName})` }}
         >
-          <span>&ensp;</span>
+          {oldWidgetRendered && <span>&ensp;</span>}
         </div>
       )}
     </div>

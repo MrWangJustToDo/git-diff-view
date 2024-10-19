@@ -30,49 +30,51 @@ const _DiffSplitExtendLine = ({
 
   if (!renderExtendLine) return null;
 
+  const oldExtendRendered =
+    oldLineExtend?.data &&
+    renderExtendLine?.({
+      diffFile,
+      side: SplitSide.old,
+      lineNumber: oldLine.lineNumber,
+      data: oldLineExtend.data,
+      onUpdate: diffFile.notifyAll,
+    });
+
+  const newExtendRendered =
+    newLineExtend?.data &&
+    renderExtendLine?.({
+      diffFile,
+      side: SplitSide.new,
+      lineNumber: newLine.lineNumber,
+      data: newLineExtend.data,
+      onUpdate: diffFile.notifyAll,
+    });
+
   return (
     <div data-line={`${lineNumber}-extend`} data-state="extend" className="diff-line diff-line-extend flex">
-      {oldLineExtend ? (
+      {oldExtendRendered ? (
         <div className="diff-line-extend-old-content w-[50%] p-0">
-          <div className="diff-line-extend-wrapper">
-            {oldLineExtend?.data &&
-              renderExtendLine?.({
-                diffFile,
-                side: SplitSide.old,
-                lineNumber: oldLine.lineNumber,
-                data: oldLineExtend.data,
-                onUpdate: diffFile.notifyAll,
-              })}
-          </div>
+          <div className="diff-line-extend-wrapper">{oldExtendRendered}</div>
         </div>
       ) : (
         <div
           className="diff-line-extend-old-placeholder w-[50%] select-none p-0"
           style={{ backgroundColor: `var(${emptyBGName})` }}
         >
-          <span>&ensp;</span>
+          {newExtendRendered && <span>&ensp;</span>}
         </div>
       )}
       <div className="diff-split-line w-[1px]" style={{ backgroundColor: `var(${borderColorName})` }} />
-      {newLineExtend ? (
+      {newExtendRendered ? (
         <div className="diff-line-extend-new-content w-[50%] p-0">
-          <div className="diff-line-extend-wrapper">
-            {newLineExtend?.data &&
-              renderExtendLine?.({
-                diffFile,
-                side: SplitSide.new,
-                lineNumber: newLine.lineNumber,
-                data: newLineExtend.data,
-                onUpdate: diffFile.notifyAll,
-              })}
-          </div>
+          <div className="diff-line-extend-wrapper">{newExtendRendered}</div>
         </div>
       ) : (
         <div
           className="diff-line-extend-new-placeholder w-[50%] select-none p-0"
           style={{ backgroundColor: `var(${emptyBGName})` }}
         >
-          <span>&ensp;</span>
+          {oldExtendRendered && <span>&ensp;</span>}
         </div>
       )}
     </div>
