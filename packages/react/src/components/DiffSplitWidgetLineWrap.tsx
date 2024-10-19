@@ -32,20 +32,21 @@ const _DiffSplitWidgetLine = ({
 
   const newLine = diffFile.getSplitRightLine(index);
 
+  const oldWidgetRendered =
+    oldLineWidget &&
+    renderWidgetLine?.({ diffFile, side: SplitSide.old, lineNumber: oldLine.lineNumber, onClose: () => setWidget({}) });
+
+  const newWidgetRendered =
+    newLineWidget &&
+    renderWidgetLine?.({ diffFile, side: SplitSide.new, lineNumber: newLine.lineNumber, onClose: () => setWidget({}) });
+
   if (!renderWidgetLine) return null;
 
   return (
     <tr data-line={`${lineNumber}-widget`} data-state="widget" className="diff-line diff-line-widget">
-      {oldLineWidget ? (
+      {oldWidgetRendered ? (
         <td className="diff-line-widget-old-content p-0" colSpan={2}>
-          <div className="diff-line-widget-wrapper">
-            {renderWidgetLine?.({
-              diffFile,
-              side: SplitSide.old,
-              lineNumber: oldLine.lineNumber,
-              onClose: () => setWidget({}),
-            })}
-          </div>
+          <div className="diff-line-widget-wrapper">{oldWidgetRendered}</div>
         </td>
       ) : (
         <td
@@ -53,23 +54,16 @@ const _DiffSplitWidgetLine = ({
           style={{ backgroundColor: `var(${emptyBGName})` }}
           colSpan={2}
         >
-          <span>&ensp;</span>
+          {newWidgetRendered && <span>&ensp;</span>}
         </td>
       )}
-      {newLineWidget ? (
+      {newWidgetRendered ? (
         <td
           className="diff-line-widget-new-content border-l-[1px] p-0"
           colSpan={2}
           style={{ borderLeftColor: `var(${borderColorName})` }}
         >
-          <div className="diff-line-widget-wrapper">
-            {renderWidgetLine?.({
-              diffFile,
-              side: SplitSide.new,
-              lineNumber: newLine.lineNumber,
-              onClose: () => setWidget({}),
-            })}
-          </div>
+          <div className="diff-line-widget-wrapper">{newWidgetRendered}</div>
         </td>
       ) : (
         <td
@@ -77,7 +71,7 @@ const _DiffSplitWidgetLine = ({
           style={{ backgroundColor: `var(${emptyBGName})`, borderLeftColor: `var(${borderColorName})` }}
           colSpan={2}
         >
-          <span>&ensp;</span>
+          {oldWidgetRendered && <span>&ensp;</span>}
         </td>
       )}
     </tr>

@@ -47,18 +47,29 @@ export const DiffSplitWidgetLine = defineComponent(
     return () => {
       if (!currentIsShow.value || !slots.widget) return null;
 
+      const oldWidgetRendered = oldLineWidget.value
+        ? slots.widget?.({
+            diffFile: props.diffFile,
+            side: SplitSide.old,
+            lineNumber: oldLine.value.lineNumber,
+            onClose: onCloseWidget,
+          })
+        : null;
+
+      const newWidgetRendered = newLineWidget.value
+        ? slots.widget?.({
+            diffFile: props.diffFile,
+            side: SplitSide.new,
+            lineNumber: newLine.value.lineNumber,
+            onClose: onCloseWidget,
+          })
+        : null;
+
       return (
         <tr data-line={`${props.lineNumber}-widget`} data-state="widget" class="diff-line diff-line-widget">
-          {oldLineWidget.value ? (
+          {oldWidgetRendered ? (
             <td class="diff-line-widget-old-content p-0" colspan={2}>
-              <div class="diff-line-widget-wrapper">
-                {slots.widget?.({
-                  diffFile: props.diffFile,
-                  side: SplitSide.old,
-                  lineNumber: oldLine.value.lineNumber,
-                  onClose: onCloseWidget,
-                })}
-              </div>
+              <div class="diff-line-widget-wrapper">{oldWidgetRendered}</div>
             </td>
           ) : (
             <td
@@ -66,23 +77,16 @@ export const DiffSplitWidgetLine = defineComponent(
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
             >
-              <span>&ensp;</span>
+              {newWidgetRendered && <span>&ensp;</span>}
             </td>
           )}
-          {newLineWidget.value ? (
+          {newWidgetRendered ? (
             <td
               class="diff-line-widget-new-content border-l-[1px] p-0"
               colspan={2}
               style={{ borderLeftColor: `var(${borderColorName})` }}
             >
-              <div class="diff-line-widget-wrapper">
-                {slots.widget?.({
-                  diffFile: props.diffFile,
-                  side: SplitSide.new,
-                  lineNumber: newLine.value.lineNumber,
-                  onClose: onCloseWidget,
-                })}
-              </div>
+              <div class="diff-line-widget-wrapper">{newWidgetRendered}</div>
             </td>
           ) : (
             <td
@@ -90,7 +94,7 @@ export const DiffSplitWidgetLine = defineComponent(
               style={{ backgroundColor: `var(${emptyBGName})`, borderLeftColor: `var(${borderColorName})` }}
               colspan={2}
             >
-              <span>&ensp;</span>
+              {oldWidgetRendered && <span>&ensp;</span>}
             </td>
           )}
         </tr>

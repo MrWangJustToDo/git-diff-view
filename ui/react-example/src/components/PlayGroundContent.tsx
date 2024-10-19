@@ -1,8 +1,10 @@
-import { DiffView, DiffFile } from "@git-diff-view/react";
 import { generateDiffFile } from "@git-diff-view/file";
+import { DiffView, DiffFile } from "@git-diff-view/react";
+import { Button, Code, useMantineColorScheme } from "@mantine/core";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
-import { Button } from "./components/Button";
+
+import { useTabWithRouter } from "../hooks/useTabWithRouter";
 
 const temp =
   'diff --git a/packages/myreact-reactivity/src/reactive/feature.ts b/packages/myreact-reactivity/src/reactive/feature.ts\nindex 5b301628..15aac42f 100644\n--- a/packages/myreact-reactivity/src/reactive/feature.ts\n+++ b/packages/myreact-reactivity/src/reactive/feature.ts\n@@ -74,7 +74,7 @@ export function createReactive<P extends Record<string, unknown>, S extends Reco\n \n     componentWillUnmount(): void {\n       this.props.$$__instance__$$.onUnmounted.forEach((f) => f());\n-      this.effect.stop();\n+      this.reactiveEffect.stop();\n     }\n \n     shouldComponentUpdate(): boolean {\n@@ -84,7 +84,7 @@ export function createReactive<P extends Record<string, unknown>, S extends Reco\n       return true;\n     }\n \n-    effect = new ReactiveEffect(() => {\n+    reactiveEffect = new ReactiveEffect(() => {\n       const { children, $$__trigger__$$, $$__reactiveState__$$, $$__instance__$$, ...last } = this.props;\n       const targetRender = (render || children) as (props: UnwrapRef<S> & P) => LikeReactNode;\n       const element = targetRender?.({ ...last, ...$$__reactiveState__$$ } as UnwrapRef<S> & P) || null;\n@@ -92,7 +92,7 @@ export function createReactive<P extends Record<string, unknown>, S extends Reco\n     }, this.props.$$__trigger__$$);\n \n     render() {\n-      return createElement(ForBeforeMount, { ["$$__instance__$$"]: this.props.$$__instance__$$, children: this.effect.run() });\n+      return createElement(ForBeforeMount, { ["$$__instance__$$"]: this.props.$$__instance__$$, children: this.reactiveEffect.run() });\n     }\n   }\n \n@@ -104,10 +104,10 @@ export function createReactive<P extends Record<string, unknown>, S extends Reco\n     } & P\n   > {\n     componentWillUnmount(): void {\n-      this.effect.stop();\n+      this.reactiveEffect.stop();\n     }\n \n-    effect = new ReactiveEffect(() => {\n+    reactiveEffect = new ReactiveEffect(() => {\n       const { children, $$__trigger__$$, $$__reactiveState__$$, $$__instance__$$, ...last } = this.props;\n       const targetRender = (render || children) as (props: UnwrapRef<S> & P) => LikeReactNode;\n       const element = targetRender?.({ ...last, ...$$__reactiveState__$$ } as UnwrapRef<S> & P) || null;\n@@ -115,7 +115,7 @@ export function createReactive<P extends Record<string, unknown>, S extends Reco\n     }, this.props.$$__trigger__$$);\n \n     render() {\n-      return this.effect.run();\n+      return this.reactiveEffect.run();\n     }\n   }\n';
@@ -12,6 +14,8 @@ const rawTemp =
 
 const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
   const [lang, setLang] = useState("ts");
+
+  const { colorScheme } = useMantineColorScheme();
 
   const [diffInstance, setDiffInstance] = useState<DiffFile>();
 
@@ -47,35 +51,35 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
   return (
     <div className="m-auto mb-[1em] mt-[1em] w-[90%]">
       <h2 className="text-[24px]">
-        PlayGround -- provide a `git diff` string
+        <Code className="text-[24px]">Git diff</Code> mode
         <div className="ml-4 inline-block text-[14px]">
-          <Button onClick={onClick}>go to `file mode`</Button>
+          <Button onClick={onClick}>Go to `File diff` mode</Button>
         </div>
       </h2>
       <div className="mt-[10px] flex flex-col gap-y-[10px]">
-        <span className="border-b p-[3px]">Lang: </span>
+        <span className="border-color border-b p-[3px]">Lang: </span>
         <input
-          className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
+          className="font-reset border-color rounded-[4px] border-2 p-[4px] text-[14px]"
           type=""
           placeholder="input syntax lang"
           value={lang}
           onChange={(e) => setLang(e.target.value)}
         />
-        <span className="border-b p-[3px]">`git diff`: </span>
+        <span className="border-color border-b p-[3px]">Git diff: </span>
         <textarea
           cols={10}
           rows={5}
           autoFocus
-          className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
+          className="font-reset border-color rounded-[6px] border-2 p-[4px] text-[14px]"
           placeholder="give a `git diff` output"
           value={diffString}
           onChange={(e) => setDiffString(e.target.value)}
         />
-        <span className="border-b p-[3px]">Original file content (optional): </span>
+        <span className="border-color border-b p-[3px]">Original file content (optional): </span>
         <textarea
           cols={10}
           rows={5}
-          className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
+          className="font-reset border-color rounded-[6px] border-2 p-[4px] text-[14px]"
           placeholder="give a raw file content (optional)"
           value={content}
           onChange={(e) => setContent(e.target.value)}
@@ -84,14 +88,15 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
 
       {diffInstance ? (
         <DiffView<string>
-          className="mt-[10px] overflow-hidden rounded-[4px] border"
+          className="border-color mt-[10px] overflow-hidden rounded-[4px] border"
           diffFile={diffInstance}
+          diffViewTheme={colorScheme === "dark" ? "dark" : "light"}
           diffViewFontSize={13}
           diffViewHighlight={true}
           diffViewWrap
         />
       ) : (
-        <div className="mt-[10px] rounded-[4px] border p-[10px] text-[22px] text-orange-500">Empty</div>
+        <div className="border-color mt-[10px] rounded-[4px] border p-[10px] text-[22px] text-orange-500">Empty</div>
       )}
     </div>
   );
@@ -109,6 +114,8 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
   const [file2, setFile2] = useState(
     'import { getHighlighter } from "shiki";\n\nimport { processAST, type SyntaxLine } from "./processAST";\n\nimport type { codeToHast } from "shiki";\n\nexport type DiffAST = DePromise<ReturnType<typeof codeToHast>>;\n\nexport type DiffHighlighter = {\n  name: string;\n  maxLineToIgnoreSyntax: number;\n  setMaxLineToIgnoreSyntax: (v: number) => void;\n  ignoreSyntaxHighlightList: (string | RegExp)[];\n  setIgnoreSyntaxHighlightList: (v: (string | RegExp)[]) => void;\n  getAST: (raw: string, fileName?: string, lang?: string) => DiffAST;\n  processAST: (ast: DiffAST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };\n  hasRegisteredCurrentLang: (lang: string) => boolean;\n  getHighlighterEngine: () => DePromise<ReturnType<typeof getHighlighter>> | null;\n};\n\nlet internal: DePromise<ReturnType<typeof getHighlighter>> | null = null;\n\nconst getDefaultHighlighter = async () =>\n  await getHighlighter({\n    themes: ["github-light", "github-dark"],\n    langs: [\n      "cpp",\n      "java",\n      "javascript",\n      "css",\n      "c#",\n      "c",\n      "c++",\n      "vue",\n      "vue-html",\n      "astro",\n      "bash",\n      "make",\n      "markdown",\n      "makefile",\n      "bat",\n      "cmake",\n      "cmd",\n      "csv",\n      "docker",\n      "dockerfile",\n      "go",\n      "python",\n      "html",\n      "jsx",\n      "tsx",\n      "typescript",\n      "sql",\n      "xml",\n      "sass",\n      "ssh-config",\n      "kotlin",\n      "json",\n      "swift",\n      "txt",\n      "diff",\n    ],\n  });\n\nconst instance = { name: "shiki" };\n\nlet _maxLineToIgnoreSyntax = 2000;\n\nconst _ignoreSyntaxHighlightList: (string | RegExp)[] = [];\n\nObject.defineProperty(instance, "maxLineToIgnoreSyntax", {\n  get: () => _maxLineToIgnoreSyntax,\n});\n\nObject.defineProperty(instance, "setMaxLineToIgnoreSyntax", {\n  value: (v: number) => {\n    _maxLineToIgnoreSyntax = v;\n  },\n});\n\nObject.defineProperty(instance, "ignoreSyntaxHighlightList", {\n  get: () => _ignoreSyntaxHighlightList,\n});\n\nObject.defineProperty(instance, "setIgnoreSyntaxHighlightList", {\n  value: (v: (string | RegExp)[]) => {\n    _ignoreSyntaxHighlightList.length = 0;\n    _ignoreSyntaxHighlightList.push(...v);\n  },\n});\n\nObject.defineProperty(instance, "getAST", {\n  value: (raw: string, fileName?: string, lang?: string) => {\n    if (\n      fileName &&\n      highlighter.ignoreSyntaxHighlightList.some((item) =>\n        item instanceof RegExp ? item.test(fileName) : fileName === item\n      )\n    ) {\n      __DEV__ &&\n        console.warn(\n          `ignore syntax for current file, because the fileName is in the ignoreSyntaxHighlightList: ${fileName}`\n        );\n      return;\n    }\n\n    try {\n      return internal?.codeToHast(raw, { lang: lang, theme: "github-light", mergeWhitespaces: false });\n    } catch (e) {\n      if (__DEV__) {\n        console.error(e);\n      } else {\n        console.log((e as Error).message);\n      }\n      return;\n    }\n  },\n});\n\nObject.defineProperty(instance, "processAST", {\n  value: (ast: DiffAST) => {\n    return processAST(ast);\n  },\n});\n\nObject.defineProperty(instance, "hasRegisteredCurrentLang", {\n  value: (lang: string) => {\n    return internal?.getLanguage(lang) !== undefined;\n  },\n});\n\nObject.defineProperty(instance, "getHighlighterEngine", {\n  value: () => {\n    return internal;\n  },\n});\n\nconst highlighter: DiffHighlighter = instance as DiffHighlighter;\n\nexport const highlighterReady = new Promise<DiffHighlighter>((r) => {\n  if (internal) {\n    r(highlighter);\n  } else {\n    getDefaultHighlighter()\n      .then((i) => {\n        internal = i;\n      })\n      .then(() => r(highlighter));\n  }\n});\n\nexport { processAST } from "./processAST";\n\nexport const versions = __VERSION__;\n\nexport * from "shiki";\n'
   );
+
+  const { colorScheme } = useMantineColorScheme();
 
   const [diffInstance, setDiffInstance] = useState<DiffFile>();
 
@@ -137,47 +144,46 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
   return (
     <div className="m-auto mb-[1em] mt-[1em] w-[90%]">
       <h2 className="text-[24px]">
-        PlayGround -- provide two file content
+        <Code className="text-[24px]">File diff</Code> mode
         <div className="ml-4 inline-block text-[14px]">
-          <Button onClick={onClick}>go to `git mode`</Button>
+          <Button onClick={onClick}>Go to `Git diff` mode</Button>
         </div>
       </h2>
       <div className="mt-[10px] flex gap-x-[10px]">
-        <div className="flex w-[50%] flex-col">
-          <span className="border-b p-[3px]">lang: </span>
+        <div className="flex w-[50%] flex-col gap-y-[10px]">
+          <span className="border-color border-b p-[3px]">Lang: </span>
           <input
-            className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
-            type=""
+            className="font-reset border-color rounded-[4px] border-2 p-[4px] text-[14px]"
             placeholder="input syntax lang"
             value={lang1}
             onChange={(e) => setLang1(e.target.value)}
           />
-          <span className="border-b p-[3px]">file 1: </span>
+          <span className="border-color border-b p-[3px]">File 1: </span>
           <textarea
             cols={10}
             rows={5}
             autoFocus
-            className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
+            className="border-color font-reset rounded-[4px] border-2 p-[4px] text-[14px]"
             placeholder="provider a file content"
             value={file1}
             onChange={(e) => setFile1(e.target.value)}
           />
         </div>
-        <div className="flex w-[50%] flex-col">
-          <span className="border-b p-[3px]">lang: </span>
+        <div className="flex w-[50%] flex-col gap-y-[10px]">
+          <span className="border-color border-b p-[3px]">Lang: </span>
           <input
-            className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
+            className="border-color font-reset rounded-[4px] border-2 p-[4px] text-[14px]"
             type=""
             placeholder="input syntax lang"
             value={lang2}
             onChange={(e) => setLang2(e.target.value)}
           />
-          <span className="border-b p-[3px]">file 2: </span>
+          <span className="border-color border-b p-[3px]">File 2: </span>
           <textarea
             cols={10}
             rows={5}
             autoFocus
-            className="rounded-[4px] border-2 border-[#888] p-[4px] text-[14px]"
+            className="border-color font-reset rounded-[4px] border-2 p-[4px] text-[14px]"
             placeholder="provider a file content"
             value={file2}
             onChange={(e) => setFile2(e.target.value)}
@@ -187,9 +193,10 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
 
       {diffInstance ? (
         <DiffView<string>
-          className="mt-[10px] overflow-hidden rounded-[4px] border"
+          className="border-color mt-[10px] overflow-hidden rounded-[4px] border"
           diffFile={diffInstance}
           diffViewFontSize={13}
+          diffViewTheme={colorScheme === "dark" ? "dark" : "light"}
           diffViewHighlight={true}
           diffViewWrap
         />
@@ -201,33 +208,22 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
 };
 
 export const PlayGround = () => {
-  const [type, setType] = useState<"git" | "file">("git");
+  const tab = useTabWithRouter();
 
-  useEffect(() => {
-    const query = new URLSearchParams(window.location.search);
-    if (query.get("tab") === "git") {
-      setType("git");
-    } else if (query.get("tab") === "file") {
-      setType("file");
-    }
-  }, []);
+  const goto = (tab: "git" | "file") => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("tab", tab);
+    url.searchParams.set("type", "try");
+    window.history.pushState({}, "", url.toString());
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
 
   return (
     <>
-      {type === "git" ? (
-        <_PlayGroundGitDiff
-          onClick={() => {
-            window.location.search = "tab=file";
-            setType("file");
-          }}
-        />
+      {tab === "git" ? (
+        <_PlayGroundGitDiff onClick={() => goto("file")} />
       ) : (
-        <_PlayGroundFileDiff
-          onClick={() => {
-            window.location.search = "tab=git";
-            setType("git");
-          }}
-        />
+        <_PlayGroundFileDiff onClick={() => goto("git")} />
       )}
     </>
   );

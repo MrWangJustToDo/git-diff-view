@@ -1,53 +1,126 @@
-import { useEffect } from "react";
-import { Example } from "./Example";
-import { usePreviewType } from "./hooks/usePreviewType";
-import { PlayGround } from "./PlayGround";
-import { Button } from "./components/Button";
+import { AppShell, Group, Title, Button, Flex, Burger, Space, useMantineColorScheme, em } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { IconMoon, IconSun } from "@tabler/icons-react";
 
-const { set: setType } = usePreviewType.getActions();
+import { ExampleContent } from "./components/ExampleContent";
+import { Github } from "./components/icons";
+import { MainContent } from "./components/MainContent";
+import { PlayGround } from "./components/PlayGroundContent";
+import { usePreviewTypeWithRouter } from "./hooks/usePreviewType";
 
 function App() {
-  const type = usePreviewType((s) => s.type);
+  const { colorScheme, toggleColorScheme } = useMantineColorScheme();
 
-  useEffect(() => {
-    const query = new URLSearchParams(window.location.search);
-    if (query.get("type") === "example") {
-      setType("example");
-    } else if (query.get("type") === "try") {
-      setType("try");
-    }
-  }, []);
+  const type = usePreviewTypeWithRouter();
+
+  const [opened, { toggle, close }] = useDisclosure();
+
+  const goto = (type: "main" | "example" | "try") => {
+    const url = new URL(window.location.href);
+    url.searchParams.set("type", type);
+    url.searchParams.delete("tab");
+    window.history.pushState({}, "", url.toString());
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  };
 
   return (
-    <>
-      <div className="m-auto mb-[1em] mt-[1.5em] w-[90%] text-right">
-        <div className="flex items-center justify-between">
-          <a
-            className="block h-[40px] w-[40px] rounded-full border text-gray-500"
-            aria-label="github"
-            href="https://github.com/MrWangJustToDo/git-diff-view"
-            target="_blank"
-          >
-            <svg
-              stroke="currentColor"
-              fill="currentColor"
-              strokeWidth="0"
-              viewBox="0 0 1024 1024"
-              aria-hidden="true"
-              className="h-full w-full"
-              xmlns="http://www.w3.org/2000/svg"
+    <AppShell
+      header={{ height: 60 }}
+      navbar={{ width: 300, breakpoint: "sm", collapsed: { desktop: true, mobile: !opened } }}
+      padding="md"
+    >
+      <AppShell.Header>
+        <Group h="100%" px="lg" justify="space-between">
+          <Flex align="center">
+            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" className="mr-2" />
+            <Title order={1} className="text-xl">
+              Git Diff View
+            </Title>
+          </Flex>
+          <Flex columnGap="16" visibleFrom="sm">
+            <Button variant="light" color={type === "main" ? "blue" : "gray"} onClick={() => goto("main")}>
+              Main
+            </Button>
+            <Button variant="light" color={type === "example" ? "blue" : "gray"} onClick={() => goto("example")}>
+              Example
+            </Button>
+            <Button variant="light" color={type === "try" ? "blue" : "gray"} onClick={() => goto("try")}>
+              Playground
+            </Button>
+            <Button
+              variant="default"
+              color="gray"
+              component="a"
+              href="https://github.com/MrWangJustToDo/git-diff-view"
+              target="_blank"
             >
-              <path d="M511.6 76.3C264.3 76.2 64 276.4 64 523.5 64 718.9 189.3 885 363.8 946c23.5 5.9 19.9-10.8 19.9-22.2v-77.5c-135.7 15.9-141.2-73.9-150.3-88.9C215 726 171.5 718 184.5 703c30.9-15.9 62.4 4 98.9 57.9 26.4 39.1 77.9 32.5 104 26 5.7-23.5 17.9-44.5 34.7-60.8-140.6-25.2-199.2-111-199.2-213 0-49.5 16.3-95 48.3-131.7-20.4-60.5 1.9-112.3 4.9-120 58.1-5.2 118.5 41.6 123.2 45.3 33-8.9 70.7-13.6 112.9-13.6 42.4 0 80.2 4.9 113.5 13.9 11.3-8.6 67.3-48.8 121.3-43.9 2.9 7.7 24.7 58.3 5.5 118 32.4 36.8 48.9 82.7 48.9 132.3 0 102.2-59 188.1-200 212.9a127.5 127.5 0 0 1 38.1 91v112.5c.8 9 0 17.9 15 17.9 177.1-59.7 304.6-227 304.6-424.1 0-247.2-200.4-447.3-447.5-447.3z"></path>
-            </svg>
-          </a>
-          <Button onClick={() => setType(type === "example" ? "try" : "example")}>
-            {type === "example" ? "Toggle to playground" : "Toggle to example"}
+              <Github className="!w-[1.42em] text-gray-400" />
+            </Button>
+            <Button variant="light" className="text-sm" onClick={toggleColorScheme} color="violet">
+              {colorScheme === "light" ? (
+                <IconSun style={{ width: em(20), height: em(20) }} />
+              ) : (
+                <IconMoon style={{ width: em(20), height: em(20) }} />
+              )}
+            </Button>
+          </Flex>
+          <Button variant="light" className="text-sm" hiddenFrom="sm" onClick={toggleColorScheme} color="violet">
+            {colorScheme === "light" ? <IconSun /> : <IconMoon />}
           </Button>
-        </div>
-      </div>
-
-      {type === "example" ? <Example /> : <PlayGround />}
-    </>
+        </Group>
+      </AppShell.Header>
+      <AppShell.Navbar py="md" px={4}>
+        <Button
+          variant="light"
+          color={type === "main" ? "blue" : "gray"}
+          onClick={() => {
+            close();
+            goto("main");
+          }}
+        >
+          Main
+        </Button>
+        <Space h="14" />
+        <Button
+          variant="light"
+          color={type === "example" ? "blue" : "gray"}
+          onClick={() => {
+            close();
+            goto("example");
+          }}
+        >
+          Example
+        </Button>
+        <Space h="14" />
+        <Button
+          variant="light"
+          color={type === "try" ? "blue" : "gray"}
+          onClick={() => {
+            close();
+            goto("try");
+          }}
+        >
+          Playground
+        </Button>
+        <Space h="14" />
+        <Button
+          variant="light"
+          color="gray"
+          component="a"
+          href="https://github.com/MrWangJustToDo/git-diff-view"
+          target="_blank"
+        >
+          <Github className="!w-[1.45em] text-gray-400" />
+        </Button>
+      </AppShell.Navbar>
+      <AppShell.Main>
+        {type === "main" && <MainContent />}
+        {type === "example" && (
+          <ExampleContent className="border-color h-[calc(100vh-60px-32px)] w-full overflow-hidden rounded-md border" />
+        )}
+        {type === "try" && <PlayGround />}
+      </AppShell.Main>
+    </AppShell>
   );
 }
 

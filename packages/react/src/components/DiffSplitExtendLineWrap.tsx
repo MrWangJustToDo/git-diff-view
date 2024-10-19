@@ -30,20 +30,31 @@ const _DiffSplitExtendLine = ({
 
   if (!renderExtendLine) return null;
 
+  const oldExtendRendered =
+    oldLineExtend?.data &&
+    renderExtendLine?.({
+      diffFile,
+      side: SplitSide.old,
+      lineNumber: oldLine.lineNumber,
+      data: oldLineExtend.data,
+      onUpdate: diffFile.notifyAll,
+    });
+
+  const newExtendRendered =
+    newLineExtend?.data &&
+    renderExtendLine?.({
+      diffFile,
+      side: SplitSide.new,
+      lineNumber: newLine.lineNumber,
+      data: newLineExtend.data,
+      onUpdate: diffFile.notifyAll,
+    });
+
   return (
     <tr data-line={`${lineNumber}-extend`} data-state="extend" className="diff-line diff-line-extend">
-      {oldLineExtend ? (
+      {oldExtendRendered ? (
         <td className="diff-line-extend-old-content p-0" colSpan={2}>
-          <div className="diff-line-extend-wrapper">
-            {oldLineExtend?.data &&
-              renderExtendLine?.({
-                diffFile,
-                side: SplitSide.old,
-                lineNumber: oldLine.lineNumber,
-                data: oldLineExtend.data,
-                onUpdate: diffFile.notifyAll,
-              })}
-          </div>
+          <div className="diff-line-extend-wrapper">{oldExtendRendered}</div>
         </td>
       ) : (
         <td
@@ -51,25 +62,16 @@ const _DiffSplitExtendLine = ({
           style={{ backgroundColor: `var(${emptyBGName})` }}
           colSpan={2}
         >
-          <span>&ensp;</span>
+          {newExtendRendered && <span>&ensp;</span>}
         </td>
       )}
-      {newLineExtend ? (
+      {newExtendRendered ? (
         <td
           className="diff-line-extend-new-content border-l-[1px] p-0"
           style={{ borderLeftColor: `var(${borderColorName})` }}
           colSpan={2}
         >
-          <div className="diff-line-extend-wrapper">
-            {newLineExtend?.data &&
-              renderExtendLine?.({
-                diffFile,
-                side: SplitSide.new,
-                lineNumber: newLine.lineNumber,
-                data: newLineExtend.data,
-                onUpdate: diffFile.notifyAll,
-              })}
-          </div>
+          <div className="diff-line-extend-wrapper">{newExtendRendered}</div>
         </td>
       ) : (
         <td
@@ -77,7 +79,7 @@ const _DiffSplitExtendLine = ({
           style={{ backgroundColor: `var(${emptyBGName})`, borderLeftColor: `var(${borderColorName})` }}
           colSpan={2}
         >
-          <span>&ensp;</span>
+          {oldExtendRendered && <span>&ensp;</span>}
         </td>
       )}
     </tr>

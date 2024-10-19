@@ -35,16 +35,26 @@ const _DiffSplitExtendLine = ({
 
   const currentLineNumber = side === SplitSide.old ? oldLine.lineNumber : newLine.lineNumber;
 
+  const currentExtendRendered =
+    currentExtend?.data &&
+    renderExtendLine?.({
+      diffFile,
+      side,
+      lineNumber: currentLineNumber,
+      data: currentExtend.data,
+      onUpdate: diffFile.notifyAll,
+    });
+
   useSyncHeight({
     selector: `div[data-line="${lineNumber}-extend-content"]`,
     wrapper: `tr[data-line="${lineNumber}-extend"]`,
     side: SplitSide[side],
-    enable: !!currentExtend?.data && typeof renderExtendLine === "function",
+    enable: !!currentExtendRendered && typeof renderExtendLine === "function",
   });
 
   const width = useDomWidth({
     selector: side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper",
-    enable: !!currentExtend?.data && typeof renderExtendLine === "function",
+    enable: !!currentExtendRendered && typeof renderExtendLine === "function",
   });
 
   if (!renderExtendLine) return null;
@@ -64,15 +74,7 @@ const _DiffSplitExtendLine = ({
             className="diff-line-extend-wrapper sticky left-0"
             style={{ width }}
           >
-            {width > 0 &&
-              currentExtend?.data &&
-              renderExtendLine?.({
-                diffFile,
-                side,
-                lineNumber: currentLineNumber,
-                data: currentExtend.data,
-                onUpdate: diffFile.notifyAll,
-              })}
+            {width > 0 && currentExtendRendered}
           </div>
         </td>
       ) : (
