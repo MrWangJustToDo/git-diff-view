@@ -201,7 +201,7 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
           diffViewWrap
         />
       ) : (
-        <div className="mt-[10px] rounded-[4px] border p-[10px] text-[22px] text-orange-500">Empty</div>
+        <div className="border-color mt-[10px] rounded-[4px] border p-[10px] text-[22px] text-orange-500">Empty</div>
       )}
     </div>
   );

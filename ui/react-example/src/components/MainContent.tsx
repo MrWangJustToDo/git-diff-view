@@ -22,10 +22,12 @@ import {
   alpha,
   getThemeColor,
   Container,
+  FloatingIndicator,
+  ButtonGroup,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconBrandReact, IconBrandVue, IconCode, IconPlayerPlay, IconRefresh } from "@tabler/icons-react";
-import { startTransition, useEffect, useMemo, useState } from "react";
+import { startTransition, useCallback, useEffect, useMemo, useState } from "react";
 
 import { useDiffConfig } from "../hooks/useDiffConfig";
 import { useDiffHighlighter } from "../hooks/useDiffHighlighter";
@@ -64,7 +66,7 @@ export const MainContent = () => {
 
   const { colorScheme } = useMantineColorScheme();
 
-  const [code, { toggle }] = useDisclosure();
+  const [code, { open, close }] = useDisclosure();
 
   const [platform, setPlatform] = useState<"react" | "vue">("react");
 
@@ -94,6 +96,10 @@ export const MainContent = () => {
 
   const { mode, highlight, engine, wrap } = useDiffConfig();
 
+  const [rootRef, setRootRef] = useState<HTMLDivElement | null>(null);
+
+  const [controlsRefs, setControlsRefs] = useState<Record<string, HTMLButtonElement | null>>({});
+
   return (
     <Container size="xl">
       <Flex mt="lg" direction={{ base: "column", sm: "row" }}>
@@ -120,11 +126,41 @@ export const MainContent = () => {
           w={{ base: "100%", sm: "60%" }}
         >
           <Group className="fixed right-6 top-2 z-10">
-            <Tooltip label={`show the ${!code ? "code" : "preview"}`}>
-              <Button variant="light" size="compact-sm" onClick={toggle} color="grape">
-                {!code ? <IconCode className="w-[1.2em]" /> : <IconPlayerPlay className="w-[1.2em]" />}
-              </Button>
-            </Tooltip>
+            <div ref={setRootRef}>
+              <ButtonGroup>
+                <Tooltip label="show the code">
+                  <Button
+                    variant="light"
+                    size="compact-sm"
+                    onClick={open}
+                    color="gray"
+                    ref={useCallback((node: HTMLButtonElement) => setControlsRefs((l) => ({ ...l, code: node })), [])}
+                  >
+                    <IconCode className="w-[1.2em]" />
+                  </Button>
+                </Tooltip>
+                <Tooltip label="show the preview">
+                  <Button
+                    variant="light"
+                    size="compact-sm"
+                    onClick={close}
+                    color="gray"
+                    ref={useCallback(
+                      (node: HTMLButtonElement) => setControlsRefs((l) => ({ ...l, preview: node })),
+                      []
+                    )}
+                  >
+                    <IconPlayerPlay className="w-[1.2em]" />
+                  </Button>
+                </Tooltip>
+              </ButtonGroup>
+
+              <FloatingIndicator
+                target={controlsRefs[code ? "code" : "preview"]}
+                parent={rootRef}
+                className="rounded-[var(--mantine-radius-default)] bg-[var(--mantine-color-violet-light)]"
+              />
+            </div>
 
             {!code ? (
               <Tooltip label="refresh">
@@ -204,7 +240,7 @@ export const MainContent = () => {
                           <Card key={i} withBorder className="relative">
                             <Text>{d}</Text>
                             <CloseButton
-                              className="absolute right-2 top-2"
+                              className="absolute right-1 top-1"
                               size="xs"
                               onClick={() => {
                                 setExtend((prev) => {
