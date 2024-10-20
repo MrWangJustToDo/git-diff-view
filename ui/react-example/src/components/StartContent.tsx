@@ -1,9 +1,9 @@
-import { Box, Title } from "@mantine/core";
+import { Container, Title } from "@mantine/core";
 
 export const StartContent = () => {
   return (
-    <Box>
-      <Title order={2}>Get Start</Title>
-    </Box>
+    <Container className="mt-8" size="xl">
+      <Title order={2}>Get Start (todo)</Title>
+    </Container>
   );
 };

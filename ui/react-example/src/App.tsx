@@ -6,6 +6,7 @@ import { ExampleContent } from "./components/ExampleContent";
 import { Github } from "./components/icons";
 import { MainContent } from "./components/MainContent";
 import { PlayGround } from "./components/PlayGroundContent";
+import { StartContent } from "./components/StartContent";
 import { usePreviewTypeWithRouter } from "./hooks/usePreviewType";
 
 function App() {
@@ -114,7 +115,12 @@ function App() {
         </Button>
       </AppShell.Navbar>
       <AppShell.Main>
-        {type === "main" && <MainContent />}
+        {type === "main" && (
+          <>
+            <MainContent />
+            <StartContent />
+          </>
+        )}
         {type === "example" && (
           <ExampleContent className="border-color h-[calc(100vh-60px-32px)] w-full overflow-hidden rounded-md border" />
         )}

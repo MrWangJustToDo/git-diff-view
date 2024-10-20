@@ -3,7 +3,7 @@ import { Button, Group, Tooltip } from "@mantine/core";
 
 import { useDiffConfig } from "../hooks/useDiffConfig";
 
-export const MainContentDiffConfig = ({ refreshFile }: { refreshFile: () => void }) => {
+export const MainContentDiffConfig = () => {
   const { mode, setEngine, setHighlight, setMode, setWrap, wrap, engine, highlight } = useDiffConfig();
 
   return (
@@ -20,13 +20,7 @@ export const MainContentDiffConfig = ({ refreshFile }: { refreshFile: () => void
         <Button onClick={() => setHighlight(!highlight)}>highlight {highlight ? "enable" : "disable"}</Button>
       </Tooltip>
       <Tooltip label="highlight engine">
-        <Button
-          disabled={!highlight}
-          onClick={() => {
-            setEngine(engine === "lowlight" ? "shiki" : "lowlight");
-            refreshFile();
-          }}
-        >
+        <Button disabled={!highlight} onClick={() => setEngine(engine === "lowlight" ? "shiki" : "lowlight")}>
           {engine}
         </Button>
       </Tooltip>

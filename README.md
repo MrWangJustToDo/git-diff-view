@@ -53,7 +53,7 @@ a React/Vue component to show the `git diff`/`file diff` result, just like Githu
 + [x] Support `Web Worker` / `Node Server` to improve performance
 + [x] Support `React` and `Vue` component
 + [x] Support compare by `@git-diff-view/core`(git diff) or `@git-diff-view/file`(file content)
-+ [x] Support `Diff Match Patch` to improve line diff
++ [x] Support `Diff Match Patch` to improve line diff (experimental)
 + [ ] Support `Virtual Scroll` to improve performance
 
 

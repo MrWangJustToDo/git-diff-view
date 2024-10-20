@@ -57,7 +57,7 @@ const App = () => {
 </template>`;
 };
 
-export const MainContentCode = memo(({ type = "react" }: { type?: "react" | "vue" }) => {
+export const MainContentDiffExampleCode = memo(({ type = "react" }: { type?: "react" | "vue" }) => {
   const { colorScheme } = useMantineColorScheme();
 
   useDiffConfig();
@@ -73,7 +73,7 @@ export const MainContentCode = memo(({ type = "react" }: { type?: "react" | "vue
         },
       }}
       theme={colorScheme === "dark" ? "dark" : "light"}
-      className="h-full"
+      className="!h-full"
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       style={{ ["--sp-layout-height"]: "100%" }}
@@ -85,4 +85,4 @@ export const MainContentCode = memo(({ type = "react" }: { type?: "react" | "vue
   );
 });
 
-MainContentCode.displayName = "MainContentCode";
+MainContentDiffExampleCode.displayName = "MainContentDiffExampleCode";
