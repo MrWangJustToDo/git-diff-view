@@ -35,8 +35,10 @@ const _DiffSplitExtendLine = ({
 
   const currentLineNumber = side === SplitSide.old ? oldLine.lineNumber : newLine.lineNumber;
 
+  const hasExtend = currentExtend?.data !== undefined && currentExtend?.data !== null;
+
   const currentExtendRendered =
-    currentExtend?.data &&
+    hasExtend &&
     renderExtendLine?.({
       diffFile,
       side,
@@ -49,12 +51,12 @@ const _DiffSplitExtendLine = ({
     selector: `div[data-line="${lineNumber}-extend-content"]`,
     wrapper: `tr[data-line="${lineNumber}-extend"]`,
     side: SplitSide[side],
-    enable: !!currentExtend?.data && typeof renderExtendLine === "function",
+    enable: hasExtend && typeof renderExtendLine === "function",
   });
 
   const width = useDomWidth({
     selector: side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper",
-    enable: !!currentExtend?.data && typeof renderExtendLine === "function",
+    enable: hasExtend && typeof renderExtendLine === "function",
   });
 
   if (!renderExtendLine) return null;
@@ -66,7 +68,7 @@ const _DiffSplitExtendLine = ({
       data-side={SplitSide[side]}
       className="diff-line diff-line-extend"
     >
-      {currentExtend?.data ? (
+      {hasExtend ? (
         <td className={`diff-line-extend-${SplitSide[side]}-content p-0`} colSpan={2}>
           <div
             data-line={`${lineNumber}-extend-content`}

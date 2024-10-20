@@ -37,7 +37,8 @@ const _DiffUnifiedExtendLine = ({
       <td className="diff-line-extend-content p-0 align-top" colSpan={2}>
         <div className="diff-line-extend-wrapper sticky left-0" style={{ width }}>
           {width > 0 &&
-            oldLineExtend?.data &&
+            oldLineExtend?.data !== undefined &&
+            oldLineExtend?.data !== null &&
             renderExtendLine?.({
               diffFile,
               side: SplitSide.old,
@@ -46,7 +47,8 @@ const _DiffUnifiedExtendLine = ({
               onUpdate: diffFile.notifyAll,
             })}
           {width > 0 &&
-            newLineExtend?.data &&
+            newLineExtend?.data !== undefined &&
+            newLineExtend?.data !== null &&
             renderExtendLine?.({
               diffFile,
               side: SplitSide.new,

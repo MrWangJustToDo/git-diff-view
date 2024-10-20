@@ -9,6 +9,7 @@ const getCode = ({ theme, type }: { theme: "light" | "dark"; type: "react" | "vu
   return type === "react"
     ? `import { DiffView, DiffFile, DiffModeEnum } from "@git-diff-view/react";
 import { generateDiffFile } from "@git-diff-view/file";
+import "@git-diff-view/react/styles/diff-view.css";
 
 // git mode
 const getDiffFile = () => {
@@ -33,6 +34,7 @@ const App = () => {
     : `<script setup lang="ts">
   import { DiffView, DiffFile, DiffModeEnum } from "@git-diff-view/vue";
   import { generateDiffFile } from "@git-diff-view/file";
+  import "@git-diff-view/vue/styles/diff-view.css";
 
   // git mode
   const getDiffFile = () => {
