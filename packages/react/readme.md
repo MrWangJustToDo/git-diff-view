@@ -23,6 +23,7 @@ import "@git-diff-view/react/styles/diff-view.css";
   diffViewHighlight={boolean}
   diffViewMode={DiffModeEnum.Split | DiffModeEnum.Unified}
   diffViewWrap={boolean}
+  diffViewTheme={'light' | 'dark'}
   diffViewAddWidget
   onAddWidgetClick={({ side, lineNumber }) => void}
   renderWidgetLine={({ onClose, side, lineNumber }) => ReactNode}
@@ -40,9 +41,8 @@ const file = generateDiffFile(
   data?.oldFile?.content || "",
   data?.newFile?.fileName || "",
   data?.newFile?.content || "",
-  data?.oldFile?.fileLang || "",
-  data?.newFile?.fileLang || ""
 );
+file.initTheme('light' / 'dark');
 file.init();
 file.buildSplitDiffLines();
 file.buildUnifiedDiffLines();
@@ -58,6 +58,7 @@ const file = new DiffFile(
   data?.oldFile?.fileLang || "",
   data?.newFile?.fileLang || ""
 );
+file.initTheme('light' / 'dark');
 file.init();
 file.buildSplitDiffLines();
 file.buildUnifiedDiffLines();
@@ -83,6 +84,7 @@ const diffFile = DiffFile.createInstance(data || {}, bundle);
 | diffViewHighlight | enable syntax highlight, type: boolean |
 | diffViewMode     | the mode for the DiffView component, type: `DiffModeEnum.Split` or `DiffModeEnum.Unified` |
 | diffViewWrap     | enable code line auto wrap, type: boolean |
+| diffViewTheme    | the theme for the DiffView component, type: `light` or `dark` |
 | diffViewAddWidget| enable `addWidget` button, type: boolean |
 | onAddWidgetClick | when the `addWidget` button clicked, type: `({ side: "old" | "new", lineNumber: number }) => void` |
 

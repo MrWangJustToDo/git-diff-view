@@ -158,7 +158,7 @@ export const MainContent = () => {
               <FloatingIndicator
                 target={controlsRefs[code ? "code" : "preview"]}
                 parent={rootRef}
-                className="rounded-[var(--mantine-radius-default)] bg-[var(--mantine-color-violet-light)]"
+                className="rounded-[var(--mantine-radius-default)] bg-[var(--mantine-color-violet-light)] z-[-1]"
               />
             </div>
 

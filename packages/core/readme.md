@@ -14,8 +14,9 @@ const file = new DiffFile(
     data?.oldFile?.fileLang || "",
     data?.newFile?.fileLang || ""
   );
-
-// do the init
+// light / dark theme, base on current highlight engine
+file.initTheme(xxx);
+// init
 file.init();
 // or you can use below method to init
 file.initRaw();

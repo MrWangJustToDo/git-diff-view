@@ -48,8 +48,8 @@ a React/Vue component to show the `git diff`/`file diff` result, just like Githu
 + [x] Support `Warp` / `UnWarp` the code line
 + [x] Support `light` / `dark` theme by default
 + [x] Support `Syntax Highlight` with <b>`full syntax context`</b> (base on `hast` AST)
-+ [x] Support `Extend Data` to show in the `Diff View`
-+ [x] Support `Widget` to show in the `Diff View`
++ [x] Support `Extend Data` component in the `Diff View`
++ [x] Support `Widget` component in the `Diff View`
 + [x] Support `Web Worker` / `Node Server` to improve performance
 + [x] Support `React` and `Vue` component
 + [x] Support compare by `@git-diff-view/core`(git diff) or `@git-diff-view/file`(file content)
@@ -91,6 +91,7 @@ import "@git-diff-view/react/styles/diff-view.css";
   diffViewHighlight={boolean}
   diffViewMode={DiffModeEnum.Split | DiffModeEnum.Unified}
   diffViewWrap={boolean}
+  diffViewTheme={'light' | 'dark'}
   diffViewAddWidget
   onAddWidgetClick={({ side, lineNumber }) => void}
   renderWidgetLine={({ onClose, side, lineNumber }) => ReactNode}
@@ -108,9 +109,8 @@ const file = generateDiffFile(
   data?.oldFile?.content || "",
   data?.newFile?.fileName || "",
   data?.newFile?.content || "",
-  data?.oldFile?.fileLang || "",
-  data?.newFile?.fileLang || ""
 );
+file.initTheme('light' / 'dark');
 file.init();
 file.buildSplitDiffLines();
 file.buildUnifiedDiffLines();
@@ -126,6 +126,7 @@ const file = new DiffFile(
   data?.oldFile?.fileLang || "",
   data?.newFile?.fileLang || ""
 );
+file.initTheme('light' / 'dark');
 file.init();
 file.buildSplitDiffLines();
 file.buildUnifiedDiffLines();
@@ -151,6 +152,7 @@ const diffFile = DiffFile.createInstance(data || {}, bundle);
 | diffViewHighlight | enable syntax highlight, type: boolean |
 | diffViewMode     | the mode for the DiffView component, type: `DiffModeEnum.Split` or `DiffModeEnum.Unified` |
 | diffViewWrap     | enable code line auto wrap, type: boolean |
+| diffViewTheme    | the theme for the DiffView component, type: `light` or `dark` |
 | diffViewAddWidget| enable `addWidget` button, type: boolean |
 | onAddWidgetClick | when the `addWidget` button clicked, type: `({ side: "old" | "new", lineNumber: number }) => void` |
 
