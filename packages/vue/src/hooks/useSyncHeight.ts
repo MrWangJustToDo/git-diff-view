@@ -24,46 +24,55 @@ export const useSyncHeight = ({
     if (!isMounted.value) return;
 
     if (enable.value) {
-      const container = document.querySelector(`#diff-root${id.value}`);
+      let clean = () => {};
 
-      const elements = Array.from(container?.querySelectorAll(selector.value));
+      const timer = setTimeout(() => {
+        const container = document.querySelector(`#diff-root${id.value}`);
 
-      const wrappers = Array.from(container?.querySelectorAll(wrapper?.value) || []);
+        const elements = Array.from(container?.querySelectorAll(selector.value));
 
-      if (elements.length === 2 && wrappers.length === 2) {
-        const ele1 = elements[0] as HTMLElement;
-        const ele2 = elements[1] as HTMLElement;
+        const wrappers = Array.from(container?.querySelectorAll(wrapper?.value) || []);
 
-        const wrapper1 = wrappers[0] as HTMLElement;
-        const wrapper2 = wrappers[1] as HTMLElement;
+        if (elements.length === 2 && wrappers.length === 2) {
+          const ele1 = elements[0] as HTMLElement;
+          const ele2 = elements[1] as HTMLElement;
 
-        const target = ele1.getAttribute("data-side") === side.value ? ele1 : ele2;
+          const wrapper1 = wrappers[0] as HTMLElement;
+          const wrapper2 = wrappers[1] as HTMLElement;
 
-        const cb = () => {
-          ele1.style.height = "auto";
-          ele2.style.height = "auto";
-          const rect1 = ele1.getBoundingClientRect();
-          const rect2 = ele2.getBoundingClientRect();
-          const maxHeight = Math.max(rect1.height, rect2.height);
-          wrapper1.style.height = maxHeight + "px";
-          wrapper2.style.height = maxHeight + "px";
-          wrapper1.setAttribute("data-sync-height", String(maxHeight));
-          wrapper2.setAttribute("data-sync-height", String(maxHeight));
-        };
+          const target = ele1.getAttribute("data-side") === side.value ? ele1 : ele2;
 
-        cb();
+          const cb = () => {
+            ele1.style.height = "auto";
+            ele2.style.height = "auto";
+            const rect1 = ele1.getBoundingClientRect();
+            const rect2 = ele2.getBoundingClientRect();
+            const maxHeight = Math.max(rect1.height, rect2.height);
+            wrapper1.style.height = maxHeight + "px";
+            wrapper2.style.height = maxHeight + "px";
+            wrapper1.setAttribute("data-sync-height", String(maxHeight));
+            wrapper2.setAttribute("data-sync-height", String(maxHeight));
+          };
 
-        const observer = new ResizeObserver(cb);
+          cb();
 
-        observer.observe(target);
+          const observer = new ResizeObserver(cb);
 
-        target.setAttribute("data-observe", "height");
+          observer.observe(target);
 
-        onCancel(() => {
-          observer.disconnect();
-          target?.removeAttribute("data-observe");
-        });
-      }
+          target.setAttribute("data-observe", "height");
+
+          clean = () => {
+            observer.disconnect();
+            target?.removeAttribute("data-observe");
+          };
+        }
+      });
+
+      onCancel(() => {
+        clearTimeout(timer);
+        clean();
+      })
     }
   };
 
