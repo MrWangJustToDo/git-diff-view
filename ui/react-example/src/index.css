@@ -6,16 +6,27 @@
   color: inherit;
 }
 
-[data-mantine-color-scheme='light'] .border-color {
+[data-mantine-color-scheme="light"] .border-color {
   border-color: var(--mantine-color-gray-3);
 }
 
-[data-mantine-color-scheme='dark'] .border-color {
+[data-mantine-color-scheme="dark"] .border-color {
   border-color: var(--mantine-color-dark-4);
 }
 
 .font-reset {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
 }
 
 .font-reset * {
@@ -23,5 +34,27 @@
 }
 
 .cm-gutter.cm-lineNumbers {
-  font-size: .875em !important;
+  font-size: 0.875em !important;
+}
+
+.animate-float {
+  animation: float 4s linear infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  25% {
+    transform: translateY(-3px);
+  }
+  50% {
+    transform: translateY(0px);
+  }
+  75% {
+    transform: translateY(3px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }

@@ -4,7 +4,7 @@ import { createState } from "reactivity-store";
 export const usePreviewType = createState(() => ({ type: "main" as "main" | "example" | "try" }), {
   withActions: (s) => ({ set: (type: "main" | "example" | "try") => (s.type = type) }),
   withNamespace: "usePreviewType",
-  withPersist: "usePreviewType",
+  // withPersist: "usePreviewType",
 });
 
 const { set: setType } = usePreviewType.getActions();
