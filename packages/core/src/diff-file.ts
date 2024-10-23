@@ -1311,7 +1311,7 @@ export class DiffFile {
     }
 
     if (__DEV__ && !data.hasInitRaw) {
-      console.error(`there are not a valid bundle data to merge, try to call 'initRaw' function before merge`);
+      console.error(`there are not a valid bundle data, try to call 'initRaw' function before merge / getBundle`);
     }
 
     if (notifyUpdate) {

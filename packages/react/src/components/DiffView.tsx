@@ -147,6 +147,7 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
   useEffect(() => {
     const cb = diffFile.subscribe(() => {
       wrapperRef.current?.setAttribute("data-theme", diffFile._getTheme() || "light");
+      wrapperRef.current?.setAttribute("data-highlighter", diffFile._getHighlighterName());
     });
 
     return cb;

@@ -159,11 +159,12 @@ export const DiffView = defineComponent<
       instance.notifyAll();
     };
 
-    const initTheme = (onClean: (cb: () => void) => void) => {
+    const initAttribute = (onClean: (cb: () => void) => void) => {
       if (!isMounted.value || !diffFile.value || !wrapperRef.value) return;
       const instance = diffFile.value;
       const cb = instance.subscribe(() => {
         wrapperRef.value?.setAttribute("data-theme", instance._getTheme() || "light");
+        wrapperRef.value?.setAttribute("data-highlighter", instance._getHighlighterName());
       });
       onClean(() => cb());
     };
@@ -183,7 +184,7 @@ export const DiffView = defineComponent<
 
     watchEffect((onClean) => initId(onClean));
 
-    watchEffect((onClean) => initTheme(onClean));
+    watchEffect((onClean) => initAttribute(onClean));
 
     provide(idSymbol, id);
 
