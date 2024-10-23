@@ -60,6 +60,12 @@ export interface DiffHunkItem extends DiffLineItem {
   unifiedInfo?: HunkLineInfo & HunkInfo;
 }
 
+type FileData = {
+  oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+  newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+  hunks?: string[];
+};
+
 export class DiffFile {
   #oldFileResult?: File;
 
@@ -121,13 +127,19 @@ export class DiffFile {
 
   _version_ = __VERSION__;
 
+  _oldFileName: string = "";
+
   _oldFileContent: string = "";
 
   _oldFileLang: string = "";
 
+  _newFileName: string = "";
+
   _newFileContent: string = "";
 
   _newFileLang: string = "";
+
+  _diffList: string[] = [];
 
   diffLineLength: number = 0;
 
@@ -147,14 +159,7 @@ export class DiffFile {
 
   #clonedInstance = new Map<DiffFile, () => void>();
 
-  static createInstance(
-    data: {
-      oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
-      newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
-      hunks?: string[];
-    },
-    bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>
-  ) {
+  static createInstance(data: FileData, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>) {
     const instance = new DiffFile(
       data?.oldFile?.fileName || "",
       data?.oldFile?.content || "",
@@ -176,34 +181,32 @@ export class DiffFile {
   }
 
   constructor(
-    readonly _oldFileName: string,
+    _oldFileName: string,
     _oldFileContent: string,
-    readonly _newFileName: string,
+    _newFileName: string,
     _newFileContent: string,
-    readonly _diffList: string[],
+    _diffList: string[],
     _oldFileLang?: string,
     _newFileLang?: string,
     readonly uuid?: string
   ) {
     Object.defineProperty(this, "__v_skip", { value: true });
-    let oldContent = _oldFileContent;
-    let newContent = _newFileContent;
+
     const diffList = Array.from(new Set(_diffList));
-    Object.defineProperties(this, {
-      _oldFileName: { get: () => _oldFileName },
-      _newFileName: { get: () => _newFileName },
-      _oldFileLang: { get: () => getLang(_oldFileLang || _oldFileName || _newFileLang || _newFileName) || "txt" },
-      _newFileLang: { get: () => getLang(_newFileLang || _newFileName || _oldFileLang || _oldFileName) || "txt" },
-      _oldFileContent: {
-        get: () => oldContent,
-        set: (v: string) => (oldContent = v),
-      },
-      _newFileContent: {
-        get: () => newContent,
-        set: (v: string) => (newContent = v),
-      },
-      _diffList: { get: () => diffList },
-    });
+
+    this._oldFileName = _oldFileName;
+
+    this._newFileName = _newFileName;
+
+    this._diffList = diffList;
+
+    this._oldFileLang = getLang(_oldFileLang || _oldFileName || _newFileLang || _newFileName) || "txt";
+
+    this._newFileLang = getLang(_newFileLang || _newFileName || _oldFileLang || _oldFileName) || "txt";
+
+    this._oldFileContent = _oldFileContent;
+
+    this._newFileContent = _newFileContent;
 
     this.initId();
   }
@@ -1304,7 +1307,11 @@ export class DiffFile {
     this.#composeByMerge = true;
 
     if (__DEV__ && this._version_ !== data.version) {
-      console.error("the version of the `diffInstance` is not match, some error may happen!");
+      console.error("the version of the `diffInstance` is not match, some error may happen");
+    }
+
+    if (__DEV__ && !data.hasInitRaw) {
+      console.error(`there are not a valid bundle data to merge, try to call 'initRaw' function before merge`);
     }
 
     if (notifyUpdate) {

@@ -44,15 +44,15 @@ declare const lowlight: {
 	registered: (aliasOrName: string) => boolean;
 };
 export declare class DiffFile {
-	readonly _oldFileName: string;
-	readonly _newFileName: string;
-	readonly _diffList: string[];
 	readonly uuid?: string;
 	_version_: string;
+	_oldFileName: string;
 	_oldFileContent: string;
 	_oldFileLang: string;
+	_newFileName: string;
 	_newFileContent: string;
 	_newFileLang: string;
+	_diffList: string[];
 	diffLineLength: number;
 	splitLineLength: number;
 	unifiedLineLength: number;
@@ -60,19 +60,7 @@ export declare class DiffFile {
 	hasExpandSplitAll: boolean;
 	hasExpandUnifiedAll: boolean;
 	hasSomeLineCollapsed: boolean;
-	static createInstance(data: {
-		oldFile?: {
-			fileName?: string | null;
-			fileLang?: string | null;
-			content?: string | null;
-		};
-		newFile?: {
-			fileName?: string | null;
-			fileLang?: string | null;
-			content?: string | null;
-		};
-		hunks?: string[];
-	}, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>): DiffFile;
+	static createInstance(data: FileData, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>): DiffFile;
 	constructor(_oldFileName: string, _oldFileContent: string, _newFileName: string, _newFileContent: string, _diffList: string[], _oldFileLang?: string, _newFileLang?: string, uuid?: string);
 	initId(): void;
 	getId(): string;
@@ -559,6 +547,19 @@ export type DiffUnifiedLineItem = {
 	type: DiffFileLineType;
 	index: number;
 	lineNumber: number;
+};
+export type FileData = {
+	oldFile?: {
+		fileName?: string | null;
+		fileLang?: string | null;
+		content?: string | null;
+	};
+	newFile?: {
+		fileName?: string | null;
+		fileLang?: string | null;
+		content?: string | null;
+	};
+	hunks?: string[];
 };
 export type HunkInfo = {
 	oldStartIndex: number;
