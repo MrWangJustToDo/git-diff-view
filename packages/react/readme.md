@@ -41,6 +41,8 @@ const file = generateDiffFile(
   data?.oldFile?.content || "",
   data?.newFile?.fileName || "",
   data?.newFile?.content || "",
+  data?.oldFile?.fileLang || "",
+  data?.newFile?.fileLang || ""
 );
 file.initTheme('light' / 'dark');
 file.init();
