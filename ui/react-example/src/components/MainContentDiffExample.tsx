@@ -10,7 +10,7 @@ import { MainContentDiffExampleCode } from "./MainContentDiffExampleCode";
 import { temp1, temp2 } from "./MainContentDiffExampleData";
 import { MainContentDiffExampleView } from "./MainContentDiffExampleView";
 
-const _diffFile = generateDiffFile("temp1.tsx", temp1, "temp2.tsx", temp2);
+const _diffFile = generateDiffFile("temp1.tsx", temp1, "temp2.tsx", temp2, 'tsx', 'tsx');
 
 const getNewDiffFile = () => {
   const instance = DiffFile.createInstance({
