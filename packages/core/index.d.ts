@@ -349,7 +349,10 @@ export declare const HiddenBidiCharsRegex: RegExp;
 export declare const _cacheMap: Cache$1<string, File$1>;
 export declare const checkDiffLineIncludeChange: (diffLine?: DiffLine) => boolean;
 export declare const composeLen = 40;
-export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[]) => void;
+export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[], { getAdditionRaw, getDeletionRaw, }: {
+	getAdditionRaw: (lineNumber: number) => string;
+	getDeletionRaw: (lineNumber: number) => string;
+}) => void;
 export declare const getFile: (raw: string, lang: string, theme: "light" | "dark", fileName?: string, uuid?: string) => File$1;
 export declare const getLang: (fileName: string) => string;
 export declare const getSplitContentLines: (diffFile: DiffFile) => DiffSplitContentLineItem[];

@@ -383,6 +383,14 @@ export class DiffFile {
   #composeDiff() {
     if (!this.#diffListResults?.length) return;
 
+    const getAdditionRaw = (lineNumber: number) => {
+      return this.#getNewRawLine(lineNumber);
+    };
+
+    const getDeletionRaw = (lineNumber: number) => {
+      return this.#getOldRawLine(lineNumber);
+    };
+
     this.#diffListResults.forEach((item) => {
       const hunks = item.hunks;
       hunks.forEach((hunk) => {
@@ -394,12 +402,12 @@ export class DiffFile {
           } else if (line.type === DiffLineType.Delete) {
             deletions.push(line);
           } else {
-            getDiffRange(additions, deletions);
+            getDiffRange(additions, deletions, { getAdditionRaw, getDeletionRaw });
             additions = [];
             deletions = [];
           }
         });
-        getDiffRange(additions, deletions);
+        getDiffRange(additions, deletions, { getAdditionRaw, getDeletionRaw });
       });
     });
 
@@ -539,10 +547,10 @@ export class DiffFile {
 
   initRaw() {
     if (this.#hasInitRaw) return;
-    this.#doDiff();
-    this.#composeDiff();
     this.#doFile();
     this.#composeRaw();
+    this.#doDiff();
+    this.#composeDiff();
     this.#composeFile();
     this.#hasInitRaw = true;
   }

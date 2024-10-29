@@ -91,17 +91,31 @@ export const getLang = (fileName: string) => {
   return extension;
 };
 
-export const getDiffRange = (additions: DiffLine[], deletions: DiffLine[]) => {
+export const getDiffRange = (
+  additions: DiffLine[],
+  deletions: DiffLine[],
+  {
+    getAdditionRaw,
+    getDeletionRaw,
+  }: {
+    getAdditionRaw: (lineNumber: number) => string;
+    getDeletionRaw: (lineNumber: number) => string;
+  }
+) => {
   if (additions.length === deletions.length) {
     const len = additions.length;
     for (let i = 0; i < len; i++) {
       const addition = additions[i];
       const deletion = deletions[i];
-      const { addRange, delRange } = relativeChanges(addition, deletion);
+      // use the original text content to computed diff range
+      // fix: get diff with ignoreWhiteSpace config
+      const _addition = addition.clone(getAdditionRaw(addition.newLineNumber) || addition.text || '');
+      const _deletion = deletion.clone(getDeletionRaw(deletion.oldLineNumber) || deletion.text || '');
+      const { addRange, delRange } = relativeChanges(_addition, _deletion);
       addition.changes = addRange;
       deletion.changes = delRange;
       // full diff
-      // const { addRange: _addRange, delRange: _delRange } = diffChanges(addition, deletion);
+      // const { addRange: _addRange, delRange: _delRange } = diffChanges(_addition, _deletion);
       // addition.diffChanges = _addRange;
       // deletion.diffChanges = _delRange;
     }

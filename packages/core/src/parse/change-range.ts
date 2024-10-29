@@ -108,7 +108,7 @@ function checkNewLineSymbolChange(
   };
 }
 
-// TODO maybe could use the original content line
+// TODO maybe could use the original content line.  fixed
 /** Get the changed ranges in the strings, relative to each other. */
 export function relativeChanges(addition: DiffLine, deletion: DiffLine): { addRange: IRange; delRange: IRange } {
   const stringA = addition.text;

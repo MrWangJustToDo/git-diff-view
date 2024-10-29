@@ -125,7 +125,9 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
         setDiffInstance(undefined);
         return;
       }
-      const data = generateDiffFile(`foo.${lang1}`, file1, `foo.${lang2}`, file2, lang1, lang2);
+      const data = generateDiffFile(`foo.${lang1}`, file1, `foo.${lang2}`, file2, lang1, lang2, {
+        ignoreWhitespace: true,
+      });
       try {
         data?.init();
         data?.buildSplitDiffLines();
