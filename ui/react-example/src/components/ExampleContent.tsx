@@ -18,7 +18,7 @@ export const ExampleContent = ({ className }: { className?: string }) => {
 
   useEffect(() => {
     const controller = new AbortController();
-    
+
     window.addEventListener(
       "message",
       (e) => {

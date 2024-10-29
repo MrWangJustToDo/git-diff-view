@@ -109,8 +109,8 @@ export const getDiffRange = (
       const deletion = deletions[i];
       // use the original text content to computed diff range
       // fix: get diff with ignoreWhiteSpace config
-      const _addition = addition.clone(getAdditionRaw(addition.newLineNumber) || addition.text || '');
-      const _deletion = deletion.clone(getDeletionRaw(deletion.oldLineNumber) || deletion.text || '');
+      const _addition = addition.clone(getAdditionRaw(addition.newLineNumber) || addition.text || "");
+      const _deletion = deletion.clone(getDeletionRaw(deletion.oldLineNumber) || deletion.text || "");
       const { addRange, delRange } = relativeChanges(_addition, _deletion);
       addition.changes = addRange;
       deletion.changes = delRange;

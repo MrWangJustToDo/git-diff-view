@@ -271,7 +271,7 @@ export const createHook = <T extends Record<string, unknown>, C extends Record<s
   typedUseSelector.getIsActive = () => active;
 
   return typedUseSelector;
-};`
+};`;
 
 export const temp2 = `/* eslint-disable @typescript-eslint/ban-types */
 import { readonly, toRaw } from "@vue/reactivity";
@@ -543,4 +543,4 @@ export const createHook = <T extends Record<string, unknown>, C extends Record<s
   typedUseSelector.getIsActive = () => active;
 
   return typedUseSelector;
-};`
+};`;

@@ -72,7 +72,7 @@ export const useSyncHeight = ({
       onCancel(() => {
         clean();
         clearTimeout(timer);
-      })
+      });
     }
   };
 
