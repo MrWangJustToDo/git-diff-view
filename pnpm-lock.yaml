@@ -78,7 +78,7 @@ importers:
   packages/core:
     dependencies:
       '@git-diff-view/lowlight':
-        specifier: ^0.0.19
+        specifier: ^0.0.20
         version: link:../lowlight
       fast-diff:
         specifier: ^1.3.0
@@ -97,7 +97,7 @@ importers:
   packages/file:
     dependencies:
       '@git-diff-view/core':
-        specifier: ^0.0.19
+        specifier: ^0.0.20
         version: link:../core
       diff:
         specifier: ^5.2.0
@@ -134,7 +134,7 @@ importers:
   packages/react:
     dependencies:
       '@git-diff-view/core':
-        specifier: ^0.0.19
+        specifier: ^0.0.20
         version: link:../core
       '@types/hast':
         specifier: ^3.0.0
@@ -189,7 +189,7 @@ importers:
   packages/vue:
     dependencies:
       '@git-diff-view/core':
-        specifier: ^0.0.19
+        specifier: ^0.0.20
         version: link:../core
       '@types/hast':
         specifier: ^3.0.0
