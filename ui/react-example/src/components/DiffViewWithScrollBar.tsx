@@ -76,7 +76,7 @@ export const DiffViewWithScrollBar = (props: Omit<DiffViewProps<string[]>, "data
           }
         }
       };
-      // 当前 @myreact 的调度还很简陋，所以这里使用 setTimeout
+      // 当前 @my-react 的调度还很简陋，所以这里使用 setTimeout
       const id = setTimeout(init, 1000);
       return () => {
         clearTimeout(id);

@@ -1,8 +1,8 @@
 import { generateDiffFile, DiffFile } from "@git-diff-view/file";
 import { Button, ButtonGroup, Card, FloatingIndicator, Group, LoadingOverlay, Popover, Tooltip } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useMounted } from "@mantine/hooks";
 import { IconCode, IconPlayerPlay, IconRefresh, IconBrandReact, IconBrandVue } from "@tabler/icons-react";
-import { useState, startTransition, useCallback, forwardRef } from "react";
+import { useState, startTransition, useCallback, forwardRef, useMemo } from "react";
 
 import { useDiffHighlighter } from "../hooks/useDiffHighlighter";
 
@@ -24,6 +24,8 @@ const getNewDiffFile = () => {
 
 export const MainContentDiffExample = () => {
   const [code, { open, close }] = useDisclosure();
+
+  const isMounted = useMounted();
 
   const [platform, setPlatform] = useState<"react" | "vue">("react");
 
@@ -54,9 +56,9 @@ export const MainContentDiffExample = () => {
 
   const [controlsRefs, setControlsRefs] = useState<Record<string, HTMLButtonElement | null>>({});
 
-  const Element = forwardRef<HTMLButtonElement, any>(
-    useCallback(
-      ({ onClick, ...props }, ref) => (
+  const Element = useMemo(
+    () =>
+      forwardRef<HTMLButtonElement, any>(({ onClick, ...props }, ref) => (
         <Tooltip label="show the code">
           <Button
             variant="light"
@@ -76,34 +78,37 @@ export const MainContentDiffExample = () => {
             <IconCode className="w-[1.2em]" />
           </Button>
         </Tooltip>
-      ),
-      []
-    )
+      )),
+    []
   );
 
-  const PlatformSwitchElement = forwardRef<HTMLButtonElement, any>(({ onClick, ...props }, ref) => (
-    <Tooltip label="switch the platform">
-      <Button
-        variant="light"
-        size="compact-sm"
-        ref={ref}
-        onClick={(e) => {
-          onClick?.(e);
-          setPlatform(platform === "react" ? "vue" : "react");
-        }}
-        {...props}
-      >
-        {platform === "react" ? <IconBrandReact className="w-[1.2em]" /> : <IconBrandVue className="w-[1.2em]" />}
-      </Button>
-    </Tooltip>
-  ));
+  const PlatformSwitchElement = useMemo(
+    () =>
+      forwardRef<HTMLButtonElement, any>(({ onClick, ...props }, ref) => (
+        <Tooltip label="switch the platform">
+          <Button
+            variant="light"
+            size="compact-sm"
+            ref={ref}
+            onClick={(e) => {
+              onClick?.(e);
+              setPlatform(platform === "react" ? "vue" : "react");
+            }}
+            {...props}
+          >
+            {platform === "react" ? <IconBrandReact className="w-[1.2em]" /> : <IconBrandVue className="w-[1.2em]" />}
+          </Button>
+        </Tooltip>
+      )),
+    [platform]
+  );
 
   return (
     <>
       <Group className="fixed right-6 top-2 z-10">
         <div ref={setRootRef}>
           <ButtonGroup>
-            <Popover withArrow opened={showCode} onClose={closeShowCode} closeOnClickOutside={false}>
+            <Popover withArrow opened={showCode && isMounted} onClose={closeShowCode} closeOnClickOutside={false}>
               <Popover.Target>
                 <Element onClick={closeShowCode} />
               </Popover.Target>

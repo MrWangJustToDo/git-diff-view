@@ -13,6 +13,8 @@ import "./index.css";
 
 __my_react_shared__.enableLoopFromRoot.current = true;
 
+// __my_react_shared__.enableConcurrentMode.current = false;
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <MantineProvider theme={theme}>

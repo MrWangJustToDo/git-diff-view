@@ -9,7 +9,6 @@
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
-  "packageManager": "pnpm@8.9.0",
   "dependencies": {
     "@codesandbox/sandpack-react": "^2.19.9",
     "@git-diff-view/file": "workspace:*",
@@ -20,7 +19,7 @@
     "@mantine/hooks": "^7.13.2",
     "@my-react/react": "0.3.3",
     "@my-react/react-dom": "0.3.3",
-    "@tabler/icons-react": "^3.19.0",
+    "@tabler/icons-react": "^3.21.0",
     "lodash": "^4.17.21",
     "overlayscrollbars": "^2.10.0",
     "react": "^18.2.0",
@@ -31,21 +30,21 @@
   "devDependencies": {
     "@my-react/react-refresh": "0.3.3",
     "@my-react/react-vite": "0.0.6",
-    "@types/lodash": "^4.17.7",
+    "@types/lodash": "^4.17.13",
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
-    "@vitejs/plugin-react": "^4.3.2",
+    "@vitejs/plugin-react": "^4.3.3",
     "autoprefixer": "^10.4.20",
     "eslint": "^8.57.0",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.12",
-    "postcss": "^8.4.43",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "postcss": "^8.4.47",
     "postcss-preset-mantine": "^1.17.0",
     "tailwindcss": "^3.4.14",
     "typescript": "5.3.3",
-    "vite": "^5.4.9",
+    "vite": "^5.4.10",
     "vite-tsconfig-paths": "^5.0.1"
   }
 }
