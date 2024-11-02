@@ -152,8 +152,8 @@ importers:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0
         version: 18.2.0(react@18.2.0)
       reactivity-store:
-        specifier: ^0.3.6
-        version: 0.3.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: ^0.3.7
+        version: 0.3.7(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       use-sync-external-store:
         specifier: ^1.2.2
         version: 1.2.2(react@18.2.0)
@@ -280,8 +280,8 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
       reactivity-store:
-        specifier: ^0.3.6
-        version: 0.3.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: ^0.3.7
+        version: 0.3.7(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       vue:
         specifier: ^3.4.38
         version: 3.4.38(typescript@5.3.3)
@@ -1606,6 +1606,9 @@ packages:
   '@vue/reactivity@3.4.38':
     resolution: {integrity: sha512-4vl4wMMVniLsSYYeldAKzbk72+D3hUnkw9z8lDeJacTxAkXeDAP1uE9xr2+aKIN0ipOL8EG2GPouVTH6yF7Gnw==}
 
+  '@vue/reactivity@3.5.12':
+    resolution: {integrity: sha512-UzaN3Da7xnJXdz4Okb/BGbAaomRHc3RdoWqTzlvd9+WBR5m3J39J1fGcHes7U3za0ruYn/iYy/a1euhMEHvTAg==}
+
   '@vue/runtime-core@3.4.38':
     resolution: {integrity: sha512-21z3wA99EABtuf+O3IhdxP0iHgkBs1vuoCAsCKLVJPEjpVqvblwBnTj42vzHRlWDCyxu9ptDm7sI2ZMcWrQqlA==}
 
@@ -1622,6 +1625,9 @@ packages:
 
   '@vue/shared@3.4.38':
     resolution: {integrity: sha512-q0xCiLkuWWQLzVrecPb0RMsNWyxICOjPrcrwxTUEHb1fsnvni4dcuyG7RT/Ie7VPTvnjzIaWzRMUBsrqNj/hhw==}
+
+  '@vue/shared@3.5.12':
+    resolution: {integrity: sha512-L2RPSAwUFbgZH20etwrXyVyCBu9OxRSi8T/38QsvnkJyvq2LufW2lDCOzm7t/U9C1mkhJGWYfCuFBCmIuNivrg==}
 
   abort-controller@3.0.0:
     resolution: {integrity: sha512-h8lQ8tacZYnR3vNQTgibj+tODHI5/+l06Au2Pcriv/Gmet0eaj4TwWH41sO9wnHDiQsEj19q0drzdWdeAHtweg==}
@@ -3824,8 +3830,8 @@ packages:
     resolution: {integrity: sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==}
     engines: {node: '>=0.10.0'}
 
-  reactivity-store@0.3.6:
-    resolution: {integrity: sha512-tZGkyrDZxzuOqSLIuHuOq10U7hV7BAEy5J5bJi6y+d/qMMf+FxTm/E6092i8DylxXtmy7wxSUo6ksWxB7Hg/jw==}
+  reactivity-store@0.3.7:
+    resolution: {integrity: sha512-9lqsDqJKCRvbw5PyyTcdqdMZyhE9NjQLs9EdYkfVQkEUeu7AoZP/mmQBa+KmOCtbc7W2uVrd/5SFvUXM5/xBow==}
     peerDependencies:
       react: ^17.0.2 || ^18.2.0
       react-dom: ^17.0.2 || ^18.2.0
@@ -5993,6 +5999,10 @@ snapshots:
     dependencies:
       '@vue/shared': 3.4.38
 
+  '@vue/reactivity@3.5.12':
+    dependencies:
+      '@vue/shared': 3.5.12
+
   '@vue/runtime-core@3.4.38':
     dependencies:
       '@vue/reactivity': 3.4.38
@@ -6020,6 +6030,8 @@ snapshots:
   '@vue/shared@3.4.15': {}
 
   '@vue/shared@3.4.38': {}
+
+  '@vue/shared@3.5.12': {}
 
   abort-controller@3.0.0:
     dependencies:
@@ -8310,10 +8322,10 @@ snapshots:
     dependencies:
       loose-envify: 1.4.0
 
-  reactivity-store@0.3.6(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  reactivity-store@0.3.7(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
-      '@vue/reactivity': 3.4.38
-      '@vue/shared': 3.4.38
+      '@vue/reactivity': 3.5.12
+      '@vue/shared': 3.5.12
       jsan: 3.1.14
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)

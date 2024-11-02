@@ -605,19 +605,41 @@ export type SyntaxNode = {
 	children?: SyntaxNode[];
 };
 declare const createDiffConfigStore: (props: DiffViewProps<any>, diffFileId: string) => import("reactivity-store").UseSelectorWithStore<{
-	id: import("reactivity-store").Ref<string>;
+	id: import("reactivity-store").Ref<string, string>;
 	setId: (_id: string) => string;
-	mode: import("reactivity-store").Ref<DiffModeEnum>;
+	mode: import("reactivity-store").Ref<DiffModeEnum, DiffModeEnum>;
 	setMode: (_mode: DiffModeEnum) => DiffModeEnum;
-	enableWrap: import("reactivity-store").Ref<boolean>;
+	enableWrap: import("reactivity-store").Ref<boolean, boolean>;
 	setEnableWrap: (_enableWrap: boolean) => boolean;
-	enableAddWidget: import("reactivity-store").Ref<boolean>;
+	enableAddWidget: import("reactivity-store").Ref<boolean, boolean>;
 	setEnableAddWidget: (_enableAddWidget: boolean) => boolean;
-	enableHighlight: import("reactivity-store").Ref<boolean>;
+	enableHighlight: import("reactivity-store").Ref<boolean, boolean>;
 	setEnableHighlight: (_enableHighlight: boolean) => boolean;
-	fontSize: import("reactivity-store").Ref<number>;
+	fontSize: import("reactivity-store").Ref<number, number>;
 	setFontSize: (_fontSize: number) => number;
 	extendData: import("reactivity-store").Ref<{
+		oldFile: {
+			[x: string]: {
+				data: any;
+			};
+		};
+		newFile: {
+			[x: string]: {
+				data: any;
+			};
+		};
+	}, {
+		oldFile: {
+			[x: string]: {
+				data: any;
+			};
+		};
+		newFile: {
+			[x: string]: {
+				data: any;
+			};
+		};
+	} | {
 		oldFile: {
 			[x: string]: {
 				data: any;
@@ -635,6 +657,11 @@ declare const createDiffConfigStore: (props: DiffViewProps<any>, diffFileId: str
 		side: SplitSide;
 		diffFile: DiffFile;
 		onClose: () => void;
+	}) => import("react").ReactNode, ({ diffFile, side, lineNumber, onClose, }: {
+		lineNumber: number;
+		side: SplitSide;
+		diffFile: DiffFile;
+		onClose: () => void;
 	}) => import("react").ReactNode>;
 	setRenderWidgetLine: (_renderWidgetLine: ({ diffFile, side, lineNumber, onClose, }: {
 		lineNumber: number;
@@ -648,6 +675,12 @@ declare const createDiffConfigStore: (props: DiffViewProps<any>, diffFileId: str
 		onClose: () => void;
 	}) => import("react").ReactNode;
 	renderExtendLine: import("reactivity-store").Ref<({ diffFile, side, data, lineNumber, onUpdate, }: {
+		lineNumber: number;
+		side: SplitSide;
+		data: any;
+		diffFile: DiffFile;
+		onUpdate: () => void;
+	}) => import("react").ReactNode, ({ diffFile, side, data, lineNumber, onUpdate, }: {
 		lineNumber: number;
 		side: SplitSide;
 		data: any;
