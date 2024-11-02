@@ -21,7 +21,7 @@ const getDiffFile = () => {
 
 // file mode
 const getDiffFile = () => {
-  const instance = generateDiffFile(oldFileName, oldContent, newFileName, newContent);
+  const instance = generateDiffFile(oldFileName, oldContent, newFileName, newContent, '', '');
   instance.initRaw();
   return instance;
 }
@@ -29,7 +29,7 @@ const getDiffFile = () => {
 const App = () => {
   const [diffFile, setDiffFile] = useState(() => getDiffFile());
 
-  return <DiffView diffFile={diffFile} diffFileWrap={${String(useDiffConfig.getReadonlyState().wrap)}} diffFileTheme={"${theme}"} diffViewHighlight={${String(useDiffConfig.getReadonlyState().highlight)}} diffViewMode={DiffModeEnum.${DiffModeEnum[useDiffConfig.getReadonlyState().mode]}} />;
+  return <DiffView diffFile={diffFile} diffViewWrap={${String(useDiffConfig.getReadonlyState().wrap)}} diffViewTheme={"${theme}"} diffViewHighlight={${String(useDiffConfig.getReadonlyState().highlight)}} diffViewMode={DiffModeEnum.${DiffModeEnum[useDiffConfig.getReadonlyState().mode]}} />;
 }`
     : `<script setup lang="ts">
   import { DiffView, DiffFile, DiffModeEnum } from "@git-diff-view/vue";
@@ -46,14 +46,14 @@ const App = () => {
 
   // file mode
   const getDiffFile = () => {
-    const instance = generateDiffFile(oldFileName, oldContent, newFileName, newContent);
+    const instance = generateDiffFile(oldFileName, oldContent, newFileName, newContent, '', '');
     instance.initRaw();
     return instance;
   }
 
 </script>
 <template>
-  <DiffView :diffFile="getDiffFile()" :diffFileWrap="${String(useDiffConfig.getReadonlyState().wrap)}" :diffFileTheme="${theme}" :diffViewHighlight="${String(useDiffConfig.getReadonlyState().highlight)}" :diffViewMode="DiffModeEnum.${DiffModeEnum[useDiffConfig.getReadonlyState().mode]}" />
+  <DiffView :diffFile="getDiffFile()" :diffViewWrap="${String(useDiffConfig.getReadonlyState().wrap)}" :diffViewTheme="${theme}" :diffViewHighlight="${String(useDiffConfig.getReadonlyState().highlight)}" :diffViewMode="DiffModeEnum.${DiffModeEnum[useDiffConfig.getReadonlyState().mode]}" />
 </template>`;
 };
 
