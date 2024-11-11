@@ -12,7 +12,7 @@ import { DiffModeEnum, DiffViewContext } from "./DiffViewContext";
 import { createDiffConfigStore, diffFontSizeName } from "./tools";
 // import { DiffSplitView } from "./v2/DiffSplitView_v2";
 
-import type { DiffHighlighter } from "@git-diff-view/core";
+import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/core";
 import type { CSSProperties, ForwardedRef, ReactNode } from "react";
 
 _cacheMap.name = "@git-diff-view/react";
@@ -24,8 +24,8 @@ export enum SplitSide {
 
 export type DiffViewProps<T> = {
   data?: {
-    oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
-    newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+    oldFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
+    newFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
     hunks: string[];
   };
   extendData?: { oldFile?: Record<string, { data: T }>; newFile?: Record<string, { data: T }> };
@@ -68,6 +68,22 @@ export type DiffViewProps<T> = {
     onUpdate: () => void;
   }) => ReactNode;
   onAddWidgetClick?: (lineNumber: number, side: SplitSide) => void;
+};
+
+type DiffViewProps_1<T> = Omit<DiffViewProps<T>, "data"> & {
+  data?: {
+    oldFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | null; content?: string | null };
+    newFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | null; content?: string | null };
+    hunks: string[];
+  };
+};
+
+type DiffViewProps_2<T> = Omit<DiffViewProps<T>, "data"> & {
+  data?: {
+    oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+    newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+    hunks: string[];
+  };
 };
 
 const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data" | "registerHighlighter">) => {
@@ -269,9 +285,23 @@ const DiffViewWithRef = <T extends unknown>(
   );
 };
 
-export const DiffView = forwardRef(DiffViewWithRef) as (<T>(
+const InnerDiffView = forwardRef(DiffViewWithRef) as (<T>(
   props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
 ) => ReactNode) & { displayName?: string };
+
+export function DiffView<T>(
+  props: DiffViewProps_1<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
+): ReactNode;
+
+export function DiffView<T>(
+  props: DiffViewProps_2<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
+): ReactNode;
+
+export function DiffView<T>(
+  props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
+) {
+  return <InnerDiffView {...props} />;
+}
 
 DiffView.displayName = "DiffView";
 

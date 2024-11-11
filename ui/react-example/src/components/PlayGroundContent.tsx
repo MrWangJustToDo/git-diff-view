@@ -24,7 +24,7 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
   const [content, setContent] = useState(rawTemp);
 
   const setDiffInstanceCb = useCallback(
-    debounce((lang, diffString, content) => {
+    debounce((lang: string, diffString: string, content: string) => {
       if (!diffString) {
         setDiffInstance(undefined);
         return;

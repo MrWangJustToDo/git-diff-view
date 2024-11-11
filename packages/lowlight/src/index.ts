@@ -2,6 +2,8 @@ import { createLowlight, all } from "lowlight";
 
 import { processAST, type SyntaxLine } from "./processAST";
 
+import type { getAst } from "./lang";
+
 const lowlight = createLowlight(all);
 
 // !SEE https://github.com/highlightjs/highlightjs-vue
@@ -61,7 +63,7 @@ export type DiffHighlighter = {
   setMaxLineToIgnoreSyntax: (v: number) => void;
   ignoreSyntaxHighlightList: (string | RegExp)[];
   setIgnoreSyntaxHighlightList: (v: (string | RegExp)[]) => void;
-  getAST: (raw: string, fileName?: string, lang?: string, theme?: "light" | "dark") => DiffAST;
+  getAST: typeof getAst;
   processAST: (ast: DiffAST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };
   hasRegisteredCurrentLang: (lang: string) => boolean;
   getHighlighterEngine: () => typeof lowlight;
@@ -136,6 +138,10 @@ Object.defineProperty(instance, "hasRegisteredCurrentLang", {
   },
 });
 
+Object.defineProperty(instance, "getHighlighterEngine", {
+  value: () => lowlight,
+});
+
 Object.defineProperty(instance, "type", { value: "class" });
 
 export { processAST } from "./processAST";
@@ -143,3 +149,5 @@ export { processAST } from "./processAST";
 export const versions = __VERSION__;
 
 export const highlighter: DiffHighlighter = instance as DiffHighlighter;
+
+export * from "./lang";

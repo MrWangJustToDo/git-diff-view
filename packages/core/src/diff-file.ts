@@ -4,7 +4,7 @@ import { getFile, File } from "./file";
 import { DiffLine, DiffLineType, parseInstance, getDiffRange, getLang } from "./parse";
 
 import type { IRawDiff } from "./parse";
-import type { DiffHighlighter } from "@git-diff-view/lowlight";
+import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/lowlight";
 
 export const composeLen = 40;
 
@@ -60,9 +60,21 @@ export interface DiffHunkItem extends DiffLineItem {
   unifiedInfo?: HunkLineInfo & HunkInfo;
 }
 
-type FileData = {
+type FileData_1 = {
+  oldFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | null; content?: string | null };
+  newFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | null; content?: string | null };
+  hunks?: string[];
+};
+
+type FileData_2 = {
   oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
   newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+  hunks?: string[];
+};
+
+type FileData_3 = {
+  oldFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
+  newFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
   hunks?: string[];
 };
 
@@ -131,13 +143,13 @@ export class DiffFile {
 
   _oldFileContent: string = "";
 
-  _oldFileLang: string = "";
+  _oldFileLang: DiffHighlighterLang | string = "";
 
   _newFileName: string = "";
 
   _newFileContent: string = "";
 
-  _newFileLang: string = "";
+  _newFileLang: DiffHighlighterLang | string = "";
 
   _diffList: string[] = [];
 
@@ -159,7 +171,15 @@ export class DiffFile {
 
   #clonedInstance = new Map<DiffFile, () => void>();
 
-  static createInstance(data: FileData, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>) {
+  static createInstance(
+    data: FileData_1,
+    bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>
+  ): DiffFile;
+  static createInstance(
+    data: FileData_2,
+    bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>
+  ): DiffFile;
+  static createInstance(data: FileData_3, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>) {
     const instance = new DiffFile(
       data?.oldFile?.fileName || "",
       data?.oldFile?.content || "",
@@ -186,8 +206,28 @@ export class DiffFile {
     _newFileName: string,
     _newFileContent: string,
     _diffList: string[],
+    _oldFileLang?: DiffHighlighterLang,
+    _newFileLang?: DiffHighlighterLang,
+    uuid?: string
+  );
+  constructor(
+    _oldFileName: string,
+    _oldFileContent: string,
+    _newFileName: string,
+    _newFileContent: string,
+    _diffList: string[],
     _oldFileLang?: string,
     _newFileLang?: string,
+    uuid?: string
+  );
+  constructor(
+    _oldFileName: string,
+    _oldFileContent: string,
+    _newFileName: string,
+    _newFileContent: string,
+    _diffList: string[],
+    _oldFileLang?: DiffHighlighterLang | string,
+    _newFileLang?: DiffHighlighterLang | string,
     readonly uuid?: string
   ) {
     Object.defineProperty(this, "__v_skip", { value: true });

@@ -9,7 +9,7 @@ declare class Cache$1<K, V> extends Map<K, V> {
 declare class File$1 {
 	
 	readonly raw: string;
-	readonly lang: string;
+	readonly lang: DiffHighlighterLang | string;
 	readonly fileName?: string;
 	ast?: DiffAST;
 	rawFile: Record<number, string>;
@@ -22,7 +22,8 @@ declare class File$1 {
 	highlighterType?: DiffHighlighter["type"];
 	maxLineNumber: number;
 	static createInstance(data: File$1): File$1;
-	constructor(raw: string, lang: string, fileName?: string);
+	constructor(row: string, lang: DiffHighlighterLang, fileName?: string);
+	constructor(row: string, lang: string, fileName?: string);
 	doSyntax({ registerHighlighter, theme, }: {
 		registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
 		theme?: "light" | "dark";
@@ -49,10 +50,10 @@ export declare class DiffFile {
 	_version_: string;
 	_oldFileName: string;
 	_oldFileContent: string;
-	_oldFileLang: string;
+	_oldFileLang: DiffHighlighterLang | string;
 	_newFileName: string;
 	_newFileContent: string;
-	_newFileLang: string;
+	_newFileLang: DiffHighlighterLang | string;
 	_diffList: string[];
 	diffLineLength: number;
 	splitLineLength: number;
@@ -61,7 +62,9 @@ export declare class DiffFile {
 	hasExpandSplitAll: boolean;
 	hasExpandUnifiedAll: boolean;
 	hasSomeLineCollapsed: boolean;
-	static createInstance(data: FileData, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>): DiffFile;
+	static createInstance(data: FileData_1, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>): DiffFile;
+	static createInstance(data: FileData_2, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>): DiffFile;
+	constructor(_oldFileName: string, _oldFileContent: string, _newFileName: string, _newFileContent: string, _diffList: string[], _oldFileLang?: DiffHighlighterLang, _newFileLang?: DiffHighlighterLang, uuid?: string);
 	constructor(_oldFileName: string, _oldFileContent: string, _newFileName: string, _newFileContent: string, _diffList: string[], _oldFileLang?: string, _newFileLang?: string, uuid?: string);
 	initId(): void;
 	getId(): string;
@@ -353,7 +356,6 @@ export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[]
 	getAdditionRaw: (lineNumber: number) => string;
 	getDeletionRaw: (lineNumber: number) => string;
 }) => void;
-export declare const getFile: (raw: string, lang: string, theme: "light" | "dark", fileName?: string, uuid?: string) => File$1;
 export declare const getLang: (fileName: string) => string;
 export declare const getSplitContentLines: (diffFile: DiffFile) => DiffSplitContentLineItem[];
 export declare const getSplitLines: (diffFile: DiffFile) => DiffSplitLineItem[];
@@ -413,6 +415,10 @@ export declare function diffChanges(addition: DiffLine, deletion: DiffLine): {
 	addRange: DiffRange;
 	delRange: DiffRange;
 };
+export declare function getAst(raw: string, fileName?: string, lang?: DiffHighlighterLang, theme?: "light" | "dark"): DiffAST;
+export declare function getAst(raw: string, fileName?: string, lang?: string, theme?: "light" | "dark"): DiffAST;
+export declare function getFile(raw: string, lang: DiffHighlighterLang, theme: "light" | "dark", fileName?: string, uuid?: string): File$1;
+export declare function getFile(raw: string, lang: string, theme: "light" | "dark", fileName?: string, uuid?: string): File$1;
 /**
  * Calculates whether or not a hunk header can be expanded up, down, both, or if
  * the space represented by the hunk header is short and expansion there would
@@ -519,7 +525,7 @@ export type DiffHighlighter = {
 	setMaxLineToIgnoreSyntax: (v: number) => void;
 	ignoreSyntaxHighlightList: (string | RegExp)[];
 	setIgnoreSyntaxHighlightList: (v: (string | RegExp)[]) => void;
-	getAST: (raw: string, fileName?: string, lang?: string, theme?: "light" | "dark") => DiffAST;
+	getAST: typeof getAst;
 	processAST: (ast: DiffAST) => {
 		syntaxFileObject: Record<number, SyntaxLine>;
 		syntaxFileLineNumber: number;
@@ -527,6 +533,7 @@ export type DiffHighlighter = {
 	hasRegisteredCurrentLang: (lang: string) => boolean;
 	getHighlighterEngine: () => typeof lowlight;
 };
+export type DiffHighlighterLang = "arduino" | "bash" | "c" | "cpp" | "csharp" | "css" | "diff" | "go" | "graphql" | "ini" | "java" | "javascript" | "jsx" | "json" | "kotlin" | "less" | "lua" | "makefile" | "markdown" | "objectivec" | "perl" | "php" | "php-template" | "plaintext" | "python" | "python-repl" | "r" | "ruby" | "rust" | "scss" | "shell" | "sql" | "swift" | "typescript" | "tsx" | "vbnet" | "wasm" | "xml" | "yaml" | "abnf" | "accesslog" | "actionscript" | "ada" | "angelscript" | "apache" | "applescript" | "arcade" | "armasm" | "asciidoc" | "aspectj" | "autohotkey" | "autoit" | "avrasm" | "awk" | "axapta" | "basic" | "bnf" | "brainfuck" | "cal" | "capnproto" | "ceylon" | "clean" | "clojure" | "clojure-repl" | "cmake" | "coffeescript" | "coq" | "cos" | "crmsh" | "crystal" | "csp" | "d" | "dart" | "delphi" | "django" | "dns" | "dockerfile" | "dos" | "dsconfig" | "dts" | "dust" | "ebnf" | "elixir" | "elm" | "erb" | "erlang" | "erlang-repl" | "excel" | "fix" | "flix" | "fortran" | "fsharp" | "gams" | "gauss" | "gcode" | "gherkin" | "glsl" | "gml" | "golo" | "gradle" | "groovy" | "haml" | "handlebars" | "haskell" | "haxe" | "hsp" | "http" | "hy" | "inform7" | "irpf90" | "isbl" | "jboss-cli" | "julia" | "julia-repl" | "lasso" | "latex" | "ldif" | "leaf" | "lisp" | "livecodeserver" | "livescript" | "llvm" | "lsl" | "mathematica" | "matlab" | "maxima" | "mel" | "mercury" | "mipsasm" | "mizar" | "mojolicious" | "monkey" | "moonscript" | "n1ql" | "nestedtext" | "nginx" | "nim" | "nix" | "node-repl" | "nsis" | "ocaml" | "openscad" | "oxygene" | "parser3" | "pf" | "pgsql" | "pony" | "powershell" | "processing" | "profile" | "prolog" | "properties" | "protobuf" | "puppet" | "purebasic" | "q" | "qml" | "reasonml" | "rib" | "roboconf" | "routeros" | "rsl" | "ruleslanguage" | "sas" | "scala" | "scheme" | "scilab" | "smali" | "smalltalk" | "sml" | "sqf" | "stan" | "stata" | "step21" | "stylus" | "subunit" | "taggerscript" | "tap" | "tcl" | "thrift" | "tp" | "twig" | "vala" | "vbscript" | "vbscript-html" | "verilog" | "vhdl" | "vim" | "wren" | "x86asm" | "xl" | "xquery" | "zephi";
 export type DiffSplitContentLineItem = {
 	type: DiffFileLineType.content;
 	index: number;
@@ -552,7 +559,20 @@ export type DiffUnifiedLineItem = {
 	index: number;
 	lineNumber: number;
 };
-export type FileData = {
+export type FileData_1 = {
+	oldFile?: {
+		fileName?: string | null;
+		fileLang?: DiffHighlighterLang | null;
+		content?: string | null;
+	};
+	newFile?: {
+		fileName?: string | null;
+		fileLang?: DiffHighlighterLang | null;
+		content?: string | null;
+	};
+	hunks?: string[];
+};
+export type FileData_2 = {
 	oldFile?: {
 		fileName?: string | null;
 		fileLang?: string | null;
