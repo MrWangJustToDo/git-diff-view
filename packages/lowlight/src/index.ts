@@ -2,7 +2,7 @@ import { createLowlight, all } from "lowlight";
 
 import { processAST, type SyntaxLine } from "./processAST";
 
-import type { getAst } from "./lang";
+import type { _getAST } from "./lang";
 
 const lowlight = createLowlight(all);
 
@@ -63,7 +63,7 @@ export type DiffHighlighter = {
   setMaxLineToIgnoreSyntax: (v: number) => void;
   ignoreSyntaxHighlightList: (string | RegExp)[];
   setIgnoreSyntaxHighlightList: (v: (string | RegExp)[]) => void;
-  getAST: typeof getAst;
+  getAST: typeof _getAST;
   processAST: (ast: DiffAST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };
   hasRegisteredCurrentLang: (lang: string) => boolean;
   getHighlighterEngine: () => typeof lowlight;
