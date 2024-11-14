@@ -2,6 +2,7 @@ import { createHighlighter } from "shiki";
 
 import { processAST, type SyntaxLine } from "./processAST";
 
+import type { _getAST } from "./lang";
 import type { codeToHast } from "shiki";
 
 type DePromise<T> = T extends Promise<infer U> ? DePromise<U> : T;
@@ -15,7 +16,7 @@ export type DiffHighlighter = {
   setMaxLineToIgnoreSyntax: (v: number) => void;
   ignoreSyntaxHighlightList: (string | RegExp)[];
   setIgnoreSyntaxHighlightList: (v: (string | RegExp)[]) => void;
-  getAST: (raw: string, fileName?: string, lang?: string, theme?: "light" | "dark") => DiffAST;
+  getAST: typeof _getAST;
   processAST: (ast: DiffAST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };
   hasRegisteredCurrentLang: (lang: string) => boolean;
   getHighlighterEngine: () => DePromise<ReturnType<typeof createHighlighter>> | null;

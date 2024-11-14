@@ -2,7 +2,7 @@ import { highlighter } from "@git-diff-view/lowlight";
 
 import { Cache } from "./cache";
 
-import type { DiffAST, DiffHighlighter, SyntaxLine } from "@git-diff-view/lowlight";
+import type { DiffAST, DiffHighlighter, DiffHighlighterLang, SyntaxLine } from "@git-diff-view/lowlight";
 
 const map = new Cache<string, File>();
 
@@ -73,9 +73,11 @@ export class File {
     return file;
   }
 
+  constructor(row: string, lang: DiffHighlighterLang, fileName?: string);
+  constructor(row: string, lang: string, fileName?: string);
   constructor(
     readonly raw: string,
-    readonly lang: string,
+    readonly lang: DiffHighlighterLang | string,
     readonly fileName?: string
   ) {
     Object.defineProperty(this, "__v_skip", { value: true });
@@ -140,15 +142,6 @@ export class File {
       this.rawFile[i + 1] = i < rawArray.length - 1 ? rawArray[i] + "\n" : rawArray[i];
     }
 
-    // reduce 对于大数组性能很差
-    // this.rawFile = rawArray.reduce(
-    //   (p, item, index) => ({
-    //     ...p,
-    //     [index + 1]: index < rawArray.length - 1 ? item + "\n" : item,
-    //   }),
-    //   {}
-    // );
-
     this.hasDoRaw = true;
   }
 
@@ -169,7 +162,21 @@ export class File {
 }
 
 // TODO add highlight engine key to cache key
-export const getFile = (raw: string, lang: string, theme: "light" | "dark", fileName?: string, uuid?: string) => {
+export function getFile(
+  raw: string,
+  lang: DiffHighlighterLang,
+  theme: "light" | "dark",
+  fileName?: string,
+  uuid?: string
+): File;
+export function getFile(raw: string, lang: string, theme: "light" | "dark", fileName?: string, uuid?: string): File;
+export function getFile(
+  raw: string,
+  lang: DiffHighlighterLang | string,
+  theme: "light" | "dark",
+  fileName?: string,
+  uuid?: string
+) {
   let key = raw + "--" + __VERSION__ + "--" + theme + "--" + lang;
 
   if (uuid) {
@@ -197,6 +204,6 @@ export const getFile = (raw: string, lang: string, theme: "light" | "dark", file
   map.set(key, file);
 
   return file;
-};
+}
 
 export const _cacheMap = map;
