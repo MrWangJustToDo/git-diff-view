@@ -297,9 +297,7 @@ export function DiffView<T>(
   props: DiffViewProps_2<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
 ): ReactNode;
 
-export function DiffView<T>(
-  props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
-) {
+export function DiffView<T>(props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }) {
   return <InnerDiffView {...props} />;
 }
 

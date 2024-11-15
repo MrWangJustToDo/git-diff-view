@@ -28,8 +28,8 @@ export declare const processAST: (ast: DiffAST) => {
 	syntaxFileLineNumber: number;
 };
 export type DiffHighlighterLang = "cpp" | "java" | "javascript" | "css" | "c#" | "c" | "c++" | "vue" | "vue-html" | "astro" | "bash" | "make" | "markdown" | "makefile" | "bat" | "cmake" | "cmd" | "csv" | "docker" | "dockerfile" | "go" | "python" | "html" | "jsx" | "tsx" | "typescript" | "sql" | "xml" | "sass" | "ssh-config" | "kotlin" | "json" | "swift" | "txt" | "diff";
-declare function getAst(raw: string, fileName?: string, lang?: DiffHighlighterLang, theme?: "light" | "dark"): DiffAST;
-declare function getAst(raw: string, fileName?: string, lang?: string, theme?: "light" | "dark"): DiffAST;
+declare function _getAST(raw: string, fileName?: string, lang?: DiffHighlighterLang, theme?: "light" | "dark"): DiffAST;
+declare function _getAST(raw: string, fileName?: string, lang?: string, theme?: "light" | "dark"): DiffAST;
 export type DePromise<T> = T extends Promise<infer U> ? DePromise<U> : T;
 export type DiffAST = DePromise<ReturnType<typeof codeToHast>>;
 export type DiffHighlighter = {
@@ -39,7 +39,7 @@ export type DiffHighlighter = {
 	setMaxLineToIgnoreSyntax: (v: number) => void;
 	ignoreSyntaxHighlightList: (string | RegExp)[];
 	setIgnoreSyntaxHighlightList: (v: (string | RegExp)[]) => void;
-	getAST: typeof getAst;
+	getAST: typeof _getAST;
 	processAST: (ast: DiffAST) => {
 		syntaxFileObject: Record<number, SyntaxLine>;
 		syntaxFileLineNumber: number;
