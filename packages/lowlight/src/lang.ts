@@ -193,12 +193,18 @@ export type DiffHighlighterLang =
   | "x86asm"
   | "xl"
   | "xquery"
-  | "zephi";
-
+  | "zephi"
+  | "vue"
+  | "vue-html";
 
 // type helper function
 export function _getAST(raw: string, fileName?: string, lang?: DiffHighlighterLang, theme?: "light" | "dark"): DiffAST;
 export function _getAST(raw: string, fileName?: string, lang?: string, theme?: "light" | "dark"): DiffAST;
-export function _getAST(_raw: string, _fileName?: string, _lang?: DiffHighlighterLang | string, _theme?: "light" | "dark") {
+export function _getAST(
+  _raw: string,
+  _fileName?: string,
+  _lang?: DiffHighlighterLang | string,
+  _theme?: "light" | "dark"
+) {
   return {} as DiffAST;
 }
