@@ -7,15 +7,15 @@ a React/Vue component to show the `git diff`/`file diff` result, just like Githu
 ## Demo ---- git-diff / file-diff
 [git-mode](https://mrwangjusttodo.github.io/git-diff-view/?type=try&tab=git)
 
-![git mode](gitMode.png)
+![git mode](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/gitMode.png)
 
 [file-mode](https://mrwangjusttodo.github.io/git-diff-view/?type=try&tab=file)
 
-![file mode](fileMode.png)
+![file mode](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/fileMode.png)
 
 [GitHub compare](https://mrwangjusttodo.github.io/MrWangJustToDo.io?overlay=open&playGround=GitHub)
 
-![GitHub compare](4.png)
+![GitHub compare](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/4.png)
 
 ## Packages
 
@@ -35,10 +35,11 @@ a React/Vue component to show the `git diff`/`file diff` result, just like Githu
 
 ## Screen Shot
 
-![Screenshot](1.png)
-![Screenshot](theme.png)
-![Screenshot](2.png)
-![Screenshot](3.png)
+![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/1.png)
+![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/5.png)
+![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/theme.png)
+![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/2.png)
+![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/3.png)
 
 
 ## Features

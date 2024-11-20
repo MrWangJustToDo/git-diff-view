@@ -73,6 +73,12 @@ const diffFile = DiffFile.createInstance(data || {}, bundle);
 <DiffView diffFile={diffFile} {...props} />;
 ```
 
+### Screen Shot
+
+![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/1.png)
+![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/5.png)
+![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/theme.png)
+
 ### Props
 
 | Props  | Description  |
