@@ -189,6 +189,7 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
           }}
         >
           <div
+            suppressHydrationWarning
             id={`diff-root${diffFileId}`}
             className={"diff-view-wrapper" + (className ? ` ${className}` : "")}
             style={style}

@@ -44,7 +44,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
     enableWrap: s.enableWrap,
   }));
 
-  useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);
+  useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
 
   useEffect(() => {
     const { setWidget } = useWidget.getReadonlyState();
