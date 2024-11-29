@@ -10,6 +10,8 @@
     "start:release": "ts-node ./scripts/release.ts",
     "dev:react": "cd ui/react-example && pnpm run dev",
     "dev:vue": "cd ui/vue-example && pnpm run dev",
+    "dev:next-page": "cd ui/next-page-example && pnpm run dev",
+    "dev:next-app": "cd ui/next-app-example && pnpm run dev",
     "build:react": "cd ui/react-example && pnpm run build",
     "pre:release": "pnpm run lint && pnpm run prettier && pnpm run clean && pnpm run build:packages",
     "release": "pnpm run pre:release && pnpm run start:release",

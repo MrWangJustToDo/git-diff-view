@@ -37,6 +37,7 @@
         {
           "dir": "./dist",
           "entryFileNames": "esm/index.mjs",
+          "banner": "'use client';",
           "format": "esm",
           "sourcemap": true
         }
@@ -50,6 +51,7 @@
           "entryFileNames": "cjs/index.js",
           "format": "cjs",
           "type": true,
+          "banner": "'use client';",
           "multiple": true,
           "sourcemap": true
         }
