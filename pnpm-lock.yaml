@@ -237,6 +237,9 @@ importers:
 
   ui/next-app-example:
     dependencies:
+      '@git-diff-view/react':
+        specifier: workspace:*
+        version: link:../../packages/react
       next:
         specifier: 15.0.3
         version: 15.0.3(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)
@@ -274,6 +277,9 @@ importers:
 
   ui/next-page-example:
     dependencies:
+      '@git-diff-view/react':
+        specifier: workspace:*
+        version: link:../../packages/react
       next:
         specifier: 15.0.3
         version: 15.0.3(react-dom@19.0.0-rc-66855b96-20241106(react@19.0.0-rc-66855b96-20241106))(react@19.0.0-rc-66855b96-20241106)

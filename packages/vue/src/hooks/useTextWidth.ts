@@ -6,7 +6,15 @@ import type { Ref } from "vue";
 
 let canvasCtx: CanvasRenderingContext2D | null = null;
 
-export class TextMeasure {
+const getKey = (font: { fontFamily?: string; fontStyle?: string; fontSize?: string }, text: string) => {
+  return `${font.fontFamily}-${font.fontStyle}-${font.fontSize}-${text}`;
+};
+
+const getStableKey = (font: { fontFamily?: string; fontStyle?: string; fontSize?: string }, text: string) => {
+  return getKey(font, "0".repeat(text.length));
+};
+
+class TextMeasure {
   #key: string = "";
 
   #map: Record<string, number> = {};
@@ -17,7 +25,7 @@ export class TextMeasure {
   }
 
   measure(text: string, font?: { fontFamily?: string; fontStyle?: string; fontSize?: string }) {
-    const currentKey = `${font?.fontFamily}-${font?.fontStyle}-${font?.fontSize}-${text}`;
+    const currentKey = getStableKey(font, text);
     if (this.#map[currentKey]) {
       return this.#map[currentKey];
     }
@@ -48,7 +56,13 @@ export const useTextWidth = ({
 }) => {
   const isMounted = useIsMounted();
 
-  const width = ref(0);
+  const fontSize = parseInt(font.value.fontSize);
+
+  let baseSize = 6;
+  
+  baseSize += fontSize > 10 ? (fontSize - 10) * 0.6 : 0;
+
+  const width = ref(baseSize * text.value.length);
 
   const measureText = () => {
     if (!isMounted.value) return;

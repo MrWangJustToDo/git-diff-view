@@ -23,14 +23,14 @@ const clear = async (packageName: string) => {
 };
 
 const buildType = async (packageName: string) => {
-  await new Promise<void>((r, j) => {
-    const ls = spawn(`cd packages/${packageName} && pnpm run gen:type`, { shell: true, stdio: "inherit" });
-    ls.on("close", () => r());
-    ls.on("error", (e) => j(e));
-  });
-  await clean(packageName);
-  if (packageName === "vue") return;
-  await clear(packageName);
+  // await new Promise<void>((r, j) => {
+  //   const ls = spawn(`cd packages/${packageName} && pnpm run gen:type`, { shell: true, stdio: "inherit" });
+  //   ls.on("close", () => r());
+  //   ls.on("error", (e) => j(e));
+  // });
+  // await clean(packageName);
+  // if (packageName === "vue") return;
+  // await clear(packageName);
 };
 
 const start = async () => {
