@@ -9,7 +9,7 @@ import {
 import * as React from "react";
 
 import { addContentHighlightBGName, delContentHighlightBGName } from "./color";
-import { getStyleObjectFromString } from "./DiffContent";
+import { getStyleObjectFromString, getSymbol } from "./DiffContent";
 import { DiffNoNewLine } from "./DiffNoNewLine";
 import { diffFontSizeName } from "./tools";
 
@@ -49,7 +49,7 @@ const RenderRange = ({
 
   const isLast = str2.includes("\n");
 
-  const _str2 = isLast ? str2.replace("\n", "") : str2;
+  const _str2 = isLast ? str2.replace("\n", "").replace("\r", "") : str2;
 
   return (
     <span
@@ -113,14 +113,7 @@ const DiffSyntax = ({
 
     const isNewLineSymbolChanged = diffRange.newLineSymbol;
 
-    const newLineSymbol =
-      isNewLineSymbolChanged === NewLineSymbol.CRLF
-        ? "␍␊"
-        : isNewLineSymbolChanged === NewLineSymbol.CR
-          ? "␍"
-          : isNewLineSymbolChanged === NewLineSymbol.LF
-            ? "␊"
-            : "";
+    const newLineSymbol = getSymbol(isNewLineSymbolChanged);
 
     const hasNoTrailingNewLine = isNewLineSymbolChanged === NewLineSymbol.NEWLINE;
 
@@ -181,7 +174,7 @@ const DiffSyntax = ({
         {hasNoTrailingNewLine && (
           <span
             data-no-newline-at-end-of-file-symbol
-            className={enableWrap ? "block text-red-500" : "inline-block align-middle text-red-500"}
+            className={enableWrap ? "block !text-red-500" : "inline-block align-middle !text-red-500"}
             style={{
               width: `var(${diffFontSizeName})`,
               height: `var(${diffFontSizeName})`,
@@ -231,14 +224,7 @@ const DiffString = ({
 
     const isNewLineSymbolChanged = diffRange.newLineSymbol;
 
-    const newLineSymbol =
-      isNewLineSymbolChanged === NewLineSymbol.CRLF
-        ? "␍␊"
-        : isNewLineSymbolChanged === NewLineSymbol.CR
-          ? "␍"
-          : isNewLineSymbolChanged === NewLineSymbol.LF
-            ? "␊"
-            : "";
+    const newLineSymbol = getSymbol(isNewLineSymbolChanged);
 
     const hasNoTrailingNewLine = isNewLineSymbolChanged === NewLineSymbol.NEWLINE;
 
@@ -280,7 +266,7 @@ const DiffString = ({
         {hasNoTrailingNewLine && (
           <span
             data-no-newline-at-end-of-file-symbol
-            className={enableWrap ? "block text-red-500" : "inline-block align-middle text-red-500"}
+            className={enableWrap ? "block !text-red-500" : "inline-block align-middle !text-red-500"}
             style={{
               width: `var(${diffFontSizeName})`,
               height: `var(${diffFontSizeName})`,

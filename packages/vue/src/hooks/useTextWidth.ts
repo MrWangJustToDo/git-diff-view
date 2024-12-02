@@ -59,7 +59,7 @@ export const useTextWidth = ({
   const fontSize = parseInt(font.value.fontSize);
 
   let baseSize = 6;
-  
+
   baseSize += fontSize > 10 ? (fontSize - 10) * 0.6 : 0;
 
   const width = ref(baseSize * text.value.length);

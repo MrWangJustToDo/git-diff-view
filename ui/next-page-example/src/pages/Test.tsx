@@ -1,6 +1,5 @@
 import { DiffFile, DiffView } from "@git-diff-view/react";
 import { GetServerSideProps } from "next"
-import { useRef } from "react";
 
 const sleep = (time: number) => new Promise((resolve) => setTimeout(resolve, time));
 
@@ -88,6 +87,7 @@ export default function Test({patch, diffFile}: {patch: string, diffFile: string
 
   return <DiffView diffFile={file} diffViewHighlight diffViewWrap diffViewFontSize={14} />;
 
+     // return <DiffView data={{hunks: [a1, a2], oldFile: {content: oldF}, newFile: {content: newF, fileLang: 'c'}}} diffViewHighlight diffViewWrap/>
 }
 
 export const getServerSideProps: GetServerSideProps = async () => {
@@ -105,5 +105,5 @@ export const getServerSideProps: GetServerSideProps = async () => {
 
   const stringData = JSON.stringify(data);
 
-  return {props: {patch: p, diffFile: stringData}};
+  return {props: {patch: d, diffFile: stringData}};
 }
