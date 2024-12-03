@@ -1,4 +1,4 @@
-import { highlighterReady } from "@git-diff-view/shiki";
+import { getDiffViewHighlighter } from "@git-diff-view/shiki";
 import { useEffect, useState } from "react";
 
 import type { DiffHighlighter } from "@git-diff-view/react";
@@ -11,7 +11,7 @@ export const useDiffHighlighter = ({ setLoading }: { setLoading: Dispatch<SetSta
     const init = async () => {
       setLoading(true);
       try {
-        const shikiHighlighter = await highlighterReady;
+        const shikiHighlighter = await getDiffViewHighlighter();
         if (shikiHighlighter) {
           setHighlighter(shikiHighlighter);
         }

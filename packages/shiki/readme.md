@@ -4,13 +4,13 @@
 ### usage
 ```tsx
 import { DiffFile } from "@git-diff-view/core";
-import { highlighterReady } from "@git-diff-view/shiki";
+import { getDiffViewHighlighter } from "@git-diff-view/shiki";
 
 const diffFile = new DiffFile(...params);
 
 diffFile.initRaw();
 
-highlighterReady().then((highlighter) => {
+getDiffViewHighlighter().then((highlighter) => {
   diffFile.initSyntax({ registerHighlighter: highlighter });
 
   diffFile.buildSplitDiffLines();

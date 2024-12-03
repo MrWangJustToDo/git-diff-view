@@ -47,7 +47,34 @@ export type DiffHighlighter = {
 	hasRegisteredCurrentLang: (lang: string) => boolean;
 	getHighlighterEngine: () => DePromise<ReturnType<typeof createHighlighter>> | null;
 };
+/**
+ * @deprecated
+ * try to use `getDiffViewHighlighter` instead
+ *
+ * @example
+ * ```ts
+ * import { highlighterReady } from '@git-diff-view/shiki'
+ *
+ * highlighterReady.then((highlighter) => {
+ *  // do something with highlighter
+ * })
+ * ```
+ */
 export declare const highlighterReady: Promise<DiffHighlighter>;
+/**
+ * get the shiki diffView highlighter
+ * @returns Promise<DiffHighlighter>
+ *
+ * @example
+ * ```ts
+ * import { getDiffViewHighlighter } from '@git-diff-view/shiki'
+ *
+ * getDiffViewHighlighter().then((highlighter) => {
+ *  // do something with highlighter
+ * }
+ * ```
+ */
+export declare const getDiffViewHighlighter: () => Promise<DiffHighlighter>;
 export declare const versions: string;
 export * from "shiki";
 

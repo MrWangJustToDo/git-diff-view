@@ -153,6 +153,19 @@ Object.defineProperty(instance, "type", { value: "class" });
 const highlighter: DiffHighlighter = instance as DiffHighlighter;
 
 // TODO: change to use function
+/**
+ * @deprecated
+ * try to use `getDiffViewHighlighter` instead
+ * 
+ * @example
+ * ```ts
+ * import { highlighterReady } from '@git-diff-view/shiki'
+ *
+ * highlighterReady.then((highlighter) => {
+ *  // do something with highlighter
+ * })
+ * ```
+ */
 export const highlighterReady = new Promise<DiffHighlighter>((r) => {
   if (internal) {
     r(highlighter);
@@ -164,6 +177,21 @@ export const highlighterReady = new Promise<DiffHighlighter>((r) => {
       .then(() => r(highlighter));
   }
 });
+
+/**
+ * get the shiki diffView highlighter
+ * @returns Promise<DiffHighlighter>
+ * 
+ * @example
+ * ```ts
+ * import { getDiffViewHighlighter } from '@git-diff-view/shiki'
+ * 
+ * getDiffViewHighlighter().then((highlighter) => {
+ *  // do something with highlighter
+ * }
+ * ```
+ */
+export const getDiffViewHighlighter = () => highlighterReady;
 
 export { processAST } from "./processAST";
 
