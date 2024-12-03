@@ -17,6 +17,10 @@ a React/Vue component to show the `git diff`/`file diff` result, just like Githu
 
 ![GitHub compare](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/4.png)
 
+## How to use
+
+See example project [Example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui)
+
 ## Packages
 
 | Package                                  | Version                                                                                                                    |
