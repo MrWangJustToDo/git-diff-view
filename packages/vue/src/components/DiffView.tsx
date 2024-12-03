@@ -226,7 +226,8 @@ export const DiffView = defineComponent<
         >
           <div class="diff-style-root" style={{ [diffFontSizeName]: (props.diffViewFontSize || 14) + "px" }}>
             <div
-              id={`diff-root${id.value}`}
+              // fix ssr mismatch error
+              id={isMounted.value ? `diff-root${id.value}` : undefined}
               class={"diff-view-wrapper" + (props.class ? ` ${props.class}` : "")}
               style={props.style}
             >

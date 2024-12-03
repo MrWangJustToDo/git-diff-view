@@ -50,7 +50,14 @@ export class DiffLine {
   }
 
   public clone(text: string) {
-    return new DiffLine(text, this.type, this.originalLineNumber, this.oldLineNumber, this.newLineNumber);
+    return new DiffLine(
+      text,
+      this.type,
+      this.originalLineNumber,
+      this.oldLineNumber,
+      this.newLineNumber,
+      this.noTrailingNewLine
+    );
   }
 }
 

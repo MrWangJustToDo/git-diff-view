@@ -56,7 +56,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
 
   const fontSize = useDiffContext.useShallowStableSelector((s) => s.fontSize);
 
-  useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);
+  useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
 
   useEffect(() => {
     const left = ref1.current;

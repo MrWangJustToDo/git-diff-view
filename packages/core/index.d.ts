@@ -408,7 +408,8 @@ export declare enum NewLineSymbol {
 	CR = 2,
 	LF = 3,
 	NEWLINE = 4,
-	NORMAL = 5
+	NORMAL = 5,
+	NULL = 6
 }
 export declare function _getAST(raw: string, fileName?: string, lang?: DiffHighlighterLang, theme?: "light" | "dark"): DiffAST;
 export declare function _getAST(raw: string, fileName?: string, lang?: string, theme?: "light" | "dark"): DiffAST;

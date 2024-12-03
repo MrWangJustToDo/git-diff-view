@@ -17,7 +17,7 @@ export const VuePlayGround = () => {
   return (
     <Card className="p-0" withBorder>
       <Box className="flex items-center px-2 py-2 font-sans text-[14px]">
-        <Vue width="16" className="mr-2 vue-icon" /> Vue
+        <Vue width="16" className="vue-icon mr-2" /> Vue
       </Box>
       <SandpackProvider
         template="vite-vue-ts"

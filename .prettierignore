@@ -1,4 +1,6 @@
 **/node_modules
+**/next-app-example
+**/next-page-example
 **/dist
 **/dev
 **/*.md

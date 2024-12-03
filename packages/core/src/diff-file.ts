@@ -628,13 +628,19 @@ export class DiffFile {
     const maxOldFileLineNumber = this.#oldFileResult?.maxLineNumber || 0;
     const maxNewFileLineNumber = this.#newFileResult?.maxLineNumber || 0;
 
+    if (__DEV__ && !this.#oldFileResult && !this.#newFileResult) {
+      console.error(
+        "this instance can not `buildSplitDiffLines` because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'"
+      );
+    }
+
     while (oldFileLineNumber <= maxOldFileLineNumber || newFileLineNumber <= maxNewFileLineNumber) {
       const oldDiffLine = this.#getOldDiffLine(oldFileLineNumber);
       const newDiffLine = this.#getNewDiffLine(newFileLineNumber);
       const oldRawLine = this.#getOldRawLine(oldFileLineNumber);
       const newRawLine = this.#getNewRawLine(newFileLineNumber);
-      const oldLineHasChange = oldDiffLine?.isIncludeableLine();
-      const newLineHasChange = newDiffLine?.isIncludeableLine();
+      const oldLineHasChange = DiffLine.prototype.isIncludeableLine.call(oldDiffLine || {});
+      const newLineHasChange = DiffLine.prototype.isIncludeableLine.call(newDiffLine || {});
       const len = this.#splitRightLines.length;
       const isHidden = !oldDiffLine && !newDiffLine;
 
@@ -808,13 +814,19 @@ export class DiffFile {
     const maxOldFileLineNumber = this.#oldFileResult?.maxLineNumber || 0;
     const maxNewFileLineNumber = this.#newFileResult?.maxLineNumber || 0;
 
+    if (__DEV__ && !this.#oldFileResult && !this.#newFileResult) {
+      console.error(
+        "this instance can not `buildUnifiedDiffLines` because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'"
+      );
+    }
+
     while (oldFileLineNumber <= maxOldFileLineNumber || newFileLineNumber <= maxNewFileLineNumber) {
       const oldRawLine = this.#getOldRawLine(oldFileLineNumber);
       const oldDiffLine = this.#getOldDiffLine(oldFileLineNumber);
       const newRawLine = this.#getNewRawLine(newFileLineNumber);
       const newDiffLine = this.#getNewDiffLine(newFileLineNumber);
-      const oldLineHasChange = oldDiffLine?.isIncludeableLine();
-      const newLineHasChange = newDiffLine?.isIncludeableLine();
+      const oldLineHasChange = DiffLine.prototype.isIncludeableLine.call(oldDiffLine || {});
+      const newLineHasChange = DiffLine.prototype.isIncludeableLine.call(newDiffLine || {});
       const len = this.#unifiedLines.length;
       const isHidden = !oldDiffLine && !newDiffLine;
 
@@ -1424,9 +1436,9 @@ export class DiffFile {
   _mergeFullBundle = (data: ReturnType<DiffFile["_getFullBundle"]>, notifyUpdate = true) => {
     this.mergeBundle(data, notifyUpdate);
     try {
-      this.#oldFileResult = File.createInstance(data.oldFileResult);
+      this.#oldFileResult = data.oldFileResult ? File.createInstance(data.oldFileResult) : null;
 
-      this.#newFileResult = File.createInstance(data.newFileResult);
+      this.#newFileResult = data.newFileResult ? File.createInstance(data.newFileResult) : null;
 
       this.#diffLines = data.diffLines;
 

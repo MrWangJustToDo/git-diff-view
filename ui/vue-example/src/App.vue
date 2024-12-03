@@ -31,7 +31,7 @@ worker.addEventListener("message", (e: MessageEvent<MessageData>) => {
   diffFile.value = instance;
 });
 
-const k = ref<Key>("a");
+const k = ref<Key>("b");
 
 const v = ref("");
 

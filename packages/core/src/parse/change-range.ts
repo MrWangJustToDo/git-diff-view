@@ -8,6 +8,7 @@ export enum NewLineSymbol {
   LF = 3,
   NEWLINE = 4,
   NORMAL = 5,
+  NULL = 6,
 }
 
 export interface IRange {
@@ -81,10 +82,22 @@ function checkNewLineSymbolChange(
   const bEndStr = stringB.slice(-2);
 
   const aSymbol =
-    aEndStr === "\r\n" ? NewLineSymbol.CRLF : aEndStr.endsWith("\r") ? NewLineSymbol.CR : NewLineSymbol.LF;
+    aEndStr === "\r\n"
+      ? NewLineSymbol.CRLF
+      : aEndStr.endsWith("\r")
+        ? NewLineSymbol.CR
+        : aEndStr.endsWith("\n")
+          ? NewLineSymbol.LF
+          : NewLineSymbol.NULL;
 
   const bSymbol =
-    bEndStr === "\r\n" ? NewLineSymbol.CRLF : bEndStr.endsWith("\r") ? NewLineSymbol.CR : NewLineSymbol.LF;
+    bEndStr === "\r\n"
+      ? NewLineSymbol.CRLF
+      : bEndStr.endsWith("\r")
+        ? NewLineSymbol.CR
+        : bEndStr.endsWith("\n")
+          ? NewLineSymbol.LF
+          : NewLineSymbol.NULL;
 
   const hasNewLineChanged = addition.noTrailingNewLine !== deletion.noTrailingNewLine;
 
@@ -98,13 +111,23 @@ function checkNewLineSymbolChange(
         ? NewLineSymbol.NEWLINE
         : NewLineSymbol.NORMAL
       : aSymbol,
-    addString: aSymbol === NewLineSymbol.CRLF ? stringA.slice(0, -2) : stringA.slice(0, -1),
+    addString:
+      aSymbol === NewLineSymbol.CRLF
+        ? stringA.slice(0, -2)
+        : aSymbol === NewLineSymbol.CR || aSymbol === NewLineSymbol.LF
+          ? stringA.slice(0, -1)
+          : stringA,
     delSymbol: hasNewLineChanged
       ? deletion.noTrailingNewLine
         ? NewLineSymbol.NEWLINE
         : NewLineSymbol.NORMAL
       : bSymbol,
-    delString: bSymbol === NewLineSymbol.CRLF ? stringB.slice(0, -2) : stringB.slice(0, -1),
+    delString:
+      bSymbol === NewLineSymbol.CRLF
+        ? stringB.slice(0, -2)
+        : bSymbol === NewLineSymbol.CR || bSymbol === NewLineSymbol.LF
+          ? stringB.slice(0, -1)
+          : stringB,
   };
 }
 

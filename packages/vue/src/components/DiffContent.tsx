@@ -4,6 +4,19 @@ import { addContentHighlightBGName, delContentHighlightBGName } from "./color";
 import { DiffNoNewLine } from "./DiffNoNewLine";
 import { diffFontSizeName } from "./tools";
 
+const getSymbol = (symbol: NewLineSymbol) => {
+  switch (symbol) {
+    case NewLineSymbol.LF:
+      return "␊";
+    case NewLineSymbol.CR:
+      return "␍";
+    case NewLineSymbol.CRLF:
+      return "␍␊";
+    default:
+      return "";
+  }
+};
+
 const DiffString = ({
   rawLine,
   diffLine,
@@ -23,7 +36,7 @@ const DiffString = ({
     const str2 = rawLine.slice(range.location, range.location + range.length);
     const str3 = rawLine.slice(range.location + range.length);
     const isLast = str2.includes("\n");
-    const _str2 = isLast ? str2.replace("\n", "") : str2;
+    const _str2 = isLast ? str2.replace("\n", "").replace("\r", "") : str2;
     const isNewLineSymbolChanged = str3 === "" ? changes.newLineSymbol : null;
     return (
       <span class="diff-line-content-raw">
@@ -37,24 +50,14 @@ const DiffString = ({
                 operator === "add" ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`,
             }}
           >
-            {isLast
-              ? `${_str2}${
-                  isNewLineSymbolChanged === NewLineSymbol.LF
-                    ? "␊"
-                    : isNewLineSymbolChanged === NewLineSymbol.CR
-                      ? "␍"
-                      : isNewLineSymbolChanged === NewLineSymbol.CRLF
-                        ? "␍␊"
-                        : ""
-                }`
-              : str2}
+            {isLast ? `${_str2}${getSymbol(isNewLineSymbolChanged)}` : str2}
           </span>
           {str3}
         </span>
         {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
           <span
             data-no-newline-at-end-of-file-symbol
-            class={enableWrap ? "block text-red-500" : "inline-block align-middle text-red-500"}
+            class={enableWrap ? "block !text-red-500" : "inline-block align-middle !text-red-500"}
             style={{
               width: `var(${diffFontSizeName})`,
               height: `var(${diffFontSizeName})`,
@@ -119,7 +122,7 @@ const DiffSyntax = ({
               const isStart = str1.length || range.location === node.startIndex;
               const isEnd = str3.length || node.endIndex === range.location + range.length - 1;
               const isLast = str2.includes("\n");
-              const _str2 = isLast ? str2.replace("\n", "") : str2;
+              const _str2 = isLast ? str2.replace("\n", "").replace("\r", "") : str2;
               return (
                 <span
                   key={index}
@@ -140,17 +143,7 @@ const DiffSyntax = ({
                       borderBottomRightRadius: isEnd || isLast ? "0.2em" : undefined,
                     }}
                   >
-                    {isLast
-                      ? `${_str2}${
-                          isNewLineSymbolChanged === NewLineSymbol.LF
-                            ? "␊"
-                            : isNewLineSymbolChanged === NewLineSymbol.CR
-                              ? "␍"
-                              : isNewLineSymbolChanged === NewLineSymbol.CRLF
-                                ? "␍␊"
-                                : ""
-                        }`
-                      : str2}
+                    {isLast ? `${_str2}${getSymbol(isNewLineSymbolChanged)}` : str2}
                   </span>
                   {str3}
                 </span>
@@ -161,7 +154,7 @@ const DiffSyntax = ({
         {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
           <span
             data-no-newline-at-end-of-file-symbol
-            class={enableWrap ? "block text-red-500" : "inline-block align-middle text-red-500"}
+            class={enableWrap ? "block !text-red-500" : "inline-block align-middle !text-red-500"}
             style={{
               width: `var(${diffFontSizeName})`,
               height: `var(${diffFontSizeName})`,

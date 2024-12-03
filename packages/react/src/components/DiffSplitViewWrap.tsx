@@ -46,7 +46,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
 
   const fontSize = useDiffContext.useShallowStableSelector((s) => s.fontSize);
 
-  useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount);
+  useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
 
   const onMouseDown = useCallback<MouseEventHandler<HTMLTableSectionElement>>((e) => {
     let ele = e.target;
