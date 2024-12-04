@@ -825,19 +825,17 @@ export type DiffViewProps_2<T> = Omit<DiffViewProps<T>, "data"> & {
 		hunks: string[];
 	};
 };
-export declare function DiffView<T>(props: DiffViewProps_1<T> & {
+declare function _DiffView<T>(props: DiffViewProps_1<T> & {
 	ref?: ForwardedRef<{
 		getDiffFileInstance: () => DiffFile;
 	}>;
 }): ReactNode;
-export declare function DiffView<T>(props: DiffViewProps_2<T> & {
+declare function _DiffView<T>(props: DiffViewProps_2<T> & {
 	ref?: ForwardedRef<{
 		getDiffFileInstance: () => DiffFile;
 	}>;
 }): ReactNode;
-export declare namespace DiffView {
-	var displayName: string;
-}
+export declare const DiffView: typeof _DiffView;
 export declare const version: string;
 
 export {

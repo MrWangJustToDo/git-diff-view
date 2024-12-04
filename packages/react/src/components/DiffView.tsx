@@ -290,18 +290,19 @@ const InnerDiffView = forwardRef(DiffViewWithRef) as (<T>(
   props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
 ) => ReactNode) & { displayName?: string };
 
-export function DiffView<T>(
+InnerDiffView.displayName = "DiffView";
+
+// type helper function
+function _DiffView<T>(
   props: DiffViewProps_1<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
 ): ReactNode;
-
-export function DiffView<T>(
+function _DiffView<T>(
   props: DiffViewProps_2<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
 ): ReactNode;
-
-export function DiffView<T>(props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }) {
+function _DiffView<T>(props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }) {
   return <InnerDiffView {...props} />;
 }
 
-DiffView.displayName = "DiffView";
+export const DiffView = InnerDiffView as typeof _DiffView;
 
 export const version = __VERSION__;

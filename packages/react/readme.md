@@ -72,6 +72,11 @@ const bundle = file.getBundle();
 const diffFile = DiffFile.createInstance(data || {}, bundle);
 <DiffView diffFile={diffFile} {...props} />;
 ```
+### example
+
+#### [react-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/react-example)
+#### [react-ssr-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/next-page-example)
+#### [react-rsc-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/next-app-example)
 
 ### Screen Shot
 
@@ -96,8 +101,3 @@ const diffFile = DiffFile.createInstance(data || {}, bundle);
 | diffViewAddWidget| enable `addWidget` button, type: boolean |
 | onAddWidgetClick | when the `addWidget` button clicked, type: `({ side: "old" | "new", lineNumber: number }) => void` |
 
-### example
-
-#### [react-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/react-example)
-#### [react-ssr-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/next-page-example)
-#### [react-rsc-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/next-app-example)

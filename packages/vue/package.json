@@ -3,7 +3,7 @@
   "description": "@git-diff-view/vue",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.21",
+  "version": "0.0.22",
   "main": "index.js",
   "type": "module",
   "types": "index.d.ts",

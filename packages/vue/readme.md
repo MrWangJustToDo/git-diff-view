@@ -69,6 +69,11 @@ const diffFile = DiffFile.createInstance(data || {}, bundle);
 <DiffView :diffFile={diffFile} />;
 ```
 
+### example
+
+#### [vue-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/vue-example)
+#### [vue-ssr-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/vue-ssr-example)
+
 ## Screen Shot
 
 ![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/1.png)
@@ -101,8 +106,3 @@ const diffFile = DiffFile.createInstance(data || {}, bundle);
 | Event | description |
 | :--------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | onAddWidgetClick | when the `addWidget` button clicked, return the `side` and `lineNumber` |
-
-### example repo
-
-[vue-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/vue-example)
-[vue-ssr-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/vue-ssr-example)
