@@ -105,3 +105,4 @@ const diffFile = DiffFile.createInstance(data || {}, bundle);
 ### example repo
 
 [vue-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/vue-example)
+[vue-ssr-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/vue-ssr-example)
