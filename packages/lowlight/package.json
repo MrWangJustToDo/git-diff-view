@@ -53,7 +53,7 @@
   ],
   "dependencies": {
     "@types/hast": "^3.0.0",
-    "highlight.js": "^11.9.0",
-    "lowlight": "^3.1.0"
+    "highlight.js": "^11.10.0",
+    "lowlight": "^3.2.0"
   }
 }

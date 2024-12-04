@@ -78,6 +78,7 @@ const _DiffSplitWidgetLine = ({
   );
 };
 
+// TODO! improve performance
 export const DiffSplitWidgetLine = ({
   index,
   diffFile,

@@ -156,7 +156,7 @@ const highlighter: DiffHighlighter = instance as DiffHighlighter;
 /**
  * @deprecated
  * try to use `getDiffViewHighlighter` instead
- * 
+ *
  * @example
  * ```ts
  * import { highlighterReady } from '@git-diff-view/shiki'
@@ -181,11 +181,11 @@ export const highlighterReady = new Promise<DiffHighlighter>((r) => {
 /**
  * get the shiki diffView highlighter
  * @returns Promise<DiffHighlighter>
- * 
+ *
  * @example
  * ```ts
  * import { getDiffViewHighlighter } from '@git-diff-view/shiki'
- * 
+ *
  * getDiffViewHighlighter().then((highlighter) => {
  *  // do something with highlighter
  * }

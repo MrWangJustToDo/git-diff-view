@@ -84,11 +84,11 @@ importers:
         specifier: ^1.3.0
         version: 1.3.0
       highlight.js:
-        specifier: ^11.9.0
-        version: 11.9.0
+        specifier: ^11.10.0
+        version: 11.10.0
       lowlight:
-        specifier: ^3.1.0
-        version: 3.1.0
+        specifier: ^3.2.0
+        version: 3.2.0
     devDependencies:
       '@types/hast':
         specifier: ^3.0.0
@@ -106,11 +106,11 @@ importers:
         specifier: ^1.3.0
         version: 1.3.0
       highlight.js:
-        specifier: ^11.9.0
-        version: 11.9.0
+        specifier: ^11.10.0
+        version: 11.10.0
       lowlight:
-        specifier: ^3.1.0
-        version: 3.1.0
+        specifier: ^3.2.0
+        version: 3.2.0
     devDependencies:
       '@types/diff':
         specifier: ^5.2.2
@@ -125,11 +125,11 @@ importers:
         specifier: ^3.0.0
         version: 3.0.4
       highlight.js:
-        specifier: ^11.9.0
-        version: 11.9.0
+        specifier: ^11.10.0
+        version: 11.10.0
       lowlight:
-        specifier: ^3.1.0
-        version: 3.1.0
+        specifier: ^3.2.0
+        version: 3.2.0
 
   packages/react:
     dependencies:
@@ -143,17 +143,17 @@ importers:
         specifier: ^1.3.0
         version: 1.3.0
       highlight.js:
-        specifier: ^11.9.0
-        version: 11.9.0
+        specifier: ^11.10.0
+        version: 11.10.0
       lowlight:
-        specifier: ^3.1.0
-        version: 3.1.0
+        specifier: ^3.2.0
+        version: 3.2.0
       react-dom:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0
         version: 18.2.0(react@18.2.0)
       reactivity-store:
-        specifier: ^0.3.7
-        version: 0.3.7(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: ^0.3.8
+        version: 0.3.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       use-sync-external-store:
         specifier: ^1.2.2
         version: 1.2.2(react@18.2.0)
@@ -198,11 +198,11 @@ importers:
         specifier: ^1.3.0
         version: 1.3.0
       highlight.js:
-        specifier: ^11.9.0
-        version: 11.9.0
+        specifier: ^11.10.0
+        version: 11.10.0
       lowlight:
-        specifier: ^3.1.0
-        version: 3.1.0
+        specifier: ^3.2.0
+        version: 3.2.0
     devDependencies:
       '@rollup/plugin-typescript':
         specifier: ^11.1.6
@@ -363,8 +363,8 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(react@18.2.0)
       reactivity-store:
-        specifier: ^0.3.7
-        version: 0.3.7(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
+        specifier: ^0.3.8
+        version: 0.3.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       vue:
         specifier: ^3.4.38
         version: 3.4.38(typescript@5.3.3)
@@ -3137,8 +3137,8 @@ packages:
   help-me@5.0.0:
     resolution: {integrity: sha512-7xgomUX6ADmcYzFik0HzAxh/73YlKR9bmFzf51CZwR+b6YtzU2m0u49hQCqV6SvlqIqsaxovfwdvbnsw3b/zpg==}
 
-  highlight.js@11.9.0:
-    resolution: {integrity: sha512-fJ7cW7fQGCYAkgv4CPfwFHrfd/cLS4Hau96JuJ+ZTOWhjnhoeN1ub1tFmALm/+lW5z4WCAuAV9bm05AP0mS6Gw==}
+  highlight.js@11.10.0:
+    resolution: {integrity: sha512-SYVnVFswQER+zu1laSya563s+F8VDGt7o35d4utbamowvUNLLMovFqwCLSocpZTz3MgaSRA1IbqRWZv97dtErQ==}
     engines: {node: '>=12.0.0'}
 
   html-tags@3.3.1:
@@ -3506,8 +3506,8 @@ packages:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
     hasBin: true
 
-  lowlight@3.1.0:
-    resolution: {integrity: sha512-CEbNVoSikAxwDMDPjXlqlFYiZLkDJHwyGu/MfOsJnF3d7f3tds5J3z8s/l9TMXhzfsJCCJEAsD78842mwmg0PQ==}
+  lowlight@3.2.0:
+    resolution: {integrity: sha512-8Me8xHTCBYEXwcJIPcurnXTeERl3plwb4207v6KPye48kX/oaYDiwXy+OCm3M/pyAPUrkMhalKsbYPm24f/UDg==}
 
   lru-cache@10.2.0:
     resolution: {integrity: sha512-2bIM8x+VAf6JT4bKAljS1qUWgMsqZRPGJS6FSahIMPVvctcNhyVp7AJu7quxOW9jwkryBReKZY5tY5JYv2n/7Q==}
@@ -4430,8 +4430,8 @@ packages:
     resolution: {integrity: sha512-klH7xkT71SxRCx4hb1hly5FJB21Hz0ACyxbXYAECEqssUjtJeFUAaI2U1DgJAzkGEnvEm3DkxuBchMC/9K4ipg==}
     engines: {node: '>=0.10.0'}
 
-  reactivity-store@0.3.7:
-    resolution: {integrity: sha512-9lqsDqJKCRvbw5PyyTcdqdMZyhE9NjQLs9EdYkfVQkEUeu7AoZP/mmQBa+KmOCtbc7W2uVrd/5SFvUXM5/xBow==}
+  reactivity-store@0.3.8:
+    resolution: {integrity: sha512-UBEP+EYndc4uWIUSHAOa+PQyNTaPebGmG5sU68XnUupcDWazjbx7s3j8DK1I+iS2hOqhLTR3AJbQITBGPqbAJA==}
     peerDependencies:
       react: ^17.0.2 || ^18.2.0
       react-dom: ^17.0.2 || ^18.2.0
@@ -8358,7 +8358,7 @@ snapshots:
 
   help-me@5.0.0: {}
 
-  highlight.js@11.9.0: {}
+  highlight.js@11.10.0: {}
 
   html-tags@3.3.1: {}
 
@@ -8677,11 +8677,11 @@ snapshots:
     dependencies:
       js-tokens: 4.0.0
 
-  lowlight@3.1.0:
+  lowlight@3.2.0:
     dependencies:
       '@types/hast': 3.0.4
       devlop: 1.1.0
-      highlight.js: 11.9.0
+      highlight.js: 11.10.0
 
   lru-cache@10.2.0: {}
 
@@ -9558,7 +9558,7 @@ snapshots:
 
   react@19.0.0-rc-66855b96-20241106: {}
 
-  reactivity-store@0.3.7(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
+  reactivity-store@0.3.8(react-dom@18.2.0(react@18.2.0))(react@18.2.0):
     dependencies:
       '@vue/reactivity': 3.5.12
       '@vue/shared': 3.5.12
