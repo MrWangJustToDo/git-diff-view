@@ -44,7 +44,6 @@
     "virtual dom highlight"
   ],
   "dependencies": {
-    "@git-diff-view/lowlight": "^0.0.23",
     "shiki": "^1.24.0"
   }
 }

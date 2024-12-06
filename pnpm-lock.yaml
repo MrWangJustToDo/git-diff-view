@@ -182,9 +182,6 @@ importers:
 
   packages/shiki:
     dependencies:
-      '@git-diff-view/lowlight':
-        specifier: ^0.0.23
-        version: link:../lowlight
       shiki:
         specifier: ^1.24.0
         version: 1.24.0
