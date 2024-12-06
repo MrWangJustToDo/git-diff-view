@@ -104,19 +104,31 @@ export class File {
       return;
     }
 
-    this.ast = finalHighlighter.getAST(this.raw, this.fileName, this.lang, theme);
+    // check current lang is support or not
+    // if it's a unsupported lang, fallback to use lowlightHighlighter
+    let supportEngin = finalHighlighter;
+
+    try {
+      if (!finalHighlighter.hasRegisteredCurrentLang(this.lang)) {
+        supportEngin = highlighter;
+      }
+    } catch {
+      supportEngin = highlighter;
+    }
+
+    this.ast = supportEngin.getAST(this.raw, this.fileName, this.lang, theme);
 
     if (!this.ast) return;
 
-    const { syntaxFileObject, syntaxFileLineNumber } = finalHighlighter.processAST(this.ast);
+    const { syntaxFileObject, syntaxFileLineNumber } = supportEngin.processAST(this.ast);
 
     this.syntaxFile = syntaxFileObject;
 
     this.syntaxLength = syntaxFileLineNumber;
 
-    this.highlighterName = finalHighlighter.name;
+    this.highlighterName = supportEngin.name;
 
-    this.highlighterType = finalHighlighter.type;
+    this.highlighterType = supportEngin.type;
 
     if (__DEV__) {
       this.#doCheck();

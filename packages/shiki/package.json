@@ -3,7 +3,7 @@
   "description": "@git-diff-view/shiki",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.22",
+  "version": "0.0.23",
   "types": "index.d.ts",
   "type": "module",
   "files": [
@@ -44,6 +44,7 @@
     "virtual dom highlight"
   ],
   "dependencies": {
-    "shiki": "^1.22.0"
+    "@git-diff-view/lowlight": "^0.0.23",
+    "shiki": "^1.24.0"
   }
 }

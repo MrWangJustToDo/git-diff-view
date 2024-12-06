@@ -1,5 +1,5 @@
 import { DiffFile, _cacheMap } from "@git-diff-view/core";
-import { createTwoFilesPatch, type LinesOptions } from "diff";
+import { createTwoFilesPatch, type PatchOptions } from "diff";
 
 import type { DiffHighlighterLang } from "@git-diff-view/core";
 
@@ -12,7 +12,7 @@ export function generateDiffFile(
   newFileContent: string,
   oldFileLang: DiffHighlighterLang,
   newFileLang: DiffHighlighterLang,
-  option?: LinesOptions,
+  option?: PatchOptions,
   uuid?: string
 ): DiffFile;
 export function generateDiffFile(
@@ -22,7 +22,7 @@ export function generateDiffFile(
   newFileContent: string,
   oldFileLang: string,
   newFileLang: string,
-  option?: LinesOptions,
+  option?: PatchOptions,
   uuid?: string
 ): DiffFile;
 export function generateDiffFile(
@@ -32,7 +32,7 @@ export function generateDiffFile(
   newFileContent: string,
   oldFileLang: DiffHighlighterLang | string,
   newFileLang: DiffHighlighterLang | string,
-  option?: LinesOptions,
+  option?: PatchOptions,
   uuid?: string
 ) {
   const diffString = createTwoFilesPatch(oldFileName, newFileName, oldFileContent, newFileContent, "", "", option);
