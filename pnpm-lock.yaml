@@ -75,6 +75,24 @@ importers:
         specifier: 5.3.3
         version: 5.3.3
 
+  packages/angular:
+    dependencies:
+      '@git-diff-view/core':
+        specifier: ^0.0.23
+        version: link:../core
+      '@types/hast':
+        specifier: ^3.0.0
+        version: 3.0.4
+      fast-diff:
+        specifier: ^1.3.0
+        version: 1.3.0
+      highlight.js:
+        specifier: ^11.10.0
+        version: 11.10.0
+      lowlight:
+        specifier: ^3.2.0
+        version: 3.2.0
+
   packages/core:
     dependencies:
       '@git-diff-view/lowlight':
@@ -185,6 +203,24 @@ importers:
       shiki:
         specifier: ^1.24.0
         version: 1.24.0
+
+  packages/svelte:
+    dependencies:
+      '@git-diff-view/core':
+        specifier: ^0.0.23
+        version: link:../core
+      '@types/hast':
+        specifier: ^3.0.0
+        version: 3.0.4
+      fast-diff:
+        specifier: ^1.3.0
+        version: 1.3.0
+      highlight.js:
+        specifier: ^11.10.0
+        version: 11.10.0
+      lowlight:
+        specifier: ^3.2.0
+        version: 3.2.0
 
   packages/vue:
     dependencies:
