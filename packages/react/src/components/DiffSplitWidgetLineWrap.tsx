@@ -11,14 +11,10 @@ const _DiffSplitWidgetLine = ({
   index,
   diffFile,
   lineNumber,
-  oldLineWidget,
-  newLineWidget,
 }: {
   index: number;
   diffFile: DiffFile;
   lineNumber: number;
-  oldLineWidget: boolean;
-  newLineWidget: boolean;
 }) => {
   const { useWidget } = useDiffWidgetContext();
 
@@ -31,6 +27,14 @@ const _DiffSplitWidgetLine = ({
   const oldLine = diffFile.getSplitLeftLine(index);
 
   const newLine = diffFile.getSplitRightLine(index);
+
+  const widgetSide = useWidget.getReadonlyState().widgetSide;
+
+  const widgetLineNumber = useWidget.getReadonlyState().widgetLineNumber;
+
+  const oldLineWidget = oldLine.lineNumber && widgetSide === SplitSide.old && widgetLineNumber === oldLine.lineNumber;
+
+  const newLineWidget = newLine.lineNumber && widgetSide === SplitSide.new && widgetLineNumber === newLine.lineNumber;
 
   const oldWidgetRendered =
     oldLineWidget &&
@@ -90,30 +94,33 @@ export const DiffSplitWidgetLine = ({
 }) => {
   const { useWidget } = useDiffWidgetContext();
 
-  const { widgetLineNumber, widgetSide } = useWidget((s) => ({
-    widgetLineNumber: s.widgetLineNumber,
-    widgetSide: s.widgetSide,
-  }));
+  const currentIsShow = useWidget.useShallowSelector(
+    React.useCallback(
+      (s) => {
+        const widgetLineNumber = s.widgetLineNumber;
 
-  const oldLine = diffFile.getSplitLeftLine(index);
+        const widgetSide = s.widgetSide;
 
-  const newLine = diffFile.getSplitRightLine(index);
+        const oldLine = diffFile.getSplitLeftLine(index);
 
-  const oldLineWidget = oldLine.lineNumber && widgetSide === SplitSide.old && widgetLineNumber === oldLine.lineNumber;
+        const newLine = diffFile.getSplitRightLine(index);
 
-  const newLineWidget = newLine.lineNumber && widgetSide === SplitSide.new && widgetLineNumber === newLine.lineNumber;
+        const oldLineWidget =
+          oldLine.lineNumber && widgetSide === SplitSide.old && widgetLineNumber === oldLine.lineNumber;
 
-  const currentIsShow = oldLineWidget || newLineWidget;
+        const newLineWidget =
+          newLine.lineNumber && widgetSide === SplitSide.new && widgetLineNumber === newLine.lineNumber;
+
+        const currentIsShow = oldLineWidget || newLineWidget;
+
+        return currentIsShow;
+      },
+      [diffFile, index]
+    ),
+    (p, c) => p === c
+  );
 
   if (!currentIsShow) return null;
 
-  return (
-    <_DiffSplitWidgetLine
-      index={index}
-      diffFile={diffFile}
-      lineNumber={lineNumber}
-      oldLineWidget={oldLineWidget}
-      newLineWidget={newLineWidget}
-    />
-  );
+  return <_DiffSplitWidgetLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
 };

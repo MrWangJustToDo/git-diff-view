@@ -10,22 +10,37 @@ import { useDiffWidgetContext } from "./DiffWidgetContext";
 import type { DiffFile } from "@git-diff-view/core";
 
 const _DiffSplitWidgetLine = ({
-  diffFile,
+  index,
   side,
+  diffFile,
   lineNumber,
-  currentLine,
-  setWidget,
-  currentWidget,
 }: {
   index: number;
   side: SplitSide;
   diffFile: DiffFile;
   lineNumber: number;
-  currentLine: ReturnType<DiffFile["getSplitLeftLine"]>;
-  currentWidget: boolean;
-  setWidget: (props: { side?: SplitSide; lineNumber?: number }) => void;
 }) => {
+  const { useWidget } = useDiffWidgetContext();
+
   const { useDiffContext } = useDiffViewContext();
+
+  const oldLine = diffFile.getSplitLeftLine(index);
+
+  const newLine = diffFile.getSplitRightLine(index);
+
+  const widgetSide = useWidget.getReadonlyState().widgetSide;
+
+  const widgetLineNumber = useWidget.getReadonlyState().widgetLineNumber;
+
+  const setWidget = useWidget.getReadonlyState().setWidget;
+
+  const oldLineWidget = oldLine.lineNumber && widgetSide === SplitSide.old && widgetLineNumber === oldLine.lineNumber;
+
+  const newLineWidget = newLine.lineNumber && widgetSide === SplitSide.new && widgetLineNumber === newLine.lineNumber;
+
+  const currentLine = side === SplitSide.old ? oldLine : newLine;
+
+  const currentWidget = side === SplitSide.old ? oldLineWidget : newLineWidget;
 
   const renderWidgetLine = useDiffContext.useShallowStableSelector((s) => s.renderWidgetLine);
 
@@ -86,8 +101,8 @@ const _DiffSplitWidgetLine = ({
 // TODO! improve performance
 export const DiffSplitWidgetLine = ({
   index,
-  diffFile,
   side,
+  diffFile,
   lineNumber,
 }: {
   index: number;
@@ -97,37 +112,33 @@ export const DiffSplitWidgetLine = ({
 }) => {
   const { useWidget } = useDiffWidgetContext();
 
-  const { widgetLineNumber, widgetSide, setWidget } = useWidget.useShallowStableSelector((s) => ({
-    widgetLineNumber: s.widgetLineNumber,
-    widgetSide: s.widgetSide,
-    setWidget: s.setWidget,
-  }));
+  const currentIsShow = useWidget.useShallowSelector(
+    React.useCallback(
+      (s) => {
+        const widgetLineNumber = s.widgetLineNumber;
 
-  const oldLine = diffFile.getSplitLeftLine(index);
+        const widgetSide = s.widgetSide;
 
-  const newLine = diffFile.getSplitRightLine(index);
+        const oldLine = diffFile.getSplitLeftLine(index);
 
-  const oldLineWidget = oldLine.lineNumber && widgetSide === SplitSide.old && widgetLineNumber === oldLine.lineNumber;
+        const newLine = diffFile.getSplitRightLine(index);
 
-  const newLineWidget = newLine.lineNumber && widgetSide === SplitSide.new && widgetLineNumber === newLine.lineNumber;
+        const oldLineWidget =
+          oldLine.lineNumber && widgetSide === SplitSide.old && widgetLineNumber === oldLine.lineNumber;
 
-  const currentLine = side === SplitSide.old ? oldLine : newLine;
+        const newLineWidget =
+          newLine.lineNumber && widgetSide === SplitSide.new && widgetLineNumber === newLine.lineNumber;
 
-  const currentWidget = side === SplitSide.old ? oldLineWidget : newLineWidget;
+        const currentIsShow = oldLineWidget || newLineWidget;
 
-  const currentIsShow = oldLineWidget || newLineWidget;
+        return currentIsShow;
+      },
+      [diffFile, index]
+    ),
+    (p, c) => p === c
+  );
 
   if (!currentIsShow) return null;
 
-  return (
-    <_DiffSplitWidgetLine
-      index={index}
-      diffFile={diffFile}
-      side={side}
-      lineNumber={lineNumber}
-      currentLine={currentLine}
-      setWidget={setWidget}
-      currentWidget={currentWidget}
-    />
-  );
+  return <_DiffSplitWidgetLine index={index} side={side} diffFile={diffFile} lineNumber={lineNumber} />;
 };

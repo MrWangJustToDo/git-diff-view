@@ -10,21 +10,29 @@ import type { DiffFile } from "@git-diff-view/core";
 const _DiffUnifiedWidgetLine = ({
   index,
   diffFile,
-  oldWidget,
-  newWidget,
   lineNumber,
-  setWidget,
 }: {
   index: number;
   diffFile: DiffFile;
-  oldWidget: boolean;
-  newWidget: boolean;
   lineNumber: number;
-  setWidget: (props: { side?: SplitSide; lineNumber?: number }) => void;
 }) => {
+  const { useWidget } = useDiffWidgetContext();
+
+  const setWidget = useWidget.getReadonlyState().setWidget;
+
   const unifiedItem = diffFile.getUnifiedLine(index);
 
   const onClose = () => setWidget({});
+
+  const widgetSide = useWidget.getReadonlyState().widgetSide;
+
+  const widgetLineNumber = useWidget.getReadonlyState().widgetLineNumber;
+
+  const oldWidget =
+    unifiedItem.oldLineNumber && widgetSide === SplitSide.old && widgetLineNumber === unifiedItem.oldLineNumber;
+
+  const newWidget =
+    unifiedItem.newLineNumber && widgetSide === SplitSide.new && widgetLineNumber === unifiedItem.newLineNumber;
 
   const { useDiffContext } = useDiffViewContext();
 
@@ -65,32 +73,31 @@ export const DiffUnifiedWidgetLine = ({
 }) => {
   const { useWidget } = useDiffWidgetContext();
 
-  const { widgetSide, widgetLineNumber, setWidget } = useWidget.useShallowStableSelector((s) => ({
-    widgetLineNumber: s.widgetLineNumber,
-    widgetSide: s.widgetSide,
-    setWidget: s.setWidget,
-  }));
+  const currentIsShow = useWidget.useShallowSelector(
+    React.useCallback(
+      (s) => {
+        const widgetLineNumber = s.widgetLineNumber;
 
-  const unifiedItem = diffFile.getUnifiedLine(index);
+        const widgetSide = s.widgetSide;
 
-  const oldWidget =
-    unifiedItem.oldLineNumber && widgetSide === SplitSide.old && widgetLineNumber === unifiedItem.oldLineNumber;
+        const unifiedItem = diffFile.getUnifiedLine(index);
 
-  const newWidget =
-    unifiedItem.newLineNumber && widgetSide === SplitSide.new && widgetLineNumber === unifiedItem.newLineNumber;
+        const oldWidget =
+          unifiedItem.oldLineNumber && widgetSide === SplitSide.old && widgetLineNumber === unifiedItem.oldLineNumber;
 
-  const currentIsShow = oldWidget || newWidget;
+        const newWidget =
+          unifiedItem.newLineNumber && widgetSide === SplitSide.new && widgetLineNumber === unifiedItem.newLineNumber;
+
+        const currentIsShow = oldWidget || newWidget;
+
+        return currentIsShow;
+      },
+      [diffFile, index]
+    ),
+    (p, c) => p === c
+  );
 
   if (!currentIsShow) return null;
 
-  return (
-    <_DiffUnifiedWidgetLine
-      index={index}
-      diffFile={diffFile}
-      lineNumber={lineNumber}
-      oldWidget={oldWidget}
-      newWidget={newWidget}
-      setWidget={setWidget}
-    />
-  );
+  return <_DiffUnifiedWidgetLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
 };
