@@ -1,14 +1,19 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { DiffFileLineType, getSplitLines, type DiffFile } from "@git-diff-view/core";
+import {
+  removeAllSelection,
+  syncScroll,
+  diffFontSizeName,
+  diffAsideWidthName,
+  borderColorName,
+} from "@git-diff-view/utils";
 import { memo, useEffect, useRef } from "react";
 import * as React from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
 import { useTextWidth } from "../../hooks/useTextWidth";
-import { borderColorName } from "../color";
 import { SplitSide } from "../DiffView";
 import { useDiffViewContext } from "../DiffViewContext";
-import { removeAllSelection, syncScroll, diffFontSizeName, diffAsideWidthName } from "../tools";
 
 import { DiffSplitViewLine } from "./DiffSplitViewLineNormal_v2";
 

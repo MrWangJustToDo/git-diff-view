@@ -1,8 +1,7 @@
 import { DiffLineType, NewLineSymbol, type DiffFile, type DiffLine, type SyntaxLine } from "@git-diff-view/core";
+import { addContentHighlightBGName, delContentHighlightBGName, diffFontSizeName } from "@git-diff-view/utils";
 
-import { addContentHighlightBGName, delContentHighlightBGName } from "./color";
 import { DiffNoNewLine } from "./DiffNoNewLine";
-import { diffFontSizeName } from "./tools";
 
 const getSymbol = (symbol: NewLineSymbol) => {
   switch (symbol) {

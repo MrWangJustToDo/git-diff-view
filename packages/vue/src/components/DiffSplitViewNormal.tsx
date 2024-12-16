@@ -1,4 +1,11 @@
 import { getSplitContentLines } from "@git-diff-view/core";
+import {
+  diffAsideWidthName,
+  diffFontSizeName,
+  removeAllSelection,
+  syncScroll,
+  borderColorName,
+} from "@git-diff-view/utils";
 import { Fragment, computed, defineComponent, ref, watchPostEffect } from "vue";
 
 import { useFontSize } from "../context";
@@ -6,13 +13,11 @@ import { useIsMounted } from "../hooks/useIsMounted";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useTextWidth } from "../hooks/useTextWidth";
 
-import { borderColorName } from "./color";
 import { DiffSplitContentLine } from "./DiffSplitContentLineNormal";
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
 import { SplitSide } from "./DiffView";
-import { diffAsideWidthName, diffFontSizeName, removeAllSelection, syncScroll } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
 

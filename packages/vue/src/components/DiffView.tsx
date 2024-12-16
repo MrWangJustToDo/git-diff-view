@@ -1,4 +1,5 @@
 import { DiffFile, _cacheMap } from "@git-diff-view/core";
+import { diffFontSizeName } from "@git-diff-view/utils";
 import { defineComponent, provide, ref, watch, watchEffect, computed, onUnmounted } from "vue";
 
 import {
@@ -19,7 +20,6 @@ import { useProvide } from "../hooks/useProvide";
 
 import { DiffSplitView } from "./DiffSplitView";
 import { DiffUnifiedView } from "./DiffUnifiedView";
-import { diffFontSizeName } from "./tools";
 
 import type { DiffHighlighter } from "@git-diff-view/core";
 import type { CSSProperties, SlotsType } from "vue";

@@ -1,12 +1,17 @@
 import { composeLen } from "@git-diff-view/core";
+import {
+  hunkContentBGName,
+  hunkContentColorName,
+  hunkLineNumberBGName,
+  plainLineNumberColorName,
+  diffAsideWidthName,
+} from "@git-diff-view/utils";
 import { computed, defineComponent, ref } from "vue";
 
 import { useEnableWrap } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 
-import { hunkContentBGName, hunkContentColorName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
-import { diffAsideWidthName } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
 

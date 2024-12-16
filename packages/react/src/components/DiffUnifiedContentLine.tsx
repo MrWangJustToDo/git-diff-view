@@ -1,10 +1,6 @@
 import { type DiffFile, type SyntaxLine, type DiffLine, checkDiffLineIncludeChange } from "@git-diff-view/core";
-import * as React from "react";
-import { memo } from "react";
-
-import { SplitSide, useDiffViewContext } from "..";
-
 import {
+  diffAsideWidthName,
   addContentBGName,
   addLineNumberBGName,
   delContentBGName,
@@ -13,11 +9,15 @@ import {
   plainContentBGName,
   plainLineNumberBGName,
   plainLineNumberColorName,
-} from "./color";
+} from "@git-diff-view/utils";
+import * as React from "react";
+import { memo } from "react";
+
+import { SplitSide, useDiffViewContext } from "..";
+
 import { DiffUnifiedAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import { useDiffWidgetContext } from "./DiffWidgetContext";
-import { diffAsideWidthName } from "./tools";
 
 import type { DiffViewProps } from "..";
 

@@ -1,9 +1,8 @@
 import { DiffLineType, NewLineSymbol, type DiffFile, type DiffLine, type SyntaxLine } from "@git-diff-view/core";
+import { memoFunc, addContentHighlightBGName, delContentHighlightBGName, diffFontSizeName } from "@git-diff-view/utils";
 import * as React from "react";
 
-import { addContentHighlightBGName, delContentHighlightBGName } from "./color";
 import { DiffNoNewLine } from "./DiffNoNewLine";
-import { diffFontSizeName, memoFunc } from "./tools";
 
 const temp = {};
 

@@ -1,11 +1,6 @@
 import { type DiffFile, type SyntaxLine, type DiffLine, checkDiffLineIncludeChange } from "@git-diff-view/core";
-import { defineComponent, ref } from "vue";
-
-import { SplitSide } from "..";
-import { useEnableAddWidget, useEnableHighlight, useEnableWrap, useOnAddWidgetClick, useSetWidget } from "../context";
-import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
-
 import {
+  diffAsideWidthName,
   addContentBGName,
   addLineNumberBGName,
   delContentBGName,
@@ -14,10 +9,15 @@ import {
   plainContentBGName,
   plainLineNumberBGName,
   plainLineNumberColorName,
-} from "./color";
+} from "@git-diff-view/utils";
+import { defineComponent, ref } from "vue";
+
+import { SplitSide } from "..";
+import { useEnableAddWidget, useEnableHighlight, useEnableWrap, useOnAddWidgetClick, useSetWidget } from "../context";
+import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
+
 import { DiffUnifiedAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
-import { diffAsideWidthName } from "./tools";
 
 const DiffUnifiedOldLine = ({
   index,

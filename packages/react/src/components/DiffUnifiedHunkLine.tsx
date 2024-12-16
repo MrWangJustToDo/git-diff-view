@@ -1,11 +1,16 @@
 import { composeLen } from "@git-diff-view/core";
+import {
+  diffAsideWidthName,
+  hunkContentBGName,
+  hunkContentColorName,
+  hunkLineNumberBGName,
+  plainLineNumberColorName,
+} from "@git-diff-view/utils";
 import * as React from "react";
 
 import { useDiffViewContext } from "..";
 
-import { hunkContentBGName, hunkContentColorName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
-import { diffAsideWidthName } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
 

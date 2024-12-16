@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { DiffFile, _cacheMap } from "@git-diff-view/core";
+import { diffFontSizeName } from "@git-diff-view/utils";
 import { memo, useEffect, useMemo, forwardRef, useImperativeHandle, useRef } from "react";
 import * as React from "react";
 
@@ -9,7 +10,7 @@ import { useUnmount } from "../hooks/useUnmount";
 import { DiffSplitView } from "./DiffSplitView";
 import { DiffUnifiedView } from "./DiffUnifiedView";
 import { DiffModeEnum, DiffViewContext } from "./DiffViewContext";
-import { createDiffConfigStore, diffFontSizeName } from "./tools";
+import { createDiffConfigStore } from "./tools";
 // import { DiffSplitView } from "./v2/DiffSplitView_v2";
 
 import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/core";
@@ -286,12 +287,6 @@ const DiffViewWithRef = <T extends unknown>(
   );
 };
 
-const InnerDiffView = forwardRef(DiffViewWithRef) as (<T>(
-  props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
-) => ReactNode) & { displayName?: string };
-
-InnerDiffView.displayName = "DiffView";
-
 // type helper function
 function _DiffView<T>(
   props: DiffViewProps_1<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
@@ -300,8 +295,12 @@ function _DiffView<T>(
   props: DiffViewProps_2<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
 ): ReactNode;
 function _DiffView<T>(props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }) {
-  return <InnerDiffView {...props} />;
+  return <DiffViewWithRef {...props} />;
 }
+
+const InnerDiffView = forwardRef(DiffViewWithRef);
+
+InnerDiffView.displayName = "DiffView";
 
 export const DiffView = InnerDiffView as typeof _DiffView;
 

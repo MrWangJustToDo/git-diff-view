@@ -1,4 +1,5 @@
 import { getUnifiedContentLine } from "@git-diff-view/core";
+import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from "@git-diff-view/utils";
 import { Fragment, computed, defineComponent, ref } from "vue";
 
 import { useEnableWrap, useFontSize } from "../context";
@@ -9,7 +10,6 @@ import { DiffUnifiedContentLine } from "./DiffUnifiedContentLine";
 import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
 import { DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
 import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
-import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
 

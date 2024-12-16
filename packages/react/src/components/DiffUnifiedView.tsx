@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { getUnifiedContentLine } from "@git-diff-view/core";
+import { diffFontSizeName, removeAllSelection, diffAsideWidthName } from "@git-diff-view/utils";
 import * as React from "react";
 import { Fragment, memo, useEffect, useMemo, useRef } from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
@@ -12,7 +13,7 @@ import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
 import { DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
 import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
 import { DiffWidgetContext } from "./DiffWidgetContext";
-import { createDiffWidgetStore, diffAsideWidthName, diffFontSizeName, removeAllSelection } from "./tools";
+import { createDiffWidgetStore } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
 import type { MouseEventHandler } from "react";

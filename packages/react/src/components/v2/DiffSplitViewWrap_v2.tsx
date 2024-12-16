@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { type DiffFile, getSplitLines } from "@git-diff-view/core";
+import { removeAllSelection, diffFontSizeName, diffAsideWidthName } from "@git-diff-view/utils";
 import { memo, useCallback, useMemo } from "react";
 import * as React from "react";
 // SEE https://github.com/facebook/react/pull/25231
@@ -8,7 +9,7 @@ import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 import { useTextWidth } from "../../hooks/useTextWidth";
 import { SplitSide } from "../DiffView";
 import { useDiffViewContext } from "../DiffViewContext";
-import { createDiffSplitConfigStore, removeAllSelection, diffFontSizeName, diffAsideWidthName } from "../tools";
+import { createDiffSplitConfigStore } from "../tools";
 
 import { DiffSplitViewLine } from "./DiffSplitViewLineWrap_v2";
 

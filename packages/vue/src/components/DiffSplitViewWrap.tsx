@@ -1,4 +1,5 @@
 import { getSplitContentLines } from "@git-diff-view/core";
+import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from "@git-diff-view/utils";
 import { Fragment, computed, defineComponent, ref } from "vue";
 
 import { SplitSide } from "..";
@@ -10,7 +11,6 @@ import { DiffSplitContentLine } from "./DiffSplitContentLineWrap";
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineWrap";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineWrap";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineWrap";
-import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from "./tools";
 
 import type { DiffFile } from "@git-diff-view/core";
 

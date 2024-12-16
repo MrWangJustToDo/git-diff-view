@@ -1,9 +1,9 @@
+import { borderColorName, emptyBGName } from "@git-diff-view/utils";
 import { computed, defineComponent, ref } from "vue";
 
 import { useExtendData, useSlots } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 
-import { borderColorName, emptyBGName } from "./color";
 import { SplitSide } from "./DiffView";
 
 import type { DiffFile } from "@git-diff-view/core";

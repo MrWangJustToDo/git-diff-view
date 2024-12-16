@@ -1,7 +1,5 @@
+import { addWidgetBGName, addWidgetColorName, diffFontSizeName } from "@git-diff-view/utils";
 import * as React from "react";
-
-import { addWidgetBGName, addWidgetColorName } from "./color";
-import { diffFontSizeName } from "./tools";
 
 import type { SplitSide } from "./DiffView";
 import type { DiffFile } from "@git-diff-view/core";

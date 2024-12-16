@@ -1,14 +1,19 @@
 import { DiffLineType, type DiffFile, checkDiffLineIncludeChange } from "@git-diff-view/core";
+import {
+  getContentBG,
+  getLineNumberBG,
+  plainLineNumberColorName,
+  diffAsideWidthName,
+  emptyBGName,
+} from "@git-diff-view/utils";
 import { defineComponent, ref } from "vue";
 
 import { useEnableAddWidget, useEnableHighlight, useOnAddWidgetClick, useSetWidget } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 
-import { emptyBGName, getContentBG, getLineNumberBG, plainLineNumberColorName } from "./color";
 import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 import { SplitSide } from "./DiffView";
-import { diffAsideWidthName } from "./tools";
 
 export const DiffSplitContentLine = defineComponent(
   (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {

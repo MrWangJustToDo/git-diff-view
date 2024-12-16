@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { type DiffFile, getSplitContentLines } from "@git-diff-view/core";
+import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from "@git-diff-view/utils";
 import { Fragment, memo, useCallback, useMemo } from "react";
 import * as React from "react";
 // SEE https://github.com/facebook/react/pull/25231
@@ -12,7 +13,7 @@ import { DiffSplitContentLine } from "./DiffSplitContentLineWrap";
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineWrap";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineWrap";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineWrap";
-import { createDiffSplitConfigStore, diffAsideWidthName, diffFontSizeName, removeAllSelection } from "./tools";
+import { createDiffSplitConfigStore } from "./tools";
 
 import type { MouseEventHandler } from "react";
 import type { Ref, UseSelectorWithStore } from "reactivity-store";
