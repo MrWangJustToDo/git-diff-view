@@ -1,14 +1,13 @@
 {
-  "name": "@git-diff-view/lowlight",
-  "description": "@git-diff-view/lowlight",
+  "name": "@git-diff-view/utils",
+  "description": "@git-diff-view/utils",
   "author": "MrWangJustToDo",
   "license": "MIT",
   "version": "0.0.23",
-  "main": "index.js",
   "types": "index.d.ts",
+  "type": "module",
   "files": [
     "dist",
-    "index.js",
     "index.d.ts"
   ],
   "scripts": {
@@ -17,14 +16,14 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MrWangJustToDo/git-diff-view.git",
-    "directory": "packages/lowlight"
+    "directory": "packages/utils"
   },
   "homepage": "https://mrwangjusttodo.github.io/git-diff-view",
   "exports": {
     ".": {
-      "require": "./index.js",
       "types": "./index.d.ts",
-      "import": "./dist/esm/index.mjs"
+      "import": "./dist/esm/index.mjs",
+      "default": "./dist/esm/index.mjs"
     },
     "./package.json": "./package.json"
   },
@@ -33,27 +32,13 @@
     "output": [
       {
         "dir": "./dist",
-        "entryFileNames": "cjs/index.js",
-        "format": "cjs",
-        "type": true,
-        "multiple": true,
-        "sourcemap": true
-      },
-      {
-        "dir": "./dist",
         "entryFileNames": "esm/index.mjs",
+        "type": true,
         "format": "esm",
         "sourcemap": true
       }
     ]
   },
-  "keywords": [
-    "highlight",
-    "virtual dom highlight"
-  ],
   "dependencies": {
-    "@types/hast": "^3.0.0",
-    "highlight.js": "^11.10.0",
-    "lowlight": "^3.2.0"
   }
 }

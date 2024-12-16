@@ -21,7 +21,7 @@
     "build": "vue-tsc --noEmit && vite build",
     "gen:type": "dts-bundle-generator -o index.d.ts dist/index.d.ts"
   },
-  "homepage": "https://github.com/MrWangJustToDo/git-diff-view",
+  "homepage": "https://mrwangjusttodo.github.io/git-diff-view",
   "exports": {
     ".": {
       "require": "./index.cjs",
@@ -50,6 +50,7 @@
   ],
   "dependencies": {
     "@git-diff-view/core": "^0.0.23",
+    "@git-diff-view/utils": "^0.0.23",
     "@types/hast": "^3.0.0",
     "highlight.js": "^11.10.0",
     "lowlight": "^3.2.0",
