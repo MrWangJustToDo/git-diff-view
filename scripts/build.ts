@@ -9,7 +9,9 @@ const externalCorePackage = (id: string) =>
   (id.includes("node_modules") || id.includes("@git-diff-view/")) && !id.includes("tslib");
 
 const external = (id: string) =>
-  (id.includes("node_modules") || id.includes("@git-diff-view/")) && !id.includes("tslib") && !id.endsWith(".css");
+  (id.includes("node_modules") || (id.includes("@git-diff-view/") && !id.endsWith("@git-diff-view/utils"))) &&
+  !id.includes("tslib") &&
+  !id.endsWith(".css");
 
 const clean = async (packageName: string) => {
   const typePath = resolve(process.cwd(), "packages", packageName, "index.d.ts");
@@ -51,6 +53,8 @@ const start = async () => {
   await buildType("lowlight");
   await rollupBuild({ packageName: "shiki", packageScope: "packages", external: external });
   await buildType("shiki");
+  await rollupBuild({ packageName: "utils", packageScope: "packages", external: externalCorePackage });
+  await buildType("utils");
   await rollupBuild({
     packageName: "core",
     packageScope: "packages",

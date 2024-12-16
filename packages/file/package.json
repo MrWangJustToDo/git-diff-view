@@ -19,7 +19,7 @@
     "url": "git+https://github.com/MrWangJustToDo/git-diff-view.git",
     "directory": "packages/file"
   },
-  "homepage": "https://github.com/MrWangJustToDo/git-diff-view",
+  "homepage": "https://mrwangjusttodo.github.io/git-diff-view",
   "exports": {
     ".": {
       "require": "./index.js",

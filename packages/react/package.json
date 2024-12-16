@@ -20,7 +20,7 @@
     "url": "git+https://github.com/MrWangJustToDo/git-diff-view.git",
     "directory": "packages/react"
   },
-  "homepage": "https://github.com/MrWangJustToDo/git-diff-view",
+  "homepage": "https://mrwangjusttodo.github.io/git-diff-view",
   "exports": {
     ".": {
       "require": "./index.js",
@@ -64,6 +64,7 @@
   ],
   "dependencies": {
     "@git-diff-view/core": "^0.0.23",
+    "@git-diff-view/utils": "^0.0.23",
     "@types/hast": "^3.0.0",
     "fast-diff": "^1.3.0",
     "highlight.js": "^11.10.0",

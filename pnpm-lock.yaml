@@ -136,6 +136,9 @@ importers:
       '@git-diff-view/core':
         specifier: ^0.0.23
         version: link:../core
+      '@git-diff-view/utils':
+        specifier: ^0.0.23
+        version: link:../utils
       '@types/hast':
         specifier: ^3.0.0
         version: 3.0.4
@@ -186,11 +189,16 @@ importers:
         specifier: ^1.24.0
         version: 1.24.0
 
+  packages/utils: {}
+
   packages/vue:
     dependencies:
       '@git-diff-view/core':
         specifier: ^0.0.23
         version: link:../core
+      '@git-diff-view/utils':
+        specifier: ^0.0.23
+        version: link:../utils
       '@types/hast':
         specifier: ^3.0.0
         version: 3.0.4
