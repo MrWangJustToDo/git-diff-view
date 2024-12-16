@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "rootDir": "src",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowSyntheticDefaultImports": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+  },
+  "include": ["./src"],
+  "exclude": ["node_modules"]
+}
