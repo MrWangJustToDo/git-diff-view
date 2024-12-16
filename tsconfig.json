@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
+    "moduleResolution": "bundler",
     "esModuleInterop": true
   },
   "ts-node": {
