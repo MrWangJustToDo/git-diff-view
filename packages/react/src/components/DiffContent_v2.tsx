@@ -6,12 +6,11 @@ import {
   type diffChanges,
   type SyntaxLine,
 } from "@git-diff-view/core";
+import { addContentHighlightBGName, delContentHighlightBGName, diffFontSizeName } from "@git-diff-view/utils";
 import * as React from "react";
 
-import { addContentHighlightBGName, delContentHighlightBGName } from "./color";
 import { getStyleObjectFromString, getSymbol } from "./DiffContent";
 import { DiffNoNewLine } from "./DiffNoNewLine";
-import { diffFontSizeName } from "./tools";
 
 const RenderRange = ({
   str,

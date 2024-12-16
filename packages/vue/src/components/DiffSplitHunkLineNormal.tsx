@@ -1,14 +1,19 @@
 import { composeLen, type DiffFile } from "@git-diff-view/core";
+import {
+  hunkContentBGName,
+  hunkContentColorName,
+  hunkLineNumberBGName,
+  plainLineNumberColorName,
+  diffAsideWidthName,
+} from "@git-diff-view/utils";
 import { computed, defineComponent, ref } from "vue";
 
 import { useMode } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
-import { hunkContentBGName, hunkContentColorName, hunkLineNumberBGName, plainLineNumberColorName } from "./color";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 import { DiffModeEnum, SplitSide } from "./DiffView";
-import { diffAsideWidthName } from "./tools";
 
 const DiffSplitHunkLineGitHub = defineComponent(
   (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {

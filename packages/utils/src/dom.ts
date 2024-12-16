@@ -28,7 +28,3 @@ export const syncScroll = (left: HTMLElement, right: HTMLElement) => {
     right.onscroll = null;
   };
 };
-
-export const diffFontSizeName = "--diff-font-size--";
-
-export const diffAsideWidthName = "--diff-aside-width--";

@@ -1,17 +1,17 @@
 import { composeLen, type DiffFile } from "@git-diff-view/core";
-import { computed, defineComponent, ref } from "vue";
-
-import { DiffModeEnum } from "..";
-import { useMode } from "../context";
-import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
-
 import {
   borderColorName,
   hunkContentBGName,
   hunkContentColorName,
   hunkLineNumberBGName,
   plainLineNumberColorName,
-} from "./color";
+} from "@git-diff-view/utils";
+import { computed, defineComponent, ref } from "vue";
+
+import { DiffModeEnum } from "..";
+import { useMode } from "../context";
+import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
+
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 
 const DiffSplitHunkLineGitHub = defineComponent(

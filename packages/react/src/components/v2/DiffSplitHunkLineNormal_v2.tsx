@@ -1,12 +1,17 @@
 import { composeLen, type DiffFile } from "@git-diff-view/core";
+import {
+  hunkLineNumberBGName,
+  plainLineNumberColorName,
+  hunkContentBGName,
+  hunkContentColorName,
+  diffAsideWidthName,
+} from "@git-diff-view/utils";
 import * as React from "react";
 
 import { useSyncHeight } from "../../hooks/useSyncHeight";
-import { hunkLineNumberBGName, plainLineNumberColorName, hunkContentBGName, hunkContentColorName } from "../color";
 import { ExpandUp, ExpandDown, ExpandAll } from "../DiffExpand";
 import { SplitSide } from "../DiffView";
 import { useDiffViewContext, DiffModeEnum } from "../DiffViewContext";
-import { diffAsideWidthName } from "../tools";
 
 const _DiffSplitHunkLineGitHub = ({
   index,

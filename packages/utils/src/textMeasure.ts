@@ -45,4 +45,4 @@ export const getTextMeasureInstance = () => {
   instance = instance || new TextMeasure();
 
   return instance;
-}
+};

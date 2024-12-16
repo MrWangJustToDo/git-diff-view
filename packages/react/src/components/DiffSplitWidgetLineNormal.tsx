@@ -1,10 +1,10 @@
+import { emptyBGName } from "@git-diff-view/utils";
 import * as React from "react";
 
 import { useDiffViewContext, SplitSide } from "..";
 import { useDomWidth } from "../hooks/useDomWidth";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
-import { emptyBGName } from "./color";
 import { useDiffWidgetContext } from "./DiffWidgetContext";
 
 import type { DiffFile } from "@git-diff-view/core";

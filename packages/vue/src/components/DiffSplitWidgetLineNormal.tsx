@@ -1,3 +1,4 @@
+import { emptyBGName } from "@git-diff-view/utils";
 import { computed, defineComponent, ref } from "vue";
 
 import { useSetWidget, useSlots, useWidget } from "../context";
@@ -5,7 +6,6 @@ import { useDomWidth } from "../hooks/useDomWidth";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
-import { emptyBGName } from "./color";
 import { SplitSide } from "./DiffView";
 
 import type { DiffFile } from "@git-diff-view/core";

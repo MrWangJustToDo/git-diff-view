@@ -1,9 +1,15 @@
 import { DiffLineType, type DiffFile, checkDiffLineIncludeChange } from "@git-diff-view/core";
+import {
+  getContentBG,
+  getLineNumberBG,
+  plainLineNumberColorName,
+  emptyBGName,
+  borderColorName,
+} from "@git-diff-view/utils";
 import * as React from "react";
 
 import { SplitSide, useDiffViewContext } from "..";
 
-import { borderColorName, emptyBGName, getContentBG, getLineNumberBG, plainLineNumberColorName } from "./color";
 import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 // import { DiffContent_v2 } from "./DiffContent_v2";

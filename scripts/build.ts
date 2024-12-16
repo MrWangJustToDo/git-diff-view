@@ -139,3 +139,8 @@ const start = async () => {
 };
 
 start();
+
+// (async () => {
+//   await rollupBuild({ packageName: "utils", packageScope: "packages", external: externalCorePackage });
+//   await buildType("utils");
+// })();

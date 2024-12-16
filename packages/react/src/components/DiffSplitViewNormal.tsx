@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { getSplitContentLines, type DiffFile } from "@git-diff-view/core";
+import { removeAllSelection, syncScroll, diffFontSizeName, borderColorName, diffAsideWidthName } from "@git-diff-view/utils";
 import { Fragment, memo, useEffect, useRef } from "react";
 import * as React from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
@@ -7,13 +8,11 @@ import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 import { useDiffViewContext } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";
 
-import { borderColorName } from "./color";
 import { DiffSplitContentLine } from "./DiffSplitContentLineNormal";
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
 import { SplitSide } from "./DiffView";
-import { diffAsideWidthName, diffFontSizeName, removeAllSelection, syncScroll } from "./tools";
 
 import type { MouseEventHandler } from "react";
 
