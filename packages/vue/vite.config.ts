@@ -8,6 +8,8 @@ import dts from "vite-plugin-dts";
 import pkg from "./package.json";
 
 export default defineConfig({
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   plugins: [typescript({ tsconfig: "./tsconfig.json" }), vue(), vueJsx(), dts()],
   build: {
     lib: {
