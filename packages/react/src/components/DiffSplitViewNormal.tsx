@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { getSplitContentLines, type DiffFile } from "@git-diff-view/core";
-import { removeAllSelection, syncScroll, diffFontSizeName, borderColorName, diffAsideWidthName } from "@git-diff-view/utils";
+import {
+  removeAllSelection,
+  syncScroll,
+  diffFontSizeName,
+  borderColorName,
+  diffAsideWidthName,
+} from "@git-diff-view/utils";
 import { Fragment, memo, useEffect, useRef } from "react";
 import * as React from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";

@@ -333,7 +333,7 @@ const DiffSplitHunkLineGitLab = defineComponent(
             )}
           </td>
           <td
-            class="diff-line-hunk-content pr-[10px] align-middle"
+            class="diff-line-hunk-content relative pr-[10px] align-middle"
             style={{ backgroundColor: `var(${hunkContentBGName})` }}
           >
             <div

@@ -40,5 +40,6 @@
     ]
   },
   "dependencies": {
+    "@git-diff-view/core": "^0.0.23"
   }
 }

@@ -1,20 +1,12 @@
 import { DiffLineType, NewLineSymbol, type DiffFile, type DiffLine, type SyntaxLine } from "@git-diff-view/core";
-import { addContentHighlightBGName, delContentHighlightBGName, diffFontSizeName } from "@git-diff-view/utils";
+import {
+  addContentHighlightBGName,
+  delContentHighlightBGName,
+  diffFontSizeName,
+  getSymbol,
+} from "@git-diff-view/utils";
 
 import { DiffNoNewLine } from "./DiffNoNewLine";
-
-const getSymbol = (symbol: NewLineSymbol) => {
-  switch (symbol) {
-    case NewLineSymbol.LF:
-      return "␊";
-    case NewLineSymbol.CR:
-      return "␍";
-    case NewLineSymbol.CRLF:
-      return "␍␊";
-    default:
-      return "";
-  }
-};
 
 const DiffString = ({
   rawLine,

@@ -189,7 +189,11 @@ importers:
         specifier: ^1.24.0
         version: 1.24.0
 
-  packages/utils: {}
+  packages/utils:
+    dependencies:
+      '@git-diff-view/core':
+        specifier: ^0.0.23
+        version: link:../core
 
   packages/vue:
     dependencies:

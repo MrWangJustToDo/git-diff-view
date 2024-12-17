@@ -1,5 +1,11 @@
 import { DiffLineType, NewLineSymbol, type DiffFile, type DiffLine, type SyntaxLine } from "@git-diff-view/core";
-import { memoFunc, addContentHighlightBGName, delContentHighlightBGName, diffFontSizeName } from "@git-diff-view/utils";
+import {
+  memoFunc,
+  addContentHighlightBGName,
+  delContentHighlightBGName,
+  diffFontSizeName,
+  getSymbol,
+} from "@git-diff-view/utils";
 import * as React from "react";
 
 import { DiffNoNewLine } from "./DiffNoNewLine";
@@ -31,19 +37,6 @@ export const getStyleObjectFromString = memoFunc((str: string) => {
   });
   return style;
 });
-
-export const getSymbol = (symbol: NewLineSymbol) => {
-  switch (symbol) {
-    case NewLineSymbol.LF:
-      return "␊";
-    case NewLineSymbol.CR:
-      return "␍";
-    case NewLineSymbol.CRLF:
-      return "␍␊";
-    default:
-      return "";
-  }
-};
 
 const DiffString = ({
   rawLine,
