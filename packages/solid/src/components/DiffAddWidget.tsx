@@ -1,16 +1,9 @@
 import { diffFontSizeName, addWidgetColorName, addWidgetBGName } from "@git-diff-view/utils";
 
-import { type SplitSide } from "./DiffView";
-
+import type { SplitSide } from "./DiffView";
 import type { DiffFile } from "@git-diff-view/core";
 
-export const DiffSplitAddWidget = ({
-  side,
-  className,
-  lineNumber,
-  onWidgetClick,
-  onOpenAddWidget,
-}: {
+export const DiffSplitAddWidget = (props: {
   index: number;
   className?: string;
   lineNumber: number;
@@ -23,7 +16,7 @@ export const DiffSplitAddWidget = ({
     <div
       class={
         "diff-add-widget-wrapper invisible select-none transition-transform hover:scale-110 group-hover:visible" +
-        (className ? " " + className : "")
+        (props.className ? " " + props.className : "")
       }
       style={{
         width: `calc(var(${diffFontSizeName}) * 1.4)`,
@@ -37,8 +30,8 @@ export const DiffSplitAddWidget = ({
           "background-color": `var(${addWidgetBGName})`,
         }}
         onClick={() => {
-          onOpenAddWidget(lineNumber, side);
-          onWidgetClick?.("onAddWidgetClick", lineNumber, side);
+          props.onOpenAddWidget(props.lineNumber, props.side);
+          props.onWidgetClick?.("onAddWidgetClick", props.lineNumber, props.side);
         }}
       >
         +
@@ -47,12 +40,7 @@ export const DiffSplitAddWidget = ({
   );
 };
 
-export const DiffUnifiedAddWidget = ({
-  lineNumber,
-  side,
-  onWidgetClick,
-  onOpenAddWidget,
-}: {
+export const DiffUnifiedAddWidget = (props: {
   index: number;
   diffFile: DiffFile;
   lineNumber: number;
@@ -75,8 +63,8 @@ export const DiffUnifiedAddWidget = ({
           "background-color": `var(${addWidgetBGName})`,
         }}
         onClick={() => {
-          onOpenAddWidget(lineNumber, side);
-          onWidgetClick?.("onAddWidgetClick", lineNumber, side);
+          props.onOpenAddWidget(props.lineNumber, props.side);
+          props.onWidgetClick?.("onAddWidgetClick", props.lineNumber, props.side);
         }}
       >
         +

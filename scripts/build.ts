@@ -138,9 +138,9 @@ const start = async () => {
   process.exit(0);
 };
 
-start();
+// start();
 
-// (async () => {
-//   await rollupBuild({ packageName: "utils", packageScope: "packages", external: externalCorePackage });
-//   await buildType("utils");
-// })();
+(async () => {
+  await rollupBuild({ packageName: "utils", packageScope: "packages", external: externalCorePackage });
+  await buildType("utils");
+})();

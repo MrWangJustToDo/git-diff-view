@@ -42,6 +42,6 @@ declare enum NewLineSymbol {
 	NORMAL = 5,
 	NULL = 6
 }
-export declare const getSymbol: (symbol: NewLineSymbol) => "" | "\u240A" | "\u240D" | "\u240D\u240A";
+export declare const getSymbol: (symbol: NewLineSymbol | string | null | undefined) => "" | "\u240A" | "\u240D" | "\u240D\u240A";
 
 export {};
