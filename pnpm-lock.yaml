@@ -239,7 +239,11 @@ importers:
 
   packages/svelte: {}
 
-  packages/utils: {}
+  packages/utils:
+    dependencies:
+      '@git-diff-view/core':
+        specifier: ^0.0.23
+        version: link:../core
 
   packages/vue:
     dependencies:

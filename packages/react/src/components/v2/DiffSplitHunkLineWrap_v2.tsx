@@ -206,7 +206,7 @@ const DiffSplitHunkLineGitLab = ({
       </div>
       <div className="diff-split-line w-[1px] flex-shrink-0" style={{ backgroundColor: `var(${borderColorName})` }} />
       <div
-        className="diff-line-hunk-action flex w-[1%] min-w-[40px] select-none flex-col items-center justify-center p-[1px]"
+        className="diff-line-hunk-action flex relative w-[1%] min-w-[40px] select-none flex-col items-center justify-center p-[1px]"
         style={{
           backgroundColor: `var(${hunkLineNumberBGName})`,
           color: `var(${plainLineNumberColorName})`,
@@ -268,7 +268,7 @@ const DiffSplitHunkLineGitLab = ({
         )}
       </div>
       <div
-        className="diff-line-hunk-content flex w-full items-center px-[10px]"
+        className="diff-line-hunk-content flex relative w-full items-center px-[10px]"
         style={{ backgroundColor: `var(${hunkContentBGName})`, color: `var(${hunkContentColorName})` }}
       >
         {currentHunk.splitInfo?.plainText || currentHunk.text}
