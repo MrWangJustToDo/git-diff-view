@@ -1,6 +1,6 @@
 import { NewLineSymbol } from "@git-diff-view/core";
 
-export const getSymbol = (symbol: NewLineSymbol) => {
+export const getSymbol = (symbol: NewLineSymbol | string | null | undefined) => {
   switch (symbol) {
     case NewLineSymbol.LF:
       return "␊";
