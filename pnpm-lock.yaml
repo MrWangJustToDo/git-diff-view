@@ -217,8 +217,8 @@ importers:
         version: 3.3.0
     devDependencies:
       '@rollup/plugin-typescript':
-        specifier: ^12.1.2
-        version: 12.1.2(rollup@4.24.3)(tslib@2.8.0)(typescript@5.4.2)
+        specifier: ^11.1.6
+        version: 11.1.6(rollup@4.24.3)(tslib@2.8.0)(typescript@5.4.2)
       '@vitejs/plugin-vue':
         specifier: ^5.2.1
         version: 5.2.1(vite@5.4.10(@types/node@22.10.1)(sugarss@4.0.1(postcss@8.4.47))(terser@5.27.0))(vue@3.5.13(typescript@5.4.2))
@@ -1371,19 +1371,6 @@ packages:
 
   '@rollup/plugin-typescript@11.1.6':
     resolution: {integrity: sha512-R92yOmIACgYdJ7dJ97p4K69I8gg6IEHt8M7dUBxN3W6nrO8uUxX5ixl0yU/N3aZTi8WhPuICvOHXQvF6FaykAA==}
-    engines: {node: '>=14.0.0'}
-    peerDependencies:
-      rollup: ^2.14.0||^3.0.0||^4.0.0
-      tslib: '*'
-      typescript: '>=3.7.0'
-    peerDependenciesMeta:
-      rollup:
-        optional: true
-      tslib:
-        optional: true
-
-  '@rollup/plugin-typescript@12.1.2':
-    resolution: {integrity: sha512-cdtSp154H5sv637uMr1a8OTWB0L1SWDSm1rDGiyfcGcvQ6cuTs4MDk2BVEBGysUWago4OJN4EQZqOTl/QY3Jgg==}
     engines: {node: '>=14.0.0'}
     peerDependencies:
       rollup: ^2.14.0||^3.0.0||^4.0.0
@@ -6285,7 +6272,7 @@ snapshots:
       rollup: 4.24.3
       tslib: 2.8.0
 
-  '@rollup/plugin-typescript@12.1.2(rollup@4.24.3)(tslib@2.8.0)(typescript@5.4.2)':
+  '@rollup/plugin-typescript@11.1.6(rollup@4.24.3)(tslib@2.8.0)(typescript@5.4.2)':
     dependencies:
       '@rollup/pluginutils': 5.1.0(rollup@4.24.3)
       resolve: 1.22.8
