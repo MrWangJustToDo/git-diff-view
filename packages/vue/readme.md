@@ -1,4 +1,4 @@
-## A Vue UI Component to render `git diff` data, support `Split View` and `Unified View`, just like `GitHub` and `GitLab`.
+## A Vue DiffView Component like GitHub, Easy to use and feature complete.
 
 ### Usage
 

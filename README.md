@@ -1,6 +1,7 @@
 ## Git Diff Component
 
-a React/Vue component to show the `git diff`/`file diff` result, just like Github code review page.
+A Diff view component for React / Vue,
+The most one component what easy to use and feature complete.
 
 [![Deploy](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml/badge.svg)](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml)
 

@@ -15,6 +15,7 @@ const file = new DiffFile(
     data?.newFile?.fileLang || ""
   );
 // light / dark theme, base on current highlight engine
+// default is light
 file.initTheme(xxx);
 // init
 file.init();

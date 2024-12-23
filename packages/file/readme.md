@@ -1,4 +1,4 @@
-## file content diff for @git-diff-view component
+## `file content diff` for @git-diff-view component
 
 This package is a wrapper for [`diff`](https://github.com/kpdecker/jsdiff) and [`@git-diff-view/core`](https://github.com/MrWangJustToDo/git-diff-view) to support pure file content diff.
 
