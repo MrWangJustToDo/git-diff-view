@@ -28,6 +28,7 @@
     "@git-diff-view/core": "workspace:*",
     "@git-diff-view/react": "workspace:*",
     "@git-diff-view/vue": "workspace:*",
+    "@git-diff-view/utils": "workspace:*",
     "@swc/core": "^1.7.40",
     "@types/lodash": "^4.17.13",
     "@types/node": "^22.8.5",

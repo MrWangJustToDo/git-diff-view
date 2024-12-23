@@ -133,6 +133,8 @@ export class DiffFile {
 
   #highlighterName?: string;
 
+  #highlighterType?: string;
+
   #theme: "light" | "dark" = "light";
 
   #_theme?: "light" | "dark";
@@ -598,6 +600,8 @@ export class DiffFile {
   initSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> } = {}) {
     if (this.#hasInitSyntax && (!this.#_theme || this.#theme === this.#_theme)) return;
 
+    if (this.#highlighterType === "class") return;
+
     if (this.#composeByMerge && !this.#composeByFullMerge) {
       __DEV__ &&
         console.error(
@@ -610,6 +614,9 @@ export class DiffFile {
 
     this.#highlighterName =
       this.#oldFileResult?.highlighterName || this.#newFileResult?.highlighterName || this.#highlighterName;
+
+    this.#highlighterType =
+      this.#oldFileResult?.highlighterType || this.#newFileResult?.highlighterType || this.#highlighterType;
 
     this.#hasInitSyntax = true;
   }
@@ -1285,6 +1292,7 @@ export class DiffFile {
     const fileLineLength = this.fileLineLength;
     const composeByDiff = this.#composeByDiff;
     const highlighterName = this.#highlighterName;
+    const highlighterType = this.#highlighterType;
     const hasSomeLineCollapsed = this.hasSomeLineCollapsed;
 
     // split
@@ -1322,6 +1330,7 @@ export class DiffFile {
       unifiedHunkLines,
 
       highlighterName,
+      highlighterType,
       composeByDiff,
       hasSomeLineCollapsed,
 
@@ -1340,6 +1349,7 @@ export class DiffFile {
     this.#hasBuildUnified = data.hasBuildUnified;
     this.#composeByDiff = data.composeByDiff;
     this.#highlighterName = data.highlighterName;
+    this.#highlighterType = data.highlighterType;
 
     this.#oldFileLines = data.oldFileLines;
     this.#oldFileDiffLines = data.oldFileDiffLines;

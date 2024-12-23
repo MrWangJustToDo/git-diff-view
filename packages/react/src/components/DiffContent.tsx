@@ -71,7 +71,14 @@ const DiffString = ({
                 operator === "add" ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`,
             }}
           >
-            {isLast ? `${_str2}${getSymbol(isNewLineSymbolChanged)}` : str2}
+            {isLast ? (
+              <>
+                {_str2}
+                <span data-newline-symbol>{getSymbol(isNewLineSymbolChanged)}</span>
+              </>
+            ) : (
+              str2
+            )}
           </span>
           {str3}
         </span>
@@ -164,7 +171,14 @@ const DiffSyntax = ({
                       borderBottomRightRadius: isEnd || isLast ? "0.2em" : undefined,
                     }}
                   >
-                    {isLast ? `${_str2}${getSymbol(isNewLineSymbolChanged)}` : str2}
+                    {isLast ? (
+                      <>
+                        {_str2}
+                        <span data-newline-symbol>{getSymbol(isNewLineSymbolChanged)}</span>
+                      </>
+                    ) : (
+                      str2
+                    )}
                   </span>
                   {str3}
                 </span>

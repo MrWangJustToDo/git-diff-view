@@ -116,6 +116,7 @@ export declare class DiffFile {
 		unifiedLines: UnifiedLineItem[];
 		unifiedHunkLines: Record<string, DiffHunkItem>;
 		highlighterName: string;
+		highlighterType: string;
 		composeByDiff: boolean;
 		hasSomeLineCollapsed: boolean;
 		version: string;
@@ -156,6 +157,7 @@ export declare class DiffFile {
 		unifiedLines: UnifiedLineItem[];
 		unifiedHunkLines: Record<string, DiffHunkItem>;
 		highlighterName: string;
+		highlighterType: string;
 		composeByDiff: boolean;
 		hasSomeLineCollapsed: boolean;
 		version: string;

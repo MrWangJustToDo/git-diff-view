@@ -14,9 +14,13 @@ const diffFile = ref<DiffFile>();
 
 const wrap = ref(true);
 
+const dark = ref(false);
+
 const mode = ref(DiffModeEnum.Split);
 
 const toggleHighlight = () => (highlight.value = !highlight.value);
+
+const toggleTheme = () => (dark.value = !dark.value);
 
 const toggleWrap = () => (wrap.value = !wrap.value);
 
@@ -55,7 +59,7 @@ watch(
 watch(
   _data,
   () => {
-    worker.postMessage({ data: _data.value, theme: "dark" });
+    worker.postMessage({ data: _data.value });
   },
   { immediate: true }
 );
@@ -94,6 +98,12 @@ const resetV = () => (v.value = "");
       </button>
       <button
         class="rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold leading-5 text-white hover:bg-sky-700"
+        @click="toggleTheme"
+      >
+        {{ dark ? "Toggle to light theme" : "Toggle to dark theme" }}
+      </button>
+      <button
+        class="rounded-full bg-sky-500 px-5 py-2 text-sm font-semibold leading-5 text-white hover:bg-sky-700"
         @click="toggleMode"
       >
         {{ mode === DiffModeEnum.Split ? "Toggle to UnifiedMode" : "Toggle to SplitMode" }}
@@ -108,6 +118,7 @@ const resetV = () => (v.value = "");
       :diff-view-highlight="highlight"
       :diff-view-add-widget="true"
       ref="instance"
+      :diff-view-theme="dark ? 'dark' : 'light'"
       :diff-view-wrap="wrap"
       @on-add-widget-click="resetV"
       :extend-data="extendData"

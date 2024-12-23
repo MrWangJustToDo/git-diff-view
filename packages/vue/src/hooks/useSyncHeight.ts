@@ -29,7 +29,7 @@ export const useSyncHeight = ({
       const timer = setTimeout(() => {
         const container = document.querySelector(`#diff-root${id.value}`);
 
-        const elements = Array.from(container?.querySelectorAll(selector.value));
+        const elements = Array.from(container?.querySelectorAll(selector.value) || []);
 
         const wrappers = Array.from(container?.querySelectorAll(wrapper?.value) || []);
 
