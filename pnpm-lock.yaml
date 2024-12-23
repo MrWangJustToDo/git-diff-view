@@ -14,6 +14,9 @@ importers:
       '@git-diff-view/react':
         specifier: workspace:*
         version: link:packages/react
+      '@git-diff-view/utils':
+        specifier: workspace:*
+        version: link:packages/utils
       '@git-diff-view/vue':
         specifier: workspace:*
         version: link:packages/vue
@@ -78,7 +81,7 @@ importers:
   packages/core:
     dependencies:
       '@git-diff-view/lowlight':
-        specifier: ^0.0.23
+        specifier: ^0.0.24
         version: link:../lowlight
       fast-diff:
         specifier: ^1.3.0
@@ -97,7 +100,7 @@ importers:
   packages/file:
     dependencies:
       '@git-diff-view/core':
-        specifier: ^0.0.23
+        specifier: ^0.0.24
         version: link:../core
       diff:
         specifier: ^7.0.0
@@ -134,11 +137,8 @@ importers:
   packages/react:
     dependencies:
       '@git-diff-view/core':
-        specifier: ^0.0.23
+        specifier: ^0.0.24
         version: link:../core
-      '@git-diff-view/utils':
-        specifier: ^0.0.23
-        version: link:../utils
       '@types/hast':
         specifier: ^3.0.0
         version: 3.0.4
@@ -192,17 +192,14 @@ importers:
   packages/utils:
     dependencies:
       '@git-diff-view/core':
-        specifier: ^0.0.23
+        specifier: ^0.0.24
         version: link:../core
 
   packages/vue:
     dependencies:
       '@git-diff-view/core':
-        specifier: ^0.0.23
+        specifier: ^0.0.24
         version: link:../core
-      '@git-diff-view/utils':
-        specifier: ^0.0.23
-        version: link:../utils
       '@types/hast':
         specifier: ^3.0.0
         version: 3.0.4
