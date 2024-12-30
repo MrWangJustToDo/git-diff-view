@@ -8,6 +8,7 @@
   "types": "index.d.ts",
   "files": [
     "dist",
+    "styles",
     "index.js",
     "index.d.ts"
   ],

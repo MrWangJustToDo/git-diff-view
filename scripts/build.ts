@@ -1,5 +1,5 @@
 import { spawn } from "node:child_process";
-import { readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { rollupBuild } from "project-tool/rollup";
 import postcss from "rollup-plugin-postcss";
@@ -12,6 +12,16 @@ const external = (id: string) =>
   (id.includes("node_modules") || (id.includes("@git-diff-view/") && !id.endsWith("@git-diff-view/utils"))) &&
   !id.includes("tslib") &&
   !id.endsWith(".css");
+
+// fix css path not found in legacy module bundler
+const copyCss = async (packageName: string) => {
+  const cssPath = resolve(process.cwd(), "packages", packageName, "dist", "css", "diff-view.css");
+  const cssContent = await readFile(cssPath, "utf-8");
+  const legacyCssDirPath = resolve(process.cwd(), "packages", packageName, "styles");
+  await mkdir(legacyCssDirPath).catch(() => void 0);
+  const cssDistPath = resolve(legacyCssDirPath, "diff-view.css");
+  await writeFile(cssDistPath, cssContent);
+};
 
 const clean = async (packageName: string) => {
   const typePath = resolve(process.cwd(), "packages", packageName, "index.d.ts");
@@ -126,6 +136,7 @@ const start = async () => {
     },
   });
   await buildType("react");
+  await copyCss("react");
   // 对于 "jsx": "preserve" 最新的rollup已经不支持解析，因此使用vite来进行打包
   // https://github.com/rollup/plugins/issues/72
   // https://rollupjs.org/migration/#configuration-changes
@@ -135,6 +146,7 @@ const start = async () => {
     ls.on("error", (e) => j(e));
   });
   await buildType("vue");
+  await copyCss("vue");
   process.exit(0);
 };
 
