@@ -64,7 +64,7 @@ type typeSlots = SlotsType<{
   extend: { lineNumber: number; side: SplitSide; data: any; diffFile: DiffFile; onUpdate: () => void };
 }>;
 
-// vue 组件打包目前无法支持范型 也不支持 slots
+// vue 组件打包目前无法支持泛型 也不支持 slots
 export const DiffView = defineComponent<
   DiffViewProps<any>,
   { onAddWidgetClick: (lineNumber: number, side: SplitSide) => void },
