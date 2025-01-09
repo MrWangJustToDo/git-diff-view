@@ -40,12 +40,18 @@ export const DiffSplitWidgetLine = defineComponent(
       newLine.value = diffFile.getSplitRightLine(props.index);
     });
 
-    const currentIsShow = computed(() => !!oldLineWidget.value || !!newLineWidget.value);
+    const currentIsShow = computed(
+      () =>
+        (!!oldLineWidget.value || !!newLineWidget.value) &&
+        !oldLine.value.isHidden &&
+        !newLine.value.isHidden &&
+        !!slots.widget
+    );
 
     const onCloseWidget = () => setWidget({});
 
     return () => {
-      if (!currentIsShow.value || !slots.widget) return null;
+      if (!currentIsShow.value) return null;
 
       const oldWidgetRendered = oldLineWidget.value
         ? slots.widget?.({

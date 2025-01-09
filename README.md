@@ -1,9 +1,17 @@
-## Git Diff Component
+<p align="center">
+  <a href="https://mrwangjusttodo.github.io/git-diff-view">
+    <img src="icon.png" alt="logo" width="180" />
+  </a>
+</p>
+
+# Git Diff Component
 
 A Diff view component for React / Vue,
 The most one component what easy to use and feature complete.
 
 [![Deploy](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml/badge.svg)](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml)
+![NPM Downloads](https://img.shields.io/npm/dm/%40git-diff-view%2Fcore)
+![NPM License](https://img.shields.io/npm/l/%40git-diff-view%2Fcore)
 
 ## Demo ---- git-diff / file-diff
 [git-mode](https://mrwangjusttodo.github.io/git-diff-view/?type=try&tab=git)

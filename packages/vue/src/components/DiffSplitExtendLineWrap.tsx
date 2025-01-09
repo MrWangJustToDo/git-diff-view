@@ -39,7 +39,8 @@ export const DiffSplitExtendLine = defineComponent(
     const currentIsShow = computed(() =>
       Boolean(
         (oldLineExtend.value || newLineExtend.value) &&
-          ((!oldLine.value?.isHidden && !newLine.value?.isHidden) || enableExpand.value)
+          ((!oldLine.value?.isHidden && !newLine.value?.isHidden) || enableExpand.value) &&
+          slots.extend
       )
     );
 
