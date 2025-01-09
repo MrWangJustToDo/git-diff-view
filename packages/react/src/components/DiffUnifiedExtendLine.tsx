@@ -87,7 +87,7 @@ export const DiffUnifiedExtendLine = ({
 
   const hasExtend = oldLineExtend?.data || newLineExtend?.data;
 
-  if (!hasExtend || !unifiedItem || unifiedItem.isHidden || !unifiedItem.diff) return null;
+  if (!hasExtend || !unifiedItem || unifiedItem.isHidden) return null;
 
   return (
     <_DiffUnifiedExtendLine
