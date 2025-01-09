@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { useDiffViewContext } from "..";
+import { useDiffViewContext } from "../components/DiffViewContext";
 
 type ObserveElement = HTMLElement & {
   __observeCallback: Set<() => void>;

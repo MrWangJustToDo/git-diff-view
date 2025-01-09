@@ -1,8 +1,7 @@
 import { flushSync } from "react-dom";
 import { createStore, ref } from "reactivity-store";
 
-import type { DiffViewProps, SplitSide } from "./DiffView";
-import type { DiffModeEnum } from "./DiffViewContext";
+import type { DiffModeEnum, DiffViewProps, SplitSide } from "./DiffView";
 import type { RefObject } from "react";
 
 export const createDiffConfigStore = (props: DiffViewProps<any>, diffFileId: string) => {

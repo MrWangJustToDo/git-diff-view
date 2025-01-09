@@ -1,7 +1,9 @@
 import { emptyBGName, borderColorName } from "@git-diff-view/utils";
 import * as React from "react";
 
-import { useDiffViewContext, SplitSide } from "..";
+import { SplitSide } from "..";
+
+import { useDiffViewContext } from "./DiffViewContext";
 
 import type { DiffFile } from "@git-diff-view/core";
 

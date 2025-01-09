@@ -9,7 +9,7 @@ import { useUnmount } from "../hooks/useUnmount";
 
 import { DiffSplitView } from "./DiffSplitView";
 import { DiffUnifiedView } from "./DiffUnifiedView";
-import { DiffModeEnum, DiffViewContext } from "./DiffViewContext";
+import { DiffViewContext } from "./DiffViewContext";
 import { createDiffConfigStore } from "./tools";
 // import { DiffSplitView } from "./v2/DiffSplitView_v2";
 
@@ -21,6 +21,15 @@ _cacheMap.name = "@git-diff-view/react";
 export enum SplitSide {
   old = 1,
   new = 2,
+}
+
+export enum DiffModeEnum {
+  // github like
+  SplitGitHub = 1,
+  // gitlab like
+  SplitGitLab = 2,
+  Split = 1 | 2,
+  Unified = 4,
 }
 
 export type DiffViewProps<T> = {

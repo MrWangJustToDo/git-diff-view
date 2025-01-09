@@ -2,8 +2,6 @@ import { spawn } from "node:child_process";
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { rollupBuild } from "project-tool/rollup";
-import postcss from "rollup-plugin-postcss";
-import tailwindcss from "tailwindcss";
 
 const externalCorePackage = (id: string) =>
   (id.includes("node_modules") || id.includes("@git-diff-view/")) && !id.includes("tslib");
@@ -45,6 +43,14 @@ const buildType = async (packageName: string) => {
   await clear(packageName);
 };
 
+const buildCss = async (packageName: string) => {
+  await new Promise<void>((r, j) => {
+    const ls = spawn(`cd packages/${packageName} && pnpm run gen:css`, { shell: true, stdio: "inherit" });
+    ls.on("close", () => r());
+    ls.on("error", (e) => j(e));
+  });
+};
+
 const start = async () => {
   await rollupBuild({
     packageName: "lowlight",
@@ -81,60 +87,8 @@ const start = async () => {
     packageName: "react",
     packageScope: "packages",
     external: external,
-    plugins: {
-      multipleDevOther: ({ defaultPlugins, defaultPluginProps: { absolutePath } }) => [
-        ...defaultPlugins,
-        postcss({
-          config: {
-            path: absolutePath + "/postcss.config.js",
-            ctx: {},
-          },
-          extract: "css/diff-view.css",
-          extensions: [".css"],
-          plugins: [
-            tailwindcss({
-              content: [`${absolutePath}/src/**/*.{js,ts,jsx,tsx}`],
-            }),
-          ],
-          minimize: true,
-        }),
-      ],
-      multipleProdOther: ({ defaultPlugins, defaultPluginProps: { absolutePath } }) => [
-        ...defaultPlugins,
-        postcss({
-          config: {
-            path: absolutePath + "/postcss.config.js",
-            ctx: {},
-          },
-          extract: "css/diff-view.css",
-          extensions: [".css"],
-          plugins: [
-            tailwindcss({
-              content: [`${absolutePath}/src/**/*.{js,ts,jsx,tsx}`],
-            }),
-          ],
-          minimize: true,
-        }),
-      ],
-      singleOther: ({ defaultPlugins, defaultPluginProps: { absolutePath } }) => [
-        ...defaultPlugins,
-        postcss({
-          config: {
-            path: absolutePath + "/postcss.config.js",
-            ctx: {},
-          },
-          extract: "css/diff-view.css",
-          extensions: [".css"],
-          plugins: [
-            tailwindcss({
-              content: [`${absolutePath}/src/**/*.{js,ts,jsx,tsx}`],
-            }),
-          ],
-          minimize: true,
-        }),
-      ],
-    },
   });
+  await buildCss("react");
   await buildType("react");
   await copyCss("react");
   // 对于 "jsx": "preserve" 最新的rollup已经不支持解析，因此使用vite来进行打包
@@ -145,12 +99,18 @@ const start = async () => {
     ls.on("close", () => r());
     ls.on("error", (e) => j(e));
   });
+  await buildCss("vue");
   await buildType("vue");
   await copyCss("vue");
   process.exit(0);
 };
 
 start();
+
+// (async () => {
+//   await buildCss('react');
+//   await buildCss('vue');
+// })();
 
 // (async () => {
 //   await rollupBuild({ packageName: "utils", packageScope: "packages", external: externalCorePackage });

@@ -10,7 +10,8 @@ import {
 import * as React from "react";
 
 import { ExpandUp, ExpandDown, ExpandAll } from "../DiffExpand";
-import { useDiffViewContext, DiffModeEnum } from "../DiffViewContext";
+import { DiffModeEnum } from "../DiffView";
+import { useDiffViewContext } from "../DiffViewContext";
 
 const DiffSplitHunkLineGitHub = ({
   index,

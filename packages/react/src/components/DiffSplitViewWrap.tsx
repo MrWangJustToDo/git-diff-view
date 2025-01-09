@@ -6,13 +6,14 @@ import * as React from "react";
 // SEE https://github.com/facebook/react/pull/25231
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
-import { useDiffViewContext, SplitSide } from "..";
+import { SplitSide } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";
 
 import { DiffSplitContentLine } from "./DiffSplitContentLineWrap";
 import { DiffSplitExtendLine } from "./DiffSplitExtendLineWrap";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineWrap";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineWrap";
+import { useDiffViewContext } from "./DiffViewContext";
 import { createDiffSplitConfigStore } from "./tools";
 
 import type { MouseEventHandler } from "react";

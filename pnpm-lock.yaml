@@ -50,6 +50,12 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.4.47
+      postcss-cli:
+        specifier: ^11.0.0
+        version: 11.0.0(jiti@1.21.0)(postcss@8.4.47)
+      postcss-import:
+        specifier: ^16.1.0
+        version: 16.1.0(postcss@8.4.47)
       postcss-prefix-selector:
         specifier: ^1.16.1
         version: 1.16.1(postcss@8.4.47)
@@ -170,12 +176,6 @@ importers:
       postcss:
         specifier: ^8.4.47
         version: 8.4.47
-      postcss-cli:
-        specifier: ^11.0.0
-        version: 11.0.0(jiti@1.21.0)(postcss@8.4.47)
-      postcss-import:
-        specifier: ^16.1.0
-        version: 16.1.0(postcss@8.4.47)
       react:
         specifier: ^18.0.0
         version: 18.2.0
@@ -2213,10 +2213,6 @@ packages:
 
   character-entities-legacy@3.0.0:
     resolution: {integrity: sha512-RpPp0asT/6ufRm//AJVwpViZbGM/MkjQFxJccQRHmISF/22NBtsHqAWmL+/pmkPWoIUJdWyeVleTl1wydHATVQ==}
-
-  chokidar@3.5.3:
-    resolution: {integrity: sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==}
-    engines: {node: '>= 8.10.0'}
 
   chokidar@3.6.0:
     resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
@@ -7202,18 +7198,6 @@ snapshots:
 
   character-entities-legacy@3.0.0: {}
 
-  chokidar@3.5.3:
-    dependencies:
-      anymatch: 3.1.3
-      braces: 3.0.2
-      glob-parent: 5.1.2
-      is-binary-path: 2.1.0
-      is-glob: 4.0.3
-      normalize-path: 3.0.0
-      readdirp: 3.6.0
-    optionalDependencies:
-      fsevents: 2.3.3
-
   chokidar@3.6.0:
     dependencies:
       anymatch: 3.1.3
@@ -9093,12 +9077,12 @@ snapshots:
 
   postcss-cli@11.0.0(jiti@1.21.0)(postcss@8.4.47):
     dependencies:
-      chokidar: 3.5.3
+      chokidar: 3.6.0
       dependency-graph: 0.11.0
       fs-extra: 11.2.0
       get-stdin: 9.0.0
       globby: 14.0.2
-      picocolors: 1.0.1
+      picocolors: 1.1.1
       postcss: 8.4.47
       postcss-load-config: 5.1.0(jiti@1.21.0)(postcss@8.4.47)
       postcss-reporter: 7.1.0(postcss@8.4.47)
@@ -9368,7 +9352,7 @@ snapshots:
 
   postcss-reporter@7.1.0(postcss@8.4.47):
     dependencies:
-      picocolors: 1.0.1
+      picocolors: 1.1.1
       postcss: 8.4.47
       thenby: 1.3.4
 

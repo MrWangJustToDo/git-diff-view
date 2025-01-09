@@ -10,8 +10,8 @@ import * as React from "react";
 
 import { useSyncHeight } from "../../hooks/useSyncHeight";
 import { ExpandUp, ExpandDown, ExpandAll } from "../DiffExpand";
-import { SplitSide } from "../DiffView";
-import { useDiffViewContext, DiffModeEnum } from "../DiffViewContext";
+import { SplitSide, DiffModeEnum } from "../DiffView";
+import { useDiffViewContext } from "../DiffViewContext";
 
 const _DiffSplitHunkLineGitHub = ({
   index,

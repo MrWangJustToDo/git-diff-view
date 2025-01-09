@@ -8,10 +8,11 @@ import {
 } from "@git-diff-view/utils";
 import * as React from "react";
 
-import { DiffModeEnum, SplitSide, useDiffViewContext } from "..";
+import { DiffModeEnum, SplitSide } from "..";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
+import { useDiffViewContext } from "./DiffViewContext";
 
 const _DiffSplitHunkLineGitHub = ({
   index,

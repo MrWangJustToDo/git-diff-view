@@ -5,13 +5,13 @@ import * as React from "react";
 import { Fragment, memo, useEffect, useMemo, useRef } from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
-import { useDiffViewContext } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";
 
 import { DiffUnifiedContentLine } from "./DiffUnifiedContentLine";
 import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
 import { DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
 import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
+import { useDiffViewContext } from "./DiffViewContext";
 import { DiffWidgetContext } from "./DiffWidgetContext";
 import { createDiffWidgetStore } from "./tools";
 
