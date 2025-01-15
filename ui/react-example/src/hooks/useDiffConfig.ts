@@ -15,7 +15,7 @@ export const useDiffConfig = createState(
       highlight: true,
       wrap: false,
       fontsize: 12,
-      mode: DiffModeEnum.SplitGitLab,
+      mode: DiffModeEnum.Split,
       engine: "lowlight",
     }) as DiffConfig,
   {
