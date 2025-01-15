@@ -278,6 +278,7 @@ const DiffSplitHunkLineGitLab = defineComponent(
               backgroundColor: `var(${hunkLineNumberBGName})`,
               color: `var(${plainLineNumberColorName})`,
               borderLeftColor: `var(${borderColorName})`,
+              borderLeftStyle: "solid",
             }}
           >
             {couldExpand.value ? (

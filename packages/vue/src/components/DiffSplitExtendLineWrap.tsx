@@ -86,14 +86,18 @@ export const DiffSplitExtendLine = defineComponent(
             <td
               class="diff-line-extend-new-content border-l-[1px] p-0"
               colspan={2}
-              style={{ borderLeftColor: `var(${borderColorName})` }}
+              style={{ borderLeftColor: `var(${borderColorName})`, borderLeftStyle: "solid" }}
             >
               <div class="diff-line-extend-wrapper">{newExtendRendered}</div>
             </td>
           ) : (
             <td
               class="diff-line-extend-new-placeholder select-none border-l-[1px] p-0"
-              style={{ backgroundColor: `var(${emptyBGName})`, borderLeftColor: `var(${borderColorName})` }}
+              style={{
+                backgroundColor: `var(${emptyBGName})`,
+                borderLeftColor: `var(${borderColorName})`,
+                borderLeftStyle: "solid",
+              }}
               colspan={2}
             >
               {oldExtendRendered && <span>&ensp;</span>}

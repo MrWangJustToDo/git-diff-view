@@ -90,14 +90,18 @@ export const DiffSplitWidgetLine = defineComponent(
             <td
               class="diff-line-widget-new-content border-l-[1px] p-0"
               colspan={2}
-              style={{ borderLeftColor: `var(${borderColorName})` }}
+              style={{ borderLeftColor: `var(${borderColorName})`, borderLeftStyle: "solid" }}
             >
               <div class="diff-line-widget-wrapper">{newWidgetRendered}</div>
             </td>
           ) : (
             <td
               class="diff-line-widget-new-placeholder select-none border-l-[1px] p-0"
-              style={{ backgroundColor: `var(${emptyBGName})`, borderLeftColor: `var(${borderColorName})` }}
+              style={{
+                backgroundColor: `var(${emptyBGName})`,
+                borderLeftColor: `var(${borderColorName})`,
+                borderLeftStyle: "solid",
+              }}
               colspan={2}
             >
               {oldWidgetRendered && <span>&ensp;</span>}

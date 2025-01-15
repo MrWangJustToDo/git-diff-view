@@ -69,7 +69,7 @@ const _DiffSplitExtendLine = ({
       {newExtendRendered ? (
         <td
           className="diff-line-extend-new-content border-l-[1px] p-0"
-          style={{ borderLeftColor: `var(${borderColorName})` }}
+          style={{ borderLeftColor: `var(${borderColorName})`, borderLeftStyle: "solid" }}
           colSpan={2}
         >
           <div className="diff-line-extend-wrapper">{newExtendRendered}</div>
@@ -77,7 +77,11 @@ const _DiffSplitExtendLine = ({
       ) : (
         <td
           className="diff-line-extend-new-placeholder select-none border-l-[1px] p-0"
-          style={{ backgroundColor: `var(${emptyBGName})`, borderLeftColor: `var(${borderColorName})` }}
+          style={{
+            backgroundColor: `var(${emptyBGName})`,
+            borderLeftColor: `var(${borderColorName})`,
+            borderLeftStyle: "solid",
+          }}
           colSpan={2}
         >
           {oldExtendRendered && <span>&ensp;</span>}

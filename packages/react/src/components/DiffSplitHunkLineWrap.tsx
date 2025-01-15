@@ -215,11 +215,12 @@ const DiffSplitHunkLineGitLab = ({
         </div>
       </td>
       <td
-        className="diff-line-hunk-action relative w-[1%] min-w-[40px] select-none border-l-[1px] p-[1px] z-[1]"
+        className="diff-line-hunk-action relative z-[1] w-[1%] min-w-[40px] select-none border-l-[1px] p-[1px]"
         style={{
           backgroundColor: `var(${hunkLineNumberBGName})`,
           color: `var(${plainLineNumberColorName})`,
           borderLeftColor: `var(${borderColorName})`,
+          borderLeftStyle: "solid",
         }}
       >
         {couldExpand ? (

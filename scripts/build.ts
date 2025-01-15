@@ -12,12 +12,12 @@ const external = (id: string) =>
   !id.endsWith(".css");
 
 // fix css path not found in legacy module bundler
-const copyCss = async (packageName: string) => {
-  const cssPath = resolve(process.cwd(), "packages", packageName, "dist", "css", "diff-view.css");
+const copyCss = async (packageName: string, file: string) => {
+  const cssPath = resolve(process.cwd(), "packages", packageName, "dist", "css", file);
   const cssContent = await readFile(cssPath, "utf-8");
   const legacyCssDirPath = resolve(process.cwd(), "packages", packageName, "styles");
   await mkdir(legacyCssDirPath).catch(() => void 0);
-  const cssDistPath = resolve(legacyCssDirPath, "diff-view.css");
+  const cssDistPath = resolve(legacyCssDirPath, file);
   await writeFile(cssDistPath, cssContent);
 };
 
@@ -90,7 +90,8 @@ const start = async () => {
   });
   await buildCss("react");
   await buildType("react");
-  await copyCss("react");
+  await copyCss("react", "diff-view.css");
+  await copyCss("react", "diff-view-pure.css");
   // 对于 "jsx": "preserve" 最新的rollup已经不支持解析，因此使用vite来进行打包
   // https://github.com/rollup/plugins/issues/72
   // https://rollupjs.org/migration/#configuration-changes
@@ -101,7 +102,8 @@ const start = async () => {
   });
   await buildCss("vue");
   await buildType("vue");
-  await copyCss("vue");
+  await copyCss("vue", "diff-view.css");
+  await copyCss("vue", "diff-view-pure.css");
   process.exit(0);
 };
 
