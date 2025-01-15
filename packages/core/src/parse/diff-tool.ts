@@ -114,7 +114,7 @@ export const getDiffRange = (
       const { addRange, delRange } = relativeChanges(_addition, _deletion);
       addition.changes = addRange;
       deletion.changes = delRange;
-      // full diff
+      // TODO! support word diff
       // const { addRange: _addRange, delRange: _delRange } = diffChanges(_addition, _deletion);
       // addition.diffChanges = _addRange;
       // deletion.diffChanges = _delRange;

@@ -215,7 +215,7 @@ const DiffSplitHunkLineGitLab = ({
         </div>
       </td>
       <td
-        className="diff-line-hunk-action relative w-[1%] min-w-[40px] select-none border-l-[1px] p-[1px]"
+        className="diff-line-hunk-action relative w-[1%] min-w-[40px] select-none border-l-[1px] p-[1px] z-[1]"
         style={{
           backgroundColor: `var(${hunkLineNumberBGName})`,
           color: `var(${plainLineNumberColorName})`,

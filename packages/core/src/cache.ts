@@ -5,12 +5,17 @@ export class Cache<K, V> extends Map<K, V> {
 
   #maxLength = 30;
 
+  get maxLength() {
+    return this.#maxLength;
+  }
+
   setMaxLength(length: number) {
     this.#maxLength = length;
     this.#checkLength();
   }
 
   set(key: K, value: V): this {
+    if (this.#maxLength <= 0) return this;
     if (this.has(key)) return this;
     this.#keyArray.push(key);
     this.#checkLength();
