@@ -5,6 +5,7 @@ import { diffFontSizeName } from "@git-diff-view/utils";
 import { memo, useEffect, useMemo, forwardRef, useImperativeHandle, useRef } from "react";
 import * as React from "react";
 
+import { useIsMounted } from "../hooks/useIsMounted";
 import { useUnmount } from "../hooks/useUnmount";
 
 import { DiffSplitView } from "./DiffSplitView";
@@ -114,6 +115,8 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
 
   const diffFileId = useMemo(() => diffFile.getId(), [diffFile]);
 
+  const isMounted = useIsMounted();
+
   const wrapperRef = useRef<HTMLDivElement>();
 
   // performance optimization
@@ -199,8 +202,7 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
           }}
         >
           <div
-            suppressHydrationWarning
-            id={`diff-root${diffFileId}`}
+            id={isMounted ? `diff-root${diffFileId}` : undefined}
             className={"diff-view-wrapper" + (className ? ` ${className}` : "")}
             style={style}
           >

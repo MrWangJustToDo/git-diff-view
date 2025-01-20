@@ -4,7 +4,7 @@
   "author": "MrWangJustToDo",
   "license": "MIT",
   "version": "0.0.25",
-  "main": "index.js",
+  "main": "./dist/vue-git-diff-view.mjs",
   "type": "module",
   "types": "index.d.ts",
   "files": [
@@ -35,19 +35,6 @@
     "./styles/*": "./dist/css/*",
     "./package.json": "./package.json"
   },
-  "buildOptions": [
-    {
-      "input": "./src/index.withStyle.ts",
-      "output": [
-        {
-          "dir": "./dist",
-          "entryFileNames": "esm/index.mjs",
-          "format": "esm",
-          "sourcemap": true
-        }
-      ]
-    }
-  ],
   "keywords": [
     "diff component",
     "vue diff component"
