@@ -13,10 +13,11 @@ import {
 import * as React from "react";
 import { memo } from "react";
 
-import { SplitSide, useDiffViewContext } from "..";
+import { SplitSide } from "..";
 
 import { DiffUnifiedAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
+import { useDiffViewContext } from "./DiffViewContext";
 import { useDiffWidgetContext } from "./DiffWidgetContext";
 
 import type { DiffViewProps } from "..";

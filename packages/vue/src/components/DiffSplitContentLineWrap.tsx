@@ -147,6 +147,7 @@ export const DiffSplitContentLine = defineComponent(
                   backgroundColor: newLineNumberBG,
                   color: `var(${plainLineNumberColorName})`,
                   borderLeftColor: `var(${borderColorName})`,
+                  borderLeftStyle: "solid",
                 }}
               >
                 {hasDiff.value && enableAddWidget.value && (
@@ -193,7 +194,11 @@ export const DiffSplitContentLine = defineComponent(
           ) : (
             <td
               class="diff-line-new-placeholder select-none border-l-[1px]"
-              style={{ backgroundColor: `var(${emptyBGName})`, borderLeftColor: `var(${borderColorName})` }}
+              style={{
+                backgroundColor: `var(${emptyBGName})`,
+                borderLeftColor: `var(${borderColorName})`,
+                borderLeftStyle: "solid",
+              }}
               colspan={2}
             >
               <span>&ensp;</span>

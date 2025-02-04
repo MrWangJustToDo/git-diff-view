@@ -13,7 +13,7 @@ export default defineConfig({
   plugins: [typescript({ tsconfig: "./tsconfig.json" }), vue(), vueJsx(), dts()],
   build: {
     lib: {
-      entry: path.resolve(__dirname, "src/index.withStyle.ts"),
+      entry: path.resolve(__dirname, "src/index.ts"),
       name: "GitDiffView",
       formats: ["es", "cjs"],
       fileName: (format) =>
@@ -26,7 +26,6 @@ export default defineConfig({
         globals: {
           vue: "Vue",
         },
-        assetFileNames: "css/diff-view.css",
       },
     },
   },

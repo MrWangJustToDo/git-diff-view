@@ -10,7 +10,8 @@ import {
 import * as React from "react";
 
 import { ExpandUp, ExpandDown, ExpandAll } from "../DiffExpand";
-import { useDiffViewContext, DiffModeEnum } from "../DiffViewContext";
+import { DiffModeEnum } from "../DiffView";
+import { useDiffViewContext } from "../DiffViewContext";
 
 const DiffSplitHunkLineGitHub = ({
   index,
@@ -206,7 +207,7 @@ const DiffSplitHunkLineGitLab = ({
       </div>
       <div className="diff-split-line w-[1px] flex-shrink-0" style={{ backgroundColor: `var(${borderColorName})` }} />
       <div
-        className="diff-line-hunk-action relative flex w-[1%] min-w-[40px] select-none flex-col items-center justify-center p-[1px]"
+        className="diff-line-hunk-action relative z-[1] flex w-[1%] min-w-[40px] select-none flex-col items-center justify-center p-[1px]"
         style={{
           backgroundColor: `var(${hunkLineNumberBGName})`,
           color: `var(${plainLineNumberColorName})`,

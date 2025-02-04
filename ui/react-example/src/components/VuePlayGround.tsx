@@ -53,7 +53,7 @@ export const VuePlayGround = () => {
   const diffFile: DiffFile = computed(() => getDiffFile());
 </script>
 <template>
-  <DiffView :diff-file="diffFile" :mode="DiffModeEnum.Split" :diff-view-highlight="true" />
+  <DiffView :diff-file="diffFile" :diff-view-mode="DiffModeEnum.Split" :diff-view-highlight="true" />
 </template>`,
         }}
         theme={colorScheme === "dark" ? "dark" : "light"}

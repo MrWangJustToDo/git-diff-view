@@ -4,6 +4,7 @@ import { CSSProperties, SlotsType } from 'vue';
 
 declare class Cache$1<K, V> extends Map<K, V> {
 	name: string;
+	get maxLength(): number;
 	setMaxLength(length: number): void;
 	set(key: K, value: V): this;
 }
@@ -58,6 +59,8 @@ export declare class DiffFile {
 	splitLineLength: number;
 	unifiedLineLength: number;
 	fileLineLength: number;
+	additionLength: number;
+	deletionLength: number;
 	hasExpandSplitAll: boolean;
 	hasExpandUnifiedAll: boolean;
 	hasSomeLineCollapsed: boolean;
@@ -109,6 +112,8 @@ export declare class DiffFile {
 		splitLineLength: number;
 		unifiedLineLength: number;
 		fileLineLength: number;
+		additionLength: number;
+		deletionLength: number;
 		splitLeftLines: SplitLineItem[];
 		splitRightLines: SplitLineItem[];
 		splitHunkLines: Record<string, DiffHunkItem>;
@@ -150,6 +155,8 @@ export declare class DiffFile {
 		splitLineLength: number;
 		unifiedLineLength: number;
 		fileLineLength: number;
+		additionLength: number;
+		deletionLength: number;
 		splitLeftLines: SplitLineItem[];
 		splitRightLines: SplitLineItem[];
 		splitHunkLines: Record<string, DiffHunkItem>;
@@ -353,6 +360,7 @@ export declare const HiddenBidiCharsRegex: RegExp;
 export declare const _cacheMap: Cache$1<string, File$1>;
 export declare const checkDiffLineIncludeChange: (diffLine?: DiffLine) => boolean;
 export declare const composeLen = 40;
+export declare const disableCache: () => void;
 export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[], { getAdditionRaw, getDeletionRaw, }: {
 	getAdditionRaw: (lineNumber: number) => string;
 	getDeletionRaw: (lineNumber: number) => string;

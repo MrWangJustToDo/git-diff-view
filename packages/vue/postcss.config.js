@@ -1,14 +1,20 @@
 export default {
   plugins: {
+    "postcss-import": {},
     tailwindcss: { config: "./tailwind.config.js" },
     "postcss-prefix-selector": {
       prefix: ".diff-tailwindcss-wrapper",
       transform: function (prefix, selector, prefixedSelector, _filePath, rule) {
         const filePath = rule.source?.input?.file;
-        // ignore base css
-        // TODO next release update
-        if (rule.source?.start?.line === 1 && rule.source?.start?.column === 1) {
-          return selector;
+        if (filePath.includes("_base.css")) {
+          if (rule.source?.start?.line === 1) {
+            return selector;
+          } else {
+            return prefixedSelector;
+          }
+        }
+        if (filePath.includes("_base_pure.css")) {
+          return prefixedSelector;
         }
         if (selector.includes("diff-line-extend-wrapper") || selector.includes("diff-line-widget-wrapper")) {
           return selector;

@@ -1,8 +1,9 @@
 import { borderColorName, emptyBGName } from "@git-diff-view/utils";
 import * as React from "react";
 
-import { useDiffViewContext, SplitSide } from "..";
+import { SplitSide } from "..";
 
+import { useDiffViewContext } from "./DiffViewContext";
 import { useDiffWidgetContext } from "./DiffWidgetContext";
 
 import type { DiffFile } from "@git-diff-view/core";
@@ -65,14 +66,18 @@ const _DiffSplitWidgetLine = ({
         <td
           className="diff-line-widget-new-content border-l-[1px] p-0"
           colSpan={2}
-          style={{ borderLeftColor: `var(${borderColorName})` }}
+          style={{ borderLeftColor: `var(${borderColorName})`, borderLeftStyle: "solid" }}
         >
           <div className="diff-line-widget-wrapper">{newWidgetRendered}</div>
         </td>
       ) : (
         <td
           className="diff-line-widget-new-placeholder select-none border-l-[1px] p-0"
-          style={{ backgroundColor: `var(${emptyBGName})`, borderLeftColor: `var(${borderColorName})` }}
+          style={{
+            backgroundColor: `var(${emptyBGName})`,
+            borderLeftColor: `var(${borderColorName})`,
+            borderLeftStyle: "solid",
+          }}
           colSpan={2}
         >
           {oldWidgetRendered && <span>&ensp;</span>}

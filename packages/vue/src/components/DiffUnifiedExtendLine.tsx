@@ -28,7 +28,7 @@ export const DiffUnifiedExtendLine = defineComponent(
     });
 
     const currentIsShow = computed(() =>
-      Boolean((oldExtend.value || newExtend.value) && !unifiedItem.value.isHidden && unifiedItem.value.diff)
+      Boolean((oldExtend.value || newExtend.value) && !unifiedItem.value.isHidden && slots.extend)
     );
 
     const width = useDomWidth({

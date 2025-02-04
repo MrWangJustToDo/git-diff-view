@@ -4,6 +4,7 @@ import { CSSProperties, ForwardedRef, ReactNode } from 'react';
 
 declare class Cache$1<K, V> extends Map<K, V> {
 	name: string;
+	get maxLength(): number;
 	setMaxLength(length: number): void;
 	set(key: K, value: V): this;
 }
@@ -58,6 +59,8 @@ export declare class DiffFile {
 	splitLineLength: number;
 	unifiedLineLength: number;
 	fileLineLength: number;
+	additionLength: number;
+	deletionLength: number;
 	hasExpandSplitAll: boolean;
 	hasExpandUnifiedAll: boolean;
 	hasSomeLineCollapsed: boolean;
@@ -109,6 +112,8 @@ export declare class DiffFile {
 		splitLineLength: number;
 		unifiedLineLength: number;
 		fileLineLength: number;
+		additionLength: number;
+		deletionLength: number;
 		splitLeftLines: SplitLineItem[];
 		splitRightLines: SplitLineItem[];
 		splitHunkLines: Record<string, DiffHunkItem>;
@@ -150,6 +155,8 @@ export declare class DiffFile {
 		splitLineLength: number;
 		unifiedLineLength: number;
 		fileLineLength: number;
+		additionLength: number;
+		deletionLength: number;
 		splitLeftLines: SplitLineItem[];
 		splitRightLines: SplitLineItem[];
 		splitHunkLines: Record<string, DiffHunkItem>;
@@ -353,6 +360,7 @@ export declare const HiddenBidiCharsRegex: RegExp;
 export declare const _cacheMap: Cache$1<string, File$1>;
 export declare const checkDiffLineIncludeChange: (diffLine?: DiffLine) => boolean;
 export declare const composeLen = 40;
+export declare const disableCache: () => void;
 export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[], { getAdditionRaw, getDeletionRaw, }: {
 	getAdditionRaw: (lineNumber: number) => string;
 	getDeletionRaw: (lineNumber: number) => string;
@@ -627,124 +635,15 @@ export type SyntaxNode = {
 	};
 	children?: SyntaxNode[];
 };
-declare const createDiffConfigStore: (props: DiffViewProps<any>, diffFileId: string) => import("reactivity-store").UseSelectorWithStore<{
-	id: import("reactivity-store").Ref<string, string>;
-	setId: (_id: string) => string;
-	mode: import("reactivity-store").Ref<DiffModeEnum, DiffModeEnum>;
-	setMode: (_mode: DiffModeEnum) => DiffModeEnum;
-	enableWrap: import("reactivity-store").Ref<boolean, boolean>;
-	setEnableWrap: (_enableWrap: boolean) => boolean;
-	enableAddWidget: import("reactivity-store").Ref<boolean, boolean>;
-	setEnableAddWidget: (_enableAddWidget: boolean) => boolean;
-	enableHighlight: import("reactivity-store").Ref<boolean, boolean>;
-	setEnableHighlight: (_enableHighlight: boolean) => boolean;
-	fontSize: import("reactivity-store").Ref<number, number>;
-	setFontSize: (_fontSize: number) => number;
-	extendData: import("reactivity-store").Ref<{
-		oldFile: {
-			[x: string]: {
-				data: any;
-			};
-		};
-		newFile: {
-			[x: string]: {
-				data: any;
-			};
-		};
-	}, {
-		oldFile: {
-			[x: string]: {
-				data: any;
-			};
-		};
-		newFile: {
-			[x: string]: {
-				data: any;
-			};
-		};
-	} | {
-		oldFile: {
-			[x: string]: {
-				data: any;
-			};
-		};
-		newFile: {
-			[x: string]: {
-				data: any;
-			};
-		};
-	}>;
-	setExtendData: (_extendData: DiffViewProps<any>["extendData"]) => void;
-	renderWidgetLine: import("reactivity-store").Ref<({ diffFile, side, lineNumber, onClose, }: {
-		lineNumber: number;
-		side: SplitSide;
-		diffFile: DiffFile;
-		onClose: () => void;
-	}) => import("react").ReactNode, ({ diffFile, side, lineNumber, onClose, }: {
-		lineNumber: number;
-		side: SplitSide;
-		diffFile: DiffFile;
-		onClose: () => void;
-	}) => import("react").ReactNode>;
-	setRenderWidgetLine: (_renderWidgetLine: ({ diffFile, side, lineNumber, onClose, }: {
-		lineNumber: number;
-		side: SplitSide;
-		diffFile: DiffFile;
-		onClose: () => void;
-	}) => import("react").ReactNode) => ({ diffFile, side, lineNumber, onClose, }: {
-		lineNumber: number;
-		side: SplitSide;
-		diffFile: DiffFile;
-		onClose: () => void;
-	}) => import("react").ReactNode;
-	renderExtendLine: import("reactivity-store").Ref<({ diffFile, side, data, lineNumber, onUpdate, }: {
-		lineNumber: number;
-		side: SplitSide;
-		data: any;
-		diffFile: DiffFile;
-		onUpdate: () => void;
-	}) => import("react").ReactNode, ({ diffFile, side, data, lineNumber, onUpdate, }: {
-		lineNumber: number;
-		side: SplitSide;
-		data: any;
-		diffFile: DiffFile;
-		onUpdate: () => void;
-	}) => import("react").ReactNode>;
-	setRenderExtendLine: (_renderExtendLine: ({ diffFile, side, data, lineNumber, onUpdate, }: {
-		lineNumber: number;
-		side: SplitSide;
-		data: any;
-		diffFile: DiffFile;
-		onUpdate: () => void;
-	}) => import("react").ReactNode) => ({ diffFile, side, data, lineNumber, onUpdate, }: {
-		lineNumber: number;
-		side: SplitSide;
-		data: any;
-		diffFile: DiffFile;
-		onUpdate: () => void;
-	}) => import("react").ReactNode;
-	onAddWidgetClick: {
-		current: (lineNumber: number, side: SplitSide) => void;
-	};
-	setOnAddWidgetClick: (_onAddWidgetClick: {
-		current: (lineNumber: number, side: SplitSide) => void;
-	}) => (lineNumber: number, side: SplitSide) => void;
-}>;
+export declare enum SplitSide {
+	old = 1,
+	new = 2
+}
 export declare enum DiffModeEnum {
 	SplitGitHub = 1,
 	SplitGitLab = 2,
 	Split = 3,
 	Unified = 4
-}
-export declare const DiffViewContext: import("react").Context<{
-	useDiffContext: ReturnType<typeof createDiffConfigStore>;
-}>;
-export declare const useDiffViewContext: () => {
-	useDiffContext: ReturnType<typeof createDiffConfigStore>;
-};
-export declare enum SplitSide {
-	old = 1,
-	new = 2
 }
 export type DiffViewProps<T> = {
 	data?: {

@@ -163,6 +163,10 @@ export class DiffFile {
 
   fileLineLength: number = 0;
 
+  additionLength: number = 0;
+
+  deletionLength: number = 0;
+
   hasExpandSplitAll: boolean = false;
 
   hasExpandUnifiedAll: boolean = false;
@@ -433,6 +437,14 @@ export class DiffFile {
       return this.#getOldRawLine(lineNumber);
     };
 
+    this.#diffLines = [];
+
+    this.additionLength = 0;
+
+    this.deletionLength = 0;
+
+    const tmp: DiffLine[] = [];
+
     this.#diffListResults.forEach((item) => {
       const hunks = item.hunks;
       hunks.forEach((hunk) => {
@@ -441,25 +453,18 @@ export class DiffFile {
         hunk.lines.forEach((line) => {
           if (line.type === DiffLineType.Add) {
             additions.push(line);
+            this.additionLength++;
           } else if (line.type === DiffLineType.Delete) {
             deletions.push(line);
+            this.deletionLength++;
           } else {
             getDiffRange(additions, deletions, { getAdditionRaw, getDeletionRaw });
             additions = [];
             deletions = [];
           }
+          tmp.push(line);
         });
         getDiffRange(additions, deletions, { getAdditionRaw, getDeletionRaw });
-      });
-    });
-
-    this.#diffLines = [];
-
-    const tmp: DiffLine[] = [];
-
-    this.#diffListResults.forEach((item) => {
-      item.hunks.forEach((_item) => {
-        tmp.push(..._item.lines);
       });
     });
 
@@ -515,21 +520,43 @@ export class DiffFile {
 
     this.#oldFileDiffLines = {};
 
+    this.#newFileDiffLines = {};
+
+    let maxOldLineNumber = -1;
+
+    let maxNewLineNumber = -1;
+
     this.#diffLines.forEach((item) => {
       if (item.oldLineNumber) {
         this.diffLineLength = Math.max(this.diffLineLength, item.oldLineNumber);
 
         this.#oldFileDiffLines[item.oldLineNumber] = item;
+
+        if (__DEV__) {
+          if (item.oldLineNumber <= maxOldLineNumber) {
+            console.warn(
+              'the "lineNumber" from "diff" should be in ascending order, maybe current "diff" string is not a valid "diff" string'
+            );
+          }
+
+          maxOldLineNumber = Math.max(maxOldLineNumber, item.oldLineNumber);
+        }
       }
-    });
 
-    this.#newFileDiffLines = {};
-
-    this.#diffLines.forEach((item) => {
       if (item.newLineNumber) {
         this.diffLineLength = Math.max(this.diffLineLength, item.newLineNumber);
 
         this.#newFileDiffLines[item.newLineNumber] = item;
+
+        if (__DEV__) {
+          if (item.newLineNumber <= maxNewLineNumber) {
+            console.warn(
+              'the "lineNumber" from "diff" should be in ascending order, maybe current "diff" string is not a valid "diff" string'
+            );
+          }
+
+          maxNewLineNumber = Math.max(maxNewLineNumber, item.newLineNumber);
+        }
       }
     });
   }
@@ -635,7 +662,7 @@ export class DiffFile {
     const maxOldFileLineNumber = this.#oldFileResult?.maxLineNumber || 0;
     const maxNewFileLineNumber = this.#newFileResult?.maxLineNumber || 0;
 
-    if (__DEV__ && !this.#oldFileResult && !this.#newFileResult) {
+    if (__DEV__ && !this.#oldFileResult && !this.#newFileResult && this.#composeByMerge) {
       console.error(
         "this instance can not `buildSplitDiffLines` because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'"
       );
@@ -821,7 +848,7 @@ export class DiffFile {
     const maxOldFileLineNumber = this.#oldFileResult?.maxLineNumber || 0;
     const maxNewFileLineNumber = this.#newFileResult?.maxLineNumber || 0;
 
-    if (__DEV__ && !this.#oldFileResult && !this.#newFileResult) {
+    if (__DEV__ && !this.#oldFileResult && !this.#newFileResult && this.#composeByMerge) {
       console.error(
         "this instance can not `buildUnifiedDiffLines` because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'"
       );
@@ -1081,11 +1108,13 @@ export class DiffFile {
     return this.#unifiedHunksLines?.[index];
   };
 
+  // TODO! support rollback?
   onUnifiedHunkExpand = (dir: "up" | "down" | "all", index: number, needTrigger = true) => {
-    const current = this.#unifiedHunksLines?.[index];
-    if (!current || !current.unifiedInfo) return;
-
     if (this.#composeByDiff) return;
+
+    const current = this.#unifiedHunksLines?.[index];
+
+    if (!current || !current.unifiedInfo) return;
 
     if (dir === "all") {
       for (let i = current.unifiedInfo.startHiddenIndex; i < current.unifiedInfo.endHiddenIndex; i++) {
@@ -1290,6 +1319,8 @@ export class DiffFile {
     const splitLineLength = this.splitLineLength;
     const unifiedLineLength = this.unifiedLineLength;
     const fileLineLength = this.fileLineLength;
+    const additionLength = this.additionLength;
+    const deletionLength = this.deletionLength;
     const composeByDiff = this.#composeByDiff;
     const highlighterName = this.#highlighterName;
     const highlighterType = this.#highlighterType;
@@ -1323,6 +1354,8 @@ export class DiffFile {
       splitLineLength,
       unifiedLineLength,
       fileLineLength,
+      additionLength,
+      deletionLength,
       splitLeftLines,
       splitRightLines,
       splitHunkLines,
@@ -1362,6 +1395,8 @@ export class DiffFile {
     this.splitLineLength = data.splitLineLength;
     this.unifiedLineLength = data.unifiedLineLength;
     this.fileLineLength = data.fileLineLength;
+    this.additionLength = data.additionLength;
+    this.deletionLength = data.deletionLength;
     this.hasSomeLineCollapsed = data.hasSomeLineCollapsed;
 
     this.#splitLeftLines = data.splitLeftLines;

@@ -8,11 +8,12 @@ import {
 } from "@git-diff-view/utils";
 import * as React from "react";
 
-import { useDiffViewContext, SplitSide } from "..";
+import { SplitSide } from "..";
 
 import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 // import { DiffContent_v2 } from "./DiffContent_v2";
+import { useDiffViewContext } from "./DiffViewContext";
 import { useDiffWidgetContext } from "./DiffWidgetContext";
 
 const _DiffSplitLine = ({

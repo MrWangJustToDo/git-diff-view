@@ -5,11 +5,12 @@ import { diffFontSizeName } from "@git-diff-view/utils";
 import { memo, useEffect, useMemo, forwardRef, useImperativeHandle, useRef } from "react";
 import * as React from "react";
 
+import { useIsMounted } from "../hooks/useIsMounted";
 import { useUnmount } from "../hooks/useUnmount";
 
 import { DiffSplitView } from "./DiffSplitView";
 import { DiffUnifiedView } from "./DiffUnifiedView";
-import { DiffModeEnum, DiffViewContext } from "./DiffViewContext";
+import { DiffViewContext } from "./DiffViewContext";
 import { createDiffConfigStore } from "./tools";
 // import { DiffSplitView } from "./v2/DiffSplitView_v2";
 
@@ -21,6 +22,15 @@ _cacheMap.name = "@git-diff-view/react";
 export enum SplitSide {
   old = 1,
   new = 2,
+}
+
+export enum DiffModeEnum {
+  // github like
+  SplitGitHub = 1,
+  // gitlab like
+  SplitGitLab = 2,
+  Split = 1 | 2,
+  Unified = 4,
 }
 
 export type DiffViewProps<T> = {
@@ -104,6 +114,8 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
   } = props;
 
   const diffFileId = useMemo(() => diffFile.getId(), [diffFile]);
+
+  const isMounted = useIsMounted();
 
   const wrapperRef = useRef<HTMLDivElement>();
 
@@ -190,8 +202,7 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
           }}
         >
           <div
-            suppressHydrationWarning
-            id={`diff-root${diffFileId}`}
+            id={isMounted ? `diff-root${diffFileId}` : undefined}
             className={"diff-view-wrapper" + (className ? ` ${className}` : "")}
             style={style}
           >

@@ -1,8 +1,10 @@
 import * as React from "react";
 import { useCallback } from "react";
 
-import { useDiffViewContext, SplitSide } from "..";
+import { SplitSide } from "..";
 import { useDomWidth } from "../hooks/useDomWidth";
+
+import { useDiffViewContext } from "./DiffViewContext";
 
 import type { DiffFile } from "@git-diff-view/core";
 
@@ -87,7 +89,7 @@ export const DiffUnifiedExtendLine = ({
 
   const hasExtend = oldLineExtend?.data || newLineExtend?.data;
 
-  if (!hasExtend || !unifiedItem || unifiedItem.isHidden || !unifiedItem.diff) return null;
+  if (!hasExtend || !unifiedItem || unifiedItem.isHidden) return null;
 
   return (
     <_DiffUnifiedExtendLine

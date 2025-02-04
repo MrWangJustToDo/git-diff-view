@@ -11,7 +11,6 @@ import { Fragment, memo, useEffect, useRef } from "react";
 import * as React from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
-import { useDiffViewContext } from "..";
 import { useTextWidth } from "../hooks/useTextWidth";
 
 import { DiffSplitContentLine } from "./DiffSplitContentLineNormal";
@@ -19,6 +18,7 @@ import { DiffSplitExtendLine } from "./DiffSplitExtendLineNormal";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineNormal";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
 import { SplitSide } from "./DiffView";
+import { useDiffViewContext } from "./DiffViewContext";
 
 import type { MouseEventHandler } from "react";
 

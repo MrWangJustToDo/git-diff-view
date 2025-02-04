@@ -1,5 +1,4 @@
 import { MantineProvider } from "@mantine/core";
-import { __my_react_shared__ } from "@my-react/react";
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 
@@ -10,10 +9,6 @@ import "@mantine/core/styles.css";
 import "overlayscrollbars/overlayscrollbars.css";
 import "@git-diff-view/react/styles/diff-view.css";
 import "./index.css";
-
-__my_react_shared__.enableLoopFromRoot.current = true;
-
-// __my_react_shared__.enableConcurrentMode.current = false;
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

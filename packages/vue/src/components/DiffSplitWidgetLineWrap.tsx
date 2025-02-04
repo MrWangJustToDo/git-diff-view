@@ -40,12 +40,18 @@ export const DiffSplitWidgetLine = defineComponent(
       newLine.value = diffFile.getSplitRightLine(props.index);
     });
 
-    const currentIsShow = computed(() => !!oldLineWidget.value || !!newLineWidget.value);
+    const currentIsShow = computed(
+      () =>
+        (!!oldLineWidget.value || !!newLineWidget.value) &&
+        !oldLine.value.isHidden &&
+        !newLine.value.isHidden &&
+        !!slots.widget
+    );
 
     const onCloseWidget = () => setWidget({});
 
     return () => {
-      if (!currentIsShow.value || !slots.widget) return null;
+      if (!currentIsShow.value) return null;
 
       const oldWidgetRendered = oldLineWidget.value
         ? slots.widget?.({
@@ -84,14 +90,18 @@ export const DiffSplitWidgetLine = defineComponent(
             <td
               class="diff-line-widget-new-content border-l-[1px] p-0"
               colspan={2}
-              style={{ borderLeftColor: `var(${borderColorName})` }}
+              style={{ borderLeftColor: `var(${borderColorName})`, borderLeftStyle: "solid" }}
             >
               <div class="diff-line-widget-wrapper">{newWidgetRendered}</div>
             </td>
           ) : (
             <td
               class="diff-line-widget-new-placeholder select-none border-l-[1px] p-0"
-              style={{ backgroundColor: `var(${emptyBGName})`, borderLeftColor: `var(${borderColorName})` }}
+              style={{
+                backgroundColor: `var(${emptyBGName})`,
+                borderLeftColor: `var(${borderColorName})`,
+                borderLeftStyle: "solid",
+              }}
               colspan={2}
             >
               {oldWidgetRendered && <span>&ensp;</span>}

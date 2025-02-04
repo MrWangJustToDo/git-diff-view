@@ -8,11 +8,12 @@ import {
 } from "@git-diff-view/utils";
 import * as React from "react";
 
-import { SplitSide, useDiffViewContext } from "..";
+import { SplitSide } from "..";
 
 import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
 // import { DiffContent_v2 } from "./DiffContent_v2";
+import { useDiffViewContext } from "./DiffViewContext";
 import { useDiffWidgetContext } from "./DiffWidgetContext";
 
 const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
@@ -125,6 +126,7 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
               backgroundColor: newLineNumberBG,
               color: `var(${plainLineNumberColorName})`,
               borderLeftColor: `var(${borderColorName})`,
+              borderLeftStyle: "solid",
             }}
           >
             {hasDiff && enableAddWidget && (
@@ -171,7 +173,11 @@ const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFi
       ) : (
         <td
           className="diff-line-new-placeholder select-none border-l-[1px]"
-          style={{ backgroundColor: `var(${emptyBGName})`, borderLeftColor: `var(${borderColorName})` }}
+          style={{
+            backgroundColor: `var(${emptyBGName})`,
+            borderLeftColor: `var(${borderColorName})`,
+            borderLeftStyle: "solid",
+          }}
           data-side={SplitSide[SplitSide.new]}
           colSpan={2}
         >

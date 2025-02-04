@@ -219,3 +219,5 @@ export function getFile(
 }
 
 export const _cacheMap = map;
+
+export const disableCache = () => map.setMaxLength(0);
