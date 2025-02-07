@@ -124,9 +124,17 @@ function App() {
           </>
         )}
         {type === "example" && (
-          <ExampleContent className="border-color h-[calc(100vh-60px-32px)] w-full overflow-hidden rounded-md border" />
+          <>
+            <ExampleContent className="border-color h-[calc(100vh-60px-32px)] w-full overflow-hidden rounded-md border" />
+            <DevTool />
+          </>
         )}
-        {type === "try" && <PlayGround />}
+        {type === "try" && (
+          <>
+            <PlayGround />
+            <DevTool />
+          </>
+        )}
       </AppShell.Main>
     </AppShell>
   );

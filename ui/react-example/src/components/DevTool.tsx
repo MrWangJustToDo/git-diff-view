@@ -19,7 +19,7 @@ async function init() {
   if (typeof getFunc() === "function") {
     getFunc()(src);
   } else {
-    await loadScript(`${src}/bundle/iframe.js`);
+    await loadScript(`${src}/bundle/hook.js`);
     await init();
   }
 }
