@@ -2,6 +2,7 @@ import { AppShell, Group, Title, Button, Flex, Burger, Space, useMantineColorSch
 import { useDisclosure } from "@mantine/hooks";
 import { IconMoon, IconSun } from "@tabler/icons-react";
 
+import { DevTool } from "./components/DevTool";
 import { ExampleContent } from "./components/ExampleContent";
 import { Github } from "./components/icons";
 import { MainContent } from "./components/MainContent";
@@ -119,6 +120,7 @@ function App() {
           <>
             <MainContent />
             <StartContent />
+            <DevTool />
           </>
         )}
         {type === "example" && (
