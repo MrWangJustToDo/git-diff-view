@@ -97,7 +97,7 @@ type DiffViewProps_2<T> = Omit<DiffViewProps<T>, "data"> & {
   };
 };
 
-const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data" | "registerHighlighter">) => {
+const InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data" | "registerHighlighter">) => {
   const {
     diffFile,
     className,
@@ -149,16 +149,45 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
       setRenderWidgetLine,
     } = useDiffContext.getReadonlyState();
 
-    diffFileId && diffFileId !== id && setId(diffFileId);
-    diffViewMode && diffViewMode !== mode && setMode(diffViewMode);
-    diffViewAddWidget !== enableAddWidget && setEnableAddWidget(diffViewAddWidget);
-    diffViewHighlight !== enableHighlight && setEnableHighlight(diffViewHighlight);
-    diffViewWrap !== enableWrap && setEnableWrap(diffViewWrap);
-    extendData && setExtendData(extendData);
-    diffViewFontSize && diffViewFontSize !== fontSize && setFontSize(diffViewFontSize);
-    onAddWidgetClick !== _onAddWidgetClick.current && setOnAddWidgetClick({ current: onAddWidgetClick });
-    renderExtendLine !== _renderExtendLine && setRenderExtendLine(renderExtendLine);
-    renderWidgetLine !== _renderWidgetLine && setRenderWidgetLine(renderWidgetLine);
+    if (diffFileId && diffFileId !== id) {
+      setId(diffFileId);
+    }
+
+    if (diffViewMode && diffViewMode !== mode) {
+      setMode(diffViewMode);
+    }
+
+    if (diffViewAddWidget !== enableAddWidget) {
+      setEnableAddWidget(diffViewAddWidget);
+    }
+
+    if (diffViewHighlight !== enableHighlight) {
+      setEnableHighlight(diffViewHighlight);
+    }
+
+    if (diffViewWrap !== enableWrap) {
+      setEnableWrap(diffViewWrap);
+    }
+
+    if (extendData) {
+      setExtendData(extendData);
+    }
+
+    if (diffViewFontSize && diffViewFontSize !== fontSize) {
+      setFontSize(diffViewFontSize);
+    }
+
+    if (onAddWidgetClick !== _onAddWidgetClick.current) {
+      setOnAddWidgetClick({ current: onAddWidgetClick });
+    }
+
+    if (renderExtendLine !== _renderExtendLine) {
+      setRenderExtendLine(renderExtendLine);
+    }
+
+    if (renderWidgetLine !== _renderWidgetLine) {
+      setRenderWidgetLine(renderWidgetLine);
+    }
   }, [
     useDiffContext,
     diffViewFontSize,
@@ -218,7 +247,7 @@ const _InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "dat
   );
 };
 
-const InternalDiffView = memo(_InternalDiffView);
+const MemoedInternalDiffView = memo(InternalDiffView);
 
 const DiffViewWithRef = <T extends unknown>(
   props: DiffViewProps<T>,
@@ -288,7 +317,7 @@ const DiffViewWithRef = <T extends unknown>(
   if (!diffFile) return null;
 
   return (
-    <InternalDiffView
+    <MemoedInternalDiffView
       key={diffFile.getId()}
       {...restProps}
       diffFile={diffFile}
@@ -299,13 +328,13 @@ const DiffViewWithRef = <T extends unknown>(
 };
 
 // type helper function
-function _DiffView<T>(
+function ReactDiffView<T>(
   props: DiffViewProps_1<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
-): ReactNode;
-function _DiffView<T>(
+): JSX.Element;
+function ReactDiffView<T>(
   props: DiffViewProps_2<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
-): ReactNode;
-function _DiffView<T>(props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }) {
+): JSX.Element;
+function ReactDiffView<T>(props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }) {
   return <DiffViewWithRef {...props} />;
 }
 
@@ -313,6 +342,6 @@ const InnerDiffView = forwardRef(DiffViewWithRef);
 
 InnerDiffView.displayName = "DiffView";
 
-export const DiffView = InnerDiffView as typeof _DiffView;
+export const DiffView = InnerDiffView as typeof ReactDiffView;
 
 export const version = __VERSION__;

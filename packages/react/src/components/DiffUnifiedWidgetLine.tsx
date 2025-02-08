@@ -8,7 +8,7 @@ import { useDiffWidgetContext } from "./DiffWidgetContext";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const _DiffUnifiedWidgetLine = ({
+const InternalDiffUnifiedWidgetLine = ({
   index,
   diffFile,
   lineNumber,
@@ -100,5 +100,5 @@ export const DiffUnifiedWidgetLine = ({
 
   if (!currentIsShow) return null;
 
-  return <_DiffUnifiedWidgetLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
+  return <InternalDiffUnifiedWidgetLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
 };

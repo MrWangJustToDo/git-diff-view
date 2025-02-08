@@ -10,7 +10,7 @@ import { useDiffWidgetContext } from "./DiffWidgetContext";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const _DiffSplitWidgetLine = ({
+const InternalDiffSplitWidgetLine = ({
   index,
   side,
   diffFile,
@@ -141,5 +141,5 @@ export const DiffSplitWidgetLine = ({
 
   if (!currentIsShow) return null;
 
-  return <_DiffSplitWidgetLine index={index} side={side} diffFile={diffFile} lineNumber={lineNumber} />;
+  return <InternalDiffSplitWidgetLine index={index} side={side} diffFile={diffFile} lineNumber={lineNumber} />;
 };

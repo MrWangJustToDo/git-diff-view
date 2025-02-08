@@ -14,7 +14,7 @@ import { useSyncHeight } from "../hooks/useSyncHeight";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 import { useDiffViewContext } from "./DiffViewContext";
 
-const _DiffSplitHunkLineGitHub = ({
+const InternalDiffSplitHunkLineGitHub = ({
   index,
   diffFile,
   side,
@@ -148,7 +148,7 @@ const _DiffSplitHunkLineGitHub = ({
   );
 };
 
-const _DiffSplitHunkLineGitLab = ({
+const InternalDiffSplitHunkLineGitLab = ({
   index,
   diffFile,
   side,
@@ -268,7 +268,7 @@ const _DiffSplitHunkLineGitLab = ({
   );
 };
 
-const _DiffSplitHunkLine = ({
+const InternalDiffSplitHunkLine = ({
   index,
   diffFile,
   side,
@@ -288,9 +288,9 @@ const _DiffSplitHunkLine = ({
     diffViewMode === DiffModeEnum.Split ||
     diffViewMode === DiffModeEnum.Unified
   ) {
-    return <_DiffSplitHunkLineGitHub index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
+    return <InternalDiffSplitHunkLineGitHub index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
   } else {
-    return <_DiffSplitHunkLineGitLab index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
+    return <InternalDiffSplitHunkLineGitLab index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
   }
 };
 
@@ -316,5 +316,5 @@ export const DiffSplitHunkLine = ({
 
   if (!currentIsShow && !currentIsPureHunk) return null;
 
-  return <_DiffSplitHunkLine index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
+  return <InternalDiffSplitHunkLine index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
 };

@@ -16,7 +16,15 @@ import { DiffContent } from "./DiffContent";
 import { useDiffViewContext } from "./DiffViewContext";
 import { useDiffWidgetContext } from "./DiffWidgetContext";
 
-const _DiffSplitLine = ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
+const InternalDiffSplitLine = ({
+  index,
+  diffFile,
+  lineNumber,
+}: {
+  index: number;
+  diffFile: DiffFile;
+  lineNumber: number;
+}) => {
   const oldLine = diffFile.getSplitLeftLine(index);
 
   const newLine = diffFile.getSplitRightLine(index);
@@ -203,5 +211,5 @@ export const DiffSplitContentLine = ({
 
   if (oldLine?.isHidden && newLine?.isHidden) return null;
 
-  return <_DiffSplitLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
+  return <InternalDiffSplitLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
 };

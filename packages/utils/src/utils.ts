@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export const memoFunc = <T extends Function>(func: T): T => {
   const cache = {};
   return ((key: string) => {

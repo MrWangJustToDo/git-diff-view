@@ -7,7 +7,7 @@ import { useDiffViewContext } from "./DiffViewContext";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const _DiffSplitExtendLine = ({
+const InternalDiffSplitExtendLine = ({
   index,
   diffFile,
   lineNumber,
@@ -126,7 +126,7 @@ export const DiffSplitExtendLine = ({
   if (!currentIsShow) return null;
 
   return (
-    <_DiffSplitExtendLine
+    <InternalDiffSplitExtendLine
       index={index}
       diffFile={diffFile}
       lineNumber={lineNumber}

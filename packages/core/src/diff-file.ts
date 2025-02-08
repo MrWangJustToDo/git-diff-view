@@ -630,10 +630,12 @@ export class DiffFile {
     if (this.#highlighterType === "class") return;
 
     if (this.#composeByMerge && !this.#composeByFullMerge) {
-      __DEV__ &&
+      if (__DEV__) {
         console.error(
           `this instance can not do syntax because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'`
         );
+      }
+
       return;
     }
 
@@ -1069,7 +1071,9 @@ export class DiffFile {
       }
     } else {
       if (current.isLast) {
-        __DEV__ && console.error("the last hunk can not expand up!");
+        if (__DEV__) {
+          console.error("the last hunk can not expand up!");
+        }
         return;
       }
       for (let i = current.splitInfo.endHiddenIndex - composeLen; i < current.splitInfo.endHiddenIndex; i++) {
@@ -1097,7 +1101,9 @@ export class DiffFile {
       this.#splitHunksLines![current.splitInfo.endHiddenIndex] = current;
     }
 
-    needTrigger && this.notifyAll();
+    if (needTrigger) {
+      this.notifyAll();
+    }
   };
 
   getUnifiedLine = (index: number) => {
@@ -1148,7 +1154,9 @@ export class DiffFile {
       }
     } else {
       if (current.isLast) {
-        __DEV__ && console.error("the last hunk can not expand up!");
+        if (__DEV__) {
+          console.error("the last hunk can not expand up!");
+        }
         return;
       }
       for (let i = current.unifiedInfo.endHiddenIndex - composeLen; i < current.unifiedInfo.endHiddenIndex; i++) {
@@ -1174,7 +1182,9 @@ export class DiffFile {
       this.#unifiedHunksLines![current.unifiedInfo.endHiddenIndex] = current;
     }
 
-    needTrigger && this.notifyAll();
+    if (needTrigger) {
+      this.notifyAll();
+    }
   };
 
   onAllExpand = (mode: "split" | "unified") => {
@@ -1455,7 +1465,7 @@ export class DiffFile {
   _delClonedInstance = (instance: DiffFile) => {
     const unsubscribe = this.#clonedInstance.get(instance);
 
-    unsubscribe && unsubscribe();
+    unsubscribe?.();
 
     this.#clonedInstance.delete(instance);
   };
