@@ -107,7 +107,7 @@ const start = async () => {
   process.exit(0);
 };
 
-start();
+// start();
 
 // (async () => {
 //   await buildCss('react');
