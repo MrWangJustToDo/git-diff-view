@@ -1276,6 +1276,14 @@ export class DiffFile {
     this.notifyAll();
   };
 
+  getOldFileContent = () => {
+    return this.#oldFileResult?.raw;
+  }
+
+  getNewFileContent = () => {
+    return this.#newFileResult?.raw;
+  }
+
   getOldSyntaxLine = (lineNumber: number) => {
     return this.#oldFileSyntaxLines?.[lineNumber];
   };

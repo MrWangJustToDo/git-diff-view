@@ -35,7 +35,7 @@
         "entryFileNames": "esm/index.mjs",
         "type": true,
         "format": "esm",
-        "sourcemap": true
+        "sourcemap": "inline"
       }
     ]
   },

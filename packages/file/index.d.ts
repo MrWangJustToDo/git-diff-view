@@ -88,6 +88,8 @@ export declare class DiffFile {
 	onUnifiedHunkExpand: (dir: "up" | "down" | "all", index: number, needTrigger?: boolean) => void;
 	onAllExpand: (mode: "split" | "unified") => void;
 	onAllCollapse: (mode: "split" | "unified") => void;
+	getOldFileContent: () => string;
+	getNewFileContent: () => string;
 	getOldSyntaxLine: (lineNumber: number) => SyntaxLine;
 	getNewSyntaxLine: (lineNumber: number) => SyntaxLine;
 	subscribe: (listener: (() => void) & {
