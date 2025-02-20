@@ -139,6 +139,10 @@ export class DiffFile {
 
   #_theme?: "light" | "dark";
 
+  #hasExpandSplitAll = { state: false };
+
+  #hasExpandUnifiedAll = { state: false };
+
   _version_ = __VERSION__;
 
   _oldFileName: string = "";
@@ -167,9 +171,9 @@ export class DiffFile {
 
   deletionLength: number = 0;
 
-  hasExpandSplitAll: boolean = false;
+  // hasExpandSplitAll: boolean = false;
 
-  hasExpandUnifiedAll: boolean = false;
+  // hasExpandUnifiedAll: boolean = false;
 
   hasSomeLineCollapsed: boolean = false;
 
@@ -1194,16 +1198,24 @@ export class DiffFile {
       Object.keys(this.#splitHunksLines || {}).forEach((key) => {
         this.onSplitHunkExpand("all", +key, false);
       });
-      this.hasExpandSplitAll = true;
+      this.#hasExpandSplitAll.state = true;
     } else {
       Object.keys(this.#unifiedHunksLines || {}).forEach((key) => {
         this.onUnifiedHunkExpand("all", +key, false);
       });
-      this.hasExpandUnifiedAll = true;
+      this.#hasExpandUnifiedAll.state = true;
     }
 
     this.notifyAll();
   };
+
+  getHasExpandSplitAll() {
+    return this.#hasExpandSplitAll.state;
+  }
+
+  getHasExpandUnifiedAll() {
+    return this.#hasExpandUnifiedAll.state;
+  }
 
   onAllCollapse = (mode: "split" | "unified") => {
     if (this.#composeByDiff) return;
@@ -1241,7 +1253,7 @@ export class DiffFile {
           this.#splitHunksLines![item.splitInfo.endHiddenIndex] = item;
         }
       });
-      this.hasExpandSplitAll = false;
+      this.#hasExpandSplitAll.state = false;
     } else {
       Object.values(this.#unifiedLines || {}).forEach((item) => {
         if (!item.isHidden && item._isHidden) {
@@ -1270,7 +1282,7 @@ export class DiffFile {
           this.#unifiedHunksLines![item.unifiedInfo.endHiddenIndex] = item;
         }
       });
-      this.hasExpandUnifiedAll = false;
+      this.#hasExpandUnifiedAll.state = false;
     }
 
     this.notifyAll();
@@ -1278,11 +1290,11 @@ export class DiffFile {
 
   getOldFileContent = () => {
     return this.#oldFileResult?.raw;
-  }
+  };
 
   getNewFileContent = () => {
     return this.#newFileResult?.raw;
-  }
+  };
 
   getOldSyntaxLine = (lineNumber: number) => {
     return this.#oldFileSyntaxLines?.[lineNumber];
@@ -1343,6 +1355,8 @@ export class DiffFile {
     const highlighterName = this.#highlighterName;
     const highlighterType = this.#highlighterType;
     const hasSomeLineCollapsed = this.hasSomeLineCollapsed;
+    const hasExpandSplitAll = this.#hasExpandSplitAll;
+    const hasExpandUnifiedAll = this.#hasExpandUnifiedAll;
 
     // split
     const splitLeftLines = this.#splitLeftLines;
@@ -1384,6 +1398,8 @@ export class DiffFile {
       highlighterType,
       composeByDiff,
       hasSomeLineCollapsed,
+      hasExpandSplitAll,
+      hasExpandUnifiedAll,
 
       version,
 
@@ -1416,6 +1432,8 @@ export class DiffFile {
     this.additionLength = data.additionLength;
     this.deletionLength = data.deletionLength;
     this.hasSomeLineCollapsed = data.hasSomeLineCollapsed;
+    this.#hasExpandSplitAll = data.hasExpandSplitAll;
+    this.#hasExpandUnifiedAll = data.hasExpandUnifiedAll;
 
     this.#splitLeftLines = data.splitLeftLines;
     this.#splitRightLines = data.splitRightLines;
