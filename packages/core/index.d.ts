@@ -62,8 +62,6 @@ export declare class DiffFile {
 	fileLineLength: number;
 	additionLength: number;
 	deletionLength: number;
-	hasExpandSplitAll: boolean;
-	hasExpandUnifiedAll: boolean;
 	hasSomeLineCollapsed: boolean;
 	static createInstance(data: FileData_1, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>): DiffFile;
 	static createInstance(data: FileData_2, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>): DiffFile;
@@ -88,6 +86,8 @@ export declare class DiffFile {
 	getUnifiedHunkLine: (index: number) => DiffHunkItem;
 	onUnifiedHunkExpand: (dir: "up" | "down" | "all", index: number, needTrigger?: boolean) => void;
 	onAllExpand: (mode: "split" | "unified") => void;
+	get hasExpandSplitAll(): boolean;
+	get hasExpandUnifiedAll(): boolean;
 	onAllCollapse: (mode: "split" | "unified") => void;
 	getOldFileContent: () => string;
 	getNewFileContent: () => string;
@@ -126,6 +126,12 @@ export declare class DiffFile {
 		highlighterType: string;
 		composeByDiff: boolean;
 		hasSomeLineCollapsed: boolean;
+		hasExpandSplitAll: {
+			state: boolean;
+		};
+		hasExpandUnifiedAll: {
+			state: boolean;
+		};
 		version: string;
 		theme: "light" | "dark";
 		isFullMerge: boolean;
@@ -169,6 +175,12 @@ export declare class DiffFile {
 		highlighterType: string;
 		composeByDiff: boolean;
 		hasSomeLineCollapsed: boolean;
+		hasExpandSplitAll: {
+			state: boolean;
+		};
+		hasExpandUnifiedAll: {
+			state: boolean;
+		};
 		version: string;
 		theme: "light" | "dark";
 	};

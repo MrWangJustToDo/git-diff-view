@@ -1209,11 +1209,11 @@ export class DiffFile {
     this.notifyAll();
   };
 
-  getHasExpandSplitAll() {
-    return this.#hasExpandSplitAll.state;
+  get hasExpandSplitAll() {
+    return this.#hasExpandSplitAll.state
   }
 
-  getHasExpandUnifiedAll() {
+  get hasExpandUnifiedAll() {
     return this.#hasExpandUnifiedAll.state;
   }
 
