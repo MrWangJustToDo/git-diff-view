@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useDiffViewContext } from "../components/DiffViewContext";
 
-type ObserveElement = HTMLElement & {
+export type ObserveElement = HTMLElement & {
   __observeCallback: Set<() => void>;
   __observeInstance: ResizeObserver;
 };

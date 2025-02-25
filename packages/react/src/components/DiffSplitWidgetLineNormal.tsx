@@ -41,12 +41,16 @@ const InternalDiffSplitWidgetLine = ({
 
   const currentLine = side === SplitSide.old ? oldLine : newLine;
 
-  const currentWidget = side === SplitSide.old ? oldLineWidget : newLineWidget;
+  const otherSide = side === SplitSide.old ? SplitSide.new : SplitSide.old;
+
+  const currentHasWidget = side === SplitSide.old ? oldLineWidget : newLineWidget;
+
+  const hasWidget = oldLineWidget || newLineWidget;
 
   const renderWidgetLine = useDiffContext.useShallowStableSelector((s) => s.renderWidgetLine);
 
   const currentWidgetRendered =
-    currentWidget &&
+    currentHasWidget &&
     renderWidgetLine?.({
       diffFile,
       side,
@@ -57,13 +61,13 @@ const InternalDiffSplitWidgetLine = ({
   useSyncHeight({
     selector: `div[data-line="${lineNumber}-widget-content"]`,
     wrapper: `tr[data-line="${lineNumber}-widget"]`,
-    side: SplitSide[side],
-    enable: !!currentWidget && typeof renderWidgetLine === "function",
+    side: SplitSide[currentHasWidget ? side : otherSide],
+    enable: hasWidget && typeof renderWidgetLine === "function",
   });
 
   const width = useDomWidth({
     selector: side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper",
-    enable: !!currentWidget && typeof renderWidgetLine === "function",
+    enable: !!currentHasWidget && typeof renderWidgetLine === "function",
   });
 
   if (!renderWidgetLine) return null;
@@ -75,7 +79,7 @@ const InternalDiffSplitWidgetLine = ({
       data-side={SplitSide[side]}
       className="diff-line diff-line-widget"
     >
-      {currentWidget ? (
+      {currentHasWidget ? (
         <td className={`diff-line-widget-${SplitSide[side]}-content p-0`} colSpan={2}>
           <div
             data-line={`${lineNumber}-widget-content`}

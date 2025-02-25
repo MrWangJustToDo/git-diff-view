@@ -10,35 +10,54 @@ import { useDiffWidgetContext } from "../DiffWidgetContext";
 import type { DiffFile } from "@git-diff-view/core";
 
 const InternalDiffSplitWidgetLine = ({
-  diffFile,
+  index,
   side,
+  diffFile,
   lineNumber,
-  currentLine,
-  setWidget,
-  currentWidget,
 }: {
   index: number;
   side: SplitSide;
   diffFile: DiffFile;
   lineNumber: number;
-  currentLine: ReturnType<DiffFile["getSplitLeftLine"]>;
-  currentWidget: boolean;
-  setWidget: (props: { side?: SplitSide; lineNumber?: number }) => void;
 }) => {
+  const { useWidget } = useDiffWidgetContext();
+
   const { useDiffContext } = useDiffViewContext();
+
+  const oldLine = diffFile.getSplitLeftLine(index);
+
+  const newLine = diffFile.getSplitRightLine(index);
+
+  const widgetSide = useWidget.getReadonlyState().widgetSide;
+
+  const widgetLineNumber = useWidget.getReadonlyState().widgetLineNumber;
+
+  const setWidget = useWidget.getReadonlyState().setWidget;
+
+  const oldLineWidget = oldLine.lineNumber && widgetSide === SplitSide.old && widgetLineNumber === oldLine.lineNumber;
+
+  const newLineWidget = newLine.lineNumber && widgetSide === SplitSide.new && widgetLineNumber === newLine.lineNumber;
+
+  const currentLine = side === SplitSide.old ? oldLine : newLine;
+
+  const otherSide = side === SplitSide.old ? SplitSide.new : SplitSide.old;
+
+  const currentHasWidget = side === SplitSide.old ? oldLineWidget : newLineWidget;
+
+  const hasWidget = oldLineWidget || newLineWidget;
 
   const renderWidgetLine = useDiffContext.useShallowStableSelector((s) => s.renderWidgetLine);
 
   useSyncHeight({
     wrapper: `div[data-state="widget"][data-line="${lineNumber}-widget"]`,
     selector: `div[data-line="${lineNumber}-widget-content"]`,
-    side: SplitSide[side],
-    enable: currentWidget && typeof renderWidgetLine === "function",
+    side: SplitSide[currentHasWidget ? side : otherSide],
+    enable: hasWidget && typeof renderWidgetLine === "function",
   });
 
   const width = useDomWidth({
     selector: side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper",
-    enable: !!currentWidget && typeof renderWidgetLine === "function",
+    enable: !!currentHasWidget && typeof renderWidgetLine === "function",
   });
 
   if (!renderWidgetLine) return null;
@@ -50,7 +69,7 @@ const InternalDiffSplitWidgetLine = ({
       data-side={SplitSide[side]}
       className="diff-line diff-line-widget"
     >
-      {currentWidget ? (
+      {currentHasWidget ? (
         <div className={`diff-line-widget-${SplitSide[side]}-content p-0`}>
           <div
             data-line={`${lineNumber}-widget-content`}
@@ -92,10 +111,9 @@ export const DiffSplitWidgetLine = ({
 }) => {
   const { useWidget } = useDiffWidgetContext();
 
-  const { widgetLineNumber, widgetSide, setWidget } = useWidget.useShallowStableSelector((s) => ({
+  const { widgetLineNumber, widgetSide } = useWidget.useShallowStableSelector((s) => ({
     widgetLineNumber: s.widgetLineNumber,
     widgetSide: s.widgetSide,
-    setWidget: s.setWidget,
   }));
 
   const oldLine = diffFile.getSplitLeftLine(index);
@@ -106,23 +124,9 @@ export const DiffSplitWidgetLine = ({
 
   const newLineWidget = newLine.lineNumber && widgetSide === SplitSide.new && widgetLineNumber === newLine.lineNumber;
 
-  const currentLine = side === SplitSide.old ? oldLine : newLine;
-
-  const currentWidget = side === SplitSide.old ? oldLineWidget : newLineWidget;
-
   const currentIsShow = oldLineWidget || newLineWidget;
 
   if (!currentIsShow) return null;
 
-  return (
-    <InternalDiffSplitWidgetLine
-      index={index}
-      diffFile={diffFile}
-      side={side}
-      lineNumber={lineNumber}
-      currentLine={currentLine}
-      setWidget={setWidget}
-      currentWidget={currentWidget}
-    />
-  );
+  return <InternalDiffSplitWidgetLine index={index} diffFile={diffFile} side={side} lineNumber={lineNumber} />;
 };

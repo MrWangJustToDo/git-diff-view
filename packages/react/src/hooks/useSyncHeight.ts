@@ -2,7 +2,8 @@ import { useEffect } from "react";
 
 import { useDiffViewContext } from "../components/DiffViewContext";
 
-// TODO
+import type { ObserveElement } from "./useDomWidth";
+
 export const useSyncHeight = ({
   selector,
   wrapper,
@@ -35,6 +36,8 @@ export const useSyncHeight = ({
 
         const target = ele1.getAttribute("data-side") === side ? ele1 : ele2;
 
+        const typedTarget = target as ObserveElement;
+
         const cb = () => {
           ele1.style.height = "auto";
           ele2.style.height = "auto";
@@ -49,16 +52,35 @@ export const useSyncHeight = ({
 
         cb();
 
-        const observer = new ResizeObserver(cb);
+        const cleanCb = () => {
+          typedTarget.__observeCallback.delete(cb);
+          if (typedTarget.__observeCallback.size === 0) {
+            typedTarget.__observeInstance?.disconnect();
+            typedTarget.removeAttribute("data-observe");
+            delete typedTarget.__observeCallback;
+            delete typedTarget.__observeInstance;
+          }
+        };
+
+        if (typedTarget.__observeCallback) {
+          typedTarget.__observeCallback.add(cb);
+
+          return () => cleanCb();
+        }
+
+        typedTarget.__observeCallback = new Set();
+
+        typedTarget.__observeCallback.add(cb);
+
+        const observer = new ResizeObserver(() => typedTarget.__observeCallback.forEach((cb) => cb()));
+
+        typedTarget.__observeInstance = observer;
 
         observer.observe(target);
 
         target.setAttribute("data-observe", "height");
 
-        return () => {
-          observer.disconnect();
-          target?.removeAttribute("data-observe");
-        };
+        return () => cleanCb();
       }
     }
   }, [selector, enable, side, id, wrapper, mounted]);
