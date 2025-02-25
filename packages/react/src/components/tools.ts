@@ -14,6 +14,10 @@ export const createDiffConfigStore = (props: DiffViewProps<any>, diffFileId: str
 
     const setMode = (_mode: DiffModeEnum) => (mode.value = _mode);
 
+    const mounted = ref(false);
+
+    const setMounted = (_mounted: boolean) => (mounted.value = _mounted);
+
     const enableWrap = ref(props.diffViewWrap);
 
     const setEnableWrap = (_enableWrap: boolean) => (enableWrap.value = _enableWrap);
@@ -79,6 +83,8 @@ export const createDiffConfigStore = (props: DiffViewProps<any>, diffFileId: str
       setId,
       mode,
       setMode,
+      mounted,
+      setMounted,
       enableWrap,
       setEnableWrap,
       enableAddWidget,

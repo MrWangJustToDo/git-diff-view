@@ -4,6 +4,8 @@ import type { InjectionKey, Ref, Slot } from "vue";
 
 export const idSymbol: InjectionKey<Ref<string>> = Symbol();
 
+export const mountedSymbol: InjectionKey<Ref<boolean>> = Symbol();
+
 export const modeSymbol: InjectionKey<Ref<DiffModeEnum>> = Symbol();
 
 export const fontSizeSymbol: InjectionKey<Ref<number>> = Symbol();

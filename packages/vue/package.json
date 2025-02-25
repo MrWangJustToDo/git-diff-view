@@ -23,7 +23,7 @@
     "gen:css1": "postcss src/tailwind.css -o dist/css/diff-view.css",
     "gen:css2": "postcss src/tailwind_pure.css -o dist/css/diff-view-pure.css",
     "gen:css": "npm run gen:css1 && npm run gen:css2",
-    "gen:type": "dts-bundle-generator -o index.d.ts dist/index.d.ts"
+    "gen:type": "dts-bundle-generator -o index.d.ts dist/types/index.d.ts"
   },
   "homepage": "https://mrwangjusttodo.github.io/git-diff-view",
   "exports": {
@@ -47,7 +47,6 @@
     "fast-diff": "^1.3.0"
   },
   "devDependencies": {
-    "@rollup/plugin-typescript": "^12.1.2",
     "@vitejs/plugin-vue": "^5.2.1",
     "@vitejs/plugin-vue-jsx": "^4.1.1",
     "autoprefixer": "^10.4.20",

@@ -14,6 +14,7 @@ import {
   onAddWidgetClickSymbol,
   widgetStateSymbol,
   setWidgetStateSymbol,
+  mountedSymbol,
 } from "../context";
 import { useIsMounted } from "../hooks/useIsMounted";
 import { useProvide } from "../hooks/useProvide";
@@ -190,6 +191,8 @@ export const DiffView = defineComponent<
     watchEffect((onClean) => initAttribute(onClean));
 
     provide(idSymbol, id);
+
+    provide(mountedSymbol, isMounted);
 
     provide(slotsSymbol, options.slots);
 

@@ -1,8 +1,6 @@
 import { type Ref, watchPostEffect } from "vue";
 
-import { useId } from "../context";
-
-import { useIsMounted } from "./useIsMounted";
+import { useId, useIsMounted } from "../context";
 
 // TODO
 export const useSyncHeight = ({

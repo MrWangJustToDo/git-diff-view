@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useDiffViewContext } from "../components/DiffViewContext";
 
@@ -12,10 +12,10 @@ export const useDomWidth = ({ selector, enable }: { selector: string; enable: bo
 
   const { useDiffContext } = useDiffViewContext();
 
-  const id = useDiffContext(useCallback((s) => s.id, []));
+  const { id, mounted } = useDiffContext.useShallowStableSelector((s) => ({ id: s.id, mounted: s.mounted }));
 
   useEffect(() => {
-    if (enable) {
+    if (enable && mounted) {
       const container = document.querySelector(`#diff-root${id}`);
 
       const wrapper = container?.querySelector(selector);
@@ -61,7 +61,7 @@ export const useDomWidth = ({ selector, enable }: { selector: string; enable: bo
 
       return () => cleanCb();
     }
-  }, [selector, enable, id]);
+  }, [selector, enable, id, mounted]);
 
   return width;
 };

@@ -82,9 +82,7 @@ const InternalDiffSplitHunkLineGitHub = ({
                   className="diff-widget-tooltip relative flex w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px]"
                   title="Expand Down"
                   data-title="Expand Down"
-                  onClick={() => {
-                    diffFile.onSplitHunkExpand("down", index);
-                  }}
+                  onClick={() => diffFile.onSplitHunkExpand("down", index)}
                 >
                   <ExpandDown className="fill-current" />
                 </button>
@@ -212,9 +210,7 @@ const InternalDiffSplitHunkLineGitLab = ({
               className="diff-widget-tooltip relative flex w-full cursor-pointer items-center justify-center rounded-[2px] py-[6px]"
               title="Expand Down"
               data-title="Expand Down"
-              onClick={() => {
-                diffFile.onSplitHunkExpand("down", index);
-              }}
+              onClick={() => diffFile.onSplitHunkExpand("down", index)}
             >
               <ExpandDown className="fill-current" />
             </button>

@@ -132,6 +132,8 @@ const InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data
       setId,
       mode,
       setMode,
+      mounted,
+      setMounted,
       enableAddWidget,
       setEnableAddWidget,
       enableHighlight,
@@ -155,6 +157,10 @@ const InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data
 
     if (diffViewMode && diffViewMode !== mode) {
       setMode(diffViewMode);
+    }
+
+    if (mounted !== isMounted) {
+      setMounted(isMounted);
     }
 
     if (diffViewAddWidget !== enableAddWidget) {
@@ -196,6 +202,7 @@ const InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data
     diffViewWrap,
     diffViewAddWidget,
     diffFileId,
+    isMounted,
     renderWidgetLine,
     renderExtendLine,
     extendData,

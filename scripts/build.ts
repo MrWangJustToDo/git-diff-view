@@ -39,7 +39,6 @@ const buildType = async (packageName: string) => {
     ls.on("error", (e) => j(e));
   });
   await clean(packageName);
-  if (packageName === "vue") return;
   await clear(packageName);
 };
 
