@@ -20,7 +20,7 @@ export const useSyncHeight = ({
   const { id, mounted } = useDiffContext.useShallowStableSelector((s) => ({ id: s.id, mounted: s.mounted }));
 
   useEffect(() => {
-    if (enable && mounted) {
+    if (enable) {
       const container = document.querySelector(`#diff-root${id}`);
 
       const elements = Array.from(container?.querySelectorAll(selector) || []);

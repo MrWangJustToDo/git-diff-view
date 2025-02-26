@@ -15,7 +15,7 @@ export const useDomWidth = ({ selector, enable }: { selector: string; enable: bo
   const { id, mounted } = useDiffContext.useShallowStableSelector((s) => ({ id: s.id, mounted: s.mounted }));
 
   useEffect(() => {
-    if (enable && mounted) {
+    if (enable) {
       const container = document.querySelector(`#diff-root${id}`);
 
       const wrapper = container?.querySelector(selector);
