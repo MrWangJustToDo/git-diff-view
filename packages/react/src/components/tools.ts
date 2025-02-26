@@ -4,7 +4,7 @@ import { createStore, ref } from "reactivity-store";
 import type { DiffModeEnum, DiffViewProps, SplitSide } from "./DiffView";
 import type { RefObject } from "react";
 
-export const createDiffConfigStore = (props: DiffViewProps<any>, diffFileId: string) => {
+export const createDiffConfigStore = (props: DiffViewProps<any> & { isMounted: boolean }, diffFileId: string) => {
   return createStore(() => {
     const id = ref(diffFileId);
 
@@ -14,7 +14,7 @@ export const createDiffConfigStore = (props: DiffViewProps<any>, diffFileId: str
 
     const setMode = (_mode: DiffModeEnum) => (mode.value = _mode);
 
-    const mounted = ref(false);
+    const mounted = ref(props.isMounted);
 
     const setMounted = (_mounted: boolean) => (mounted.value = _mounted);
 

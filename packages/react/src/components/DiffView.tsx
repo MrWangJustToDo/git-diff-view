@@ -97,7 +97,9 @@ type DiffViewProps_2<T> = Omit<DiffViewProps<T>, "data"> & {
   };
 };
 
-const InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data" | "registerHighlighter">) => {
+const InternalDiffView = <T extends unknown>(
+  props: Omit<DiffViewProps<T>, "data" | "registerHighlighter"> & { isMounted: boolean }
+) => {
   const {
     diffFile,
     className,
@@ -111,11 +113,10 @@ const InternalDiffView = <T extends unknown>(props: Omit<DiffViewProps<T>, "data
     extendData,
     diffViewAddWidget,
     onAddWidgetClick,
+    isMounted,
   } = props;
 
   const diffFileId = useMemo(() => diffFile.getId(), [diffFile]);
-
-  const isMounted = useIsMounted();
 
   const wrapperRef = useRef<HTMLDivElement>();
 
@@ -291,6 +292,8 @@ const DiffViewWithRef = <T extends unknown>(
     diffFileRef.current = diffFile;
   }
 
+  const isMounted = useIsMounted();
+
   useEffect(() => {
     if (_diffFile && diffFile) {
       _diffFile._addClonedInstance(diffFile);
@@ -328,6 +331,7 @@ const DiffViewWithRef = <T extends unknown>(
       key={diffFile.getId()}
       {...restProps}
       diffFile={diffFile}
+      isMounted={isMounted}
       diffViewMode={restProps.diffViewMode || DiffModeEnum.SplitGitHub}
       diffViewFontSize={restProps.diffViewFontSize || 14}
     />
