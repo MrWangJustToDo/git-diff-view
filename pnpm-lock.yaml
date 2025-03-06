@@ -348,11 +348,11 @@ importers:
         specifier: ^7.15.1
         version: 7.16.3(react@18.3.1)
       '@my-react/react':
-        specifier: 0.3.4
-        version: 0.3.4
+        specifier: ^0.3.5
+        version: 0.3.5
       '@my-react/react-dom':
-        specifier: 0.3.4
-        version: 0.3.4(@my-react/react@0.3.4)
+        specifier: ^0.3.5
+        version: 0.3.5(@my-react/react@0.3.5)
       '@tabler/icons-react':
         specifier: ^3.26.0
         version: 3.30.0(react@18.3.1)
@@ -373,11 +373,11 @@ importers:
         version: 0.3.9(react@18.3.1)
     devDependencies:
       '@my-react/react-refresh':
-        specifier: 0.3.4
-        version: 0.3.4(@my-react/react@0.3.4)
+        specifier: ^0.3.5
+        version: 0.3.5(@my-react/react@0.3.5)
       '@my-react/react-vite':
-        specifier: 0.0.7
-        version: 0.0.7(@my-react/react-refresh@0.3.4(@my-react/react@0.3.4))(vite@5.4.14(@types/node@22.13.1)(sugarss@4.0.1(postcss@8.5.1))(terser@5.38.1))
+        specifier: ^0.0.8
+        version: 0.0.8(@my-react/react-refresh@0.3.5(@my-react/react@0.3.5))(vite@5.4.14(@types/node@22.13.1)(sugarss@4.0.1(postcss@8.5.1))(terser@5.38.1))
       '@types/lodash':
         specifier: ^4.17.15
         version: 4.17.15
@@ -1081,29 +1081,29 @@ packages:
   '@microsoft/tsdoc@0.15.1':
     resolution: {integrity: sha512-4aErSrCR/On/e5G2hDP0wjooqDdauzEbIq8hIkIe5pXV0rtWJZvdCEKL0ykZxex+IxIwBp0eGeV48hQN07dXtw==}
 
-  '@my-react/react-dom@0.3.4':
-    resolution: {integrity: sha512-F5+xEikDnFGBEra6CcUeET7NIatwcHcbc3XKb0B1aTxV1zC/NGU/oFEb56ZfvNlBULe5mxZlEWPdcj5njqswYg==}
+  '@my-react/react-dom@0.3.5':
+    resolution: {integrity: sha512-GUkQBGO1LUGW/cqAgvyCsporltd2DxgJtVADRArVbhlJOati631gEVWEGJhsieri8AOoXz5aMtz0OKGm45ZY+Q==}
     peerDependencies:
-      '@my-react/react': '>=0.3.4'
+      '@my-react/react': '>=0.3.5'
 
-  '@my-react/react-jsx@0.3.4':
-    resolution: {integrity: sha512-DASBXsOi/E6T6XbP9WYBGNDlYbBahGTZAdpbTM99TR62vT1nreKNrLRVMIvbg1bYoMPmc1y34/8j0squa+BmXQ==}
+  '@my-react/react-jsx@0.3.5':
+    resolution: {integrity: sha512-2C4gHSsQR7a0IcePWcu/dMHDv358Ltcf6ptJby+s6BZN3qDGsPAjJG26UDTkpm6bBqwCOY9RGm1FoTh5gz0ufA==}
     peerDependencies:
-      '@my-react/react': '>=0.3.4'
+      '@my-react/react': '>=0.3.5'
 
-  '@my-react/react-refresh@0.3.4':
-    resolution: {integrity: sha512-BEdyewLxJcwRIAtOez8mlH/lABlZn6UYejKSkDBr92lQFUEgLkkf2Z/50iQMK0fakeE0frCImGvM3A3gLXFBFg==}
+  '@my-react/react-refresh@0.3.5':
+    resolution: {integrity: sha512-FLBcVvVJoylOMc3H7Iidj0n9eZIGbVnZEfJV5pa0xCbQRA5j98f4fhhfpI7S6f2zagWEn7gkWmscPJ1ElCYqmA==}
     peerDependencies:
-      '@my-react/react': '>=0.3.4'
+      '@my-react/react': '>=0.3.5'
 
-  '@my-react/react-vite@0.0.7':
-    resolution: {integrity: sha512-C4+6wGOU6dSnbR0nrhC4m9o9gXpDYq2/k8ma0jNp506xyvfcyYet4u9D+4H6taZHD9ISLNujB+Y21/9lCcbEdw==}
+  '@my-react/react-vite@0.0.8':
+    resolution: {integrity: sha512-FwzoJSJxXuTLkuvBTau07Mcg1cAC4aTWigHWqRo0G2iGhIyN3kcBwKAgbXTcvp5Yk+vDXMq0ZGU8lr2E+60/Bg==}
     peerDependencies:
-      '@my-react/react-refresh': '>=0.3.4'
+      '@my-react/react-refresh': '>=0.3.5'
       vite: ^4 || ^5
 
-  '@my-react/react@0.3.4':
-    resolution: {integrity: sha512-WfTtk3dn3jp8TbJ5r+lXMTQZmZUkhcRFGNFA53eiRs2ipNNZLArQWtaPo4oWpAfOSBjjS+wlGdVRvB/QrQ22tw==}
+  '@my-react/react@0.3.5':
+    resolution: {integrity: sha512-7OxGfUR9+4qSGAqiTBMjLg79H1GNYJ3N9yRwxn+aGx/eGvuySm2edWEn/r28OiITcdAqwIiI4DSMFK83UckxIQ==}
 
   '@next/env@15.1.6':
     resolution: {integrity: sha512-d9AFQVPEYNr+aqokIiPLNK/MTyt3DWa/dpKveiAaVccUadFbhFEvY6FXYX2LJO2Hv7PHnLBu2oWwB4uBuHjr/w==}
@@ -5691,31 +5691,31 @@ snapshots:
 
   '@microsoft/tsdoc@0.15.1': {}
 
-  '@my-react/react-dom@0.3.4(@my-react/react@0.3.4)':
+  '@my-react/react-dom@0.3.5(@my-react/react@0.3.5)':
     dependencies:
-      '@my-react/react': 0.3.4
+      '@my-react/react': 0.3.5
 
-  '@my-react/react-jsx@0.3.4(@my-react/react@0.3.4)':
+  '@my-react/react-jsx@0.3.5(@my-react/react@0.3.5)':
     dependencies:
-      '@my-react/react': 0.3.4
+      '@my-react/react': 0.3.5
 
-  '@my-react/react-refresh@0.3.4(@my-react/react@0.3.4)':
+  '@my-react/react-refresh@0.3.5(@my-react/react@0.3.5)':
     dependencies:
-      '@my-react/react': 0.3.4
+      '@my-react/react': 0.3.5
 
-  '@my-react/react-vite@0.0.7(@my-react/react-refresh@0.3.4(@my-react/react@0.3.4))(vite@5.4.14(@types/node@22.13.1)(sugarss@4.0.1(postcss@8.5.1))(terser@5.38.1))':
+  '@my-react/react-vite@0.0.8(@my-react/react-refresh@0.3.5(@my-react/react@0.3.5))(vite@5.4.14(@types/node@22.13.1)(sugarss@4.0.1(postcss@8.5.1))(terser@5.38.1))':
     dependencies:
       '@babel/core': 7.26.8
       '@babel/plugin-transform-react-jsx-self': 7.25.9(@babel/core@7.26.8)
       '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.26.8)
-      '@my-react/react-refresh': 0.3.4(@my-react/react@0.3.4)
+      '@my-react/react-refresh': 0.3.5(@my-react/react@0.3.5)
       vite: 5.4.14(@types/node@22.13.1)(sugarss@4.0.1(postcss@8.5.1))(terser@5.38.1)
     transitivePeerDependencies:
       - supports-color
 
-  '@my-react/react@0.3.4':
+  '@my-react/react@0.3.5':
     dependencies:
-      '@my-react/react-jsx': 0.3.4(@my-react/react@0.3.4)
+      '@my-react/react-jsx': 0.3.5(@my-react/react@0.3.5)
 
   '@next/env@15.1.6': {}
 
