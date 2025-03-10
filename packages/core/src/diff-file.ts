@@ -1210,7 +1210,7 @@ export class DiffFile {
   };
 
   get hasExpandSplitAll() {
-    return this.#hasExpandSplitAll.state
+    return this.#hasExpandSplitAll.state;
   }
 
   get hasExpandUnifiedAll() {
