@@ -62,9 +62,7 @@ const InternalDiffSplitWidgetLine = ({
         <div
           className="diff-line-widget-old-placeholder w-[50%] select-none p-0"
           style={{ backgroundColor: `var(${emptyBGName})` }}
-        >
-          {newWidgetRendered && <span>&ensp;</span>}
-        </div>
+        />
       )}
       <div className="diff-split-line w-[1px] flex-shrink-0" style={{ backgroundColor: `var(${borderColorName})` }} />
       {newWidgetRendered ? (
@@ -75,9 +73,7 @@ const InternalDiffSplitWidgetLine = ({
         <div
           className="diff-line-widget-new-placeholder w-[50%] select-none p-0"
           style={{ backgroundColor: `var(${emptyBGName})` }}
-        >
-          {oldWidgetRendered && <span>&ensp;</span>}
-        </div>
+        />
       )}
     </div>
   );

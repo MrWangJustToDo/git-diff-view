@@ -62,9 +62,7 @@ const InternalDiffSplitExtendLine = ({
           className="diff-line-extend-old-placeholder select-none p-0"
           style={{ backgroundColor: `var(${emptyBGName})` }}
           colSpan={2}
-        >
-          {newExtendRendered && <span>&ensp;</span>}
-        </td>
+        />
       )}
       {newExtendRendered ? (
         <td
@@ -83,9 +81,7 @@ const InternalDiffSplitExtendLine = ({
             borderLeftStyle: "solid",
           }}
           colSpan={2}
-        >
-          {oldExtendRendered && <span>&ensp;</span>}
-        </td>
+        />
       )}
     </tr>
   );

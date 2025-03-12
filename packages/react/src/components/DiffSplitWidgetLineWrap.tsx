@@ -58,9 +58,7 @@ const InternalDiffSplitWidgetLine = ({
           className="diff-line-widget-old-placeholder select-none p-0"
           style={{ backgroundColor: `var(${emptyBGName})` }}
           colSpan={2}
-        >
-          {newWidgetRendered && <span>&ensp;</span>}
-        </td>
+        />
       )}
       {newWidgetRendered ? (
         <td
@@ -79,9 +77,7 @@ const InternalDiffSplitWidgetLine = ({
             borderLeftStyle: "solid",
           }}
           colSpan={2}
-        >
-          {oldWidgetRendered && <span>&ensp;</span>}
-        </td>
+        />
       )}
     </tr>
   );

@@ -60,9 +60,7 @@ const InternalDiffSplitExtendLine = ({
         <div
           className="diff-line-extend-old-placeholder w-[50%] select-none p-0"
           style={{ backgroundColor: `var(${emptyBGName})` }}
-        >
-          {newExtendRendered && <span>&ensp;</span>}
-        </div>
+        />
       )}
       <div className="diff-split-line w-[1px]" style={{ backgroundColor: `var(${borderColorName})` }} />
       {newExtendRendered ? (
@@ -73,9 +71,7 @@ const InternalDiffSplitExtendLine = ({
         <div
           className="diff-line-extend-new-placeholder w-[50%] select-none p-0"
           style={{ backgroundColor: `var(${emptyBGName})` }}
-        >
-          {oldExtendRendered && <span>&ensp;</span>}
-        </div>
+        />
       )}
     </div>
   );
