@@ -1,4 +1,5 @@
-import { Button } from "@mantine/core";
+import { Button, ButtonGroup } from "@mantine/core";
+import { IconX } from "@tabler/icons-react";
 import { useState } from "react";
 
 const src = "https://mrwangjusttodo.github.io/myreact-devtools";
@@ -25,26 +26,32 @@ async function init() {
 }
 
 export const DevTool = () => {
+  const [hide, setHide] = useState(false);
+
   const [open, setOpen] = useState(false);
 
   return (
-    <Button
-      className="fixed bottom-16 left-4 z-50"
-      color="red"
-      size="md"
-      onClick={async () => {
-        if (!open) {
-          await init();
+    <ButtonGroup className="fixed bottom-16 left-4 z-50" style={{ display: hide ? "none" : undefined }}>
+      <Button
+        color="red"
+        size="md"
+        onClick={async () => {
+          if (!open) {
+            await init();
 
-          setOpen(true);
-        } else {
-          getFunc()?.["close"]?.();
+            setOpen(true);
+          } else {
+            getFunc()?.["close"]?.();
 
-          setOpen(false);
-        }
-      }}
-    >
-      {!open ? "Open" : "Close"} DevTool
-    </Button>
+            setOpen(false);
+          }
+        }}
+      >
+        {!open ? "Open" : "Close"} DevTool
+      </Button>
+      <Button size="md" className="px-2" variant="light" onClick={() => setHide(true)}>
+        <IconX />
+      </Button>
+    </ButtonGroup>
   );
 };
