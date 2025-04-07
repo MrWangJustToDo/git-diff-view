@@ -6,7 +6,7 @@ import { DiffLine, DiffLineType, parseInstance, getDiffRange, getLang } from "./
 import type { IRawDiff } from "./parse";
 import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/lowlight";
 
-let composeLen = 40;
+export let composeLen = 40;
 
 export const changeDefaultComposeLength = (compose: number) => {
   composeLen = compose;

@@ -373,8 +373,8 @@ export declare const DefaultDiffExpansionStep = 40;
  */
 export declare const HiddenBidiCharsRegex: RegExp;
 export declare const _cacheMap: Cache$1<string, File$1>;
+export declare const changeDefaultComposeLength: (compose: number) => void;
 export declare const checkDiffLineIncludeChange: (diffLine?: DiffLine) => boolean;
-export declare const composeLen = 40;
 export declare const disableCache: () => void;
 export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[], { getAdditionRaw, getDeletionRaw, }: {
 	getAdditionRaw: (lineNumber: number) => string;
@@ -392,6 +392,7 @@ export declare const processAST: (ast: DiffAST) => {
 	syntaxFileObject: Record<number, SyntaxLine>;
 	syntaxFileLineNumber: number;
 };
+export declare const resetDefaultComposeLength: () => void;
 export declare const versions: string;
 export declare enum DiffFileLineType {
 	hunk = 1,
@@ -462,6 +463,7 @@ export declare function relativeChanges(addition: DiffLine, deletion: DiffLine):
 	addRange: IRange;
 	delRange: IRange;
 };
+export declare let composeLen: number;
 export interface DiffHunkItem extends DiffLineItem {
 	isFirst: boolean;
 	isLast: boolean;
