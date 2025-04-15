@@ -9,6 +9,11 @@ export enum DiffFileLineType {
   extend = 4,
 }
 
+export enum SplitSide {
+  old = 1,
+  new = 2,
+}
+
 export type DiffSplitContentLineItem = {
   type: DiffFileLineType.content;
   index: number;
@@ -114,4 +119,15 @@ export const getUnifiedContentLine = (diffFile: DiffFile): DiffUnifiedContentLin
   });
 
   return unifiedLines;
+};
+
+export const checkCurrentLineIsHidden = (diffFile: DiffFile, lineNumber: number, side: SplitSide) => {
+  const splitLine = diffFile.getSplitLineByLineNumber(lineNumber, side);
+
+  const unifiedLine = diffFile.getUnifiedLineByLineNumber(lineNumber, side);
+
+  return {
+    split: !splitLine || splitLine.isHidden,
+    unified: !unifiedLine || unifiedLine.isHidden,
+  };
 };

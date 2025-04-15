@@ -78,10 +78,12 @@ export declare class DiffFile {
 	buildSplitDiffLines(): void;
 	buildUnifiedDiffLines(): void;
 	getSplitLeftLine: (index: number) => SplitLineItem;
+	getSplitLineByLineNumber: (lineNumber: number, side: SplitSide) => SplitLineItem;
 	getSplitRightLine: (index: number) => SplitLineItem;
 	getSplitHunkLine: (index: number) => DiffHunkItem;
 	onSplitHunkExpand: (dir: "up" | "down" | "all", index: number, needTrigger?: boolean) => void;
 	getUnifiedLine: (index: number) => UnifiedLineItem;
+	getUnifiedLineByLineNumber: (lienNumber: number, side: SplitSide) => UnifiedLineItem;
 	getUnifiedHunkLine: (index: number) => DiffHunkItem;
 	onUnifiedHunkExpand: (dir: "up" | "down" | "all", index: number, needTrigger?: boolean) => void;
 	onAllExpand: (mode: "split" | "unified") => void;
@@ -373,6 +375,10 @@ export declare const DefaultDiffExpansionStep = 40;
 export declare const HiddenBidiCharsRegex: RegExp;
 export declare const _cacheMap: Cache$1<string, File$1>;
 export declare const changeDefaultComposeLength: (compose: number) => void;
+export declare const checkCurrentLineIsHidden: (diffFile: DiffFile, lineNumber: number, side: SplitSide) => {
+	split: boolean;
+	unified: boolean;
+};
 export declare const checkDiffLineIncludeChange: (diffLine?: DiffLine) => boolean;
 export declare const disableCache: () => void;
 export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[], { getAdditionRaw, getDeletionRaw, }: {
@@ -434,6 +440,10 @@ export declare enum NewLineSymbol {
 	NEWLINE = 4,
 	NORMAL = 5,
 	NULL = 6
+}
+export declare enum SplitSide {
+	old = 1,
+	new = 2
 }
 export declare function _getAST(raw: string, fileName?: string, lang?: DiffHighlighterLang, theme?: "light" | "dark"): DiffAST;
 export declare function _getAST(raw: string, fileName?: string, lang?: string, theme?: "light" | "dark"): DiffAST;
@@ -651,10 +661,6 @@ export type SyntaxNode = {
 	};
 	children?: SyntaxNode[];
 };
-export declare enum SplitSide {
-	old = 1,
-	new = 2
-}
 export declare enum DiffModeEnum {
 	SplitGitHub = 1,
 	SplitGitLab = 2,

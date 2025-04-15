@@ -3,6 +3,8 @@
 import { getFile, File } from "./file";
 import { DiffLine, DiffLineType, parseInstance, getDiffRange, getLang } from "./parse";
 
+import { SplitSide } from ".";
+
 import type { IRawDiff } from "./parse";
 import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/lowlight";
 
@@ -10,11 +12,11 @@ export let composeLen = 40;
 
 export const changeDefaultComposeLength = (compose: number) => {
   composeLen = compose;
-}
+};
 
 export const resetDefaultComposeLength = () => {
   composeLen = 40;
-}
+};
 
 const idSet = new Set<string>();
 
@@ -1035,6 +1037,14 @@ export class DiffFile {
     return this.#splitLeftLines[index];
   };
 
+  getSplitLineByLineNumber = (lineNumber: number, side: SplitSide) => {
+    if (side === SplitSide.old) {
+      return this.#splitLeftLines?.find((item) => item.lineNumber === lineNumber);
+    } else {
+      return this.#splitRightLines?.find((item) => item.lineNumber === lineNumber);
+    }
+  };
+
   getSplitRightLine = (index: number) => {
     return this.#splitRightLines[index];
   };
@@ -1120,6 +1130,14 @@ export class DiffFile {
 
   getUnifiedLine = (index: number) => {
     return this.#unifiedLines[index];
+  };
+
+  getUnifiedLineByLineNumber = (lienNumber: number, side: SplitSide) => {
+    if (side === SplitSide.old) {
+      return this.#unifiedLines?.find((item) => item.oldLineNumber === lienNumber);
+    } else {
+      return this.#unifiedLines?.find((item) => item.newLineNumber === lienNumber);
+    }
   };
 
   getUnifiedHunkLine = (index: number) => {

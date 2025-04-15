@@ -1,4 +1,4 @@
-import { DiffFile, _cacheMap } from "@git-diff-view/core";
+import { DiffFile, _cacheMap, SplitSide } from "@git-diff-view/core";
 import { diffFontSizeName } from "@git-diff-view/utils";
 import { defineComponent, provide, ref, watch, watchEffect, computed, onUnmounted } from "vue";
 
@@ -36,10 +36,7 @@ export enum DiffModeEnum {
   Unified = 4,
 }
 
-export enum SplitSide {
-  old = 1,
-  new = 2,
-}
+export { SplitSide };
 
 export type DiffViewProps<T> = {
   data?: {
