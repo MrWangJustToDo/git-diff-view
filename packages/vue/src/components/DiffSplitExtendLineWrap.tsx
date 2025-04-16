@@ -78,9 +78,7 @@ export const DiffSplitExtendLine = defineComponent(
               class="diff-line-extend-old-placeholder select-none p-0"
               style={{ backgroundColor: `var(${emptyBGName})` }}
               colspan={2}
-            >
-              {newExtendRendered && <span>&ensp;</span>}
-            </td>
+            />
           )}
           {newExtendRendered ? (
             <td
@@ -99,9 +97,7 @@ export const DiffSplitExtendLine = defineComponent(
                 borderLeftStyle: "solid",
               }}
               colspan={2}
-            >
-              {oldExtendRendered && <span>&ensp;</span>}
-            </td>
+            />
           )}
         </tr>
       );

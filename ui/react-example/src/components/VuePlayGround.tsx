@@ -7,8 +7,9 @@ import {
   SandpackProvider,
 } from "@codesandbox/sandpack-react";
 import { Box, Card, useMantineColorScheme } from "@mantine/core";
+import { IconBrandVue } from "@tabler/icons-react";
 
-import { Vue } from "./icons";
+// import { Vue } from "./icons";
 import { f1, f2 } from "./ReactPlayGround";
 
 export const VuePlayGround = () => {
@@ -17,7 +18,7 @@ export const VuePlayGround = () => {
   return (
     <Card className="p-0" withBorder>
       <Box className="flex items-center px-2 py-2 font-sans text-[14px]">
-        <Vue width="16" className="vue-icon mr-2" /> Vue
+        <IconBrandVue size="16" color="#42b883" className="mr-2" />Vue
       </Box>
       <SandpackProvider
         template="vite-vue-ts"

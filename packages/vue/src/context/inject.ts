@@ -8,6 +8,7 @@ import {
   fontSizeSymbol,
   idSymbol,
   modeSymbol,
+  mountedSymbol,
   onAddWidgetClickSymbol,
   setWidgetStateSymbol,
   slotsSymbol,
@@ -17,6 +18,8 @@ import {
 export const useId = () => inject(idSymbol);
 
 export const useMode = () => inject(modeSymbol);
+
+export const useIsMounted = () => inject(mountedSymbol);
 
 export const useFontSize = () => inject(fontSizeSymbol);
 

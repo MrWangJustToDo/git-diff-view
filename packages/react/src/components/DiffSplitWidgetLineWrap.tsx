@@ -8,7 +8,7 @@ import { useDiffWidgetContext } from "./DiffWidgetContext";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const _DiffSplitWidgetLine = ({
+const InternalDiffSplitWidgetLine = ({
   index,
   diffFile,
   lineNumber,
@@ -58,9 +58,7 @@ const _DiffSplitWidgetLine = ({
           className="diff-line-widget-old-placeholder select-none p-0"
           style={{ backgroundColor: `var(${emptyBGName})` }}
           colSpan={2}
-        >
-          {newWidgetRendered && <span>&ensp;</span>}
-        </td>
+        />
       )}
       {newWidgetRendered ? (
         <td
@@ -79,9 +77,7 @@ const _DiffSplitWidgetLine = ({
             borderLeftStyle: "solid",
           }}
           colSpan={2}
-        >
-          {oldWidgetRendered && <span>&ensp;</span>}
-        </td>
+        />
       )}
     </tr>
   );
@@ -127,5 +123,5 @@ export const DiffSplitWidgetLine = ({
 
   if (!currentIsShow) return null;
 
-  return <_DiffSplitWidgetLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
+  return <InternalDiffSplitWidgetLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
 };

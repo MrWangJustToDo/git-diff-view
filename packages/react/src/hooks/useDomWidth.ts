@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useDiffViewContext } from "../components/DiffViewContext";
 
-type ObserveElement = HTMLElement & {
+export type ObserveElement = HTMLElement & {
   __observeCallback: Set<() => void>;
   __observeInstance: ResizeObserver;
 };
@@ -12,7 +12,7 @@ export const useDomWidth = ({ selector, enable }: { selector: string; enable: bo
 
   const { useDiffContext } = useDiffViewContext();
 
-  const id = useDiffContext(useCallback((s) => s.id, []));
+  const { id, mounted } = useDiffContext.useShallowStableSelector((s) => ({ id: s.id, mounted: s.mounted }));
 
   useEffect(() => {
     if (enable) {
@@ -61,7 +61,7 @@ export const useDomWidth = ({ selector, enable }: { selector: string; enable: bo
 
       return () => cleanCb();
     }
-  }, [selector, enable, id]);
+  }, [selector, enable, id, mounted]);
 
   return width;
 };

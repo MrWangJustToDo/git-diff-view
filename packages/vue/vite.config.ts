@@ -1,4 +1,3 @@
-import typescript from "@rollup/plugin-typescript";
 import vue from "@vitejs/plugin-vue";
 import vueJsx from "@vitejs/plugin-vue-jsx";
 import * as path from "path";
@@ -8,9 +7,7 @@ import dts from "vite-plugin-dts";
 import pkg from "./package.json";
 
 export default defineConfig({
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  plugins: [typescript({ tsconfig: "./tsconfig.json" }), vue(), vueJsx(), dts()],
+  plugins: [vue(), vueJsx(), dts({ outDir: "dist/types" })],
   build: {
     lib: {
       entry: path.resolve(__dirname, "src/index.ts"),

@@ -3,10 +3,20 @@
 import { getFile, File } from "./file";
 import { DiffLine, DiffLineType, parseInstance, getDiffRange, getLang } from "./parse";
 
+import { SplitSide } from ".";
+
 import type { IRawDiff } from "./parse";
 import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/lowlight";
 
-export const composeLen = 40;
+export let composeLen = 40;
+
+export const changeDefaultComposeLength = (compose: number) => {
+  composeLen = compose;
+};
+
+export const resetDefaultComposeLength = () => {
+  composeLen = 40;
+};
 
 const idSet = new Set<string>();
 
@@ -139,6 +149,10 @@ export class DiffFile {
 
   #_theme?: "light" | "dark";
 
+  #hasExpandSplitAll = { state: false };
+
+  #hasExpandUnifiedAll = { state: false };
+
   _version_ = __VERSION__;
 
   _oldFileName: string = "";
@@ -167,9 +181,9 @@ export class DiffFile {
 
   deletionLength: number = 0;
 
-  hasExpandSplitAll: boolean = false;
+  // hasExpandSplitAll: boolean = false;
 
-  hasExpandUnifiedAll: boolean = false;
+  // hasExpandUnifiedAll: boolean = false;
 
   hasSomeLineCollapsed: boolean = false;
 
@@ -630,10 +644,12 @@ export class DiffFile {
     if (this.#highlighterType === "class") return;
 
     if (this.#composeByMerge && !this.#composeByFullMerge) {
-      __DEV__ &&
+      if (__DEV__) {
         console.error(
           `this instance can not do syntax because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'`
         );
+      }
+
       return;
     }
 
@@ -1021,6 +1037,14 @@ export class DiffFile {
     return this.#splitLeftLines[index];
   };
 
+  getSplitLineByLineNumber = (lineNumber: number, side: SplitSide) => {
+    if (side === SplitSide.old) {
+      return this.#splitLeftLines?.find((item) => item.lineNumber === lineNumber);
+    } else {
+      return this.#splitRightLines?.find((item) => item.lineNumber === lineNumber);
+    }
+  };
+
   getSplitRightLine = (index: number) => {
     return this.#splitRightLines[index];
   };
@@ -1069,7 +1093,9 @@ export class DiffFile {
       }
     } else {
       if (current.isLast) {
-        __DEV__ && console.error("the last hunk can not expand up!");
+        if (__DEV__) {
+          console.error("the last hunk can not expand up!");
+        }
         return;
       }
       for (let i = current.splitInfo.endHiddenIndex - composeLen; i < current.splitInfo.endHiddenIndex; i++) {
@@ -1097,11 +1123,21 @@ export class DiffFile {
       this.#splitHunksLines![current.splitInfo.endHiddenIndex] = current;
     }
 
-    needTrigger && this.notifyAll();
+    if (needTrigger) {
+      this.notifyAll();
+    }
   };
 
   getUnifiedLine = (index: number) => {
     return this.#unifiedLines[index];
+  };
+
+  getUnifiedLineByLineNumber = (lienNumber: number, side: SplitSide) => {
+    if (side === SplitSide.old) {
+      return this.#unifiedLines?.find((item) => item.oldLineNumber === lienNumber);
+    } else {
+      return this.#unifiedLines?.find((item) => item.newLineNumber === lienNumber);
+    }
   };
 
   getUnifiedHunkLine = (index: number) => {
@@ -1148,7 +1184,9 @@ export class DiffFile {
       }
     } else {
       if (current.isLast) {
-        __DEV__ && console.error("the last hunk can not expand up!");
+        if (__DEV__) {
+          console.error("the last hunk can not expand up!");
+        }
         return;
       }
       for (let i = current.unifiedInfo.endHiddenIndex - composeLen; i < current.unifiedInfo.endHiddenIndex; i++) {
@@ -1174,7 +1212,9 @@ export class DiffFile {
       this.#unifiedHunksLines![current.unifiedInfo.endHiddenIndex] = current;
     }
 
-    needTrigger && this.notifyAll();
+    if (needTrigger) {
+      this.notifyAll();
+    }
   };
 
   onAllExpand = (mode: "split" | "unified") => {
@@ -1184,16 +1224,24 @@ export class DiffFile {
       Object.keys(this.#splitHunksLines || {}).forEach((key) => {
         this.onSplitHunkExpand("all", +key, false);
       });
-      this.hasExpandSplitAll = true;
+      this.#hasExpandSplitAll.state = true;
     } else {
       Object.keys(this.#unifiedHunksLines || {}).forEach((key) => {
         this.onUnifiedHunkExpand("all", +key, false);
       });
-      this.hasExpandUnifiedAll = true;
+      this.#hasExpandUnifiedAll.state = true;
     }
 
     this.notifyAll();
   };
+
+  get hasExpandSplitAll() {
+    return this.#hasExpandSplitAll.state;
+  }
+
+  get hasExpandUnifiedAll() {
+    return this.#hasExpandUnifiedAll.state;
+  }
 
   onAllCollapse = (mode: "split" | "unified") => {
     if (this.#composeByDiff) return;
@@ -1231,7 +1279,7 @@ export class DiffFile {
           this.#splitHunksLines![item.splitInfo.endHiddenIndex] = item;
         }
       });
-      this.hasExpandSplitAll = false;
+      this.#hasExpandSplitAll.state = false;
     } else {
       Object.values(this.#unifiedLines || {}).forEach((item) => {
         if (!item.isHidden && item._isHidden) {
@@ -1260,10 +1308,18 @@ export class DiffFile {
           this.#unifiedHunksLines![item.unifiedInfo.endHiddenIndex] = item;
         }
       });
-      this.hasExpandUnifiedAll = false;
+      this.#hasExpandUnifiedAll.state = false;
     }
 
     this.notifyAll();
+  };
+
+  getOldFileContent = () => {
+    return this.#oldFileResult?.raw;
+  };
+
+  getNewFileContent = () => {
+    return this.#newFileResult?.raw;
   };
 
   getOldSyntaxLine = (lineNumber: number) => {
@@ -1325,6 +1381,8 @@ export class DiffFile {
     const highlighterName = this.#highlighterName;
     const highlighterType = this.#highlighterType;
     const hasSomeLineCollapsed = this.hasSomeLineCollapsed;
+    const hasExpandSplitAll = this.#hasExpandSplitAll;
+    const hasExpandUnifiedAll = this.#hasExpandUnifiedAll;
 
     // split
     const splitLeftLines = this.#splitLeftLines;
@@ -1366,6 +1424,8 @@ export class DiffFile {
       highlighterType,
       composeByDiff,
       hasSomeLineCollapsed,
+      hasExpandSplitAll,
+      hasExpandUnifiedAll,
 
       version,
 
@@ -1398,6 +1458,8 @@ export class DiffFile {
     this.additionLength = data.additionLength;
     this.deletionLength = data.deletionLength;
     this.hasSomeLineCollapsed = data.hasSomeLineCollapsed;
+    this.#hasExpandSplitAll = data.hasExpandSplitAll;
+    this.#hasExpandUnifiedAll = data.hasExpandUnifiedAll;
 
     this.#splitLeftLines = data.splitLeftLines;
     this.#splitRightLines = data.splitRightLines;
@@ -1455,7 +1517,7 @@ export class DiffFile {
   _delClonedInstance = (instance: DiffFile) => {
     const unsubscribe = this.#clonedInstance.get(instance);
 
-    unsubscribe && unsubscribe();
+    unsubscribe?.();
 
     this.#clonedInstance.delete(instance);
   };

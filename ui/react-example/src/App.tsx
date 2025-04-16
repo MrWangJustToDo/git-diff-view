@@ -1,7 +1,8 @@
 import { AppShell, Group, Title, Button, Flex, Burger, Space, useMantineColorScheme, em } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { IconMoon, IconSun } from "@tabler/icons-react";
+import { IconBrandGithub, IconMoon, IconSun } from "@tabler/icons-react";
 
+import { DevTool } from "./components/DevTool";
 import { ExampleContent } from "./components/ExampleContent";
 import { Github } from "./components/icons";
 import { MainContent } from "./components/MainContent";
@@ -55,7 +56,7 @@ function App() {
               href="https://github.com/MrWangJustToDo/git-diff-view"
               target="_blank"
             >
-              <Github className="!w-[1.42em] text-gray-400" />
+              <IconBrandGithub className="text-gray-400" />
             </Button>
             <Button variant="light" className="text-sm" onClick={toggleColorScheme} color="violet">
               {colorScheme === "light" ? (
@@ -119,12 +120,21 @@ function App() {
           <>
             <MainContent />
             <StartContent />
+            <DevTool />
           </>
         )}
         {type === "example" && (
-          <ExampleContent className="border-color h-[calc(100vh-60px-32px)] w-full overflow-hidden rounded-md border" />
+          <>
+            <ExampleContent className="border-color h-[calc(100vh-60px-32px)] w-full overflow-hidden rounded-md border" />
+            <DevTool />
+          </>
         )}
-        {type === "try" && <PlayGround />}
+        {type === "try" && (
+          <>
+            <PlayGround />
+            <DevTool />
+          </>
+        )}
       </AppShell.Main>
     </AppShell>
   );

@@ -1,8 +1,6 @@
 import { ref, watchPostEffect } from "vue";
 
-import { useId } from "../context";
-
-import { useIsMounted } from "./useIsMounted";
+import { useId, useIsMounted } from "../context";
 
 import type { Ref } from "vue";
 

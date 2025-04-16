@@ -13,7 +13,7 @@ import { useDiffViewContext } from "./DiffViewContext";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const _DiffUnifiedHunkLine = ({
+const InternalDiffUnifiedHunkLine = ({
   index,
   diffFile,
   lineNumber,
@@ -144,5 +144,5 @@ export const DiffUnifiedHunkLine = ({
 
   if (!currentIsShow && !currentIsPureHunk) return null;
 
-  return <_DiffUnifiedHunkLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
+  return <InternalDiffUnifiedHunkLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
 };

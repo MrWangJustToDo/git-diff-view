@@ -11,7 +11,7 @@ const getCode = ({ theme, type }: { theme: "light" | "dark"; type: "react" | "vu
 import { generateDiffFile } from "@git-diff-view/file";
 import "@git-diff-view/react/styles/diff-view.css";
 
-// git mode
+// git mode, use \`git diff\` output to render
 const getDiffFile = () => {
   // see https://git-scm.com/docs/git-diff
   const instance = new DiffFile(oldFileName, oldContent, newFileName, newContent, [ git diff output string ]);
@@ -19,7 +19,7 @@ const getDiffFile = () => {
   return instance;
 }
 
-// file mode
+// file mode, use \`string content\` to render
 const getDiffFile = () => {
   const instance = generateDiffFile(oldFileName, oldContent, newFileName, newContent, '', '');
   instance.initRaw();
@@ -36,7 +36,7 @@ const App = () => {
   import { generateDiffFile } from "@git-diff-view/file";
   import "@git-diff-view/vue/styles/diff-view.css";
 
-  // git mode
+  // git mode, use \`git diff\` output to render
   const getDiffFile = () => {
     // see https://git-scm.com/docs/git-diff
     const instance = new DiffFile(oldFileName, oldContent, newFileName, newContent, [ git diff output string ]);
@@ -44,7 +44,7 @@ const App = () => {
     return instance;
   }
 
-  // file mode
+  // file mode, use \`string content\` to render
   const getDiffFile = () => {
     const instance = generateDiffFile(oldFileName, oldContent, newFileName, newContent, '', '');
     instance.initRaw();

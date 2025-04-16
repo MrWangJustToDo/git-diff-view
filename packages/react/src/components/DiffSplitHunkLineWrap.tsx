@@ -292,7 +292,7 @@ const DiffSplitHunkLineGitLab = ({
   );
 };
 
-const _DiffSplitHunkLine = ({
+const InternalDiffSplitHunkLine = ({
   index,
   diffFile,
   lineNumber,
@@ -336,5 +336,5 @@ export const DiffSplitHunkLine = ({
 
   if (!currentIsShow && !currentIsPureHunk) return null;
 
-  return <_DiffSplitHunkLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
+  return <InternalDiffSplitHunkLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
 };

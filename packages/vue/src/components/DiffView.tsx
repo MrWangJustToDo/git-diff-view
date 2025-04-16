@@ -1,4 +1,4 @@
-import { DiffFile, _cacheMap } from "@git-diff-view/core";
+import { DiffFile, _cacheMap, SplitSide } from "@git-diff-view/core";
 import { diffFontSizeName } from "@git-diff-view/utils";
 import { defineComponent, provide, ref, watch, watchEffect, computed, onUnmounted } from "vue";
 
@@ -14,6 +14,7 @@ import {
   onAddWidgetClickSymbol,
   widgetStateSymbol,
   setWidgetStateSymbol,
+  mountedSymbol,
 } from "../context";
 import { useIsMounted } from "../hooks/useIsMounted";
 import { useProvide } from "../hooks/useProvide";
@@ -35,10 +36,7 @@ export enum DiffModeEnum {
   Unified = 4,
 }
 
-export enum SplitSide {
-  old = 1,
-  new = 2,
-}
+export { SplitSide };
 
 export type DiffViewProps<T> = {
   data?: {
@@ -100,7 +98,9 @@ export const DiffView = defineComponent<
     const wrapperRef = ref<HTMLDivElement>();
 
     const setWidget = (v: { side?: SplitSide; lineNumber?: number }) => {
-      typeof options.slots.widget === "function" && (widgetState.value = v);
+      if (typeof options.slots.widget === "function") {
+        widgetState.value = v;
+      }
     };
 
     const enableHighlight = computed(() => props.diffViewHighlight ?? true);
@@ -151,6 +151,7 @@ export const DiffView = defineComponent<
     const initSyntax = () => {
       if (!isMounted.value || !enableHighlight.value || !diffFile.value) return;
       // hack to track the value change
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
       theme.value;
       const instance = diffFile.value;
       instance.initSyntax({
@@ -187,6 +188,8 @@ export const DiffView = defineComponent<
     watchEffect((onClean) => initAttribute(onClean));
 
     provide(idSymbol, id);
+
+    provide(mountedSymbol, isMounted);
 
     provide(slotsSymbol, options.slots);
 

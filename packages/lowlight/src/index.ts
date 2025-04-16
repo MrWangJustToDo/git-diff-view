@@ -101,7 +101,9 @@ Object.defineProperty(instance, "getAST", {
     let hasRegisteredLang = true;
 
     if (!lowlight.registered(lang)) {
-      __DEV__ && console.warn(`not support current lang: ${lang} yet`);
+      if (__DEV__) {
+        console.warn(`not support current lang: ${lang} yet`);
+      }
       hasRegisteredLang = false;
     }
 
@@ -111,10 +113,11 @@ Object.defineProperty(instance, "getAST", {
         item instanceof RegExp ? item.test(fileName) : fileName === item
       )
     ) {
-      __DEV__ &&
+      if (__DEV__) {
         console.warn(
           `ignore syntax for current file, because the fileName is in the ignoreSyntaxHighlightList: ${fileName}`
         );
+      }
       return;
     }
 

@@ -6,7 +6,7 @@ import { useDiffViewContext } from "../DiffViewContext";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const _DiffSplitExtendLine = ({
+const InternalDiffSplitExtendLine = ({
   index,
   diffFile,
   lineNumber,
@@ -60,9 +60,7 @@ const _DiffSplitExtendLine = ({
         <div
           className="diff-line-extend-old-placeholder w-[50%] select-none p-0"
           style={{ backgroundColor: `var(${emptyBGName})` }}
-        >
-          {newExtendRendered && <span>&ensp;</span>}
-        </div>
+        />
       )}
       <div className="diff-split-line w-[1px]" style={{ backgroundColor: `var(${borderColorName})` }} />
       {newExtendRendered ? (
@@ -73,9 +71,7 @@ const _DiffSplitExtendLine = ({
         <div
           className="diff-line-extend-new-placeholder w-[50%] select-none p-0"
           style={{ backgroundColor: `var(${emptyBGName})` }}
-        >
-          {oldExtendRendered && <span>&ensp;</span>}
-        </div>
+        />
       )}
     </div>
   );
@@ -116,7 +112,7 @@ export const DiffSplitExtendLine = ({
   if (!currentIsShow) return null;
 
   return (
-    <_DiffSplitExtendLine
+    <InternalDiffSplitExtendLine
       index={index}
       diffFile={diffFile}
       lineNumber={lineNumber}

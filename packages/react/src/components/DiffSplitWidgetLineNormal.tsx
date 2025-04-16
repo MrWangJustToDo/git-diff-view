@@ -10,7 +10,7 @@ import { useDiffWidgetContext } from "./DiffWidgetContext";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const _DiffSplitWidgetLine = ({
+const InternalDiffSplitWidgetLine = ({
   index,
   side,
   diffFile,
@@ -41,12 +41,16 @@ const _DiffSplitWidgetLine = ({
 
   const currentLine = side === SplitSide.old ? oldLine : newLine;
 
-  const currentWidget = side === SplitSide.old ? oldLineWidget : newLineWidget;
+  const otherSide = side === SplitSide.old ? SplitSide.new : SplitSide.old;
+
+  const currentHasWidget = side === SplitSide.old ? oldLineWidget : newLineWidget;
+
+  const hasWidget = oldLineWidget || newLineWidget;
 
   const renderWidgetLine = useDiffContext.useShallowStableSelector((s) => s.renderWidgetLine);
 
   const currentWidgetRendered =
-    currentWidget &&
+    currentHasWidget &&
     renderWidgetLine?.({
       diffFile,
       side,
@@ -57,13 +61,13 @@ const _DiffSplitWidgetLine = ({
   useSyncHeight({
     selector: `div[data-line="${lineNumber}-widget-content"]`,
     wrapper: `tr[data-line="${lineNumber}-widget"]`,
-    side: SplitSide[side],
-    enable: !!currentWidget && typeof renderWidgetLine === "function",
+    side: SplitSide[currentHasWidget ? side : otherSide],
+    enable: hasWidget && typeof renderWidgetLine === "function",
   });
 
   const width = useDomWidth({
     selector: side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper",
-    enable: !!currentWidget && typeof renderWidgetLine === "function",
+    enable: !!currentHasWidget && typeof renderWidgetLine === "function",
   });
 
   if (!renderWidgetLine) return null;
@@ -75,7 +79,7 @@ const _DiffSplitWidgetLine = ({
       data-side={SplitSide[side]}
       className="diff-line diff-line-widget"
     >
-      {currentWidget ? (
+      {currentHasWidget ? (
         <td className={`diff-line-widget-${SplitSide[side]}-content p-0`} colSpan={2}>
           <div
             data-line={`${lineNumber}-widget-content`}
@@ -141,5 +145,5 @@ export const DiffSplitWidgetLine = ({
 
   if (!currentIsShow) return null;
 
-  return <_DiffSplitWidgetLine index={index} side={side} diffFile={diffFile} lineNumber={lineNumber} />;
+  return <InternalDiffSplitWidgetLine index={index} side={side} diffFile={diffFile} lineNumber={lineNumber} />;
 };

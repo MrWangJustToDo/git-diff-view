@@ -8,7 +8,7 @@ import { useDiffViewContext } from "../DiffViewContext";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const _DiffSplitExtendLine = ({
+const InternalDiffSplitExtendLine = ({
   index,
   diffFile,
   oldLineExtend,
@@ -33,20 +33,26 @@ const _DiffSplitExtendLine = ({
 
   const currentExtend = side === SplitSide.old ? oldLineExtend : newLineExtend;
 
+  const otherSide = side === SplitSide.old ? SplitSide.new : SplitSide.old;
+
   const currentLineNumber = side === SplitSide.old ? oldLine.lineNumber : newLine.lineNumber;
 
-  const hasExtend = currentExtend?.data !== undefined && currentExtend?.data !== null;
+  const currentSideHasExtend = currentExtend?.data !== undefined && currentExtend?.data !== null;
+
+  const hasExtend =
+    (oldLineExtend?.data !== undefined && oldLineExtend?.data !== null) ||
+    (newLineExtend?.data !== undefined && newLineExtend?.data !== null);
 
   useSyncHeight({
     wrapper: `div[data-state="extend"][data-line="${lineNumber}-extend"]`,
     selector: `div[data-line="${lineNumber}-extend-content"]`,
-    side: SplitSide[side],
+    side: SplitSide[currentSideHasExtend ? side : otherSide],
     enable: hasExtend && typeof renderExtendLine === "function",
   });
 
   const width = useDomWidth({
     selector: side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper",
-    enable: hasExtend && typeof renderExtendLine === "function",
+    enable: currentSideHasExtend && typeof renderExtendLine === "function",
   });
 
   if (!renderExtendLine) return null;
@@ -58,7 +64,7 @@ const _DiffSplitExtendLine = ({
       data-side={SplitSide[side]}
       className="diff-line diff-line-extend"
     >
-      {hasExtend ? (
+      {currentSideHasExtend ? (
         <div className={`diff-line-extend-${SplitSide[side]}-content p-0`}>
           <div
             data-line={`${lineNumber}-extend-content`}
@@ -72,7 +78,7 @@ const _DiffSplitExtendLine = ({
                 diffFile,
                 side,
                 lineNumber: currentLineNumber,
-                data: currentExtend.data,
+                data: currentExtend?.data,
                 onUpdate: diffFile.notifyAll,
               })}
           </div>
@@ -128,7 +134,7 @@ export const DiffSplitExtendLine = ({
   if (!currentIsShow) return null;
 
   return (
-    <_DiffSplitExtendLine
+    <InternalDiffSplitExtendLine
       side={side}
       index={index}
       diffFile={diffFile}

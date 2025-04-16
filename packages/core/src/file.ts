@@ -95,12 +95,16 @@ export class File {
     const finalHighlighter = registerHighlighter || highlighter;
 
     if (this.syntaxLength) {
-      __DEV__ && console.error("current file already doSyntax before!");
+      if (__DEV__) {
+        console.error("current file already doSyntax before!");
+      }
       return;
     }
 
     if (this.rawLength > finalHighlighter.maxLineToIgnoreSyntax) {
-      __DEV__ && console.warn(`ignore syntax for current file, because the rawLength is too long: ${this.rawLength}`);
+      if (__DEV__) {
+        console.warn(`ignore syntax for current file, because the rawLength is too long: ${this.rawLength}`);
+      }
       return;
     }
 

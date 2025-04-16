@@ -61,8 +61,6 @@ export declare class DiffFile {
 	fileLineLength: number;
 	additionLength: number;
 	deletionLength: number;
-	hasExpandSplitAll: boolean;
-	hasExpandUnifiedAll: boolean;
 	hasSomeLineCollapsed: boolean;
 	static createInstance(data: FileData_1, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>): DiffFile;
 	static createInstance(data: FileData_2, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>): DiffFile;
@@ -80,14 +78,20 @@ export declare class DiffFile {
 	buildSplitDiffLines(): void;
 	buildUnifiedDiffLines(): void;
 	getSplitLeftLine: (index: number) => SplitLineItem;
+	getSplitLineByLineNumber: (lineNumber: number, side: SplitSide) => SplitLineItem;
 	getSplitRightLine: (index: number) => SplitLineItem;
 	getSplitHunkLine: (index: number) => DiffHunkItem;
 	onSplitHunkExpand: (dir: "up" | "down" | "all", index: number, needTrigger?: boolean) => void;
 	getUnifiedLine: (index: number) => UnifiedLineItem;
+	getUnifiedLineByLineNumber: (lienNumber: number, side: SplitSide) => UnifiedLineItem;
 	getUnifiedHunkLine: (index: number) => DiffHunkItem;
 	onUnifiedHunkExpand: (dir: "up" | "down" | "all", index: number, needTrigger?: boolean) => void;
 	onAllExpand: (mode: "split" | "unified") => void;
+	get hasExpandSplitAll(): boolean;
+	get hasExpandUnifiedAll(): boolean;
 	onAllCollapse: (mode: "split" | "unified") => void;
+	getOldFileContent: () => string;
+	getNewFileContent: () => string;
 	getOldSyntaxLine: (lineNumber: number) => SyntaxLine;
 	getNewSyntaxLine: (lineNumber: number) => SyntaxLine;
 	subscribe: (listener: (() => void) & {
@@ -123,6 +127,12 @@ export declare class DiffFile {
 		highlighterType: string;
 		composeByDiff: boolean;
 		hasSomeLineCollapsed: boolean;
+		hasExpandSplitAll: {
+			state: boolean;
+		};
+		hasExpandUnifiedAll: {
+			state: boolean;
+		};
 		version: string;
 		theme: "light" | "dark";
 		isFullMerge: boolean;
@@ -166,6 +176,12 @@ export declare class DiffFile {
 		highlighterType: string;
 		composeByDiff: boolean;
 		hasSomeLineCollapsed: boolean;
+		hasExpandSplitAll: {
+			state: boolean;
+		};
+		hasExpandUnifiedAll: {
+			state: boolean;
+		};
 		version: string;
 		theme: "light" | "dark";
 	};
@@ -358,8 +374,12 @@ export declare const DefaultDiffExpansionStep = 40;
  */
 export declare const HiddenBidiCharsRegex: RegExp;
 export declare const _cacheMap: Cache$1<string, File$1>;
+export declare const changeDefaultComposeLength: (compose: number) => void;
+export declare const checkCurrentLineIsHidden: (diffFile: DiffFile, lineNumber: number, side: SplitSide) => {
+	split: boolean;
+	unified: boolean;
+};
 export declare const checkDiffLineIncludeChange: (diffLine?: DiffLine) => boolean;
-export declare const composeLen = 40;
 export declare const disableCache: () => void;
 export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[], { getAdditionRaw, getDeletionRaw, }: {
 	getAdditionRaw: (lineNumber: number) => string;
@@ -377,6 +397,7 @@ export declare const processAST: (ast: DiffAST) => {
 	syntaxFileObject: Record<number, SyntaxLine>;
 	syntaxFileLineNumber: number;
 };
+export declare const resetDefaultComposeLength: () => void;
 export declare const versions: string;
 export declare enum DiffFileLineType {
 	hunk = 1,
@@ -420,6 +441,10 @@ export declare enum NewLineSymbol {
 	NORMAL = 5,
 	NULL = 6
 }
+export declare enum SplitSide {
+	old = 1,
+	new = 2
+}
 export declare function _getAST(raw: string, fileName?: string, lang?: DiffHighlighterLang, theme?: "light" | "dark"): DiffAST;
 export declare function _getAST(raw: string, fileName?: string, lang?: string, theme?: "light" | "dark"): DiffAST;
 export declare function assertNever(_: never, message: string): never;
@@ -447,6 +472,7 @@ export declare function relativeChanges(addition: DiffLine, deletion: DiffLine):
 	addRange: IRange;
 	delRange: IRange;
 };
+export declare let composeLen: number;
 export interface DiffHunkItem extends DiffLineItem {
 	isFirst: boolean;
 	isLast: boolean;
@@ -640,10 +666,6 @@ export declare enum DiffModeEnum {
 	SplitGitLab = 2,
 	Split = 3,
 	Unified = 4
-}
-export declare enum SplitSide {
-	old = 1,
-	new = 2
 }
 export type DiffViewProps<T> = {
 	data?: {

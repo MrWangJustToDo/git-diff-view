@@ -8,7 +8,7 @@ import { useDiffViewContext } from "./DiffViewContext";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const _DiffUnifiedExtendLine = ({
+const InternalDiffUnifiedExtendLine = ({
   index,
   diffFile,
   lineNumber,
@@ -92,7 +92,7 @@ export const DiffUnifiedExtendLine = ({
   if (!hasExtend || !unifiedItem || unifiedItem.isHidden) return null;
 
   return (
-    <_DiffUnifiedExtendLine
+    <InternalDiffUnifiedExtendLine
       index={index}
       diffFile={diffFile}
       lineNumber={lineNumber}

@@ -100,10 +100,11 @@ export const MainContentDiffExampleView = memo(
                           setExtend((prev) => {
                             const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
                             const res = { ...prev };
+                            const nData = res[sideKey]?.[lineNumber].data.filter((_, index) => index !== i);
                             res[sideKey] = {
                               ...res[sideKey],
                               [lineNumber]: {
-                                data: res[sideKey]?.[lineNumber].data.filter((_, index) => index !== i),
+                                data: nData?.length ? nData : undefined,
                               },
                             };
                             return res;

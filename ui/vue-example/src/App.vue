@@ -110,7 +110,7 @@ const resetV = () => (v.value = "");
       </button>
     </div>
   </div>
-  <div class="m-auto mb-[5em] w-[90%] overflow-hidden rounded-[5px] border border-solid border-[#c1c1c1]">
+  <div class="m-auto mb-[5em] w-[90%] overflow-hidden rounded-[5px] border border-solid border-[#e1e1e1]">
     <DiffView
       :diff-file="diffFile"
       :diff-view-font-size="14"
