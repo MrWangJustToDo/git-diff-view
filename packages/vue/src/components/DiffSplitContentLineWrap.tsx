@@ -66,6 +66,8 @@ export const DiffSplitContentLine = defineComponent(
       newLineIsAdded.value = newLine.value?.diff?.type === DiffLineType.Add;
     });
 
+    const onOpenAddWidget = (lineNumber: number, side: SplitSide) => setWidget({ side: side, lineNumber: lineNumber });
+
     return () => {
       if (hasHidden.value) return null;
 
@@ -97,7 +99,7 @@ export const DiffSplitContentLine = defineComponent(
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
                     className="absolute left-[100%] z-[1] translate-x-[-50%]"
-                    onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
+                    onOpenAddWidget={onOpenAddWidget}
                   />
                 )}
                 <span data-line-num={oldLine.value.lineNumber} style={{ opacity: hasChange.value ? undefined : 0.5 }}>
@@ -117,7 +119,7 @@ export const DiffSplitContentLine = defineComponent(
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
                     className="absolute right-[100%] z-[1] translate-x-[50%]"
-                    onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
+                    onOpenAddWidget={onOpenAddWidget}
                   />
                 )}
                 <DiffContent
@@ -158,7 +160,7 @@ export const DiffSplitContentLine = defineComponent(
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
                     className="absolute left-[100%] z-[1] translate-x-[-50%]"
-                    onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
+                    onOpenAddWidget={onOpenAddWidget}
                   />
                 )}
                 <span data-line-num={newLine.value.lineNumber} style={{ opacity: hasChange.value ? undefined : 0.5 }}>
@@ -178,7 +180,7 @@ export const DiffSplitContentLine = defineComponent(
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
                     className="absolute right-[100%] z-[1] translate-x-[50%]"
-                    onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
+                    onOpenAddWidget={onOpenAddWidget}
                   />
                 )}
                 <DiffContent

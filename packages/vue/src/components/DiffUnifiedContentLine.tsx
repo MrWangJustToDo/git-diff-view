@@ -197,7 +197,7 @@ export const DiffUnifiedContentLine = defineComponent(
       currentItemHasChange.value = checkDiffLineIncludeChange(unifiedItem.value?.diff);
     });
 
-    const onOpenAddWidget = (lineNumber, side) => setWidget({ side: side, lineNumber: lineNumber });
+    const onOpenAddWidget = (lineNumber: number, side: SplitSide) => setWidget({ side: side, lineNumber: lineNumber });
 
     return () => {
       if (currentItemHasHidden.value) return null;

@@ -40,9 +40,11 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const contextValue = useMemo(() => ({ useWidget }), [useWidget]);
 
-  const { fontSize, enableWrap } = useDiffContext.useShallowStableSelector((s) => ({
+  const { fontSize, enableWrap, enableHighlight, enableAddWidget } = useDiffContext.useShallowStableSelector((s) => ({
     fontSize: s.fontSize,
     enableWrap: s.enableWrap,
+    enableHighlight: s.enableHighlight,
+    enableAddWidget: s.enableAddWidget,
   }));
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
@@ -93,7 +95,14 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
               {lines.map((item) => (
                 <Fragment key={item.index}>
                   <DiffUnifiedHunkLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
-                  <DiffUnifiedContentLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
+                  <DiffUnifiedContentLine
+                    index={item.index}
+                    lineNumber={item.lineNumber}
+                    diffFile={diffFile}
+                    enableWrap={enableWrap}
+                    enableHighlight={enableHighlight}
+                    enableAddWidget={enableAddWidget}
+                  />
                   <DiffUnifiedWidgetLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
                   <DiffUnifiedExtendLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
                 </Fragment>

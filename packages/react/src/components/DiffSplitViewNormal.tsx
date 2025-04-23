@@ -32,7 +32,17 @@ const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
   }
 };
 
-const DiffSplitViewTable = ({ side, diffFile }: { side: SplitSide; diffFile: DiffFile }) => {
+const DiffSplitViewTable = ({
+  side,
+  diffFile,
+  enableAddWidget,
+  enableHighlight,
+}: {
+  side: SplitSide;
+  diffFile: DiffFile;
+  enableHighlight: boolean;
+  enableAddWidget: boolean;
+}) => {
   const className = side === SplitSide.new ? "new-diff-table" : "old-diff-table";
 
   const lines = getSplitContentLines(diffFile);
@@ -53,7 +63,14 @@ const DiffSplitViewTable = ({ side, diffFile }: { side: SplitSide; diffFile: Dif
         {lines.map((line) => (
           <Fragment key={line.index}>
             <DiffSplitHunkLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
-            <DiffSplitContentLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
+            <DiffSplitContentLine
+              index={line.index}
+              side={side}
+              lineNumber={line.lineNumber}
+              diffFile={diffFile}
+              enableAddWidget={enableAddWidget}
+              enableHighlight={enableHighlight}
+            />
             <DiffSplitWidgetLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
             <DiffSplitExtendLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
           </Fragment>
@@ -78,7 +95,11 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
 
   const { useDiffContext } = useDiffViewContext();
 
-  const fontSize = useDiffContext.useShallowStableSelector((s) => s.fontSize);
+  const { fontSize, enableAddWidget, enableHighlight } = useDiffContext.useShallowStableSelector((s) => ({
+    fontSize: s.fontSize,
+    enableAddWidget: s.enableAddWidget,
+    enableHighlight: s.enableHighlight,
+  }));
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
 
@@ -114,7 +135,12 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
           fontSize: `var(${diffFontSizeName})`,
         }}
       >
-        <DiffSplitViewTable side={SplitSide.old} diffFile={diffFile} />
+        <DiffSplitViewTable
+          side={SplitSide.old}
+          diffFile={diffFile}
+          enableAddWidget={enableAddWidget}
+          enableHighlight={enableHighlight}
+        />
       </div>
       <div className="diff-split-line w-[1.5px]" style={{ backgroundColor: `var(${borderColorName})` }} />
       <div
@@ -128,7 +154,12 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
           fontSize: `var(${diffFontSizeName})`,
         }}
       >
-        <DiffSplitViewTable side={SplitSide.new} diffFile={diffFile} />
+        <DiffSplitViewTable
+          side={SplitSide.new}
+          diffFile={diffFile}
+          enableAddWidget={enableAddWidget}
+          enableHighlight={enableHighlight}
+        />
       </div>
     </div>
   );

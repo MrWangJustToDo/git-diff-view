@@ -63,6 +63,8 @@ export const DiffSplitContentLine = defineComponent(
       currentLineHasContent.value = currentLine.value.lineNumber;
     });
 
+    const onOpenAddWidget = (lineNumber: number, side: SplitSide) => setWidget({ side: side, lineNumber: lineNumber });
+
     return () => {
       if (currentLineHasHidden.value) return null;
 
@@ -101,7 +103,7 @@ export const DiffSplitContentLine = defineComponent(
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
                     className="absolute left-[100%] z-[1] translate-x-[-50%]"
-                    onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
+                    onOpenAddWidget={onOpenAddWidget}
                   />
                 )}
                 <span

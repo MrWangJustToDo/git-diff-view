@@ -21,11 +21,15 @@ const InternalDiffSplitLine = ({
   diffFile,
   lineNumber,
   side,
+  enableAddWidget,
+  enableHighlight,
 }: {
   index: number;
   side: SplitSide;
   diffFile: DiffFile;
   lineNumber: number;
+  enableHighlight: boolean;
+  enableAddWidget: boolean;
 }) => {
   const getCurrentSyntaxLine = side === SplitSide.old ? diffFile.getOldSyntaxLine : diffFile.getNewSyntaxLine;
 
@@ -47,11 +51,7 @@ const InternalDiffSplitLine = ({
 
   const { useDiffContext } = useDiffViewContext();
 
-  const { enableHighlight, enableAddWidget, onAddWidgetClick } = useDiffContext.useShallowStableSelector((s) => ({
-    enableHighlight: s.enableHighlight,
-    enableAddWidget: s.enableAddWidget,
-    onAddWidgetClick: s.onAddWidgetClick,
-  }));
+  const onAddWidgetClick = useDiffContext.getReadonlyState().onAddWidgetClick;
 
   const { useWidget } = useDiffWidgetContext();
 
@@ -129,11 +129,15 @@ export const DiffSplitContentLine = ({
   diffFile,
   lineNumber,
   side,
+  enableAddWidget,
+  enableHighlight,
 }: {
   index: number;
   side: SplitSide;
   diffFile: DiffFile;
   lineNumber: number;
+  enableHighlight: boolean;
+  enableAddWidget: boolean;
 }) => {
   const getCurrentLine = side === SplitSide.old ? diffFile.getSplitLeftLine : diffFile.getSplitRightLine;
 
@@ -141,5 +145,14 @@ export const DiffSplitContentLine = ({
 
   if (currentLine?.isHidden) return null;
 
-  return <InternalDiffSplitLine index={index} diffFile={diffFile} lineNumber={lineNumber} side={side} />;
+  return (
+    <InternalDiffSplitLine
+      index={index}
+      diffFile={diffFile}
+      lineNumber={lineNumber}
+      side={side}
+      enableAddWidget={enableAddWidget}
+      enableHighlight={enableHighlight}
+    />
+  );
 };

@@ -46,7 +46,11 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
 
   const useSplitConfig = useMemo(() => createDiffSplitConfigStore(), []);
 
-  const fontSize = useDiffContext.useShallowStableSelector((s) => s.fontSize);
+  const { fontSize, enableAddWidget, enableHighlight } = useDiffContext.useShallowStableSelector((s) => ({
+    fontSize: s.fontSize,
+    enableAddWidget: s.enableAddWidget,
+    enableHighlight: s.enableHighlight,
+  }));
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
 
@@ -117,7 +121,13 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
             {lines.map((line) => (
               <Fragment key={line.index}>
                 <DiffSplitHunkLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
-                <DiffSplitContentLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
+                <DiffSplitContentLine
+                  index={line.index}
+                  lineNumber={line.lineNumber}
+                  diffFile={diffFile}
+                  enableAddWidget={enableAddWidget}
+                  enableHighlight={enableHighlight}
+                />
                 <DiffSplitWidgetLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
                 <DiffSplitExtendLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
               </Fragment>

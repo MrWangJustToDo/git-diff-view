@@ -161,19 +161,26 @@ const DiffUnifiedNewLine = ({
 };
 
 const _DiffUnifiedLine = memo(
-  ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
+  ({
+    index,
+    diffFile,
+    lineNumber,
+    enableWrap,
+    enableAddWidget,
+    enableHighlight,
+  }: {
+    index: number;
+    diffFile: DiffFile;
+    lineNumber: number;
+    enableWrap: boolean;
+    enableHighlight: boolean;
+    enableAddWidget: boolean;
+  }) => {
     const unifiedLine = diffFile.getUnifiedLine(index);
 
     const { useDiffContext } = useDiffViewContext();
 
-    const { enableWrap, enableHighlight, enableAddWidget, onAddWidgetClick } = useDiffContext.useShallowStableSelector(
-      (s) => ({
-        enableWrap: s.enableWrap,
-        enableHighlight: s.enableHighlight,
-        enableAddWidget: s.enableAddWidget,
-        onAddWidgetClick: s.onAddWidgetClick,
-      })
-    );
+    const onAddWidgetClick = useDiffContext.getReadonlyState().onAddWidgetClick;
 
     const { useWidget } = useDiffWidgetContext();
 
@@ -291,14 +298,29 @@ export const DiffUnifiedContentLine = ({
   index,
   diffFile,
   lineNumber,
+  enableWrap,
+  enableHighlight,
+  enableAddWidget,
 }: {
   index: number;
   diffFile: DiffFile;
   lineNumber: number;
+  enableWrap: boolean;
+  enableHighlight: boolean;
+  enableAddWidget: boolean;
 }) => {
   const unifiedLine = diffFile.getUnifiedLine(index);
 
   if (unifiedLine?.isHidden) return null;
 
-  return <_DiffUnifiedLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
+  return (
+    <_DiffUnifiedLine
+      index={index}
+      diffFile={diffFile}
+      lineNumber={lineNumber}
+      enableWrap={enableWrap}
+      enableHighlight={enableHighlight}
+      enableAddWidget={enableAddWidget}
+    />
+  );
 };
