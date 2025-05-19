@@ -208,6 +208,7 @@ const DiffSyntax = ({
   );
 };
 
+// TODO
 const DiffString = ({
   rawLine,
   diffLine,
@@ -286,6 +287,7 @@ const DiffString = ({
   }
 };
 
+// TODO
 export const DiffContent_v2 = ({
   diffLine,
   rawLine,

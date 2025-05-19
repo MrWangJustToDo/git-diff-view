@@ -1,6 +1,8 @@
 import { highlighter } from "@git-diff-view/lowlight";
 
 import { Cache } from "./cache";
+import { escapeHtml } from "./escape-html";
+
 
 import type { DiffAST, DiffHighlighter, DiffHighlighterLang, SyntaxLine } from "@git-diff-view/lowlight";
 
@@ -26,6 +28,22 @@ if (__DEV__ && typeof globalThis !== "undefined") {
   }
 }
 
+export type SyntaxLineWithTemplate = SyntaxLine & {
+  template?: string;
+};
+
+const getSyntaxLineTemplate = (line: SyntaxLine) => {
+  let template = "";
+
+  line?.nodeList?.forEach(({ node, wrapper }) => {
+    template += `<span data-start="${node.startIndex}" data-end="${node.endIndex}" class="${(
+      wrapper?.properties?.className || []
+    )?.join(" ")}" style="${wrapper?.properties?.style || ""}">${escapeHtml(node.value)}</span>`;
+  });
+
+  return template;
+};
+
 export class File {
   ast?: DiffAST;
 
@@ -35,7 +53,7 @@ export class File {
 
   rawLength?: number;
 
-  syntaxFile: Record<number, SyntaxLine> = {};
+  syntaxFile: Record<number, SyntaxLineWithTemplate> = {};
 
   hasDoSyntax: boolean = false;
 
@@ -125,6 +143,11 @@ export class File {
     if (!this.ast) return;
 
     const { syntaxFileObject, syntaxFileLineNumber } = supportEngin.processAST(this.ast);
+
+    // get syntax template
+    Object.values(syntaxFileObject).forEach((line: SyntaxLineWithTemplate) => {
+      line.template = getSyntaxLineTemplate(line);
+    });
 
     this.syntaxFile = syntaxFileObject;
 

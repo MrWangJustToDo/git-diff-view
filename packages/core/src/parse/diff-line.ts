@@ -20,7 +20,9 @@ export class DiffLine {
     public readonly newLineNumber: number | null,
     public readonly noTrailingNewLine: boolean = false,
     public changes?: IRange,
-    public diffChanges?: DiffRange
+    public diffChanges?: DiffRange,
+    public plainTemplate?: string,
+    public syntaxTemplate?: string
   ) {}
 
   public withNoTrailingNewLine(noTrailingNewLine: boolean): DiffLine {

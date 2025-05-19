@@ -451,6 +451,14 @@ export class DiffFile {
       return this.#getOldRawLine(lineNumber);
     };
 
+    const getAdditionSyntax = (lineNumber: number) => {
+      return this.#getNewSyntaxLine(lineNumber);
+    };
+
+    const getDeletionSyntax = (lineNumber: number) => {
+      return this.#getOldSyntaxLine(lineNumber);
+    };
+
     this.#diffLines = [];
 
     this.additionLength = 0;
@@ -472,13 +480,18 @@ export class DiffFile {
             deletions.push(line);
             this.deletionLength++;
           } else {
-            getDiffRange(additions, deletions, { getAdditionRaw, getDeletionRaw });
+            getDiffRange(additions, deletions, {
+              getAdditionRaw,
+              getDeletionRaw,
+              getAdditionSyntax,
+              getDeletionSyntax,
+            });
             additions = [];
             deletions = [];
           }
           tmp.push(line);
         });
-        getDiffRange(additions, deletions, { getAdditionRaw, getDeletionRaw });
+        getDiffRange(additions, deletions, { getAdditionRaw, getDeletionRaw, getAdditionSyntax, getDeletionSyntax });
       });
     });
 
@@ -585,6 +598,28 @@ export class DiffFile {
     this.#newFileSyntaxLines = this.#newFileResult?.syntaxFile;
   }
 
+  #doSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> } = {}) {
+    if (this.#highlighterType === "class") return;
+
+    if (this.#composeByMerge && !this.#composeByFullMerge) {
+      if (__DEV__) {
+        console.error(
+          `this instance can not do syntax because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'`
+        );
+      }
+
+      return;
+    }
+
+    this.#composeSyntax({ registerHighlighter });
+
+    this.#highlighterName =
+      this.#oldFileResult?.highlighterName || this.#newFileResult?.highlighterName || this.#highlighterName;
+
+    this.#highlighterType =
+      this.#oldFileResult?.highlighterType || this.#newFileResult?.highlighterType || this.#highlighterType;
+  }
+
   #getOldDiffLine(lineNumber: number | null) {
     if (!lineNumber) return;
     return this.#oldFileDiffLines?.[lineNumber];
@@ -601,6 +636,14 @@ export class DiffFile {
 
   #getNewRawLine(lineNumber: number) {
     return this.#newFileLines?.[lineNumber];
+  }
+
+  #getOldSyntaxLine(lineNumber: number) {
+    return this.#oldFileSyntaxLines?.[lineNumber];
+  }
+
+  #getNewSyntaxLine(lineNumber: number) {
+    return this.#newFileSyntaxLines?.[lineNumber];
   }
 
   initId() {
@@ -641,25 +684,12 @@ export class DiffFile {
   initSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> } = {}) {
     if (this.#hasInitSyntax && (!this.#_theme || this.#theme === this.#_theme)) return;
 
-    if (this.#highlighterType === "class") return;
+    this.#doSyntax({ registerHighlighter });
 
-    if (this.#composeByMerge && !this.#composeByFullMerge) {
-      if (__DEV__) {
-        console.error(
-          `this instance can not do syntax because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'`
-        );
-      }
+    // reset diff
+    this.#diffListResults = [];
 
-      return;
-    }
-
-    this.#composeSyntax({ registerHighlighter });
-
-    this.#highlighterName =
-      this.#oldFileResult?.highlighterName || this.#newFileResult?.highlighterName || this.#highlighterName;
-
-    this.#highlighterType =
-      this.#oldFileResult?.highlighterType || this.#newFileResult?.highlighterType || this.#highlighterType;
+    this.#composeDiff();
 
     this.#hasInitSyntax = true;
   }
@@ -1583,4 +1613,12 @@ export class DiffFile {
     this.#unifiedLines = null;
     this.#theme = undefined;
   };
+}
+
+if (__DEV__) {
+  Object.defineProperty(DiffFile.prototype, "__full_bundle__", {
+    get: function (this: DiffFile) {
+      return this._getFullBundle();
+    },
+  });
 }
