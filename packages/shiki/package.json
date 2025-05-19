@@ -8,6 +8,7 @@
   "main": "./dist/esm/index.mjs",
   "type": "module",
   "files": [
+    "src",
     "dist",
     "index.d.ts"
   ],

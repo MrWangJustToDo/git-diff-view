@@ -8,6 +8,7 @@
   "type": "module",
   "types": "index.d.ts",
   "files": [
+    "src",
     "dist",
     "styles",
     "index.cjs",
