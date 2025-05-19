@@ -14,7 +14,11 @@ export const expandContentBGName = "--diff-expand-content--";
 
 export const plainLineNumberColorName = "--diff-plain-lineNumber-color--";
 
+export const expandLineNumberColorName = "--diff-expand-lineNumber-color--";
+
 export const plainLineNumberBGName = "--diff-plain-lineNumber--";
+
+export const expandLineNumberBGName = "--diff-expand-lineNumber--";
 
 export const hunkContentBGName = "--diff-hunk-content--";
 
@@ -51,5 +55,5 @@ export const getLineNumberBG = (isAdded: boolean, isDelete: boolean, hasDiff: bo
       ? `var(${delLineNumberBGName})`
       : hasDiff
         ? `var(${plainLineNumberBGName})`
-        : `var(${expandContentBGName})`;
+        : `var(${expandLineNumberBGName})`;
 };

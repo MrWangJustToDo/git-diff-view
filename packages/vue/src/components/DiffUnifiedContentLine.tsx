@@ -9,6 +9,7 @@ import {
   plainContentBGName,
   plainLineNumberBGName,
   plainLineNumberColorName,
+  expandLineNumberColorName,
 } from "@git-diff-view/utils";
 import { defineComponent, ref } from "vue";
 
@@ -246,7 +247,7 @@ export const DiffUnifiedContentLine = defineComponent(
             <td
               class="diff-line-num sticky left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
               style={{
-                color: `var(${plainLineNumberColorName})`,
+                color: `var(${unifiedItem.value.diff ? plainLineNumberColorName : expandLineNumberColorName})`,
                 backgroundColor: unifiedItem.value.diff
                   ? `var(${plainLineNumberBGName})`
                   : `var(${expandContentBGName})`,

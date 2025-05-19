@@ -11,7 +11,9 @@
   --diff-plain-content--: #ffffff;
   --diff-expand-content--: #fafafa;
   --diff-plain-lineNumber--: #fafafa;
+  --diff-expand-lineNumber--: #fafafa;
   --diff-plain-lineNumber-color--: #555555;
+  --diff-expand-lineNumber-color--: #555555;
   --diff-hunk-content--: #ddf4ff;
   --diff-hunk-lineNumber--: #c7ecff;
   --diff-hunk-lineNumber-hover--: #0969da;
@@ -40,7 +42,9 @@
   --diff-plain-content--: #0d1117;
   --diff-expand-content--: #161b22;
   --diff-plain-lineNumber--: #161b22;
+  --diff-expand-lineNumber--: #161b22;
   --diff-plain-lineNumber-color--: #a0aaab;
+  --diff-expand-lineNumber-color--: #a0aaab;
   --diff-hunk-content--: #131d2e;
   --diff-hunk-lineNumber--: #204274;
   --diff-hunk-lineNumber-hover--: #1f6feb;

@@ -5,6 +5,7 @@ import {
   plainLineNumberColorName,
   emptyBGName,
   diffAsideWidthName,
+  expandLineNumberColorName,
 } from "@git-diff-view/utils";
 import * as React from "react";
 
@@ -74,7 +75,7 @@ const InternalDiffSplitLine = ({
             className={`diff-line-${SplitSide[side]}-num sticky left-0 flex w-[1%] min-w-[40px] select-none items-center px-[10px] text-right`}
             style={{
               backgroundColor: lineNumberBG,
-              color: `var(${plainLineNumberColorName})`,
+              color: `var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName})`,
               width: `var(${diffAsideWidthName})`,
               minWidth: `var(${diffAsideWidthName})`,
               maxWidth: `var(${diffAsideWidthName})`,

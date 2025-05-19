@@ -5,6 +5,7 @@ import {
   plainLineNumberColorName,
   emptyBGName,
   borderColorName,
+  expandLineNumberColorName,
 } from "@git-diff-view/utils";
 import * as React from "react";
 
@@ -132,7 +133,7 @@ const InternalDiffSplitLine = ({
             data-side={SplitSide[SplitSide.new]}
             style={{
               backgroundColor: newLineNumberBG,
-              color: `var(${plainLineNumberColorName})`,
+              color: `var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName})`,
               borderLeftColor: `var(${borderColorName})`,
               borderLeftStyle: "solid",
             }}

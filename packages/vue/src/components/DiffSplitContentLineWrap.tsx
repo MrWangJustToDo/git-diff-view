@@ -2,6 +2,7 @@ import { DiffLineType, type DiffFile, checkDiffLineIncludeChange } from "@git-di
 import {
   borderColorName,
   emptyBGName,
+  expandLineNumberColorName,
   getContentBG,
   getLineNumberBG,
   plainLineNumberColorName,
@@ -89,7 +90,10 @@ export const DiffSplitContentLine = defineComponent(
             <>
               <td
                 class="diff-line-old-num group relative w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top"
-                style={{ backgroundColor: oldLineNumberBG, color: `var(${plainLineNumberColorName})` }}
+                style={{
+                  backgroundColor: oldLineNumberBG,
+                  color: `var(${hasDiff.value ? plainLineNumberColorName : expandLineNumberColorName})`,
+                }}
               >
                 {hasDiff.value && enableAddWidget.value && (
                   <DiffSplitAddWidget
@@ -147,7 +151,7 @@ export const DiffSplitContentLine = defineComponent(
                 class="diff-line-new-num group relative w-[1%] min-w-[40px] select-none border-l-[1px] pl-[10px] pr-[10px] text-right align-top"
                 style={{
                   backgroundColor: newLineNumberBG,
-                  color: `var(${plainLineNumberColorName})`,
+                  color: `var(${hasDiff.value ? plainLineNumberColorName : expandLineNumberColorName})`,
                   borderLeftColor: `var(${borderColorName})`,
                   borderLeftStyle: "solid",
                 }}
