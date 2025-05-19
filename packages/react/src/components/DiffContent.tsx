@@ -68,9 +68,11 @@ const DiffString = ({
 
   if (changes?.hasLineChange) {
     const isNewLineSymbolChanged = changes.newLineSymbol;
-    if (!diffLine?.plainTemplate) {
+
+    if (!diffLine?.plainTemplate && typeof getPlainTemplate === "function") {
       getPlainTemplate({ diffLine, rawLine, operator });
     }
+
     if (diffLine?.plainTemplate) {
       return (
         <span className="diff-line-content-raw">
@@ -97,7 +99,6 @@ const DiffString = ({
       const str3 = rawLine.slice(range.location + range.length);
       const isLast = str2.includes("\n");
       const _str2 = isLast ? str2.replace("\n", "").replace("\r", "") : str2;
-      const isNewLineSymbolChanged = changes.newLineSymbol;
       return (
         <span className="diff-line-content-raw">
           <span data-range-start={range.location} data-range-end={range.location + range.length}>
@@ -162,9 +163,11 @@ const DiffSyntax = ({
 
   if (changes?.hasLineChange) {
     const isNewLineSymbolChanged = changes.newLineSymbol;
-    if (!diffLine?.syntaxTemplate) {
+
+    if (!diffLine?.syntaxTemplate && typeof getSyntaxTemplate === "function") {
       getSyntaxTemplate({ diffLine, syntaxLine, operator });
     }
+
     if (diffLine?.syntaxTemplate) {
       return (
         <span className="diff-line-syntax-raw">

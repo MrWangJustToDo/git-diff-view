@@ -77,7 +77,7 @@ export const getSyntaxTemplate = ({
         wrapper?.properties?.className || []
       )?.join(
         " "
-      )}" style="${wrapper?.properties?.style || ""}">${escapeHtml(str1)}<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-top-left-radius: ${isStart ? "0.2em" : ""};border-bottom-left-radius: ${isStart ? "0.2em" : ""};border-top-right-radius: ${isEnd || isLast ? "0.2em" : ""};border-bottom-right-radius: ${isEnd || isLast ? "0.2em" : ""}">${
+      )}" style="${wrapper?.properties?.style || ""}">${escapeHtml(str1)}<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-top-left-radius: ${isStart ? "0.2em" : "0"};border-bottom-left-radius: ${isStart ? "0.2em" : "0"};border-top-right-radius: ${isEnd || isLast ? "0.2em" : "0"};border-bottom-right-radius: ${isEnd || isLast ? "0.2em" : "0"}">${
         isLast
           ? `${escapeHtml(_str2)}<span data-newline-symbol>${getSymbol(changes.newLineSymbol)}</span>`
           : escapeHtml(str2)
