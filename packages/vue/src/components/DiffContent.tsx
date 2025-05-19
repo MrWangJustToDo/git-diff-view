@@ -10,7 +10,7 @@ import { DiffNoNewLine } from "./DiffNoNewLine";
 
 import type { DiffFile, DiffLine, SyntaxLine, SyntaxLineWithTemplate } from "@git-diff-view/core";
 
-export const getTemplate = (line: SyntaxLine) => {
+export const getTemplate = (line: SyntaxLineWithTemplate) => {
   let template = "";
 
   line?.nodeList?.forEach(({ node, wrapper }) => {
@@ -19,7 +19,7 @@ export const getTemplate = (line: SyntaxLine) => {
     )?.join(" ")}" style="${wrapper?.properties?.style || ""}">${escapeHtml(node.value)}</span>`;
   });
 
-  return template;
+  line.template = template;
 };
 
 const DiffString = ({

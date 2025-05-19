@@ -41,7 +41,7 @@ export const getStyleObjectFromString = memoFunc((str: string) => {
   return style;
 });
 
-export const getTemplate = (line: SyntaxLine) => {
+export const getTemplate = (line: SyntaxLineWithTemplate) => {
   let template = "";
 
   line?.nodeList?.forEach(({ node, wrapper }) => {
@@ -50,7 +50,7 @@ export const getTemplate = (line: SyntaxLine) => {
     )?.join(" ")}" style="${wrapper?.properties?.style || ""}">${escapeHtml(node.value)}</span>`;
   });
 
-  return template;
+  line.template = template;
 };
 
 const DiffString = ({
