@@ -686,9 +686,6 @@ export class DiffFile {
 
     this.#doSyntax({ registerHighlighter });
 
-    // reset diff
-    this.#diffListResults = [];
-
     this.#composeDiff();
 
     this.#hasInitSyntax = true;
