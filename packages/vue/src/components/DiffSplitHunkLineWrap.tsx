@@ -66,7 +66,7 @@ const DiffSplitHunkLineGitHub = defineComponent(
       if (!currentIsShow.value && !currentIsPureHunk.value) return null;
 
       return (
-        <tr data-line={`${props.lineNumber}-hunk`} data-state="hunk" class="diff-line diff-line-hunk select-none">
+        <tr data-line={`${props.lineNumber}-hunk`} data-state="hunk" class="diff-line diff-line-hunk">
           <td
             class="diff-line-hunk-action relative w-[1%] min-w-[40px] select-none p-[1px]"
             style={{
@@ -199,7 +199,7 @@ const DiffSplitHunkLineGitLab = defineComponent(
       if (!currentIsShow.value && !currentIsPureHunk.value) return null;
 
       return (
-        <tr data-line={`${props.lineNumber}-hunk`} data-state="hunk" class="diff-line diff-line-hunk select-none">
+        <tr data-line={`${props.lineNumber}-hunk`} data-state="hunk" class="diff-line diff-line-hunk">
           <td
             class="diff-line-hunk-action relative w-[1%] min-w-[40px] select-none p-[1px]"
             style={{

@@ -7,7 +7,7 @@ import {
   borderColorName,
   diffAsideWidthName,
 } from "@git-diff-view/utils";
-import { Fragment, memo, useEffect, useRef } from "react";
+import { Fragment, memo, useEffect, useRef, useState } from "react";
 import * as React from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
@@ -22,30 +22,46 @@ import { useDiffViewContext } from "./DiffViewContext";
 
 import type { MouseEventHandler } from "react";
 
-const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
-  const ele = e.target;
-
-  // need remove all the selection
-  if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
-    removeAllSelection();
-    return;
-  }
-};
-
 const DiffSplitViewTable = ({
   side,
   diffFile,
   enableAddWidget,
   enableHighlight,
+  onSelect,
 }: {
   side: SplitSide;
   diffFile: DiffFile;
   enableHighlight: boolean;
   enableAddWidget: boolean;
+  onSelect?: (side: SplitSide) => void;
 }) => {
   const className = side === SplitSide.new ? "new-diff-table" : "old-diff-table";
 
   const lines = getSplitContentLines(diffFile);
+
+  const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
+    let ele = e.target as HTMLElement;
+
+    if (ele && ele?.nodeName === "BUTTON") {
+      removeAllSelection();
+      return;
+    }
+
+    while (ele && ele instanceof HTMLElement) {
+      const state = ele.getAttribute("data-state");
+      if (state) {
+        if (state === "extend" || state === "hunk" || state === "widget") {
+          onSelect?.(undefined);
+          removeAllSelection();
+        } else {
+          onSelect?.(side);
+          removeAllSelection();
+        }
+        return;
+      }
+      ele = ele.parentElement;
+    }
+  };
 
   return (
     <table className={className + " w-full border-collapse border-spacing-0"} data-mode={SplitSide[side]}>
@@ -91,6 +107,8 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
 
   const ref2 = useRef<HTMLDivElement>(null);
 
+  const [side, setSide] = useState<SplitSide>();
+
   const splitLineLength = Math.max(diffFile.splitLineLength, diffFile.fileLineLength);
 
   const { useDiffContext } = useDiffViewContext();
@@ -122,8 +140,13 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
 
   const width = Math.max(40, _width + 25);
 
+  const id = `diff-root${diffFile.getId()}`
+
   return (
     <div className="split-diff-view split-diff-view-normal flex w-full basis-[50%]">
+      <style data-select-style>
+        {side ? `#${id} [data-state="extend"] {user-select: none} \n #${id} [data-state="hunk"] {user-select: none} \n #${id} [data-state="widget"] {user-select: none}` : ''}
+      </style>
       <div
         className="old-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
         ref={ref1}
@@ -140,6 +163,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
           diffFile={diffFile}
           enableAddWidget={enableAddWidget}
           enableHighlight={enableHighlight}
+          onSelect={setSide}
         />
       </div>
       <div className="diff-split-line w-[1.5px]" style={{ backgroundColor: `var(${borderColorName})` }} />
@@ -159,6 +183,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
           diffFile={diffFile}
           enableAddWidget={enableAddWidget}
           enableHighlight={enableHighlight}
+          onSelect={setSide}
         />
       </div>
     </div>

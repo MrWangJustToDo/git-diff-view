@@ -18,9 +18,9 @@ const Style = ({ splitSideInfo, id }: { splitSideInfo: { side: SplitSide }; id: 
   return (
     <style data-select-style>
       {splitSideInfo.side === SplitSide.old
-        ? `#${id} td[data-side="${SplitSide[SplitSide.new]}"] {user-select: none}`
+        ? `#${id} [data-side="${SplitSide[SplitSide.new]}"] {user-select: none} \n #${id} [data-state="extend"] {user-select: none} \n #${id} [data-state="hunk"] {user-select: none} \n #${id} [data-state="widget"] {user-select: none}`
         : splitSideInfo.side === SplitSide.new
-          ? `#${id} td[data-side="${SplitSide[SplitSide.old]}"] {user-select: none}`
+          ? `#${id} [data-side="${SplitSide[SplitSide.old]}"] {user-select: none} \n #${id} [data-state="extend"] {user-select: none} \n #${id} [data-state="hunk"] {user-select: none} \n #${id} [data-state="widget"] {user-select: none}`
           : ""}
     </style>
   );
@@ -43,16 +43,24 @@ export const DiffSplitViewWrap = defineComponent(
         return;
       }
 
-      while (ele && ele instanceof HTMLElement && ele.nodeName !== "TD") {
-        ele = ele.parentElement;
-      }
-
-      if (ele instanceof HTMLElement) {
+      while (ele && ele instanceof HTMLElement) {
+        const state = ele.getAttribute("data-state");
         const side = ele.getAttribute("data-side");
         if (side) {
           splitSideInfo.value.side = SplitSide[side];
           removeAllSelection();
         }
+        if (state) {
+          if (state === "extend" || state === "hunk" || state === "widget") {
+            splitSideInfo.value.side = undefined;
+            removeAllSelection();
+            return;
+          } else {
+            return;
+          }
+        }
+
+        ele = ele.parentElement;
       }
     };
 

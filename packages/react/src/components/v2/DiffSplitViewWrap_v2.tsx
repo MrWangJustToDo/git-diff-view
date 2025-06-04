@@ -28,9 +28,9 @@ const Style = ({
   return (
     <style data-select-style>
       {splitRef === SplitSide.old
-        ? `#${id} td[data-side="${SplitSide[SplitSide.new]}"] {user-select: none}`
+        ? `#${id} [data-side="${SplitSide[SplitSide.new]}"] {user-select: none} \n #${id} [data-state="extend"] {user-select: none} \n #${id} [data-state="hunk"] {user-select: none} \n #${id} [data-state="widget"] {user-select: none}`
         : splitRef === SplitSide.new
-          ? `#${id} td[data-side="${SplitSide[SplitSide.old]}"] {user-select: none}`
+          ? `#${id} [data-side="${SplitSide[SplitSide.old]}"] {user-select: none} \n #${id} [data-state="extend"] {user-select: none} \n #${id} [data-state="hunk"] {user-select: none} \n #${id} [data-state="widget"] {user-select: none}`
           : ""}
     </style>
   );
@@ -58,16 +58,24 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
       return;
     }
 
-    while (ele && ele instanceof HTMLElement && ele.nodeName !== "TD") {
-      ele = ele.parentElement;
-    }
-
-    if (ele instanceof HTMLElement) {
+    while (ele && ele instanceof HTMLElement) {
+      const state = ele.getAttribute("data-state");
       const side = ele.getAttribute("data-side");
       if (side) {
         setSelectSide(SplitSide[side]);
         removeAllSelection();
       }
+      if (state) {
+        if (state === "extend" || state === "hunk" || state === "widget") {
+          setSelectSide(undefined);
+          removeAllSelection();
+          return;
+        } else {
+          return;
+        }
+      }
+
+      ele = ele.parentElement;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
