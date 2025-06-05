@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { type DiffFile, getSplitLines } from "@git-diff-view/core";
 import { removeAllSelection, diffFontSizeName, diffAsideWidthName } from "@git-diff-view/utils";
-import { memo, useCallback, useMemo } from "react";
+import { memo, useMemo, useRef } from "react";
 import * as React from "react";
 // SEE https://github.com/facebook/react/pull/25231
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
@@ -9,76 +9,21 @@ import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 import { useTextWidth } from "../../hooks/useTextWidth";
 import { SplitSide } from "../DiffView";
 import { useDiffViewContext } from "../DiffViewContext";
-import { createDiffSplitConfigStore } from "../tools";
 
 import { DiffSplitViewLine } from "./DiffSplitViewLineWrap_v2";
 
 import type { MouseEventHandler } from "react";
-import type { Ref, UseSelectorWithStore } from "reactivity-store";
-
-const Style = ({
-  useSelector,
-  id,
-}: {
-  useSelector: UseSelectorWithStore<{ splitRef: Ref<SplitSide> }>;
-  id: string;
-}) => {
-  const splitRef = useSelector((s) => s.splitRef);
-
-  return (
-    <style data-select-style>
-      {splitRef === SplitSide.old
-        ? `#${id} [data-side="${SplitSide[SplitSide.new]}"] {user-select: none} \n #${id} [data-state="extend"] {user-select: none} \n #${id} [data-state="hunk"] {user-select: none} \n #${id} [data-state="widget"] {user-select: none}`
-        : splitRef === SplitSide.new
-          ? `#${id} [data-side="${SplitSide[SplitSide.old]}"] {user-select: none} \n #${id} [data-state="extend"] {user-select: none} \n #${id} [data-state="hunk"] {user-select: none} \n #${id} [data-state="widget"] {user-select: none}`
-          : ""}
-    </style>
-  );
-};
 
 export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => {
   const splitLineLength = Math.max(diffFile.splitLineLength, diffFile.fileLineLength);
 
   const { useDiffContext } = useDiffViewContext();
 
-  const useSplitConfig = useMemo(() => createDiffSplitConfigStore(), []);
+  const ref = useRef<HTMLStyleElement>(null);
 
   const fontSize = useDiffContext.useShallowStableSelector((s) => s.fontSize);
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
-
-  const onMouseDown = useCallback<MouseEventHandler<HTMLTableSectionElement>>((e) => {
-    let ele = e.target;
-
-    const setSelectSide = useSplitConfig.getReadonlyState().setSplit;
-
-    // need remove all the selection
-    if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
-      removeAllSelection();
-      return;
-    }
-
-    while (ele && ele instanceof HTMLElement) {
-      const state = ele.getAttribute("data-state");
-      const side = ele.getAttribute("data-side");
-      if (side) {
-        setSelectSide(SplitSide[side]);
-        removeAllSelection();
-      }
-      if (state) {
-        if (state === "extend" || state === "hunk" || state === "widget") {
-          setSelectSide(undefined);
-          removeAllSelection();
-          return;
-        } else {
-          return;
-        }
-      }
-
-      ele = ele.parentElement;
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const font = useMemo(() => ({ fontSize: fontSize + "px", fontFamily: "Menlo, Consolas, monospace" }), [fontSize]);
 
@@ -91,6 +36,47 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
 
   const lines = getSplitLines(diffFile);
 
+  const setStyle = (side: SplitSide) => {
+    if (!ref.current) return;
+    if (!side) {
+      ref.current.textContent = "";
+    } else {
+      const id = `diff-root${diffFile.getId()}`;
+      const targetSide = side === SplitSide.old ? SplitSide.new : SplitSide.old;
+      ref.current.textContent = `#${id} [data-side="${SplitSide[targetSide]}"] {user-select: none} \n#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`;
+    }
+  };
+
+  const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
+    let ele = e.target;
+
+    // need remove all the selection
+    if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
+      removeAllSelection();
+      return;
+    }
+
+    while (ele && ele instanceof HTMLElement) {
+      const state = ele.getAttribute("data-state");
+      const side = ele.getAttribute("data-side");
+      if (side) {
+        setStyle(SplitSide[side]);
+        removeAllSelection();
+      }
+      if (state) {
+        if (state === "extend" || state === "hunk" || state === "widget") {
+          setStyle(undefined);
+          removeAllSelection();
+          return;
+        } else {
+          return;
+        }
+      }
+
+      ele = ele.parentElement;
+    }
+  };
+
   return (
     <div className="split-diff-view split-diff-view-warp w-full">
       <div
@@ -102,7 +88,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
           fontSize: `var(${diffFontSizeName})`,
         }}
       >
-        <Style useSelector={useSplitConfig} id={`diff-root${diffFile.getId()}`} />
+        <style data-select-style ref={ref} />
         <div className="diff-table w-full table-fixed border-collapse">
           <div className="diff-table-body leading-[1.6]" onMouseDownCapture={onMouseDown}>
             {lines.map((line, index) => (

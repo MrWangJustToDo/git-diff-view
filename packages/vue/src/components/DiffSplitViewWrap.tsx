@@ -18,9 +18,9 @@ const Style = ({ splitSideInfo, id }: { splitSideInfo: { side: SplitSide }; id: 
   return (
     <style data-select-style>
       {splitSideInfo.side === SplitSide.old
-        ? `#${id} [data-side="${SplitSide[SplitSide.new]}"] {user-select: none} \n #${id} [data-state="extend"] {user-select: none} \n #${id} [data-state="hunk"] {user-select: none} \n #${id} [data-state="widget"] {user-select: none}`
+        ? `#${id} [data-side="${SplitSide[SplitSide.new]}"] {user-select: none} \n#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`
         : splitSideInfo.side === SplitSide.new
-          ? `#${id} [data-side="${SplitSide[SplitSide.old]}"] {user-select: none} \n #${id} [data-state="extend"] {user-select: none} \n #${id} [data-state="hunk"] {user-select: none} \n #${id} [data-state="widget"] {user-select: none}`
+          ? `#${id} [data-side="${SplitSide[SplitSide.old]}"] {user-select: none} \n#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`
           : ""}
     </style>
   );

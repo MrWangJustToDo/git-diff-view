@@ -1,4 +1,3 @@
-import { flushSync } from "react-dom";
 import { createStore, ref } from "reactivity-store";
 
 import type { DiffModeEnum, DiffViewProps, SplitSide } from "./DiffView";
@@ -122,19 +121,5 @@ export const createDiffWidgetStore = (useDiffContextRef: RefObject<ReturnType<ty
     };
 
     return { widgetSide, widgetLineNumber, setWidget };
-  });
-};
-
-export const createDiffSplitConfigStore = () => {
-  return createStore(() => {
-    const splitRef = ref<SplitSide>(undefined);
-
-    const setSplit = (side: SplitSide | undefined) => {
-      flushSync(() => {
-        splitRef.value = side;
-      });
-    };
-
-    return { splitRef, setSplit };
   });
 };
