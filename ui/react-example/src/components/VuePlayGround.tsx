@@ -24,8 +24,8 @@ export const VuePlayGround = () => {
         template="vite-vue-ts"
         customSetup={{
           dependencies: {
-            "@git-diff-view/file": "0.0.20",
-            "@git-diff-view/vue": "0.0.20",
+            "@git-diff-view/file": "0.0.26",
+            "@git-diff-view/vue": "0.0.26",
           },
         }}
         files={{
