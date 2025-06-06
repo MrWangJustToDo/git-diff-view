@@ -1,8 +1,7 @@
 import { highlighter } from "@git-diff-view/lowlight";
 
 import { Cache } from "./cache";
-import { escapeHtml } from "./escape-html";
-
+import { getPlainLineTemplate, getSyntaxLineTemplate } from "./parse";
 
 import type { DiffAST, DiffHighlighter, DiffHighlighterLang, SyntaxLine } from "@git-diff-view/lowlight";
 
@@ -32,18 +31,6 @@ export type SyntaxLineWithTemplate = SyntaxLine & {
   template?: string;
 };
 
-const getSyntaxLineTemplate = (line: SyntaxLine) => {
-  let template = "";
-
-  line?.nodeList?.forEach(({ node, wrapper }) => {
-    template += `<span data-start="${node.startIndex}" data-end="${node.endIndex}" class="${(
-      wrapper?.properties?.className || []
-    )?.join(" ")}" style="${wrapper?.properties?.style || ""}">${escapeHtml(node.value)}</span>`;
-  });
-
-  return template;
-};
-
 export class File {
   ast?: DiffAST;
 
@@ -54,6 +41,8 @@ export class File {
   rawLength?: number;
 
   syntaxFile: Record<number, SyntaxLineWithTemplate> = {};
+
+  plainFile: Record<number, { value: string; template?: string }> = {};
 
   hasDoSyntax: boolean = false;
 
@@ -70,13 +59,15 @@ export class File {
 
     file.ast = data?.ast;
 
-    file.rawFile = data?.rawFile;
+    file.rawFile = data?.rawFile || {};
+
+    file.plainFile = data?.plainFile || {};
 
     file.hasDoRaw = data?.hasDoRaw;
 
     file.rawLength = data?.rawLength;
 
-    file.syntaxFile = data?.syntaxFile;
+    file.syntaxFile = data?.syntaxFile || {};
 
     file.hasDoSyntax = data?.hasDoSyntax;
 
@@ -177,8 +168,14 @@ export class File {
 
     this.rawFile = {};
 
+    this.plainFile = {};
+
     for (let i = 0; i < rawArray.length; i++) {
       this.rawFile[i + 1] = i < rawArray.length - 1 ? rawArray[i] + "\n" : rawArray[i];
+      this.plainFile[i + 1] = {
+        value: this.rawFile[i + 1],
+        template: getPlainLineTemplate(this.rawFile[i + 1]),
+      }
     }
 
     this.hasDoRaw = true;

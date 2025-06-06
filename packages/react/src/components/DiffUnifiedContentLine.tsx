@@ -1,4 +1,4 @@
-import { type DiffFile, type SyntaxLine, type DiffLine, checkDiffLineIncludeChange } from "@git-diff-view/core";
+import { type DiffFile, type DiffLine, checkDiffLineIncludeChange, type File } from "@git-diff-view/core";
 import {
   diffAsideWidthName,
   addContentBGName,
@@ -27,6 +27,7 @@ const DiffUnifiedOldLine = ({
   index,
   diffLine,
   rawLine,
+  plainLine,
   syntaxLine,
   lineNumber,
   diffFile,
@@ -39,7 +40,8 @@ const DiffUnifiedOldLine = ({
   index: number;
   lineNumber: number;
   rawLine: string;
-  syntaxLine?: SyntaxLine;
+  plainLine?: File["plainFile"][number];
+  syntaxLine?: File["syntaxFile"][number];
   diffLine?: DiffLine;
   diffFile: DiffFile;
   enableWrap: boolean;
@@ -85,6 +87,7 @@ const DiffUnifiedOldLine = ({
           enableHighlight={enableHighlight}
           rawLine={rawLine}
           diffLine={diffLine}
+          plainLine={plainLine}
           syntaxLine={syntaxLine}
         />
       </td>
@@ -96,6 +99,7 @@ const DiffUnifiedNewLine = ({
   index,
   diffLine,
   rawLine,
+  plainLine,
   syntaxLine,
   lineNumber,
   diffFile,
@@ -108,7 +112,8 @@ const DiffUnifiedNewLine = ({
   index: number;
   lineNumber: number;
   rawLine: string;
-  syntaxLine?: SyntaxLine;
+  plainLine?: File["plainFile"][number];
+  syntaxLine?: File["syntaxFile"][number];
   diffLine?: DiffLine;
   diffFile: DiffFile;
   enableWrap: boolean;
@@ -154,6 +159,7 @@ const DiffUnifiedNewLine = ({
           enableHighlight={enableHighlight}
           rawLine={rawLine}
           diffLine={diffLine}
+          plainLine={plainLine}
           syntaxLine={syntaxLine}
         />
       </td>
@@ -205,6 +211,12 @@ const _DiffUnifiedLine = memo(
         ? diffFile.getOldSyntaxLine(oldLinenumber)
         : undefined;
 
+    const plainLine = newLineNumber
+      ? diffFile.getNewPlainLine(newLineNumber)
+      : oldLinenumber
+        ? diffFile.getOldPlainLine(oldLinenumber)
+        : undefined;
+
     if (hasChange) {
       if (unifiedLine.oldLineNumber) {
         return (
@@ -215,6 +227,7 @@ const _DiffUnifiedLine = memo(
             rawLine={rawLine}
             diffLine={diffLine}
             setWidget={setWidget}
+            plainLine={plainLine}
             syntaxLine={syntaxLine}
             enableHighlight={enableHighlight}
             enableAddWidget={enableAddWidget}
@@ -231,6 +244,7 @@ const _DiffUnifiedLine = memo(
             diffLine={diffLine}
             diffFile={diffFile}
             setWidget={setWidget}
+            plainLine={plainLine}
             syntaxLine={syntaxLine}
             enableHighlight={enableHighlight}
             enableAddWidget={enableAddWidget}
@@ -284,6 +298,7 @@ const _DiffUnifiedLine = memo(
               enableHighlight={enableHighlight}
               rawLine={rawLine}
               diffLine={diffLine}
+              plainLine={plainLine}
               syntaxLine={syntaxLine}
             />
           </td>

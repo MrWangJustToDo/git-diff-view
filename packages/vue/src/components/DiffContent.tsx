@@ -1,4 +1,4 @@
-import { DiffLineType, escapeHtml, getPlainTemplate, getSyntaxTemplate, NewLineSymbol } from "@git-diff-view/core";
+import { DiffLineType, getPlainDiffTemplate, getPlainLineTemplate, getSyntaxDiffTemplate, getSyntaxLineTemplate, NewLineSymbol } from "@git-diff-view/core";
 import {
   addContentHighlightBGName,
   delContentHighlightBGName,
@@ -8,28 +8,18 @@ import {
 
 import { DiffNoNewLine } from "./DiffNoNewLine";
 
-import type { DiffFile, DiffLine, SyntaxLine, SyntaxLineWithTemplate } from "@git-diff-view/core";
-
-export const getTemplate = (line: SyntaxLineWithTemplate) => {
-  let template = "";
-
-  line?.nodeList?.forEach(({ node, wrapper }) => {
-    template += `<span data-start="${node.startIndex}" data-end="${node.endIndex}" class="${(
-      wrapper?.properties?.className || []
-    )?.join(" ")}" style="${wrapper?.properties?.style || ""}">${escapeHtml(node.value)}</span>`;
-  });
-
-  line.template = template;
-};
+import type { DiffFile, DiffLine, File } from "@git-diff-view/core";
 
 const DiffString = ({
   rawLine,
   diffLine,
   operator,
+  plainLine,
   enableWrap,
 }: {
   rawLine: string;
   diffLine?: DiffLine;
+  plainLine?: File["plainFile"][number];
   operator?: "add" | "del";
   enableWrap?: boolean;
 }) => {
@@ -38,8 +28,8 @@ const DiffString = ({
   if (changes?.hasLineChange) {
     const isNewLineSymbolChanged = changes.newLineSymbol;
 
-    if (!diffLine?.plainTemplate && typeof getPlainTemplate === "function") {
-      getPlainTemplate({ diffLine, rawLine, operator });
+    if (!diffLine?.plainTemplate && typeof getPlainDiffTemplate === "function") {
+      getPlainDiffTemplate({ diffLine, rawLine, operator });
     }
 
     if (diffLine?.plainTemplate) {
@@ -108,6 +98,18 @@ const DiffString = ({
     }
   }
 
+  if (plainLine && !plainLine?.template) {
+    plainLine.template = getPlainLineTemplate(plainLine.value);
+  }
+
+  if (plainLine?.template) {
+    return (
+      <span class="diff-line-content-raw">
+        <span data-template innerHTML={plainLine.template} />
+      </span>
+    );
+  }
+
   return <span class="diff-line-content-raw">{rawLine}</span>;
 };
 
@@ -120,7 +122,7 @@ const DiffSyntax = ({
 }: {
   rawLine: string;
   diffLine?: DiffLine;
-  syntaxLine?: SyntaxLineWithTemplate;
+  syntaxLine?: File["syntaxFile"][number];
   operator?: "add" | "del";
   enableWrap?: boolean;
 }) => {
@@ -133,8 +135,8 @@ const DiffSyntax = ({
   if (changes?.hasLineChange) {
     const isNewLineSymbolChanged = changes.newLineSymbol;
 
-    if (!diffLine?.syntaxTemplate && typeof getSyntaxTemplate === "function") {
-      getSyntaxTemplate({ diffLine, syntaxLine, operator });
+    if (!diffLine?.syntaxTemplate && typeof getSyntaxDiffTemplate === "function") {
+      getSyntaxDiffTemplate({ diffLine, syntaxLine, operator });
     }
 
     if (diffLine?.syntaxTemplate) {
@@ -240,7 +242,7 @@ const DiffSyntax = ({
   }
 
   if (!syntaxLine.template) {
-    getTemplate(syntaxLine);
+    syntaxLine.template = getSyntaxLineTemplate(syntaxLine);
   }
 
   if (syntaxLine.template) {
@@ -271,12 +273,14 @@ const DiffSyntax = ({
 export const DiffContent = ({
   diffLine,
   rawLine,
+  plainLine,
   syntaxLine,
   enableWrap,
   enableHighlight,
 }: {
   rawLine: string;
-  syntaxLine?: SyntaxLine;
+  plainLine?: File["plainFile"][number];
+  syntaxLine?: File["syntaxFile"][number];
   diffLine?: DiffLine;
   diffFile: DiffFile;
   enableWrap: boolean;
@@ -316,6 +320,7 @@ export const DiffContent = ({
           operator={isAdded ? "add" : isDelete ? "del" : undefined}
           rawLine={rawLine}
           diffLine={diffLine}
+          plainLine={plainLine}
           enableWrap={enableWrap}
         />
       )}

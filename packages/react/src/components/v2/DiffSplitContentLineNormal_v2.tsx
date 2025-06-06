@@ -28,6 +28,8 @@ const InternalDiffSplitLine = ({
 }) => {
   const getCurrentSyntaxLine = side === SplitSide.old ? diffFile.getOldSyntaxLine : diffFile.getNewSyntaxLine;
 
+  const getCurrentPlainLine = side === SplitSide.old ? diffFile.getOldPlainLine : diffFile.getNewPlainLine;
+
   const oldLine = diffFile.getSplitLeftLine(index);
 
   const newLine = diffFile.getSplitRightLine(index);
@@ -59,6 +61,8 @@ const InternalDiffSplitLine = ({
   const contentBG = getContentBG(isAdded, isDelete, hasDiff);
 
   const lineNumberBG = getLineNumberBG(isAdded, isDelete, hasDiff);
+
+  const plainLine = getCurrentPlainLine(currentLine.lineNumber);
 
   const syntaxLine = getCurrentSyntaxLine(currentLine.lineNumber);
 
@@ -109,6 +113,7 @@ const InternalDiffSplitLine = ({
               diffFile={diffFile}
               rawLine={currentLine.value!}
               diffLine={currentLine.diff}
+              plainLine={plainLine}
               syntaxLine={syntaxLine}
               enableHighlight={enableHighlight}
             />

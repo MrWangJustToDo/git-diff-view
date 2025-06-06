@@ -1,4 +1,4 @@
-import { type DiffFile, type SyntaxLine, type DiffLine, checkDiffLineIncludeChange } from "@git-diff-view/core";
+import { type DiffFile, type DiffLine, checkDiffLineIncludeChange, type File } from "@git-diff-view/core";
 import {
   diffAsideWidthName,
   addContentBGName,
@@ -24,6 +24,7 @@ const DiffUnifiedOldLine = ({
   index,
   diffLine,
   rawLine,
+  plainLine,
   syntaxLine,
   lineNumber,
   diffFile,
@@ -36,7 +37,8 @@ const DiffUnifiedOldLine = ({
   index: number;
   lineNumber: number;
   rawLine: string;
-  syntaxLine?: SyntaxLine;
+  plainLine?: File["plainFile"][number];
+  syntaxLine?: File["syntaxFile"][number];
   diffLine?: DiffLine;
   diffFile: DiffFile;
   enableWrap: boolean;
@@ -82,6 +84,7 @@ const DiffUnifiedOldLine = ({
           enableHighlight={enableHighlight}
           rawLine={rawLine}
           diffLine={diffLine}
+          plainLine={plainLine}
           syntaxLine={syntaxLine}
         />
       </td>
@@ -93,6 +96,7 @@ const DiffUnifiedNewLine = ({
   index,
   diffLine,
   rawLine,
+  plainLine,
   syntaxLine,
   lineNumber,
   diffFile,
@@ -105,7 +109,8 @@ const DiffUnifiedNewLine = ({
   index: number;
   lineNumber: number;
   rawLine: string;
-  syntaxLine?: SyntaxLine;
+  plainLine?: File["plainFile"][number];
+  syntaxLine?: File["syntaxFile"][number];
   diffLine?: DiffLine;
   diffFile: DiffFile;
   enableWrap: boolean;
@@ -151,6 +156,7 @@ const DiffUnifiedNewLine = ({
           enableHighlight={enableHighlight}
           rawLine={rawLine}
           diffLine={diffLine}
+          plainLine={plainLine}
           syntaxLine={syntaxLine}
         />
       </td>
@@ -176,7 +182,7 @@ export const DiffUnifiedContentLine = defineComponent(
 
     const currentItemHasChange = ref(checkDiffLineIncludeChange(unifiedItem.value?.diff));
 
-    const currentSyntaxItem = ref(
+    const currentSyntaxLine = ref(
       unifiedItem.value?.newLineNumber
         ? props.diffFile.getNewSyntaxLine(unifiedItem.value.newLineNumber)
         : unifiedItem.value?.oldLineNumber
@@ -184,13 +190,27 @@ export const DiffUnifiedContentLine = defineComponent(
           : undefined
     );
 
+    const currentPlainLine = ref(
+      unifiedItem.value?.newLineNumber
+        ? props.diffFile.getNewPlainLine(unifiedItem.value.newLineNumber)
+        : unifiedItem.value?.oldLineNumber
+          ? props.diffFile.getOldPlainLine(unifiedItem.value.oldLineNumber)
+          : undefined
+    );
+
     useSubscribeDiffFile(props, (diffFile) => {
       unifiedItem.value = diffFile.getUnifiedLine(props.index);
 
-      currentSyntaxItem.value = unifiedItem.value?.newLineNumber
+      currentSyntaxLine.value = unifiedItem.value?.newLineNumber
         ? diffFile.getNewSyntaxLine(unifiedItem.value.newLineNumber)
         : unifiedItem.value?.oldLineNumber
           ? diffFile.getOldSyntaxLine(unifiedItem.value.oldLineNumber)
+          : undefined;
+
+      currentPlainLine.value = unifiedItem.value?.newLineNumber
+        ? diffFile.getNewPlainLine(unifiedItem.value.newLineNumber)
+        : unifiedItem.value?.oldLineNumber
+          ? diffFile.getOldPlainLine(unifiedItem.value.oldLineNumber)
           : undefined;
 
       currentItemHasHidden.value = unifiedItem.value?.isHidden;
@@ -212,7 +232,8 @@ export const DiffUnifiedContentLine = defineComponent(
               diffFile={props.diffFile}
               rawLine={unifiedItem.value.value || ""}
               diffLine={unifiedItem.value.diff}
-              syntaxLine={currentSyntaxItem.value}
+              plainLine={currentPlainLine.value}
+              syntaxLine={currentSyntaxLine.value}
               enableHighlight={enableHighlight.value}
               enableAddWidget={enableAddWidget.value}
               lineNumber={unifiedItem.value.oldLineNumber}
@@ -228,7 +249,8 @@ export const DiffUnifiedContentLine = defineComponent(
               diffFile={props.diffFile}
               rawLine={unifiedItem.value.value || ""}
               diffLine={unifiedItem.value.diff}
-              syntaxLine={currentSyntaxItem.value}
+              plainLine={currentPlainLine.value}
+              syntaxLine={currentSyntaxLine.value}
               enableHighlight={enableHighlight.value}
               enableAddWidget={enableAddWidget.value}
               lineNumber={unifiedItem.value.newLineNumber!}
@@ -288,7 +310,8 @@ export const DiffUnifiedContentLine = defineComponent(
                 enableHighlight={enableHighlight.value}
                 rawLine={unifiedItem.value.value || ""}
                 diffLine={unifiedItem.value.diff}
-                syntaxLine={currentSyntaxItem.value}
+                plainLine={currentPlainLine.value}
+                syntaxLine={currentSyntaxLine.value}
               />
             </td>
           </tr>

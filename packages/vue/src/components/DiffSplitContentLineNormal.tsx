@@ -46,6 +46,12 @@ export const DiffSplitContentLine = defineComponent(
         : props.diffFile.getNewSyntaxLine(currentLine.value?.lineNumber)
     );
 
+    const currentPlainLine = ref(
+      props.side === SplitSide.old
+        ? props.diffFile.getOldPlainLine(currentLine.value?.lineNumber)
+        : props.diffFile.getNewPlainLine(currentLine.value.lineNumber)
+    );
+
     useSubscribeDiffFile(props, (diffFile) => {
       currentLine.value =
         props.side === SplitSide.old ? diffFile.getSplitLeftLine(props.index) : diffFile.getSplitRightLine(props.index);
@@ -54,6 +60,11 @@ export const DiffSplitContentLine = defineComponent(
         props.side === SplitSide.old
           ? diffFile.getOldSyntaxLine(currentLine.value?.lineNumber)
           : diffFile.getNewSyntaxLine(currentLine.value?.lineNumber);
+
+      currentPlainLine.value =
+        props.side === SplitSide.old
+          ? diffFile.getOldPlainLine(currentLine.value?.lineNumber)
+          : diffFile.getNewPlainLine(currentLine.value?.lineNumber);
 
       currentLineHasDiff.value = !!currentLine.value?.diff;
 
@@ -123,6 +134,7 @@ export const DiffSplitContentLine = defineComponent(
                   diffFile={props.diffFile}
                   rawLine={currentLine.value.value}
                   diffLine={currentLine.value.diff}
+                  plainLine={currentPlainLine.value}
                   syntaxLine={currentSyntaxLine.value}
                   enableHighlight={enableHighlight.value}
                 />

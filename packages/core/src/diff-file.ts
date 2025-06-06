@@ -105,6 +105,10 @@ export class DiffFile {
 
   #newFileLines?: File["rawFile"];
 
+  #oldFilePlainLines?: File["plainFile"];
+
+  #newFilePlainLines?: File["plainFile"];
+
   #oldFileSyntaxLines?: File["syntaxFile"];
 
   #newFileSyntaxLines?: File["syntaxFile"];
@@ -306,9 +310,13 @@ export class DiffFile {
 
     this.#oldFileLines = this.#oldFileResult?.rawFile;
 
+    this.#oldFilePlainLines = this.#oldFileResult?.plainFile;
+
     this.#newFileResult?.doRaw();
 
     this.#newFileLines = this.#newFileResult?.rawFile;
+
+    this.#newFilePlainLines = this.#newFileResult?.plainFile;
 
     this.fileLineLength = Math.max(
       this.fileLineLength,
@@ -634,8 +642,16 @@ export class DiffFile {
     return this.#oldFileLines?.[lineNumber];
   }
 
+  #getOldPlainLine(lineNumber: number) {
+    return this.#oldFilePlainLines?.[lineNumber];
+  }
+
   #getNewRawLine(lineNumber: number) {
     return this.#newFileLines?.[lineNumber];
+  }
+
+  #getNewPlainLine(lineNumber: number) {
+    return this.#newFilePlainLines?.[lineNumber];
   }
 
   #getOldSyntaxLine(lineNumber: number) {
@@ -1349,8 +1365,16 @@ export class DiffFile {
     return this.#newFileResult?.raw;
   };
 
+  getOldPlainLine = (lineNumber: number) => {
+    return this.#oldFilePlainLines?.[lineNumber];
+  };
+
   getOldSyntaxLine = (lineNumber: number) => {
     return this.#oldFileSyntaxLines?.[lineNumber];
+  };
+
+  getNewPlainLine = (lineNumber: number) => {
+    return this.#newFilePlainLines?.[lineNumber];
   };
 
   getNewSyntaxLine = (lineNumber: number) => {
@@ -1393,10 +1417,12 @@ export class DiffFile {
     const hasBuildUnified = this.#hasBuildUnified;
     const oldFileLines = this.#oldFileLines;
     const oldFileDiffLines = this.#oldFileDiffLines;
+    const oldFilePlainLines = this.#oldFilePlainLines;
     const oldFileSyntaxLines = this.#oldFileSyntaxLines;
     const oldFilePlaceholderLines = this.#oldFilePlaceholderLines;
     const newFileLines = this.#newFileLines;
     const newFileDiffLines = this.#newFileDiffLines;
+    const newFilePlainLines = this.#newFilePlainLines;
     const newFileSyntaxLines = this.#newFileSyntaxLines;
     const newFilePlaceholderLines = this.#newFilePlaceholderLines;
     const splitLineLength = this.splitLineLength;
@@ -1430,10 +1456,12 @@ export class DiffFile {
       hasBuildUnified,
       oldFileLines,
       oldFileDiffLines,
+      oldFilePlainLines,
       oldFileSyntaxLines,
       oldFilePlaceholderLines,
       newFileLines,
       newFileDiffLines,
+      newFilePlainLines,
       newFileSyntaxLines,
       newFilePlaceholderLines,
       splitLineLength,
@@ -1473,10 +1501,12 @@ export class DiffFile {
 
     this.#oldFileLines = data.oldFileLines;
     this.#oldFileDiffLines = data.oldFileDiffLines;
+    this.#oldFilePlainLines = data.oldFilePlainLines;
     this.#oldFileSyntaxLines = data.oldFileSyntaxLines;
     this.#oldFilePlaceholderLines = data.oldFilePlaceholderLines;
     this.#newFileLines = data.newFileLines;
     this.#newFileDiffLines = data.newFileDiffLines;
+    this.#newFilePlainLines = data.newFilePlainLines;
     this.#newFileSyntaxLines = data.newFileSyntaxLines;
     this.#newFilePlaceholderLines = data.newFilePlaceholderLines;
     this.splitLineLength = data.splitLineLength;

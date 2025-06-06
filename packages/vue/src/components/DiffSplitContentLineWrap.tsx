@@ -34,6 +34,10 @@ export const DiffSplitContentLine = defineComponent(
 
     const newSyntaxLine = ref(props.diffFile.getNewSyntaxLine(newLine.value?.lineNumber));
 
+    const oldPlainLine = ref(props.diffFile.getOldPlainLine(oldLine.value.lineNumber));
+
+    const newPlainLine = ref(props.diffFile.getNewPlainLine(newLine.value.lineNumber));
+
     const hasDiff = ref(!!oldLine.value?.diff || !!newLine.value?.diff);
 
     const hasChange = ref(
@@ -54,6 +58,10 @@ export const DiffSplitContentLine = defineComponent(
       oldSyntaxLine.value = diffFile.getOldSyntaxLine(oldLine.value?.lineNumber);
 
       newSyntaxLine.value = diffFile.getNewSyntaxLine(newLine.value?.lineNumber);
+
+      oldPlainLine.value = diffFile.getOldPlainLine(oldLine.value.lineNumber);
+
+      newPlainLine.value = diffFile.getNewPlainLine(newLine.value.lineNumber);
 
       hasDiff.value = !!oldLine.value?.diff || !!newLine.value?.diff;
 
@@ -131,6 +139,7 @@ export const DiffSplitContentLine = defineComponent(
                   diffFile={props.diffFile}
                   rawLine={oldLine.value.value}
                   diffLine={oldLine.value.diff}
+                  plainLine={oldPlainLine.value}
                   syntaxLine={oldSyntaxLine.value}
                   enableHighlight={enableHighlight.value}
                 />
@@ -192,6 +201,7 @@ export const DiffSplitContentLine = defineComponent(
                   diffFile={props.diffFile}
                   rawLine={newLine.value.value || ""}
                   diffLine={newLine.value.diff}
+                  plainLine={newPlainLine.value}
                   syntaxLine={newSyntaxLine.value}
                   enableHighlight={enableHighlight.value}
                 />

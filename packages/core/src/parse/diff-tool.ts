@@ -1,7 +1,7 @@
 import { relativeChanges } from "./change-range";
 import { DiffLineType } from "./diff-line";
 import { DiffHunkExpansionType } from "./raw-diff";
-import { getPlainTemplate, getSyntaxTemplate } from "./template";
+import { getPlainDiffTemplate, getSyntaxDiffTemplate } from "./template";
 
 import type { SyntaxLineWithTemplate } from "../file";
 import type { DiffLine } from "./diff-line";
@@ -123,16 +123,16 @@ export const getDiffRange = (
         deletion.changes = delRange;
       }
       if (!addition.plainTemplate || !deletion.plainTemplate) {
-        getPlainTemplate({ diffLine: addition, rawLine: getAdditionRaw(addition.newLineNumber), operator: "add" });
-        getPlainTemplate({ diffLine: deletion, rawLine: getDeletionRaw(deletion.oldLineNumber), operator: "del" });
+        getPlainDiffTemplate({ diffLine: addition, rawLine: getAdditionRaw(addition.newLineNumber), operator: "add" });
+        getPlainDiffTemplate({ diffLine: deletion, rawLine: getDeletionRaw(deletion.oldLineNumber), operator: "del" });
       }
       if (!addition.syntaxTemplate || !deletion.syntaxTemplate) {
-        getSyntaxTemplate({
+        getSyntaxDiffTemplate({
           diffLine: addition,
           syntaxLine: getAdditionSyntax(addition.newLineNumber),
           operator: "add",
         });
-        getSyntaxTemplate({
+        getSyntaxDiffTemplate({
           diffLine: deletion,
           syntaxLine: getDeletionSyntax(deletion.oldLineNumber),
           operator: "del",
