@@ -1,6 +1,19 @@
-import { AppShell, Group, Title, Button, Flex, Burger, Space, useMantineColorScheme, em } from "@mantine/core";
+import {
+  AppShell,
+  Group,
+  Title,
+  Button,
+  Flex,
+  Burger,
+  Space,
+  useMantineColorScheme,
+  em,
+  Anchor,
+  Tooltip,
+} from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { IconBrandGithub, IconMoon, IconSun } from "@tabler/icons-react";
+import { version } from "react";
 
 import { DevTool } from "./components/DevTool";
 import { ExampleContent } from "./components/ExampleContent";
@@ -38,6 +51,12 @@ function App() {
             <Title order={1} className="text-xl">
               Git Diff View
             </Title>
+            <small className="ml-4 mr-1">power by</small>
+            <Tooltip label={<span>Go to @my-react project, version: {version}</span>} withArrow position="top">
+              <Anchor href="https://github.com/MrWangJustToDo/MyReact" target="_blank">
+                <small>@my-react</small>
+              </Anchor>
+            </Tooltip>
           </Flex>
           <Flex columnGap="16" visibleFrom="sm">
             <Button variant="light" color={type === "main" ? "blue" : "gray"} onClick={() => goto("main")}>

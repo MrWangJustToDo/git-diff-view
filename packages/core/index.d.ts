@@ -9,7 +9,7 @@ declare class Cache$1<K, V> extends Map<K, V> {
 }
 declare class File$1 {
 	
-	readonly raw: string;
+	raw: string;
 	readonly lang: DiffHighlighterLang | string;
 	readonly fileName?: string;
 	ast?: DiffAST;
@@ -84,11 +84,13 @@ export declare class DiffFile {
 	buildUnifiedDiffLines(): void;
 	getSplitLeftLine: (index: number) => SplitLineItem;
 	getSplitLineByLineNumber: (lineNumber: number, side: SplitSide) => SplitLineItem;
+	getSplitLineIndexByLineNumber: (lineNumber: number, side: SplitSide) => number;
 	getSplitRightLine: (index: number) => SplitLineItem;
 	getSplitHunkLine: (index: number) => DiffHunkItem;
 	onSplitHunkExpand: (dir: "up" | "down" | "all", index: number, needTrigger?: boolean) => void;
 	getUnifiedLine: (index: number) => UnifiedLineItem;
 	getUnifiedLineByLineNumber: (lienNumber: number, side: SplitSide) => UnifiedLineItem;
+	getUnifiedLineIndexByLineNumber: (lineNumber: number, side: SplitSide) => number;
 	getUnifiedHunkLine: (index: number) => DiffHunkItem;
 	onUnifiedHunkExpand: (dir: "up" | "down" | "all", index: number, needTrigger?: boolean) => void;
 	onAllExpand: (mode: "split" | "unified") => void;
@@ -412,8 +414,6 @@ export declare const checkCurrentLineIsHidden: (diffFile: DiffFile, lineNumber: 
 };
 export declare const checkDiffLineIncludeChange: (diffLine?: DiffLine) => boolean;
 export declare const disableCache: () => void;
-export declare const doAfterTransform: (content: string) => string;
-export declare const doPreTransform: (content: string) => string;
 export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[], { getAdditionRaw, getDeletionRaw, getAdditionSyntax, getDeletionSyntax, }: {
 	getAdditionRaw: (lineNumber: number) => string;
 	getDeletionRaw: (lineNumber: number) => string;
@@ -438,6 +438,18 @@ export declare const getSyntaxLineTemplate: (line: SyntaxLine) => string;
 export declare const getUnifiedContentLine: (diffFile: DiffFile) => DiffUnifiedContentLineItem[];
 export declare const getUnifiedLines: (diffFile: DiffFile) => DiffUnifiedLineItem[];
 export declare const highlighter: DiffHighlighter;
+/**
+ * Checks whether content transformation is currently enabled.
+ *
+ * @returns {boolean} True if transformation is enabled, false otherwise
+ *
+ * @example
+ * ```typescript
+ * if (isTransformEnabled()) {
+ *   console.log('Transformations are active');
+ * }
+ * ```
+ */
 export declare const isTransformEnabled: () => boolean;
 export declare const numIterator: <T>(num: number, cb: (index: number) => T) => T[];
 export declare const parseInstance: DiffParser;
@@ -445,14 +457,48 @@ export declare const processAST: (ast: DiffAST) => {
 	syntaxFileObject: Record<number, SyntaxLine>;
 	syntaxFileLineNumber: number;
 };
+/**
+ * Applies the transformation function to the provided content if transformation is enabled.
+ *
+ * @param content - The content string to transform
+ * @returns {string} The transformed content if transformation is enabled and configured, otherwise the original content
+ *
+ * @example
+ * ```typescript
+ * const transformed = processTransformContent('  hello world  ');
+ * ```
+ */
+export declare const processTransformContent: (content: string) => string;
+/**
+ * Applies the file transformation function to the provided content if transformation is enabled.
+ *
+ * @param content - The content string to transform
+ * @returns {string} The transformed content if transformation is enabled and configured, otherwise the original content
+ *
+ * @example
+ * ```typescript
+ * const transformed = doTransformFile('some file content');
+ * ```
+ */
+export declare const processTransformForFile: (content: string) => string;
 export declare const resetDefaultComposeLength: () => void;
+/**
+ * Resets all transformation functions to their default state and disables transformation.
+ * This clears any previously set pre-transform and after-transform functions.
+ *
+ * @example
+ * ```typescript
+ * resetTransform(); // Clears all transformations
+ * ```
+ */
 export declare const resetTransform: () => void;
-export declare const setAfterTransform: (fn: (content: string) => string) => void;
 /**
  * ⚠️ **WARNING: DANGEROUS OPERATION** ⚠️
  *
  * Sets a pre-transformation function that will be applied to content before processing.
  * This is a global state modification that affects all subsequent operations.
+ *
+ * if your set a transform content function, you may also need call `escapeHtml` function to escape html characters.
  *
  * **CAUTION**:
  * - This function modifies global state and may cause unexpected side effects
@@ -466,10 +512,32 @@ export declare const setAfterTransform: (fn: (content: string) => string) => voi
  * @example
  * ```typescript
  * // Use with caution - this affects global behavior
- * setPreTransform((content) => content.trim());
+ * setTransformForContent((content) => content.trim());
  * ```
  */
-export declare const setPreTransform: (fn: (content: string) => string) => void;
+export declare const setTransformForContent: (fn: (content: string) => string) => void;
+/**
+ * ⚠️ **WARNING: DANGEROUS OPERATION** ⚠️
+ *
+ * Sets a transformation function that will be applied to the file content.
+ * This is a global state modification that affects all subsequent file operations.
+ *
+ * **CAUTION**:
+ * - This function modifies global state and may cause unexpected side effects
+ * - The transformation will be applied to ALL file content processing operations
+ * - Multiple calls will overwrite the previous transform function
+ * - Ensure proper error handling in your transform function to avoid breaking the entire pipeline
+ *
+ * @param fn - The transformation function to apply to file content
+ * @throws {Error} Throws an error if the provided parameter is not a function
+ *
+ * @example
+ * ```typescript
+ * // Use with caution - this affects global behavior
+ * setTransformFile((content) => content.toUpperCase());
+ * ```
+ */
+export declare const setTransformForFile: (fn: (content: string) => string) => void;
 export declare const versions: string;
 export declare enum DiffFileLineType {
 	hunk = 1,

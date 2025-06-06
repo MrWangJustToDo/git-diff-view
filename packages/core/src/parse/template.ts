@@ -2,7 +2,7 @@ import { addContentHighlightBGName, delContentHighlightBGName, getSymbol } from 
 
 import { escapeHtml } from "../escape-html";
 
-import { doPreTransform, doAfterTransform } from "./transform";
+import { processTransformContent, isTransformEnabled } from "./transform";
 
 import type { SyntaxLineWithTemplate } from "../file";
 import type { DiffLine } from "./diff-line";
@@ -23,6 +23,8 @@ export const getPlainDiffTemplate = ({
 
   if (!changes || !changes.hasLineChange || !rawLine) return;
 
+  const transform = isTransformEnabled() ? processTransformContent : escapeHtml;
+
   const range = changes.range;
   const str1 = rawLine.slice(0, range.location);
   const str2 = rawLine.slice(range.location, range.location + range.length);
@@ -33,11 +35,11 @@ export const getPlainDiffTemplate = ({
 
   const template = `<span data-range-start="${range.location}" data-range-end="${
     range.location + range.length
-  }">${doAfterTransform(escapeHtml(doPreTransform(str1)))}<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-radius: 0.2em;">${
+  }">${transform(str1)}<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-radius: 0.2em;">${
     isLast
-      ? `${doAfterTransform(escapeHtml(doPreTransform(_str2)))}<span data-newline-symbol>${getSymbol(isNewLineSymbolChanged)}</span>`
-      : doAfterTransform(escapeHtml(doPreTransform(str2)))
-  }</span>${doAfterTransform(escapeHtml(doPreTransform(str3)))}</span>`;
+      ? `${transform(_str2)}<span data-newline-symbol>${getSymbol(isNewLineSymbolChanged)}</span>`
+      : transform(str2)
+  }</span>${transform(str3)}</span>`;
 
   diffLine.plainTemplate = template;
 };
@@ -57,6 +59,8 @@ export const getSyntaxDiffTemplate = ({
 
   if (!changes || !changes.hasLineChange) return;
 
+  const transform = isTransformEnabled() ? processTransformContent : escapeHtml;
+
   const range = changes.range;
 
   let template = `<span data-range-start="${range.location}" data-range-end="${range.location + range.length}">`;
@@ -65,7 +69,7 @@ export const getSyntaxDiffTemplate = ({
     if (node.endIndex < range.location || range.location + range.length < node.startIndex) {
       template += `<span data-start="${node.startIndex}" data-end="${node.endIndex}" class="${(
         wrapper?.properties?.className || []
-      )?.join(" ")}" style="${wrapper?.properties?.style || ""}">${doAfterTransform(escapeHtml(doPreTransform(node.value)))}</span>`;
+      )?.join(" ")}" style="${wrapper?.properties?.style || ""}">${transform(node.value)}</span>`;
     } else {
       const index1 = range.location - node.startIndex;
       const index2 = index1 < 0 ? 0 : index1;
@@ -80,11 +84,11 @@ export const getSyntaxDiffTemplate = ({
         wrapper?.properties?.className || []
       )?.join(
         " "
-      )}" style="${wrapper?.properties?.style || ""}">${doAfterTransform(escapeHtml(doPreTransform(str1)))}<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-top-left-radius: ${isStart ? "0.2em" : "0"};border-bottom-left-radius: ${isStart ? "0.2em" : "0"};border-top-right-radius: ${isEnd || isLast ? "0.2em" : "0"};border-bottom-right-radius: ${isEnd || isLast ? "0.2em" : "0"}">${
+      )}" style="${wrapper?.properties?.style || ""}">${transform(str1)}<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-top-left-radius: ${isStart ? "0.2em" : "0"};border-bottom-left-radius: ${isStart ? "0.2em" : "0"};border-top-right-radius: ${isEnd || isLast ? "0.2em" : "0"};border-bottom-right-radius: ${isEnd || isLast ? "0.2em" : "0"}">${
         isLast
-          ? `${doAfterTransform(escapeHtml(doPreTransform(_str2)))}<span data-newline-symbol>${getSymbol(changes.newLineSymbol)}</span>`
-          : doAfterTransform(escapeHtml(doPreTransform(str2)))
-      }</span>${doAfterTransform(escapeHtml(doPreTransform(str3)))}</span>`;
+          ? `${transform(_str2)}<span data-newline-symbol>${getSymbol(changes.newLineSymbol)}</span>`
+          : transform(str2)
+      }</span>${transform(str3)}</span>`;
     }
   });
 
@@ -96,10 +100,12 @@ export const getSyntaxDiffTemplate = ({
 export const getSyntaxLineTemplate = (line: SyntaxLine) => {
   let template = "";
 
+  const transform = isTransformEnabled() ? processTransformContent : escapeHtml;
+
   line?.nodeList?.forEach(({ node, wrapper }) => {
     template += `<span data-start="${node.startIndex}" data-end="${node.endIndex}" class="${(
       wrapper?.properties?.className || []
-    )?.join(" ")}" style="${wrapper?.properties?.style || ""}">${doAfterTransform(escapeHtml(doPreTransform(node.value)))}</span>`;
+    )?.join(" ")}" style="${wrapper?.properties?.style || ""}">${transform(node.value)}</span>`;
   });
 
   return template;
@@ -108,7 +114,9 @@ export const getSyntaxLineTemplate = (line: SyntaxLine) => {
 export const getPlainLineTemplate = (line: string) => {
   if (!line) return "";
 
-  const template = doAfterTransform(escapeHtml(doPreTransform(line)));
+  const transform = isTransformEnabled() ? processTransformContent : escapeHtml;
+
+  const template = transform(line);
 
   return template;
 };

@@ -642,16 +642,8 @@ export class DiffFile {
     return this.#oldFileLines?.[lineNumber];
   }
 
-  #getOldPlainLine(lineNumber: number) {
-    return this.#oldFilePlainLines?.[lineNumber];
-  }
-
   #getNewRawLine(lineNumber: number) {
     return this.#newFileLines?.[lineNumber];
-  }
-
-  #getNewPlainLine(lineNumber: number) {
-    return this.#newFilePlainLines?.[lineNumber];
   }
 
   #getOldSyntaxLine(lineNumber: number) {
@@ -1088,6 +1080,14 @@ export class DiffFile {
     }
   };
 
+  getSplitLineIndexByLineNumber = (lineNumber: number, side: SplitSide) => {
+    if (side === SplitSide.old) {
+      return this.#splitLeftLines?.findIndex((item) => item.lineNumber === lineNumber);
+    } else {
+      return this.#splitRightLines?.findIndex((item) => item.lineNumber === lineNumber);
+    }
+  }
+
   getSplitRightLine = (index: number) => {
     return this.#splitRightLines[index];
   };
@@ -1182,6 +1182,14 @@ export class DiffFile {
       return this.#unifiedLines?.find((item) => item.newLineNumber === lienNumber);
     }
   };
+
+  getUnifiedLineIndexByLineNumber = (lineNumber: number, side: SplitSide) => {
+    if (side === SplitSide.old) {
+      return this.#unifiedLines?.findIndex((item) => item.oldLineNumber === lineNumber);
+    } else {
+      return this.#unifiedLines?.findIndex((item) => item.newLineNumber === lineNumber);
+    }
+  }
 
   getUnifiedHunkLine = (index: number) => {
     return this.#unifiedHunksLines?.[index];

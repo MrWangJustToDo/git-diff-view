@@ -1,7 +1,7 @@
 import { highlighter } from "@git-diff-view/lowlight";
 
 import { Cache } from "./cache";
-import { getPlainLineTemplate, getSyntaxLineTemplate } from "./parse";
+import { getPlainLineTemplate, getSyntaxLineTemplate, processTransformForFile } from "./parse";
 
 import type { DiffAST, DiffHighlighter, DiffHighlighterLang, SyntaxLine } from "@git-diff-view/lowlight";
 
@@ -85,10 +85,12 @@ export class File {
   constructor(row: string, lang: DiffHighlighterLang, fileName?: string);
   constructor(row: string, lang: string, fileName?: string);
   constructor(
-    readonly raw: string,
+    public raw: string,
     readonly lang: DiffHighlighterLang | string,
     readonly fileName?: string
   ) {
+    this.raw = processTransformForFile(raw);
+    
     Object.defineProperty(this, "__v_skip", { value: true });
   }
 
