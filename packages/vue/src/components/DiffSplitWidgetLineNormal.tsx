@@ -91,7 +91,7 @@ export const DiffSplitWidgetLine = defineComponent(
               <div
                 data-line={`${props.lineNumber}-widget-content`}
                 data-side={SplitSide[props.side]}
-                class="diff-line-widget-wrapper sticky left-0"
+                class="diff-line-widget-wrapper sticky left-0 z-[1]"
                 style={{ width: width.value + "px" }}
               >
                 {width.value > 0 &&
