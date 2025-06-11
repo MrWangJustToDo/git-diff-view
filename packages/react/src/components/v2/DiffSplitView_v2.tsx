@@ -17,7 +17,10 @@ export const DiffSplitView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   useDiffContextRef.current = useDiffContext;
 
-  const enableWrap = useDiffContext.useShallowStableSelector((s) => s.enableWrap);
+  const { enableWrap, onCreateUseWidgetHook } = useDiffContext.useShallowStableSelector((s) => ({
+    enableWrap: s.enableWrap,
+    onCreateUseWidgetHook: s.onCreateUseWidgetHook,
+  }));
 
   // performance optimization
   const useWidget = useMemo(() => createDiffWidgetStore(useDiffContextRef), []);
@@ -29,6 +32,10 @@ export const DiffSplitView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
     setWidget({});
   }, [diffFile, useWidget]);
+
+  useEffect(() => {
+    onCreateUseWidgetHook?.(useWidget);
+  }, [useWidget, onCreateUseWidgetHook]);
 
   return (
     <DiffWidgetContext.Provider value={contextValue}>

@@ -14,6 +14,7 @@ import { DiffViewContext } from "./DiffViewContext";
 import { createDiffConfigStore } from "./tools";
 // import { DiffSplitView } from "./v2/DiffSplitView_v2";
 
+import type { createDiffWidgetStore } from "./tools";
 import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/core";
 import type { CSSProperties, ForwardedRef, ReactNode } from "react";
 
@@ -76,6 +77,7 @@ export type DiffViewProps<T> = {
     onUpdate: () => void;
   }) => ReactNode;
   onAddWidgetClick?: (lineNumber: number, side: SplitSide) => void;
+  onCreateUseWidgetHook?: (hook: ReturnType<typeof createDiffWidgetStore>) => void;
 };
 
 type DiffViewProps_1<T> = Omit<DiffViewProps<T>, "data"> & {
@@ -110,6 +112,7 @@ const InternalDiffView = <T extends unknown>(
     extendData,
     diffViewAddWidget,
     onAddWidgetClick,
+    onCreateUseWidgetHook,
     isMounted,
   } = props;
 
@@ -147,6 +150,8 @@ const InternalDiffView = <T extends unknown>(
       setRenderExtendLine,
       renderWidgetLine: _renderWidgetLine,
       setRenderWidgetLine,
+      onCreateUseWidgetHook: _onCreateUseWidgetHook,
+      setOnCreateUseWidgetHook,
     } = useDiffContext.getReadonlyState();
 
     if (diffFileId && diffFileId !== id) {
@@ -185,6 +190,10 @@ const InternalDiffView = <T extends unknown>(
       setOnAddWidgetClick({ current: onAddWidgetClick });
     }
 
+    if (onCreateUseWidgetHook !== _onCreateUseWidgetHook) {
+      setOnCreateUseWidgetHook(onCreateUseWidgetHook);
+    }
+
     if (renderExtendLine !== _renderExtendLine) {
       setRenderExtendLine(renderExtendLine);
     }
@@ -205,6 +214,7 @@ const InternalDiffView = <T extends unknown>(
     renderExtendLine,
     extendData,
     onAddWidgetClick,
+    onCreateUseWidgetHook,
   ]);
 
   useEffect(() => {

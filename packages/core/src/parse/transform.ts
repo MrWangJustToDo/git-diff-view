@@ -8,10 +8,10 @@ let transformFile = temp;
 
 /**
  * ⚠️ **WARNING: DANGEROUS OPERATION** ⚠️
- * 
+ *
  * This function modifies global state and may cause unexpected side effects.
  * You may also need escapeHTML for the content.
- * 
+ *
  * @param fn - The transformation function to help transform template content
  * @throws {Error} Throws an error if the provided parameter is not a function
  *

@@ -32,12 +32,14 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const contextValue = useMemo(() => ({ useWidget }), [useWidget]);
 
-  const { fontSize, enableWrap, enableHighlight, enableAddWidget } = useDiffContext.useShallowStableSelector((s) => ({
-    fontSize: s.fontSize,
-    enableWrap: s.enableWrap,
-    enableHighlight: s.enableHighlight,
-    enableAddWidget: s.enableAddWidget,
-  }));
+  const { fontSize, enableWrap, enableHighlight, enableAddWidget, onCreateUseWidgetHook } =
+    useDiffContext.useShallowStableSelector((s) => ({
+      fontSize: s.fontSize,
+      enableWrap: s.enableWrap,
+      enableHighlight: s.enableHighlight,
+      enableAddWidget: s.enableAddWidget,
+      onCreateUseWidgetHook: s.onCreateUseWidgetHook,
+    }));
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
 
@@ -46,6 +48,10 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
     setWidget({});
   }, [diffFile, useWidget]);
+
+  useEffect(() => {
+    onCreateUseWidgetHook?.(useWidget);
+  }, [useWidget, onCreateUseWidgetHook]);
 
   const unifiedLineLength = Math.max(diffFile.unifiedLineLength, diffFile.fileLineLength);
 

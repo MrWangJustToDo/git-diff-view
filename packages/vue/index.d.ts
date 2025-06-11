@@ -815,6 +815,10 @@ export type DiffViewProps<T> = {
 			data: T;
 		}>;
 	};
+	initialWidgetState?: {
+		side: SplitSide;
+		lineNumber: number;
+	};
 	diffFile?: DiffFile;
 	class?: string;
 	style?: CSSProperties;

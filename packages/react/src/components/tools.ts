@@ -71,6 +71,11 @@ export const createDiffConfigStore = (props: DiffViewProps<any> & { isMounted: b
     const setRenderExtendLine = (_renderExtendLine: typeof renderExtendLine.value) =>
       (renderExtendLine.value = _renderExtendLine);
 
+    const onCreateUseWidgetHook = ref(props.onCreateUseWidgetHook);
+
+    const setOnCreateUseWidgetHook = (_onCreateUseWidgetHook: typeof onCreateUseWidgetHook.value) =>
+      (onCreateUseWidgetHook.value = _onCreateUseWidgetHook);
+
     // 避免无意义的订阅
     const onAddWidgetClick = { current: props.onAddWidgetClick };
 
@@ -100,6 +105,8 @@ export const createDiffConfigStore = (props: DiffViewProps<any> & { isMounted: b
       setRenderExtendLine,
       onAddWidgetClick,
       setOnAddWidgetClick,
+      onCreateUseWidgetHook,
+      setOnCreateUseWidgetHook,
     };
   });
 };
