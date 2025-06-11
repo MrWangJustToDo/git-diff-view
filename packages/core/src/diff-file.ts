@@ -10,6 +10,8 @@ import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/lowlig
 
 export let composeLen = 40;
 
+export const getCurrentComposeLength = () => composeLen;
+
 export const changeDefaultComposeLength = (compose: number) => {
   composeLen = compose;
 };
@@ -1086,7 +1088,7 @@ export class DiffFile {
     } else {
       return this.#splitRightLines?.findIndex((item) => item.lineNumber === lineNumber);
     }
-  }
+  };
 
   getSplitRightLine = (index: number) => {
     return this.#splitRightLines[index];
@@ -1189,7 +1191,7 @@ export class DiffFile {
     } else {
       return this.#unifiedLines?.findIndex((item) => item.newLineNumber === lineNumber);
     }
-  }
+  };
 
   getUnifiedHunkLine = (index: number) => {
     return this.#unifiedHunksLines?.[index];

@@ -1,4 +1,4 @@
-import { /* escapeHtml, */ generateDiffFile, /* setTransformForContent */ } from "@git-diff-view/file";
+import { /* escapeHtml, */ generateDiffFile /* setTransformForContent */ } from "@git-diff-view/file";
 import { DiffView, DiffFile } from "@git-diff-view/react";
 import { Button, Code, Switch, useMantineColorScheme } from "@mantine/core";
 import { debounce } from "lodash";

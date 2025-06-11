@@ -1,4 +1,11 @@
-import { DiffLineType, getPlainDiffTemplate, getPlainLineTemplate, getSyntaxDiffTemplate, getSyntaxLineTemplate, NewLineSymbol } from "@git-diff-view/core";
+import {
+  DiffLineType,
+  getPlainDiffTemplate,
+  getPlainLineTemplate,
+  getSyntaxDiffTemplate,
+  getSyntaxLineTemplate,
+  NewLineSymbol,
+} from "@git-diff-view/core";
 import {
   addContentHighlightBGName,
   delContentHighlightBGName,

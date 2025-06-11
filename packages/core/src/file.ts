@@ -90,7 +90,7 @@ export class File {
     readonly fileName?: string
   ) {
     this.raw = processTransformForFile(raw);
-    
+
     Object.defineProperty(this, "__v_skip", { value: true });
   }
 
@@ -177,7 +177,7 @@ export class File {
       this.plainFile[i + 1] = {
         value: this.rawFile[i + 1],
         template: getPlainLineTemplate(this.rawFile[i + 1]),
-      }
+      };
     }
 
     this.hasDoRaw = true;

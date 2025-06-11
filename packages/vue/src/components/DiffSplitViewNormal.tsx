@@ -152,7 +152,9 @@ export const DiffSplitViewNormal = defineComponent(
       return (
         <div class="split-diff-view split-diff-view-normal flex w-full basis-[50%]">
           <style data-select-style>
-            {side.value ? `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}` : ''}
+            {side.value
+              ? `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`
+              : ""}
           </style>
           <div
             class="old-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"

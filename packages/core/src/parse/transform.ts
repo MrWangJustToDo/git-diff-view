@@ -8,28 +8,20 @@ let transformFile = temp;
 
 /**
  * ⚠️ **WARNING: DANGEROUS OPERATION** ⚠️
- *
- * Sets a pre-transformation function that will be applied to content before processing.
- * This is a global state modification that affects all subsequent operations.
  * 
- * if your set a transform content function, you may also need call `escapeHtml` function to escape html characters.
- *
- * **CAUTION**:
- * - This function modifies global state and may cause unexpected side effects
- * - The transformation will be applied to ALL content processing operations
- * - Multiple calls will overwrite the previous transform function
- * - Ensure proper error handling in your transform function to avoid breaking the entire pipeline
- *
- * @param fn - The transformation function to apply before processing content
+ * This function modifies global state and may cause unexpected side effects.
+ * You may also need escapeHTML for the content.
+ * 
+ * @param fn - The transformation function to help transform template content
  * @throws {Error} Throws an error if the provided parameter is not a function
  *
  * @example
  * ```typescript
  * // Use with caution - this affects global behavior
- * setTransformForContent((content) => content.trim());
+ * setTransformForTemplateContent((content) => content.trim());
  * ```
  */
-export const setTransformForContent = (fn: (content: string) => string) => {
+export const setTransformForTemplateContent = (fn: (content: string) => string) => {
   if (typeof fn !== "function") {
     throw new Error("Transform must be a function");
   }
@@ -41,15 +33,6 @@ export const setTransformForContent = (fn: (content: string) => string) => {
 
 /**
  * ⚠️ **WARNING: DANGEROUS OPERATION** ⚠️
- *
- * Sets a transformation function that will be applied to the file content.
- * This is a global state modification that affects all subsequent file operations.
- *
- * **CAUTION**:
- * - This function modifies global state and may cause unexpected side effects
- * - The transformation will be applied to ALL file content processing operations
- * - Multiple calls will overwrite the previous transform function
- * - Ensure proper error handling in your transform function to avoid breaking the entire pipeline
  *
  * @param fn - The transformation function to apply to file content
  * @throws {Error} Throws an error if the provided parameter is not a function
@@ -70,7 +53,6 @@ export const setTransformForFile = (fn: (content: string) => string) => {
 
 /**
  * Resets all transformation functions to their default state and disables transformation.
- * This clears any previously set pre-transform and after-transform functions.
  *
  * @example
  * ```typescript
@@ -107,10 +89,10 @@ export const isTransformEnabled = () => enableTransform;
  *
  * @example
  * ```typescript
- * const transformed = processTransformContent('  hello world  ');
+ * const transformed = processTransformTemplateContent('  hello world  ');
  * ```
  */
-export const processTransformContent = (content: string) => {
+export const processTransformTemplateContent = (content: string) => {
   if (enableTransform && temp !== transformContent) {
     return transformContent(content);
   }

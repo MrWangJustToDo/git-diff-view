@@ -83,44 +83,44 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
   const width = Math.max(40, _width + 25);
 
   const setStyle = (side: SplitSide) => {
-      if (!ref.current) return;
-      if (!side) {
-        ref.current.textContent = "";
-      } else {
-        const id = `diff-root${diffFile.getId()}`;
-        ref.current.textContent = `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`;
-      }
-    };
+    if (!ref.current) return;
+    if (!side) {
+      ref.current.textContent = "";
+    } else {
+      const id = `diff-root${diffFile.getId()}`;
+      ref.current.textContent = `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`;
+    }
+  };
 
-    const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
-      let ele = e.target;
+  const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
+    let ele = e.target;
 
-      // need remove all the selection
-      if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
+    // need remove all the selection
+    if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
+      removeAllSelection();
+      return;
+    }
+
+    while (ele && ele instanceof HTMLElement) {
+      const state = ele.getAttribute("data-state");
+      const side = ele.getAttribute("data-side");
+      if (side) {
+        setStyle(SplitSide[side]);
         removeAllSelection();
-        return;
       }
-
-      while (ele && ele instanceof HTMLElement) {
-        const state = ele.getAttribute("data-state");
-        const side = ele.getAttribute("data-side");
-        if (side) {
-          setStyle(SplitSide[side]);
+      if (state) {
+        if (state === "extend" || state === "hunk" || state === "widget") {
+          setStyle(undefined);
           removeAllSelection();
+          return;
+        } else {
+          return;
         }
-        if (state) {
-          if (state === "extend" || state === "hunk" || state === "widget") {
-            setStyle(undefined);
-            removeAllSelection();
-            return;
-          } else {
-            return;
-          }
-        }
-
-        ele = ele.parentElement;
       }
-    };
+
+      ele = ele.parentElement;
+    }
+  };
 
   return (
     <div className="split-diff-view split-diff-view-normal flex w-full basis-[50%]">
@@ -150,7 +150,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
           fontSize: `var(${diffFontSizeName})`,
         }}
       >
-        <DiffSplitViewTable side={SplitSide.new} diffFile={diffFile}  onMouseDown={onMouseDown} />
+        <DiffSplitViewTable side={SplitSide.new} diffFile={diffFile} onMouseDown={onMouseDown} />
       </div>
     </div>
   );

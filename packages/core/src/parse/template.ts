@@ -2,7 +2,7 @@ import { addContentHighlightBGName, delContentHighlightBGName, getSymbol } from 
 
 import { escapeHtml } from "../escape-html";
 
-import { processTransformContent, isTransformEnabled } from "./transform";
+import { processTransformTemplateContent, isTransformEnabled } from "./transform";
 
 import type { SyntaxLineWithTemplate } from "../file";
 import type { DiffLine } from "./diff-line";
@@ -23,7 +23,7 @@ export const getPlainDiffTemplate = ({
 
   if (!changes || !changes.hasLineChange || !rawLine) return;
 
-  const transform = isTransformEnabled() ? processTransformContent : escapeHtml;
+  const transform = isTransformEnabled() ? processTransformTemplateContent : escapeHtml;
 
   const range = changes.range;
   const str1 = rawLine.slice(0, range.location);
@@ -59,7 +59,7 @@ export const getSyntaxDiffTemplate = ({
 
   if (!changes || !changes.hasLineChange) return;
 
-  const transform = isTransformEnabled() ? processTransformContent : escapeHtml;
+  const transform = isTransformEnabled() ? processTransformTemplateContent : escapeHtml;
 
   const range = changes.range;
 
@@ -100,7 +100,7 @@ export const getSyntaxDiffTemplate = ({
 export const getSyntaxLineTemplate = (line: SyntaxLine) => {
   let template = "";
 
-  const transform = isTransformEnabled() ? processTransformContent : escapeHtml;
+  const transform = isTransformEnabled() ? processTransformTemplateContent : escapeHtml;
 
   line?.nodeList?.forEach(({ node, wrapper }) => {
     template += `<span data-start="${node.startIndex}" data-end="${node.endIndex}" class="${(
@@ -114,7 +114,7 @@ export const getSyntaxLineTemplate = (line: SyntaxLine) => {
 export const getPlainLineTemplate = (line: string) => {
   if (!line) return "";
 
-  const transform = isTransformEnabled() ? processTransformContent : escapeHtml;
+  const transform = isTransformEnabled() ? processTransformTemplateContent : escapeHtml;
 
   const template = transform(line);
 
