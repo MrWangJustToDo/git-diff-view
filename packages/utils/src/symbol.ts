@@ -1,4 +1,11 @@
-import { NewLineSymbol } from "@git-diff-view/core";
+export enum NewLineSymbol {
+  CRLF = 1,
+  CR = 2,
+  LF = 3,
+  NEWLINE = 4,
+  NORMAL = 5,
+  NULL = 6,
+}
 
 export const getSymbol = (symbol: NewLineSymbol) => {
   switch (symbol) {

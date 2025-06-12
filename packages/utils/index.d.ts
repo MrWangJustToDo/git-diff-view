@@ -36,7 +36,7 @@ export declare const syncScroll: (left: HTMLElement, right: HTMLElement) => () =
 export declare const diffFontSizeName = "--diff-font-size--";
 export declare const diffAsideWidthName = "--diff-aside-width--";
 export declare const memoFunc: <T extends Function>(func: T) => T;
-declare enum NewLineSymbol {
+export declare enum NewLineSymbol {
 	CRLF = 1,
 	CR = 2,
 	LF = 3,

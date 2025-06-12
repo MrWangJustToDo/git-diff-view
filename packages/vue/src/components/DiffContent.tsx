@@ -4,13 +4,13 @@ import {
   getPlainLineTemplate,
   getSyntaxDiffTemplate,
   getSyntaxLineTemplate,
-  NewLineSymbol,
 } from "@git-diff-view/core";
 import {
   addContentHighlightBGName,
   delContentHighlightBGName,
   diffFontSizeName,
   getSymbol,
+  NewLineSymbol,
 } from "@git-diff-view/utils";
 
 import { DiffNoNewLine } from "./DiffNoNewLine";

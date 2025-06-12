@@ -1,6 +1,5 @@
 import {
   DiffLineType,
-  NewLineSymbol,
   type DiffFile,
   type DiffLine,
   type diffChanges,
@@ -11,6 +10,7 @@ import {
   delContentHighlightBGName,
   diffFontSizeName,
   getSymbol,
+  NewLineSymbol,
 } from "@git-diff-view/utils";
 import * as React from "react";
 

@@ -49,6 +49,14 @@ declare const lowlight: {
 	};
 	registered: (aliasOrName: string) => boolean;
 };
+declare enum NewLineSymbol {
+	CRLF = 1,
+	CR = 2,
+	LF = 3,
+	NEWLINE = 4,
+	NORMAL = 5,
+	NULL = 6
+}
 export declare class DiffFile {
 	readonly uuid?: string;
 	_version_: string;
@@ -554,14 +562,6 @@ export declare enum DiffLineType {
 	Add = 1,
 	Delete = 2,
 	Hunk = 3
-}
-export declare enum NewLineSymbol {
-	CRLF = 1,
-	CR = 2,
-	LF = 3,
-	NEWLINE = 4,
-	NORMAL = 5,
-	NULL = 6
 }
 export declare enum SplitSide {
 	old = 1,

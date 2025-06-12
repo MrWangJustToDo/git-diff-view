@@ -4,7 +4,8 @@ import { resolve } from "node:path";
 import { rollupBuild } from "project-tool/rollup";
 
 const externalCorePackage = (id: string) =>
-  (id.includes("node_modules") || id.includes("@git-diff-view/")) && !id.includes("tslib");
+  (id.includes("node_modules") || (id.includes("@git-diff-view/") && !id.endsWith("@git-diff-view/utils"))) &&
+  !id.includes("tslib");
 
 const external = (id: string) =>
   (id.includes("node_modules") || (id.includes("@git-diff-view/") && !id.endsWith("@git-diff-view/utils"))) &&

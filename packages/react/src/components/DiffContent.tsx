@@ -1,7 +1,6 @@
 /* eslint-disable max-lines */
 import {
   DiffLineType,
-  NewLineSymbol,
   getSyntaxDiffTemplate,
   getSyntaxLineTemplate,
   getPlainDiffTemplate,
@@ -13,6 +12,7 @@ import {
   delContentHighlightBGName,
   diffFontSizeName,
   getSymbol,
+  NewLineSymbol,
 } from "@git-diff-view/utils";
 import * as React from "react";
 
