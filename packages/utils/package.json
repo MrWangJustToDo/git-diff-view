@@ -3,7 +3,7 @@
   "description": "@git-diff-view/utils",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.28",
+  "version": "0.0.29",
   "types": "index.d.ts",
   "type": "module",
   "files": [
@@ -41,6 +41,6 @@
     ]
   },
   "dependencies": {
-    "@git-diff-view/core": "^0.0.28"
+    "@git-diff-view/core": "^0.0.29"
   }
 }
