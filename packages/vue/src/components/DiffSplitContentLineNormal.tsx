@@ -98,7 +98,7 @@ export const DiffSplitContentLine = defineComponent(
           {currentLineHasContent.value ? (
             <>
               <td
-                class={`diff-line-${SplitSide[props.side]}-num sticky left-0 w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top`}
+                class={`diff-line-${SplitSide[props.side]}-num sticky z-[1] left-0 w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top`}
                 style={{
                   backgroundColor: lineNumberBG,
                   color: `var(${currentLineHasDiff.value ? plainLineNumberColorName : expandLineNumberColorName})`,

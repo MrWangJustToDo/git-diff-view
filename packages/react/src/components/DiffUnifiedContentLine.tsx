@@ -53,7 +53,7 @@ const DiffUnifiedOldLine = ({
   return (
     <tr data-line={index} data-state="diff" className="diff-line group">
       <td
-        className="diff-line-num sticky left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
+        className="diff-line-num sticky z-[1] left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
         style={{
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${delLineNumberBGName})`,
@@ -125,7 +125,7 @@ const DiffUnifiedNewLine = ({
   return (
     <tr data-line={index} data-state="diff" className="diff-line group">
       <td
-        className="diff-line-num sticky left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
+        className="diff-line-num sticky z-[1] left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
         style={{
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${addLineNumberBGName})`,
@@ -257,7 +257,7 @@ const _DiffUnifiedLine = memo(
       return (
         <tr data-line={lineNumber} data-state={unifiedLine.diff ? "diff" : "plain"} className="diff-line group">
           <td
-            className="diff-line-num sticky left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
+            className="diff-line-num sticky z-[1] left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
             style={{
               color: `var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName})`,
               width: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
