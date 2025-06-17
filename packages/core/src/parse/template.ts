@@ -8,6 +8,8 @@ import type { SyntaxLineWithTemplate } from "../file";
 import type { DiffLine } from "./diff-line";
 import type { SyntaxLine } from "@git-diff-view/lowlight";
 
+const defaultTransform = (content: string) => escapeHtml(content).replace(/\n/g, "").replace(/\r/g, "");
+
 export const getPlainDiffTemplate = ({
   diffLine,
   rawLine,
@@ -23,7 +25,7 @@ export const getPlainDiffTemplate = ({
 
   if (!changes || !changes.hasLineChange || !rawLine) return;
 
-  const transform = isTransformEnabled() ? processTransformTemplateContent : escapeHtml;
+  const transform = isTransformEnabled() ? processTransformTemplateContent : defaultTransform;
 
   const range = changes.range;
   const str1 = rawLine.slice(0, range.location);
@@ -59,7 +61,7 @@ export const getSyntaxDiffTemplate = ({
 
   if (!changes || !changes.hasLineChange) return;
 
-  const transform = isTransformEnabled() ? processTransformTemplateContent : escapeHtml;
+  const transform = isTransformEnabled() ? processTransformTemplateContent : defaultTransform;
 
   const range = changes.range;
 
@@ -100,7 +102,7 @@ export const getSyntaxDiffTemplate = ({
 export const getSyntaxLineTemplate = (line: SyntaxLine) => {
   let template = "";
 
-  const transform = isTransformEnabled() ? processTransformTemplateContent : escapeHtml;
+  const transform = isTransformEnabled() ? processTransformTemplateContent : defaultTransform;
 
   line?.nodeList?.forEach(({ node, wrapper }) => {
     template += `<span data-start="${node.startIndex}" data-end="${node.endIndex}" class="${(
@@ -114,7 +116,7 @@ export const getSyntaxLineTemplate = (line: SyntaxLine) => {
 export const getPlainLineTemplate = (line: string) => {
   if (!line) return "";
 
-  const transform = isTransformEnabled() ? processTransformTemplateContent : escapeHtml;
+  const transform = isTransformEnabled() ? processTransformTemplateContent : defaultTransform;
 
   const template = transform(line);
 

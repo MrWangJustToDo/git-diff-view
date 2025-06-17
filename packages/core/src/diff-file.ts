@@ -145,6 +145,8 @@ export class DiffFile {
 
   #composeByMerge: boolean = false;
 
+  #enableTemplate: boolean = true;
+
   #composeByFullMerge: boolean = false;
 
   #highlighterName?: string;
@@ -294,6 +296,7 @@ export class DiffFile {
         this._oldFileName,
         this.uuid ? this.uuid + "-old" : undefined
       );
+      this.#oldFileResult.enableTemplate = this.#enableTemplate;
     }
 
     if (this._newFileContent) {
@@ -304,6 +307,7 @@ export class DiffFile {
         this._newFileName,
         this.uuid ? this.uuid + "-new" : undefined
       );
+      this.#newFileResult.enableTemplate = this.#enableTemplate;
     }
   }
 
@@ -374,6 +378,7 @@ export class DiffFile {
         this._oldFileName,
         this.uuid ? this.uuid + "-old" : undefined
       );
+      this.#oldFileResult.enableTemplate = this.#enableTemplate;
       this.#newFileResult = getFile(
         this._newFileContent,
         this._newFileLang,
@@ -381,6 +386,7 @@ export class DiffFile {
         this._newFileName,
         this.uuid ? this.uuid + "-new" : undefined
       );
+      this.#newFileResult.enableTemplate = this.#enableTemplate;
       this.#oldFilePlaceholderLines = oldFilePlaceholderLines;
       this.#newFilePlaceholderLines = newFilePlaceholderLines;
       // all of the file just compose by diff, so we can not do the expand action
@@ -415,6 +421,7 @@ export class DiffFile {
         this._newFileName,
         this.uuid ? this.uuid + "-new" : undefined
       );
+      this.#newFileResult.enableTemplate = this.#enableTemplate;
     } else if (this.#newFileResult) {
       let oldLineNumber = 1;
       let newLineNumber = 1;
@@ -445,6 +452,7 @@ export class DiffFile {
         this._oldFileName,
         this.uuid ? this.uuid + "-old" : undefined
       );
+      this.#oldFileResult.enableTemplate = this.#enableTemplate;
     }
 
     this.#composeRaw();
@@ -704,6 +712,18 @@ export class DiffFile {
   init() {
     this.initRaw();
     this.initSyntax();
+  }
+
+  enableTemplate() {
+    this.#enableTemplate = true;
+  }
+
+  disableTemplate() {
+    this.#enableTemplate = false;
+  }
+
+  getIsEnableTemplate() {
+    return this.#enableTemplate;
   }
 
   buildSplitDiffLines() {
@@ -1458,6 +1478,7 @@ export class DiffFile {
 
     const version = this._version_;
     const theme = this.#theme;
+    const enableTemplate = this.#enableTemplate;
 
     return {
       hasInitRaw,
@@ -1495,6 +1516,8 @@ export class DiffFile {
       version,
 
       theme,
+
+      enableTemplate,
 
       isFullMerge: false,
     };
@@ -1536,6 +1559,8 @@ export class DiffFile {
     this.#unifiedHunksLines = data.unifiedHunkLines;
 
     this.#theme = data.theme;
+
+    this.#enableTemplate = data.enableTemplate;
 
     // mark this instance as a merged instance
     this.#composeByMerge = true;

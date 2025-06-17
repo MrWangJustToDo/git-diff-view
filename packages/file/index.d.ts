@@ -26,6 +26,7 @@ declare class File$1 {
 	highlighterName?: DiffHighlighter["name"];
 	highlighterType?: DiffHighlighter["type"];
 	maxLineNumber: number;
+	enableTemplate: boolean;
 	static createInstance(data: File$1): File$1;
 	constructor(row: string, lang: DiffHighlighterLang, fileName?: string);
 	constructor(row: string, lang: string, fileName?: string);
@@ -87,6 +88,9 @@ export declare class DiffFile {
 		registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
 	}): void;
 	init(): void;
+	enableTemplate(): void;
+	disableTemplate(): void;
+	getIsEnableTemplate(): boolean;
 	buildSplitDiffLines(): void;
 	buildUnifiedDiffLines(): void;
 	getSplitLeftLine: (index: number) => SplitLineItem;
@@ -165,6 +169,7 @@ export declare class DiffFile {
 		};
 		version: string;
 		theme: "light" | "dark";
+		enableTemplate: boolean;
 		isFullMerge: boolean;
 	};
 	mergeBundle: (data: ReturnType<DiffFile["getBundle"]>, notifyUpdate?: boolean) => void;
@@ -222,6 +227,7 @@ export declare class DiffFile {
 		};
 		version: string;
 		theme: "light" | "dark";
+		enableTemplate: boolean;
 	};
 	_mergeFullBundle: (data: ReturnType<DiffFile["_getFullBundle"]>, notifyUpdate?: boolean) => void;
 	_destroy: () => void;

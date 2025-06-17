@@ -54,6 +54,8 @@ export class File {
 
   maxLineNumber: number = 0;
 
+  enableTemplate: boolean = true;
+
   static createInstance(data: File) {
     const file = new File(data?.raw, data?.lang, data?.fileName);
 
@@ -78,6 +80,8 @@ export class File {
     file.highlighterType = data?.highlighterType;
 
     file.maxLineNumber = data?.maxLineNumber;
+
+    file.enableTemplate = data?.enableTemplate ?? true;
 
     return file;
   }
@@ -137,10 +141,12 @@ export class File {
 
     const { syntaxFileObject, syntaxFileLineNumber } = supportEngin.processAST(this.ast);
 
-    // get syntax template
-    Object.values(syntaxFileObject).forEach((line: SyntaxLineWithTemplate) => {
-      line.template = getSyntaxLineTemplate(line);
-    });
+    if (this.enableTemplate) {
+      // get syntax template
+      Object.values(syntaxFileObject).forEach((line: SyntaxLineWithTemplate) => {
+        line.template = getSyntaxLineTemplate(line);
+      });
+    }
 
     this.syntaxFile = syntaxFileObject;
 
@@ -174,10 +180,12 @@ export class File {
 
     for (let i = 0; i < rawArray.length; i++) {
       this.rawFile[i + 1] = i < rawArray.length - 1 ? rawArray[i] + "\n" : rawArray[i];
-      this.plainFile[i + 1] = {
-        value: this.rawFile[i + 1],
-        template: getPlainLineTemplate(this.rawFile[i + 1]),
-      };
+      if (this.enableTemplate) {
+        this.plainFile[i + 1] = {
+          value: this.rawFile[i + 1],
+          template: getPlainLineTemplate(this.rawFile[i + 1]),
+        };
+      }
     }
 
     this.hasDoRaw = true;
