@@ -2,7 +2,7 @@ import { generateDiffFile, DiffFile } from "@git-diff-view/file";
 import { Button, ButtonGroup, Card, FloatingIndicator, Group, LoadingOverlay, Popover, Tooltip } from "@mantine/core";
 import { useDisclosure, useMounted } from "@mantine/hooks";
 import { IconCode, IconPlayerPlay, IconRefresh, IconBrandReact, IconBrandVue } from "@tabler/icons-react";
-import { useState, startTransition, useCallback, forwardRef, useMemo } from "react";
+import { useState, startTransition, useCallback, forwardRef, useMemo, useEffect } from "react";
 
 import { useDiffHighlighter } from "../hooks/useDiffHighlighter";
 
@@ -22,7 +22,7 @@ const getNewDiffFile = () => {
   return instance;
 };
 
-export const MainContentDiffExample = () => {
+export const MainContentDiffExample = ({ onUpdate }: { onUpdate?: (diffFile: DiffFile) => void }) => {
   const [code, { open, close }] = useDisclosure();
 
   const isMounted = useMounted();
@@ -55,6 +55,12 @@ export const MainContentDiffExample = () => {
   const [rootRef, setRootRef] = useState<HTMLDivElement | null>(null);
 
   const [controlsRefs, setControlsRefs] = useState<Record<string, HTMLButtonElement | null>>({});
+
+  useEffect(() => {
+    if (onUpdate) {
+      onUpdate(diffFile);
+    }
+  }, [diffFile]);
 
   const Element = useMemo(
     () =>
