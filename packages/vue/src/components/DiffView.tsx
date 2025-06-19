@@ -1,5 +1,5 @@
 import { DiffFile, _cacheMap, SplitSide } from "@git-diff-view/core";
-import { diffFontSizeName } from "@git-diff-view/utils";
+import { diffFontSizeName, DiffModeEnum } from "@git-diff-view/utils";
 import { defineComponent, provide, ref, watch, watchEffect, computed, onUnmounted } from "vue";
 
 import {
@@ -27,16 +27,7 @@ import type { CSSProperties, SlotsType } from "vue";
 
 _cacheMap.name = "@git-diff-view/vue";
 
-export enum DiffModeEnum {
-  // github like
-  SplitGitHub = 1,
-  // gitlab like
-  SplitGitLab = 2,
-  Split = 1 | 2,
-  Unified = 4,
-}
-
-export { SplitSide };
+export { SplitSide, DiffModeEnum };
 
 export type DiffViewProps<T> = {
   data?: {
@@ -125,8 +116,6 @@ export const DiffView = defineComponent<
             side: props.initialWidgetState.side,
             lineNumber: props.initialWidgetState.lineNumber,
           };
-        } else {
-          widgetState.value = {};
         }
       },
       { immediate: true, deep: true }

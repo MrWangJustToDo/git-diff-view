@@ -210,6 +210,9 @@ importers:
       lowlight:
         specifier: ^3.3.0
         version: 3.3.0
+      reactivity-store:
+        specifier: ^0.3.11
+        version: 0.3.11(react@19.0.0)
     devDependencies:
       autoprefixer:
         specifier: ^10.4.20
@@ -9281,6 +9284,13 @@ snapshots:
       react: 18.3.1
       use-sync-external-store: 1.5.0(react@18.3.1)
 
+  reactivity-store@0.3.11(react@19.0.0):
+    dependencies:
+      '@vue/reactivity': 3.5.16
+      '@vue/shared': 3.5.16
+      react: 19.0.0
+      use-sync-external-store: 1.5.0(react@19.0.0)
+
   read-cache@1.0.0:
     dependencies:
       pify: 2.3.0
@@ -10304,6 +10314,10 @@ snapshots:
   use-sync-external-store@1.5.0(react@18.3.1):
     dependencies:
       react: 18.3.1
+
+  use-sync-external-store@1.5.0(react@19.0.0):
+    dependencies:
+      react: 19.0.0
 
   util-deprecate@1.0.2: {}
 

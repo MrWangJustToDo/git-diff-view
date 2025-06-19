@@ -15,7 +15,7 @@ import {
   getSymbol,
   NewLineSymbol,
 } from "@git-diff-view/utils";
-import { createEffect, For, Show } from "solid-js";
+import { createMemo, For, Show } from "solid-js";
 
 import { DiffNoNewLine } from "./DiffNoNewLine";
 
@@ -59,9 +59,7 @@ const DiffString = (props: {
   };
 
   // eslint-disable-next-line solid/reactivity
-  initTemplateIfNeed();
-
-  createEffect(initTemplateIfNeed);
+  createMemo(initTemplateIfNeed);
 
   return (
     <Show
@@ -174,9 +172,7 @@ const DiffSyntax = (props: {
   };
 
   // eslint-disable-next-line solid/reactivity
-  initTemplateIfNeed();
-
-  createEffect(initTemplateIfNeed);
+  createMemo(initTemplateIfNeed);
 
   return (
     <Show

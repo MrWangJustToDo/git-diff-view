@@ -19,3 +19,12 @@ export const getSymbol = (symbol: NewLineSymbol | string | null | undefined) => 
       return "";
   }
 };
+
+export enum DiffModeEnum {
+  // github like
+  SplitGitHub = 1,
+  // gitlab like
+  SplitGitLab = 2,
+  Split = 1 | 2,
+  Unified = 4,
+}

@@ -1411,6 +1411,7 @@ export class DiffFile {
     return this.#newFileSyntaxLines?.[lineNumber];
   };
 
+  // TODO improve
   subscribe = (listener: (() => void) & { isSyncExternal?: boolean }) => {
     this.#listeners.push(listener);
 
@@ -1578,7 +1579,7 @@ export class DiffFile {
     }
   };
 
-  _getHighlighterName = () => this.#highlighterName;
+  _getHighlighterName = () => this.#highlighterName || '';
 
   _getIsPureDiffRender = () => this.#composeByDiff;
 

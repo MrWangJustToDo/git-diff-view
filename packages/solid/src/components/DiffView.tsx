@@ -1,16 +1,17 @@
-import { DiffFile } from "@git-diff-view/core";
-import { type JSXElement, type JSX, createSignal, createRenderEffect } from "solid-js";
+/* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
+import { _cacheMap, DiffFile, SplitSide } from "@git-diff-view/core";
+import { diffFontSizeName, DiffModeEnum } from "@git-diff-view/utils";
+import { type JSXElement, type JSX, createSignal, createEffect, createMemo, onCleanup } from "solid-js";
+
+import { DiffViewContext } from "./DiffViewContext";
+import { DiffWidgetContext } from "./DiffWidgetContext";
+import { createDiffConfigStore } from "./tools";
 
 import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/core";
 
-export enum DiffModeEnum {
-  // github like
-  SplitGitHub = 1,
-  // gitlab like
-  SplitGitLab = 2,
-  Split = 1 | 2,
-  Unified = 4,
-}
+_cacheMap.name = "@git-diff-view/solid";
+
+export { SplitSide, DiffModeEnum };
 
 export type DiffViewProps<T> = {
   data?: {
@@ -18,7 +19,8 @@ export type DiffViewProps<T> = {
     newFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
     hunks: string[];
   };
-  extendData?: { oldFile?: Record<string, { data: T }>; newFile?: Record<string, { data: T }> };
+  extendData?: { oldFile?: Record<string, { data: T } | undefined>; newFile?: Record<string, { data: T } | undefined> };
+  initialWidgetState?: { side: SplitSide; lineNumber: number };
   diffFile?: DiffFile;
   class?: string;
   style?: JSX.CSSProperties;
@@ -56,15 +58,30 @@ export type DiffViewProps<T> = {
   onAddWidgetClick?: (lineNumber: number, side: SplitSide) => void;
 };
 
-export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
+type DiffViewProps_1<T> = Omit<DiffViewProps<T>, "data"> & {
+  data?: {
+    oldFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | null; content?: string | null };
+    newFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | null; content?: string | null };
+    hunks: string[];
+  };
+};
+
+type DiffViewProps_2<T> = Omit<DiffViewProps<T>, "data"> & {
+  data?: {
+    oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+    newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+    hunks: string[];
+  };
+};
+
+const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
   const getInstance = () => {
+    let diffFile: DiffFile | null = null;
     if (props.diffFile) {
-      const diffFile = DiffFile.createInstance({});
+      diffFile = DiffFile.createInstance({});
       diffFile._mergeFullBundle(props.diffFile._getFullBundle());
-      return diffFile;
-    }
-    if (props.data)
-      return new DiffFile(
+    } else if (props.data) {
+      diffFile = new DiffFile(
         props.data.oldFile?.fileName || "",
         props.data.oldFile?.content || "",
         props.data.newFile?.fileName || "",
@@ -73,16 +90,164 @@ export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
         props.data.oldFile?.fileLang || "",
         props.data.newFile?.fileLang || ""
       );
-    return null;
+    }
+
+    onCleanup(() => diffFile?.clear?.());
+
+    return diffFile;
   };
 
-  const [diffFile, setDiffFile] = createSignal(getInstance());
+  let wrapperRef: HTMLDivElement | undefined;
 
-  createRenderEffect(() => {
-    diffFile()?.clear();
+  const diffFile = createMemo(getInstance);
 
-    setDiffFile(getInstance());
+  const [isMounted, setIsMounted] = createSignal(false);
+
+  createEffect(() => {
+    setIsMounted(true);
   });
 
-  return <div>DiffView</div>;
+  const [widgetState, setWidgetState] = createSignal<{ side?: SplitSide; lineNumber?: number }>({
+    side: props.initialWidgetState?.side,
+    lineNumber: props.initialWidgetState?.lineNumber,
+  });
+
+  const reactiveHook = createDiffConfigStore(props, diffFile()?.getId() || "");
+
+  createEffect(() => {
+    const {
+      setId,
+      setEnableAddWidget,
+      setEnableHighlight,
+      setEnableWrap,
+      setExtendData,
+      setFontSize,
+      setIsIsMounted,
+      setMode,
+      setOnAddWidgetClick,
+      setRenderExtendLine,
+      setRenderWidgetLine,
+    } = reactiveHook.getReadonlyState();
+    const currentDiffFile = diffFile();
+
+    setId(currentDiffFile?.getId() || "");
+
+    setEnableAddWidget(!!props.diffViewAddWidget);
+
+    setEnableHighlight(!!props.diffViewHighlight);
+
+    setEnableWrap(!!props.diffViewWrap);
+
+    setFontSize(props.diffViewFontSize || 14);
+
+    setIsIsMounted(isMounted());
+
+    setMode(props.diffViewMode || DiffModeEnum.Split);
+
+    setOnAddWidgetClick({ current: props.onAddWidgetClick });
+
+    setRenderExtendLine(props.renderExtendLine);
+
+    setRenderWidgetLine(props.renderWidgetLine);
+
+    setExtendData(props.extendData);
+  });
+
+  createEffect(() => {
+    if (props.initialWidgetState) {
+      setWidgetState({
+        side: props.initialWidgetState.side,
+        lineNumber: props.initialWidgetState.lineNumber,
+      });
+    }
+  });
+
+  const initSubscribe = () => {
+    const mounted = isMounted();
+    const currentDiffFile = diffFile();
+    if (mounted && props.diffFile && currentDiffFile) {
+      props.diffFile._addClonedInstance(currentDiffFile);
+      onCleanup(() => props.diffFile?._delClonedInstance(currentDiffFile));
+    }
+  };
+
+  const initDiff = () => {
+    const mounted = isMounted();
+    const currentDiffFile = diffFile();
+    if (mounted && currentDiffFile) {
+      currentDiffFile.initTheme(props.diffViewTheme);
+      currentDiffFile.initRaw();
+      currentDiffFile.buildSplitDiffLines();
+      currentDiffFile.buildUnifiedDiffLines();
+    }
+  };
+
+  const initSyntax = () => {
+    const mounted = isMounted();
+    const currentDiffFile = diffFile();
+    if (mounted && currentDiffFile && props.diffViewHighlight) {
+      currentDiffFile.initSyntax({ registerHighlighter: props.registerHighlighter });
+      currentDiffFile.notifyAll();
+    }
+  };
+
+  const initAttribute = () => {
+    const mounted = isMounted();
+    const currentDiffFile = diffFile();
+    if (mounted && currentDiffFile && wrapperRef) {
+      const cb = currentDiffFile.subscribe(() => {
+        wrapperRef?.setAttribute("data-theme", currentDiffFile._getTheme() || "light");
+        wrapperRef?.setAttribute("data-highlighter", currentDiffFile._getHighlighterName());
+      });
+
+      onCleanup(() => cb());
+    }
+  };
+
+  createEffect(initSubscribe);
+
+  createEffect(initDiff);
+
+  createEffect(initSyntax);
+
+  createEffect(initAttribute);
+
+  onCleanup(() => reactiveHook.clear());
+
+  return (
+    <div
+      class="diff-tailwindcss-wrapper"
+      data-component="git-diff-view"
+      data-theme={diffFile()?._getTheme?.() || "light"}
+      data-version={__VERSION__}
+      data-highlighter={diffFile()?._getHighlighterName?.()}
+      ref={wrapperRef}
+    >
+      <DiffViewContext.Provider value={reactiveHook}>
+        <DiffWidgetContext.Provider value={widgetState}>
+          <div class="diff-style-root" style={{ [diffFontSizeName]: (props.diffViewFontSize || 14) + "px" }}>
+            <div
+              id={isMounted() ? `diff-root${diffFile()?.getId()}` : undefined}
+              class={"diff-view-wrapper" + (props.class ? ` ${props.class}` : "")}
+              style={props.style}
+            >
+              {/* {!props.diffViewMode || props.diffViewMode & DiffModeEnum.Split ? (
+            <DiffSplitView key={DiffModeEnum.Split} diffFile={diffFile.value as DiffFile} />
+          ) : (
+            <DiffUnifiedView key={DiffModeEnum.Unified} diffFile={diffFile.value as DiffFile} />
+          )} */}
+            </div>
+          </div>
+        </DiffWidgetContext.Provider>
+      </DiffViewContext.Provider>
+    </div>
+  );
 };
+
+function SolidDiffView<T>(props: DiffViewProps_1<T>): JSXElement;
+function SolidDiffView<T>(props: DiffViewProps_2<T>): JSXElement;
+function SolidDiffView<T>(props: DiffViewProps<T>): JSXElement {
+  return <InternalDiffView {...props} />;
+}
+
+export const DiffView = SolidDiffView;

@@ -93,7 +93,7 @@ function checkNewLineSymbolChange(
 
   const hasNewLineChanged = addition.noTrailingNewLine !== deletion.noTrailingNewLine;
 
-  if (aSymbol === bSymbol) {
+  if (aSymbol === bSymbol && !hasNewLineChanged) {
     return { addSymbol: undefined, addString: stringA, delSymbol: undefined, delString: stringB };
   }
 
