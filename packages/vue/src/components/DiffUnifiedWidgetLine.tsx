@@ -50,7 +50,7 @@ export const DiffUnifiedWidgetLine = defineComponent(
       return (
         <tr data-line={`${props.lineNumber}-widget`} data-state="widget" class="diff-line diff-line-widget">
           <td class="diff-line-widget-content p-0" colspan={2}>
-            <div class="diff-line-widget-wrapper sticky left-0" style={{ width: width.value + "px" }}>
+            <div class="diff-line-widget-wrapper sticky left-0 z-[1]" style={{ width: width.value + "px" }}>
               {width.value > 0 &&
                 oldWidget.value &&
                 slots.widget?.({

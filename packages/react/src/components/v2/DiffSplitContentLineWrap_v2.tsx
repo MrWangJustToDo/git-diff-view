@@ -6,6 +6,7 @@ import {
   emptyBGName,
   borderColorName,
   diffAsideWidthName,
+  expandLineNumberColorName,
 } from "@git-diff-view/utils";
 import * as React from "react";
 
@@ -31,6 +32,10 @@ const InternalDiffSplitLine = ({
   const oldSyntaxLine = diffFile.getOldSyntaxLine(oldLine?.lineNumber);
 
   const newSyntaxLine = diffFile.getNewSyntaxLine(newLine?.lineNumber);
+
+  const oldPlainLine = diffFile.getOldPlainLine(oldLine.lineNumber);
+
+  const newPlainLine = diffFile.getNewPlainLine(newLine.lineNumber);
 
   const hasDiff = !!oldLine?.diff || !!newLine?.diff;
 
@@ -73,7 +78,7 @@ const InternalDiffSplitLine = ({
             data-side={SplitSide[SplitSide.old]}
             style={{
               backgroundColor: oldLineNumberBG,
-              color: `var(${plainLineNumberColorName})`,
+              color: `var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName})`,
               width: `var(${diffAsideWidthName})`,
               minWidth: `var(${diffAsideWidthName})`,
               maxWidth: `var(${diffAsideWidthName})`,
@@ -119,6 +124,7 @@ const InternalDiffSplitLine = ({
               diffFile={diffFile}
               rawLine={oldLine.value}
               diffLine={oldLine.diff}
+              plainLine={oldPlainLine}
               syntaxLine={oldSyntaxLine}
               enableHighlight={enableHighlight}
             />
@@ -155,7 +161,7 @@ const InternalDiffSplitLine = ({
             data-side={SplitSide[SplitSide.new]}
             style={{
               backgroundColor: newLineNumberBG,
-              color: `var(${plainLineNumberColorName})`,
+              color: `var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName})`,
               width: `var(${diffAsideWidthName})`,
               minWidth: `var(${diffAsideWidthName})`,
               maxWidth: `var(${diffAsideWidthName})`,
@@ -201,6 +207,7 @@ const InternalDiffSplitLine = ({
               diffFile={diffFile}
               rawLine={newLine.value || ""}
               diffLine={newLine.diff}
+              plainLine={newPlainLine}
               syntaxLine={newSyntaxLine}
               enableHighlight={enableHighlight}
             />

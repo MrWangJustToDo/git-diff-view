@@ -1,6 +1,5 @@
 import {
   DiffLineType,
-  NewLineSymbol,
   type DiffFile,
   type DiffLine,
   type diffChanges,
@@ -11,6 +10,7 @@ import {
   delContentHighlightBGName,
   diffFontSizeName,
   getSymbol,
+  NewLineSymbol,
 } from "@git-diff-view/utils";
 import * as React from "react";
 
@@ -208,6 +208,7 @@ const DiffSyntax = ({
   );
 };
 
+// TODO
 const DiffString = ({
   rawLine,
   diffLine,
@@ -286,6 +287,7 @@ const DiffString = ({
   }
 };
 
+// TODO
 export const DiffContent_v2 = ({
   diffLine,
   rawLine,

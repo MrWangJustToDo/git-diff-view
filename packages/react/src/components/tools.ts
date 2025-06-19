@@ -1,4 +1,3 @@
-import { flushSync } from "react-dom";
 import { createStore, ref } from "reactivity-store";
 
 import type { DiffModeEnum, DiffViewProps, SplitSide } from "./DiffView";
@@ -72,6 +71,11 @@ export const createDiffConfigStore = (props: DiffViewProps<any> & { isMounted: b
     const setRenderExtendLine = (_renderExtendLine: typeof renderExtendLine.value) =>
       (renderExtendLine.value = _renderExtendLine);
 
+    const onCreateUseWidgetHook = ref(props.onCreateUseWidgetHook);
+
+    const setOnCreateUseWidgetHook = (_onCreateUseWidgetHook: typeof onCreateUseWidgetHook.value) =>
+      (onCreateUseWidgetHook.value = _onCreateUseWidgetHook);
+
     // 避免无意义的订阅
     const onAddWidgetClick = { current: props.onAddWidgetClick };
 
@@ -101,6 +105,8 @@ export const createDiffConfigStore = (props: DiffViewProps<any> & { isMounted: b
       setRenderExtendLine,
       onAddWidgetClick,
       setOnAddWidgetClick,
+      onCreateUseWidgetHook,
+      setOnCreateUseWidgetHook,
     };
   });
 };
@@ -122,19 +128,5 @@ export const createDiffWidgetStore = (useDiffContextRef: RefObject<ReturnType<ty
     };
 
     return { widgetSide, widgetLineNumber, setWidget };
-  });
-};
-
-export const createDiffSplitConfigStore = () => {
-  return createStore(() => {
-    const splitRef = ref<SplitSide>(undefined);
-
-    const setSplit = (side: SplitSide | undefined) => {
-      flushSync(() => {
-        splitRef.value = side;
-      });
-    };
-
-    return { splitRef, setSplit };
   });
 };

@@ -3,11 +3,12 @@
   "description": "@git-diff-view/shiki",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.27",
+  "version": "0.0.29",
   "types": "index.d.ts",
   "main": "./dist/esm/index.mjs",
   "type": "module",
   "files": [
+    "src",
     "dist",
     "index.d.ts"
   ],

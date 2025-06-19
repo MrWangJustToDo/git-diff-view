@@ -1,6 +1,7 @@
 import { highlighter } from "@git-diff-view/lowlight";
 
 import { Cache } from "./cache";
+import { getPlainLineTemplate, getSyntaxLineTemplate, processTransformForFile } from "./parse";
 
 import type { DiffAST, DiffHighlighter, DiffHighlighterLang, SyntaxLine } from "@git-diff-view/lowlight";
 
@@ -26,6 +27,10 @@ if (__DEV__ && typeof globalThis !== "undefined") {
   }
 }
 
+export type SyntaxLineWithTemplate = SyntaxLine & {
+  template?: string;
+};
+
 export class File {
   ast?: DiffAST;
 
@@ -35,7 +40,9 @@ export class File {
 
   rawLength?: number;
 
-  syntaxFile: Record<number, SyntaxLine> = {};
+  syntaxFile: Record<number, SyntaxLineWithTemplate> = {};
+
+  plainFile: Record<number, { value: string; template?: string }> = {};
 
   hasDoSyntax: boolean = false;
 
@@ -47,18 +54,22 @@ export class File {
 
   maxLineNumber: number = 0;
 
+  enableTemplate: boolean = true;
+
   static createInstance(data: File) {
     const file = new File(data?.raw, data?.lang, data?.fileName);
 
     file.ast = data?.ast;
 
-    file.rawFile = data?.rawFile;
+    file.rawFile = data?.rawFile || {};
+
+    file.plainFile = data?.plainFile || {};
 
     file.hasDoRaw = data?.hasDoRaw;
 
     file.rawLength = data?.rawLength;
 
-    file.syntaxFile = data?.syntaxFile;
+    file.syntaxFile = data?.syntaxFile || {};
 
     file.hasDoSyntax = data?.hasDoSyntax;
 
@@ -70,16 +81,20 @@ export class File {
 
     file.maxLineNumber = data?.maxLineNumber;
 
+    file.enableTemplate = data?.enableTemplate ?? true;
+
     return file;
   }
 
   constructor(row: string, lang: DiffHighlighterLang, fileName?: string);
   constructor(row: string, lang: string, fileName?: string);
   constructor(
-    readonly raw: string,
+    public raw: string,
     readonly lang: DiffHighlighterLang | string,
     readonly fileName?: string
   ) {
+    this.raw = processTransformForFile(raw);
+
     Object.defineProperty(this, "__v_skip", { value: true });
   }
 
@@ -126,6 +141,13 @@ export class File {
 
     const { syntaxFileObject, syntaxFileLineNumber } = supportEngin.processAST(this.ast);
 
+    if (this.enableTemplate) {
+      // get syntax template
+      Object.values(syntaxFileObject).forEach((line: SyntaxLineWithTemplate) => {
+        line.template = getSyntaxLineTemplate(line);
+      });
+    }
+
     this.syntaxFile = syntaxFileObject;
 
     this.syntaxLength = syntaxFileLineNumber;
@@ -154,8 +176,16 @@ export class File {
 
     this.rawFile = {};
 
+    this.plainFile = {};
+
     for (let i = 0; i < rawArray.length; i++) {
       this.rawFile[i + 1] = i < rawArray.length - 1 ? rawArray[i] + "\n" : rawArray[i];
+      if (this.enableTemplate) {
+        this.plainFile[i + 1] = {
+          value: this.rawFile[i + 1],
+          template: getPlainLineTemplate(this.rawFile[i + 1]),
+        };
+      }
     }
 
     this.hasDoRaw = true;

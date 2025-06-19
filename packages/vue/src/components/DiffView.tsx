@@ -45,6 +45,7 @@ export type DiffViewProps<T> = {
     hunks: string[];
   };
   extendData?: { oldFile?: Record<string, { data: T }>; newFile?: Record<string, { data: T }> };
+  initialWidgetState?: { side: SplitSide; lineNumber: number };
   diffFile?: DiffFile;
   class?: string;
   style?: CSSProperties;
@@ -114,6 +115,21 @@ export const DiffView = defineComponent<
         diffFile.value = getInstance();
       },
       { immediate: true }
+    );
+
+    watch(
+      () => props.initialWidgetState,
+      () => {
+        if (props.initialWidgetState) {
+          widgetState.value = {
+            side: props.initialWidgetState.side,
+            lineNumber: props.initialWidgetState.lineNumber,
+          };
+        } else {
+          widgetState.value = {};
+        }
+      },
+      { immediate: true, deep: true }
     );
 
     watch(
@@ -259,6 +275,7 @@ export const DiffView = defineComponent<
       "diffViewTheme",
       "extendData",
       "registerHighlighter",
+      "initialWidgetState",
       "style",
     ],
     // expose: ["getDiffView"],

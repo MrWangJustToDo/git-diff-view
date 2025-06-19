@@ -14,13 +14,17 @@ import {
   getThemeColor,
   Container,
 } from "@mantine/core";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import { MainContentDiffConfig } from "./MainContentDiffConfig";
 import { MainContentDiffExample } from "./MainContentDiffExample";
 
+import type { DiffFile } from "@git-diff-view/react";
+
 export const MainContent = () => {
   const theme = useMantineTheme();
+
+  const [d, setD] = useState<DiffFile>();
 
   const { colorScheme } = useMantineColorScheme();
 
@@ -44,14 +48,14 @@ export const MainContent = () => {
           <Space h="12" />
           <Title order={4}>Diff View Config</Title>
           <Space h="4" />
-          <MainContentDiffConfig />
+          <MainContentDiffConfig diffFile={d} />
         </Stack>
 
         <Box
           className={`relative h-[calc(100vh-200px)] transform-gpu overflow-hidden rounded-md border border-solid ${colorScheme === "light" ? "border-gray-200" : "border-gray-600"}`}
           w={{ base: "100%", sm: "60%" }}
         >
-          <MainContentDiffExample />
+          <MainContentDiffExample onUpdate={setD} />
         </Box>
       </Flex>
     </Container>

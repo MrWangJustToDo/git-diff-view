@@ -3,10 +3,11 @@
   "description": "@git-diff-view/react",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.27",
+  "version": "0.0.29",
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
+    "src",
     "dist",
     "styles",
     "index.js",
@@ -66,12 +67,12 @@
     "react diff component"
   ],
   "dependencies": {
-    "@git-diff-view/core": "^0.0.27",
+    "@git-diff-view/core": "^0.0.29",
     "@types/hast": "^3.0.0",
     "fast-diff": "^1.3.0",
     "highlight.js": "^11.11.0",
     "lowlight": "^3.3.0",
-    "reactivity-store": "^0.3.9",
+    "reactivity-store": "^0.3.11",
     "use-sync-external-store": "^1.4.0"
   },
   "devDependencies": {

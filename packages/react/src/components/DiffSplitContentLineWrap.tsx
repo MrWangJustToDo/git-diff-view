@@ -5,6 +5,7 @@ import {
   plainLineNumberColorName,
   emptyBGName,
   borderColorName,
+  expandLineNumberColorName,
 } from "@git-diff-view/utils";
 import * as React from "react";
 
@@ -20,10 +21,14 @@ const InternalDiffSplitLine = ({
   index,
   diffFile,
   lineNumber,
+  enableAddWidget,
+  enableHighlight,
 }: {
   index: number;
   diffFile: DiffFile;
   lineNumber: number;
+  enableHighlight: boolean;
+  enableAddWidget: boolean;
 }) => {
   const oldLine = diffFile.getSplitLeftLine(index);
 
@@ -31,7 +36,11 @@ const InternalDiffSplitLine = ({
 
   const oldSyntaxLine = diffFile.getOldSyntaxLine(oldLine?.lineNumber);
 
+  const oldPlainLine = diffFile.getOldPlainLine(oldLine.lineNumber);
+
   const newSyntaxLine = diffFile.getNewSyntaxLine(newLine?.lineNumber);
+
+  const newPlainLine = diffFile.getNewPlainLine(newLine.lineNumber);
 
   const hasDiff = !!oldLine?.diff || !!newLine?.diff;
 
@@ -43,11 +52,7 @@ const InternalDiffSplitLine = ({
 
   const { useDiffContext } = useDiffViewContext();
 
-  const { enableHighlight, enableAddWidget, onAddWidgetClick } = useDiffContext.useShallowStableSelector((s) => ({
-    enableHighlight: s.enableHighlight,
-    enableAddWidget: s.enableAddWidget,
-    onAddWidgetClick: s.onAddWidgetClick,
-  }));
+  const onAddWidgetClick = useDiffContext.getReadonlyState().onAddWidgetClick;
 
   const { useWidget } = useDiffWidgetContext();
 
@@ -110,6 +115,7 @@ const InternalDiffSplitLine = ({
               diffFile={diffFile}
               rawLine={oldLine.value}
               diffLine={oldLine.diff}
+              plainLine={oldPlainLine}
               syntaxLine={oldSyntaxLine}
               enableHighlight={enableHighlight}
             />
@@ -132,7 +138,7 @@ const InternalDiffSplitLine = ({
             data-side={SplitSide[SplitSide.new]}
             style={{
               backgroundColor: newLineNumberBG,
-              color: `var(${plainLineNumberColorName})`,
+              color: `var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName})`,
               borderLeftColor: `var(${borderColorName})`,
               borderLeftStyle: "solid",
             }}
@@ -173,6 +179,7 @@ const InternalDiffSplitLine = ({
               diffFile={diffFile}
               rawLine={newLine.value || ""}
               diffLine={newLine.diff}
+              plainLine={newPlainLine}
               syntaxLine={newSyntaxLine}
               enableHighlight={enableHighlight}
             />
@@ -200,10 +207,14 @@ export const DiffSplitContentLine = ({
   index,
   diffFile,
   lineNumber,
+  enableAddWidget,
+  enableHighlight,
 }: {
   index: number;
   diffFile: DiffFile;
   lineNumber: number;
+  enableHighlight: boolean;
+  enableAddWidget: boolean;
 }) => {
   const oldLine = diffFile.getSplitLeftLine(index);
 
@@ -211,5 +222,13 @@ export const DiffSplitContentLine = ({
 
   if (oldLine?.isHidden && newLine?.isHidden) return null;
 
-  return <InternalDiffSplitLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
+  return (
+    <InternalDiffSplitLine
+      index={index}
+      diffFile={diffFile}
+      lineNumber={lineNumber}
+      enableAddWidget={enableAddWidget}
+      enableHighlight={enableHighlight}
+    />
+  );
 };

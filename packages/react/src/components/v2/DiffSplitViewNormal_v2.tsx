@@ -19,17 +19,15 @@ import { DiffSplitViewLine } from "./DiffSplitViewLineNormal_v2";
 
 import type { MouseEventHandler } from "react";
 
-const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
-  const ele = e.target;
-
-  // need remove all the selection
-  if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
-    removeAllSelection();
-    return;
-  }
-};
-
-export const DiffSplitViewTable = ({ side, diffFile }: { side: SplitSide; diffFile: DiffFile }) => {
+export const DiffSplitViewTable = ({
+  side,
+  diffFile,
+  onMouseDown,
+}: {
+  side: SplitSide;
+  diffFile: DiffFile;
+  onMouseDown?: MouseEventHandler<HTMLDivElement>;
+}) => {
   const className = side === SplitSide.new ? "new-diff-table" : "old-diff-table";
 
   const lines = getSplitLines(diffFile);
@@ -54,6 +52,8 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
   const ref1 = useRef<HTMLDivElement>(null);
 
   const ref2 = useRef<HTMLDivElement>(null);
+
+  const ref = useRef<HTMLStyleElement>();
 
   const splitLineLength = Math.max(diffFile.splitLineLength, diffFile.fileLineLength);
 
@@ -82,8 +82,49 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
 
   const width = Math.max(40, _width + 25);
 
+  const setStyle = (side: SplitSide) => {
+    if (!ref.current) return;
+    if (!side) {
+      ref.current.textContent = "";
+    } else {
+      const id = `diff-root${diffFile.getId()}`;
+      ref.current.textContent = `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`;
+    }
+  };
+
+  const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
+    let ele = e.target;
+
+    // need remove all the selection
+    if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
+      removeAllSelection();
+      return;
+    }
+
+    while (ele && ele instanceof HTMLElement) {
+      const state = ele.getAttribute("data-state");
+      const side = ele.getAttribute("data-side");
+      if (side) {
+        setStyle(SplitSide[side]);
+        removeAllSelection();
+      }
+      if (state) {
+        if (state === "extend" || state === "hunk" || state === "widget") {
+          setStyle(undefined);
+          removeAllSelection();
+          return;
+        } else {
+          return;
+        }
+      }
+
+      ele = ele.parentElement;
+    }
+  };
+
   return (
     <div className="split-diff-view split-diff-view-normal flex w-full basis-[50%]">
+      <style data-select-style ref={ref} />
       <div
         className="old-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
         ref={ref1}
@@ -95,7 +136,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
           fontSize: `var(${diffFontSizeName})`,
         }}
       >
-        <DiffSplitViewTable side={SplitSide.old} diffFile={diffFile} />
+        <DiffSplitViewTable side={SplitSide.old} diffFile={diffFile} onMouseDown={onMouseDown} />
       </div>
       <div className="diff-split-line w-[1.5px]" style={{ backgroundColor: `var(${borderColorName})` }} />
       <div
@@ -109,7 +150,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
           fontSize: `var(${diffFontSizeName})`,
         }}
       >
-        <DiffSplitViewTable side={SplitSide.new} diffFile={diffFile} />
+        <DiffSplitViewTable side={SplitSide.new} diffFile={diffFile} onMouseDown={onMouseDown} />
       </div>
     </div>
   );

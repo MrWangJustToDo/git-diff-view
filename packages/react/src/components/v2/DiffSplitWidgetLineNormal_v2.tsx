@@ -74,7 +74,7 @@ const InternalDiffSplitWidgetLine = ({
           <div
             data-line={`${lineNumber}-widget-content`}
             data-side={SplitSide[side]}
-            className="diff-line-widget-wrapper sticky left-0"
+            className="diff-line-widget-wrapper sticky left-0 z-[1]"
             style={{ width }}
           >
             {width > 0 &&

@@ -1,15 +1,7 @@
+import { NewLineSymbol } from "@git-diff-view/utils";
 import fastDiff from "fast-diff";
 
 import type { DiffLine } from "./diff-line";
-
-export enum NewLineSymbol {
-  CRLF = 1,
-  CR = 2,
-  LF = 3,
-  NEWLINE = 4,
-  NORMAL = 5,
-  NULL = 6,
-}
 
 export interface IRange {
   readonly range: {

@@ -9,19 +9,24 @@ declare class Cache$1<K, V> extends Map<K, V> {
 }
 declare class File$1 {
 	
-	readonly raw: string;
+	raw: string;
 	readonly lang: DiffHighlighterLang | string;
 	readonly fileName?: string;
 	ast?: DiffAST;
 	rawFile: Record<number, string>;
 	hasDoRaw: boolean;
 	rawLength?: number;
-	syntaxFile: Record<number, SyntaxLine>;
+	syntaxFile: Record<number, SyntaxLineWithTemplate>;
+	plainFile: Record<number, {
+		value: string;
+		template?: string;
+	}>;
 	hasDoSyntax: boolean;
 	syntaxLength?: number;
 	highlighterName?: DiffHighlighter["name"];
 	highlighterType?: DiffHighlighter["type"];
 	maxLineNumber: number;
+	enableTemplate: boolean;
 	static createInstance(data: File$1): File$1;
 	constructor(row: string, lang: DiffHighlighterLang, fileName?: string);
 	constructor(row: string, lang: string, fileName?: string);
@@ -45,6 +50,14 @@ declare const lowlight: {
 	};
 	registered: (aliasOrName: string) => boolean;
 };
+declare enum NewLineSymbol {
+	CRLF = 1,
+	CR = 2,
+	LF = 3,
+	NEWLINE = 4,
+	NORMAL = 5,
+	NULL = 6
+}
 export declare class DiffFile {
 	
 	readonly uuid?: string;
@@ -76,15 +89,20 @@ export declare class DiffFile {
 		registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
 	}): void;
 	init(): void;
+	enableTemplate(): void;
+	disableTemplate(): void;
+	getIsEnableTemplate(): boolean;
 	buildSplitDiffLines(): void;
 	buildUnifiedDiffLines(): void;
 	getSplitLeftLine: (index: number) => SplitLineItem;
 	getSplitLineByLineNumber: (lineNumber: number, side: SplitSide) => SplitLineItem;
+	getSplitLineIndexByLineNumber: (lineNumber: number, side: SplitSide) => number;
 	getSplitRightLine: (index: number) => SplitLineItem;
 	getSplitHunkLine: (index: number) => DiffHunkItem;
 	onSplitHunkExpand: (dir: "up" | "down" | "all", index: number, needTrigger?: boolean) => void;
 	getUnifiedLine: (index: number) => UnifiedLineItem;
 	getUnifiedLineByLineNumber: (lienNumber: number, side: SplitSide) => UnifiedLineItem;
+	getUnifiedLineIndexByLineNumber: (lineNumber: number, side: SplitSide) => number;
 	getUnifiedHunkLine: (index: number) => DiffHunkItem;
 	onUnifiedHunkExpand: (dir: "up" | "down" | "all", index: number, needTrigger?: boolean) => void;
 	onAllExpand: (mode: "split" | "unified") => void;
@@ -93,8 +111,16 @@ export declare class DiffFile {
 	onAllCollapse: (mode: "split" | "unified") => void;
 	getOldFileContent: () => string;
 	getNewFileContent: () => string;
-	getOldSyntaxLine: (lineNumber: number) => SyntaxLine;
-	getNewSyntaxLine: (lineNumber: number) => SyntaxLine;
+	getOldPlainLine: (lineNumber: number) => {
+		value: string;
+		template?: string;
+	};
+	getOldSyntaxLine: (lineNumber: number) => SyntaxLineWithTemplate;
+	getNewPlainLine: (lineNumber: number) => {
+		value: string;
+		template?: string;
+	};
+	getNewSyntaxLine: (lineNumber: number) => SyntaxLineWithTemplate;
 	subscribe: (listener: (() => void) & {
 		isSyncExternal?: boolean;
 	}) => () => void;
@@ -108,11 +134,19 @@ export declare class DiffFile {
 		hasBuildUnified: boolean;
 		oldFileLines: Record<number, string>;
 		oldFileDiffLines: Record<string, DiffLineItem>;
-		oldFileSyntaxLines: Record<number, SyntaxLine>;
+		oldFilePlainLines: Record<number, {
+			value: string;
+			template?: string;
+		}>;
+		oldFileSyntaxLines: Record<number, SyntaxLineWithTemplate>;
 		oldFilePlaceholderLines: Record<string, boolean>;
 		newFileLines: Record<number, string>;
 		newFileDiffLines: Record<string, DiffLineItem>;
-		newFileSyntaxLines: Record<number, SyntaxLine>;
+		newFilePlainLines: Record<number, {
+			value: string;
+			template?: string;
+		}>;
+		newFileSyntaxLines: Record<number, SyntaxLineWithTemplate>;
 		newFilePlaceholderLines: Record<string, boolean>;
 		splitLineLength: number;
 		unifiedLineLength: number;
@@ -136,6 +170,7 @@ export declare class DiffFile {
 		};
 		version: string;
 		theme: "light" | "dark";
+		enableTemplate: boolean;
 		isFullMerge: boolean;
 	};
 	mergeBundle: (data: ReturnType<DiffFile["getBundle"]>, notifyUpdate?: boolean) => void;
@@ -157,11 +192,19 @@ export declare class DiffFile {
 		hasBuildUnified: boolean;
 		oldFileLines: Record<number, string>;
 		oldFileDiffLines: Record<string, DiffLineItem>;
-		oldFileSyntaxLines: Record<number, SyntaxLine>;
+		oldFilePlainLines: Record<number, {
+			value: string;
+			template?: string;
+		}>;
+		oldFileSyntaxLines: Record<number, SyntaxLineWithTemplate>;
 		oldFilePlaceholderLines: Record<string, boolean>;
 		newFileLines: Record<number, string>;
 		newFileDiffLines: Record<string, DiffLineItem>;
-		newFileSyntaxLines: Record<number, SyntaxLine>;
+		newFilePlainLines: Record<number, {
+			value: string;
+			template?: string;
+		}>;
+		newFileSyntaxLines: Record<number, SyntaxLineWithTemplate>;
 		newFilePlaceholderLines: Record<string, boolean>;
 		splitLineLength: number;
 		unifiedLineLength: number;
@@ -185,6 +228,7 @@ export declare class DiffFile {
 		};
 		version: string;
 		theme: "light" | "dark";
+		enableTemplate: boolean;
 	};
 	_mergeFullBundle: (data: ReturnType<DiffFile["_getFullBundle"]>, notifyUpdate?: boolean) => void;
 	_destroy: () => void;
@@ -232,7 +276,9 @@ export declare class DiffLine {
 	readonly noTrailingNewLine: boolean;
 	changes?: IRange;
 	diffChanges?: DiffRange;
-	constructor(text: string, type: DiffLineType, originalLineNumber: number | null, oldLineNumber: number | null, newLineNumber: number | null, noTrailingNewLine?: boolean, changes?: IRange, diffChanges?: DiffRange);
+	plainTemplate?: string;
+	syntaxTemplate?: string;
+	constructor(text: string, type: DiffLineType, originalLineNumber: number | null, oldLineNumber: number | null, newLineNumber: number | null, noTrailingNewLine?: boolean, changes?: IRange, diffChanges?: DiffRange, plainTemplate?: string, syntaxTemplate?: string);
 	withNoTrailingNewLine(noTrailingNewLine: boolean): DiffLine;
 	isIncludeableLine(): boolean;
 	equals(other: DiffLine): boolean;
@@ -382,23 +428,113 @@ export declare const checkCurrentLineIsHidden: (diffFile: DiffFile, lineNumber: 
 };
 export declare const checkDiffLineIncludeChange: (diffLine?: DiffLine) => boolean;
 export declare const disableCache: () => void;
-export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[], { getAdditionRaw, getDeletionRaw, }: {
+export declare const getCurrentComposeLength: () => number;
+export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[], { getAdditionRaw, getDeletionRaw, getAdditionSyntax, getDeletionSyntax, }: {
 	getAdditionRaw: (lineNumber: number) => string;
 	getDeletionRaw: (lineNumber: number) => string;
+	getAdditionSyntax: (lineNumber: number) => SyntaxLineWithTemplate;
+	getDeletionSyntax: (lineNumber: number) => SyntaxLineWithTemplate;
 }) => void;
 export declare const getLang: (fileName: string) => string;
+export declare const getPlainDiffTemplate: ({ diffLine, rawLine, operator, }: {
+	diffLine: DiffLine;
+	rawLine: string;
+	operator: "add" | "del";
+}) => void;
+export declare const getPlainLineTemplate: (line: string) => string;
 export declare const getSplitContentLines: (diffFile: DiffFile) => DiffSplitContentLineItem[];
 export declare const getSplitLines: (diffFile: DiffFile) => DiffSplitLineItem[];
+export declare const getSyntaxDiffTemplate: ({ diffLine, syntaxLine, operator, }: {
+	diffLine: DiffLine;
+	syntaxLine: SyntaxLineWithTemplate;
+	operator: "add" | "del";
+}) => void;
+export declare const getSyntaxLineTemplate: (line: SyntaxLine) => string;
 export declare const getUnifiedContentLine: (diffFile: DiffFile) => DiffUnifiedContentLineItem[];
 export declare const getUnifiedLines: (diffFile: DiffFile) => DiffUnifiedLineItem[];
 export declare const highlighter: DiffHighlighter;
+/**
+ * Checks whether content transformation is currently enabled.
+ *
+ * @returns {boolean} True if transformation is enabled, false otherwise
+ *
+ * @example
+ * ```typescript
+ * if (isTransformEnabled()) {
+ *   console.log('Transformations are active');
+ * }
+ * ```
+ */
+export declare const isTransformEnabled: () => boolean;
 export declare const numIterator: <T>(num: number, cb: (index: number) => T) => T[];
 export declare const parseInstance: DiffParser;
 export declare const processAST: (ast: DiffAST) => {
 	syntaxFileObject: Record<number, SyntaxLine>;
 	syntaxFileLineNumber: number;
 };
+/**
+ * Applies the file transformation function to the provided content if transformation is enabled.
+ *
+ * @param content - The content string to transform
+ * @returns {string} The transformed content if transformation is enabled and configured, otherwise the original content
+ *
+ * @example
+ * ```typescript
+ * const transformed = doTransformFile('some file content');
+ * ```
+ */
+export declare const processTransformForFile: (content: string) => string;
+/**
+ * Applies the transformation function to the provided content if transformation is enabled.
+ *
+ * @param content - The content string to transform
+ * @returns {string} The transformed content if transformation is enabled and configured, otherwise the original content
+ *
+ * @example
+ * ```typescript
+ * const transformed = processTransformTemplateContent('  hello world  ');
+ * ```
+ */
+export declare const processTransformTemplateContent: (content: string) => string;
 export declare const resetDefaultComposeLength: () => void;
+/**
+ * Resets all transformation functions to their default state and disables transformation.
+ *
+ * @example
+ * ```typescript
+ * resetTransform(); // Clears all transformations
+ * ```
+ */
+export declare const resetTransform: () => void;
+/**
+ * ⚠️ **WARNING: DANGEROUS OPERATION** ⚠️
+ *
+ * @param fn - The transformation function to apply to file content
+ * @throws {Error} Throws an error if the provided parameter is not a function
+ *
+ * @example
+ * ```typescript
+ * // Use with caution - this affects global behavior
+ * setTransformFile((content) => content.toUpperCase());
+ * ```
+ */
+export declare const setTransformForFile: (fn: (content: string) => string) => void;
+/**
+ * ⚠️ **WARNING: DANGEROUS OPERATION** ⚠️
+ *
+ * This function modifies global state and may cause unexpected side effects.
+ * You may also need escapeHTML for the content.
+ *
+ * @param fn - The transformation function to help transform template content
+ * @throws {Error} Throws an error if the provided parameter is not a function
+ *
+ * @example
+ * ```typescript
+ * // Use with caution - this affects global behavior
+ * setTransformForTemplateContent((content) => content.trim());
+ * ```
+ */
+export declare const setTransformForTemplateContent: (fn: (content: string) => string) => void;
 export declare const versions: string;
 export declare enum DiffFileLineType {
 	hunk = 1,
@@ -434,14 +570,6 @@ export declare enum DiffLineType {
 	Delete = 2,
 	Hunk = 3
 }
-export declare enum NewLineSymbol {
-	CRLF = 1,
-	CR = 2,
-	LF = 3,
-	NEWLINE = 4,
-	NORMAL = 5,
-	NULL = 6
-}
 export declare enum SplitSide {
 	old = 1,
 	new = 2
@@ -453,6 +581,7 @@ export declare function diffChanges(addition: DiffLine, deletion: DiffLine): {
 	addRange: DiffRange;
 	delRange: DiffRange;
 };
+export declare function escapeHtml(string: unknown): string;
 export declare function getFile(raw: string, lang: DiffHighlighterLang, theme: "light" | "dark", fileName?: string, uuid?: string): File$1;
 export declare function getFile(raw: string, lang: string, theme: "light" | "dark", fileName?: string, uuid?: string): File$1;
 /**
@@ -648,6 +777,9 @@ export type SyntaxLine = {
 		node: SyntaxNode;
 		wrapper?: SyntaxNode;
 	}[];
+};
+export type SyntaxLineWithTemplate = SyntaxLine & {
+	template?: string;
 };
 // Generated by dts-bundle-generator v9.5.1
 export type SyntaxNode = {

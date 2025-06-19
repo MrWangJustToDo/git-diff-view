@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { type DiffFile, getSplitContentLines } from "@git-diff-view/core";
 import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from "@git-diff-view/utils";
-import { Fragment, memo, useCallback, useMemo } from "react";
+import { Fragment, memo, useMemo, useRef } from "react";
 import * as React from "react";
 // SEE https://github.com/facebook/react/pull/25231
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
@@ -14,66 +14,23 @@ import { DiffSplitExtendLine } from "./DiffSplitExtendLineWrap";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLineWrap";
 import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineWrap";
 import { useDiffViewContext } from "./DiffViewContext";
-import { createDiffSplitConfigStore } from "./tools";
 
 import type { MouseEventHandler } from "react";
-import type { Ref, UseSelectorWithStore } from "reactivity-store";
-
-const Style = ({
-  useSelector,
-  id,
-}: {
-  useSelector: UseSelectorWithStore<{ splitRef: Ref<SplitSide> }>;
-  id: string;
-}) => {
-  const splitRef = useSelector((s) => s.splitRef);
-
-  return (
-    <style data-select-style>
-      {splitRef === SplitSide.old
-        ? `#${id} td[data-side="${SplitSide[SplitSide.new]}"] {user-select: none}`
-        : splitRef === SplitSide.new
-          ? `#${id} td[data-side="${SplitSide[SplitSide.old]}"] {user-select: none}`
-          : ""}
-    </style>
-  );
-};
 
 export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => {
   const splitLineLength = Math.max(diffFile.splitLineLength, diffFile.fileLineLength);
 
   const { useDiffContext } = useDiffViewContext();
 
-  const useSplitConfig = useMemo(() => createDiffSplitConfigStore(), []);
+  const ref = useRef<HTMLStyleElement>(null);
 
-  const fontSize = useDiffContext.useShallowStableSelector((s) => s.fontSize);
+  const { fontSize, enableAddWidget, enableHighlight } = useDiffContext.useShallowStableSelector((s) => ({
+    fontSize: s.fontSize,
+    enableAddWidget: s.enableAddWidget,
+    enableHighlight: s.enableHighlight,
+  }));
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
-
-  const onMouseDown = useCallback<MouseEventHandler<HTMLTableSectionElement>>((e) => {
-    let ele = e.target;
-
-    const setSelectSide = useSplitConfig.getReadonlyState().setSplit;
-
-    // need remove all the selection
-    if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
-      removeAllSelection();
-      return;
-    }
-
-    while (ele && ele instanceof HTMLElement && ele.nodeName !== "TD") {
-      ele = ele.parentElement;
-    }
-
-    if (ele instanceof HTMLElement) {
-      const side = ele.getAttribute("data-side");
-      if (side) {
-        setSelectSide(SplitSide[side]);
-        removeAllSelection();
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const font = useMemo(() => ({ fontSize: fontSize + "px", fontFamily: "Menlo, Consolas, monospace" }), [fontSize]);
 
@@ -86,6 +43,47 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
 
   const lines = getSplitContentLines(diffFile);
 
+  const setStyle = (side: SplitSide) => {
+    if (!ref.current) return;
+    if (!side) {
+      ref.current.textContent = "";
+    } else {
+      const id = `diff-root${diffFile.getId()}`;
+      const targetSide = side === SplitSide.old ? SplitSide.new : SplitSide.old;
+      ref.current.textContent = `#${id} [data-side="${SplitSide[targetSide]}"] {user-select: none} \n#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`;
+    }
+  };
+
+  const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
+    let ele = e.target;
+
+    // need remove all the selection
+    if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
+      removeAllSelection();
+      return;
+    }
+
+    while (ele && ele instanceof HTMLElement) {
+      const state = ele.getAttribute("data-state");
+      const side = ele.getAttribute("data-side");
+      if (side) {
+        setStyle(SplitSide[side]);
+        removeAllSelection();
+      }
+      if (state) {
+        if (state === "extend" || state === "hunk" || state === "widget") {
+          setStyle(undefined);
+          removeAllSelection();
+          return;
+        } else {
+          return;
+        }
+      }
+
+      ele = ele.parentElement;
+    }
+  };
+
   return (
     <div className="split-diff-view split-diff-view-wrap w-full">
       <div
@@ -97,7 +95,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
           fontSize: `var(${diffFontSizeName})`,
         }}
       >
-        <Style useSelector={useSplitConfig} id={`diff-root${diffFile.getId()}`} />
+        <style data-select-style ref={ref} />
         <table className="diff-table w-full table-fixed border-collapse border-spacing-0">
           <colgroup>
             <col className="diff-table-old-num-col" width={Math.round(width)} />
@@ -117,7 +115,13 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
             {lines.map((line) => (
               <Fragment key={line.index}>
                 <DiffSplitHunkLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
-                <DiffSplitContentLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
+                <DiffSplitContentLine
+                  index={line.index}
+                  lineNumber={line.lineNumber}
+                  diffFile={diffFile}
+                  enableAddWidget={enableAddWidget}
+                  enableHighlight={enableHighlight}
+                />
                 <DiffSplitWidgetLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
                 <DiffSplitExtendLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
               </Fragment>

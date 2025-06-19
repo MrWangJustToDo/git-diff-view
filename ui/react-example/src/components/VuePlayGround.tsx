@@ -18,14 +18,15 @@ export const VuePlayGround = () => {
   return (
     <Card className="p-0" withBorder>
       <Box className="flex items-center px-2 py-2 font-sans text-[14px]">
-        <IconBrandVue size="16" color="#42b883" className="mr-2" />Vue
+        <IconBrandVue size="16" color="#42b883" className="mr-2" />
+        Vue
       </Box>
       <SandpackProvider
         template="vite-vue-ts"
         customSetup={{
           dependencies: {
-            "@git-diff-view/file": "0.0.20",
-            "@git-diff-view/vue": "0.0.20",
+            "@git-diff-view/file": "0.0.26",
+            "@git-diff-view/vue": "0.0.26",
           },
         }}
         files={{

@@ -10,6 +10,8 @@ import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/lowlig
 
 export let composeLen = 40;
 
+export const getCurrentComposeLength = () => composeLen;
+
 export const changeDefaultComposeLength = (compose: number) => {
   composeLen = compose;
 };
@@ -105,6 +107,10 @@ export class DiffFile {
 
   #newFileLines?: File["rawFile"];
 
+  #oldFilePlainLines?: File["plainFile"];
+
+  #newFilePlainLines?: File["plainFile"];
+
   #oldFileSyntaxLines?: File["syntaxFile"];
 
   #newFileSyntaxLines?: File["syntaxFile"];
@@ -138,6 +144,8 @@ export class DiffFile {
   #composeByDiff: boolean = false;
 
   #composeByMerge: boolean = false;
+
+  #enableTemplate: boolean = true;
 
   #composeByFullMerge: boolean = false;
 
@@ -288,6 +296,7 @@ export class DiffFile {
         this._oldFileName,
         this.uuid ? this.uuid + "-old" : undefined
       );
+      this.#oldFileResult.enableTemplate = this.#enableTemplate;
     }
 
     if (this._newFileContent) {
@@ -298,6 +307,7 @@ export class DiffFile {
         this._newFileName,
         this.uuid ? this.uuid + "-new" : undefined
       );
+      this.#newFileResult.enableTemplate = this.#enableTemplate;
     }
   }
 
@@ -306,9 +316,13 @@ export class DiffFile {
 
     this.#oldFileLines = this.#oldFileResult?.rawFile;
 
+    this.#oldFilePlainLines = this.#oldFileResult?.plainFile;
+
     this.#newFileResult?.doRaw();
 
     this.#newFileLines = this.#newFileResult?.rawFile;
+
+    this.#newFilePlainLines = this.#newFileResult?.plainFile;
 
     this.fileLineLength = Math.max(
       this.fileLineLength,
@@ -364,6 +378,7 @@ export class DiffFile {
         this._oldFileName,
         this.uuid ? this.uuid + "-old" : undefined
       );
+      this.#oldFileResult.enableTemplate = this.#enableTemplate;
       this.#newFileResult = getFile(
         this._newFileContent,
         this._newFileLang,
@@ -371,6 +386,7 @@ export class DiffFile {
         this._newFileName,
         this.uuid ? this.uuid + "-new" : undefined
       );
+      this.#newFileResult.enableTemplate = this.#enableTemplate;
       this.#oldFilePlaceholderLines = oldFilePlaceholderLines;
       this.#newFilePlaceholderLines = newFilePlaceholderLines;
       // all of the file just compose by diff, so we can not do the expand action
@@ -405,6 +421,7 @@ export class DiffFile {
         this._newFileName,
         this.uuid ? this.uuid + "-new" : undefined
       );
+      this.#newFileResult.enableTemplate = this.#enableTemplate;
     } else if (this.#newFileResult) {
       let oldLineNumber = 1;
       let newLineNumber = 1;
@@ -435,6 +452,7 @@ export class DiffFile {
         this._oldFileName,
         this.uuid ? this.uuid + "-old" : undefined
       );
+      this.#oldFileResult.enableTemplate = this.#enableTemplate;
     }
 
     this.#composeRaw();
@@ -449,6 +467,14 @@ export class DiffFile {
 
     const getDeletionRaw = (lineNumber: number) => {
       return this.#getOldRawLine(lineNumber);
+    };
+
+    const getAdditionSyntax = (lineNumber: number) => {
+      return this.#getNewSyntaxLine(lineNumber);
+    };
+
+    const getDeletionSyntax = (lineNumber: number) => {
+      return this.#getOldSyntaxLine(lineNumber);
     };
 
     this.#diffLines = [];
@@ -472,13 +498,18 @@ export class DiffFile {
             deletions.push(line);
             this.deletionLength++;
           } else {
-            getDiffRange(additions, deletions, { getAdditionRaw, getDeletionRaw });
+            getDiffRange(additions, deletions, {
+              getAdditionRaw,
+              getDeletionRaw,
+              getAdditionSyntax,
+              getDeletionSyntax,
+            });
             additions = [];
             deletions = [];
           }
           tmp.push(line);
         });
-        getDiffRange(additions, deletions, { getAdditionRaw, getDeletionRaw });
+        getDiffRange(additions, deletions, { getAdditionRaw, getDeletionRaw, getAdditionSyntax, getDeletionSyntax });
       });
     });
 
@@ -585,6 +616,28 @@ export class DiffFile {
     this.#newFileSyntaxLines = this.#newFileResult?.syntaxFile;
   }
 
+  #doSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> } = {}) {
+    if (this.#highlighterType === "class") return;
+
+    if (this.#composeByMerge && !this.#composeByFullMerge) {
+      if (__DEV__) {
+        console.error(
+          `this instance can not do syntax because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'`
+        );
+      }
+
+      return;
+    }
+
+    this.#composeSyntax({ registerHighlighter });
+
+    this.#highlighterName =
+      this.#oldFileResult?.highlighterName || this.#newFileResult?.highlighterName || this.#highlighterName;
+
+    this.#highlighterType =
+      this.#oldFileResult?.highlighterType || this.#newFileResult?.highlighterType || this.#highlighterType;
+  }
+
   #getOldDiffLine(lineNumber: number | null) {
     if (!lineNumber) return;
     return this.#oldFileDiffLines?.[lineNumber];
@@ -601,6 +654,14 @@ export class DiffFile {
 
   #getNewRawLine(lineNumber: number) {
     return this.#newFileLines?.[lineNumber];
+  }
+
+  #getOldSyntaxLine(lineNumber: number) {
+    return this.#oldFileSyntaxLines?.[lineNumber];
+  }
+
+  #getNewSyntaxLine(lineNumber: number) {
+    return this.#newFileSyntaxLines?.[lineNumber];
   }
 
   initId() {
@@ -641,25 +702,9 @@ export class DiffFile {
   initSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> } = {}) {
     if (this.#hasInitSyntax && (!this.#_theme || this.#theme === this.#_theme)) return;
 
-    if (this.#highlighterType === "class") return;
+    this.#doSyntax({ registerHighlighter });
 
-    if (this.#composeByMerge && !this.#composeByFullMerge) {
-      if (__DEV__) {
-        console.error(
-          `this instance can not do syntax because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'`
-        );
-      }
-
-      return;
-    }
-
-    this.#composeSyntax({ registerHighlighter });
-
-    this.#highlighterName =
-      this.#oldFileResult?.highlighterName || this.#newFileResult?.highlighterName || this.#highlighterName;
-
-    this.#highlighterType =
-      this.#oldFileResult?.highlighterType || this.#newFileResult?.highlighterType || this.#highlighterType;
+    this.#composeDiff();
 
     this.#hasInitSyntax = true;
   }
@@ -667,6 +712,18 @@ export class DiffFile {
   init() {
     this.initRaw();
     this.initSyntax();
+  }
+
+  enableTemplate() {
+    this.#enableTemplate = true;
+  }
+
+  disableTemplate() {
+    this.#enableTemplate = false;
+  }
+
+  getIsEnableTemplate() {
+    return this.#enableTemplate;
   }
 
   buildSplitDiffLines() {
@@ -1045,6 +1102,14 @@ export class DiffFile {
     }
   };
 
+  getSplitLineIndexByLineNumber = (lineNumber: number, side: SplitSide) => {
+    if (side === SplitSide.old) {
+      return this.#splitLeftLines?.findIndex((item) => item.lineNumber === lineNumber);
+    } else {
+      return this.#splitRightLines?.findIndex((item) => item.lineNumber === lineNumber);
+    }
+  };
+
   getSplitRightLine = (index: number) => {
     return this.#splitRightLines[index];
   };
@@ -1137,6 +1202,14 @@ export class DiffFile {
       return this.#unifiedLines?.find((item) => item.oldLineNumber === lienNumber);
     } else {
       return this.#unifiedLines?.find((item) => item.newLineNumber === lienNumber);
+    }
+  };
+
+  getUnifiedLineIndexByLineNumber = (lineNumber: number, side: SplitSide) => {
+    if (side === SplitSide.old) {
+      return this.#unifiedLines?.findIndex((item) => item.oldLineNumber === lineNumber);
+    } else {
+      return this.#unifiedLines?.findIndex((item) => item.newLineNumber === lineNumber);
     }
   };
 
@@ -1322,8 +1395,16 @@ export class DiffFile {
     return this.#newFileResult?.raw;
   };
 
+  getOldPlainLine = (lineNumber: number) => {
+    return this.#oldFilePlainLines?.[lineNumber];
+  };
+
   getOldSyntaxLine = (lineNumber: number) => {
     return this.#oldFileSyntaxLines?.[lineNumber];
+  };
+
+  getNewPlainLine = (lineNumber: number) => {
+    return this.#newFilePlainLines?.[lineNumber];
   };
 
   getNewSyntaxLine = (lineNumber: number) => {
@@ -1366,10 +1447,12 @@ export class DiffFile {
     const hasBuildUnified = this.#hasBuildUnified;
     const oldFileLines = this.#oldFileLines;
     const oldFileDiffLines = this.#oldFileDiffLines;
+    const oldFilePlainLines = this.#oldFilePlainLines;
     const oldFileSyntaxLines = this.#oldFileSyntaxLines;
     const oldFilePlaceholderLines = this.#oldFilePlaceholderLines;
     const newFileLines = this.#newFileLines;
     const newFileDiffLines = this.#newFileDiffLines;
+    const newFilePlainLines = this.#newFilePlainLines;
     const newFileSyntaxLines = this.#newFileSyntaxLines;
     const newFilePlaceholderLines = this.#newFilePlaceholderLines;
     const splitLineLength = this.splitLineLength;
@@ -1395,6 +1478,7 @@ export class DiffFile {
 
     const version = this._version_;
     const theme = this.#theme;
+    const enableTemplate = this.#enableTemplate;
 
     return {
       hasInitRaw,
@@ -1403,10 +1487,12 @@ export class DiffFile {
       hasBuildUnified,
       oldFileLines,
       oldFileDiffLines,
+      oldFilePlainLines,
       oldFileSyntaxLines,
       oldFilePlaceholderLines,
       newFileLines,
       newFileDiffLines,
+      newFilePlainLines,
       newFileSyntaxLines,
       newFilePlaceholderLines,
       splitLineLength,
@@ -1431,6 +1517,8 @@ export class DiffFile {
 
       theme,
 
+      enableTemplate,
+
       isFullMerge: false,
     };
   };
@@ -1446,10 +1534,12 @@ export class DiffFile {
 
     this.#oldFileLines = data.oldFileLines;
     this.#oldFileDiffLines = data.oldFileDiffLines;
+    this.#oldFilePlainLines = data.oldFilePlainLines;
     this.#oldFileSyntaxLines = data.oldFileSyntaxLines;
     this.#oldFilePlaceholderLines = data.oldFilePlaceholderLines;
     this.#newFileLines = data.newFileLines;
     this.#newFileDiffLines = data.newFileDiffLines;
+    this.#newFilePlainLines = data.newFilePlainLines;
     this.#newFileSyntaxLines = data.newFileSyntaxLines;
     this.#newFilePlaceholderLines = data.newFilePlaceholderLines;
     this.splitLineLength = data.splitLineLength;
@@ -1469,6 +1559,8 @@ export class DiffFile {
     this.#unifiedHunksLines = data.unifiedHunkLines;
 
     this.#theme = data.theme;
+
+    this.#enableTemplate = data.enableTemplate;
 
     // mark this instance as a merged instance
     this.#composeByMerge = true;
@@ -1583,4 +1675,12 @@ export class DiffFile {
     this.#unifiedLines = null;
     this.#theme = undefined;
   };
+}
+
+if (__DEV__) {
+  Object.defineProperty(DiffFile.prototype, "__full_bundle__", {
+    get: function (this: DiffFile) {
+      return this._getFullBundle();
+    },
+  });
 }

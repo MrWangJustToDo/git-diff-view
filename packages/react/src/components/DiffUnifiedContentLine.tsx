@@ -1,4 +1,4 @@
-import { type DiffFile, type SyntaxLine, type DiffLine, checkDiffLineIncludeChange } from "@git-diff-view/core";
+import { type DiffFile, type DiffLine, checkDiffLineIncludeChange, type File } from "@git-diff-view/core";
 import {
   diffAsideWidthName,
   addContentBGName,
@@ -9,6 +9,7 @@ import {
   plainContentBGName,
   plainLineNumberBGName,
   plainLineNumberColorName,
+  expandLineNumberColorName,
 } from "@git-diff-view/utils";
 import * as React from "react";
 import { memo } from "react";
@@ -26,6 +27,7 @@ const DiffUnifiedOldLine = ({
   index,
   diffLine,
   rawLine,
+  plainLine,
   syntaxLine,
   lineNumber,
   diffFile,
@@ -38,7 +40,8 @@ const DiffUnifiedOldLine = ({
   index: number;
   lineNumber: number;
   rawLine: string;
-  syntaxLine?: SyntaxLine;
+  plainLine?: File["plainFile"][number];
+  syntaxLine?: File["syntaxFile"][number];
   diffLine?: DiffLine;
   diffFile: DiffFile;
   enableWrap: boolean;
@@ -50,7 +53,7 @@ const DiffUnifiedOldLine = ({
   return (
     <tr data-line={index} data-state="diff" className="diff-line group">
       <td
-        className="diff-line-num sticky left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
+        className="diff-line-num sticky z-[1] left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
         style={{
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${delLineNumberBGName})`,
@@ -84,6 +87,7 @@ const DiffUnifiedOldLine = ({
           enableHighlight={enableHighlight}
           rawLine={rawLine}
           diffLine={diffLine}
+          plainLine={plainLine}
           syntaxLine={syntaxLine}
         />
       </td>
@@ -95,6 +99,7 @@ const DiffUnifiedNewLine = ({
   index,
   diffLine,
   rawLine,
+  plainLine,
   syntaxLine,
   lineNumber,
   diffFile,
@@ -107,7 +112,8 @@ const DiffUnifiedNewLine = ({
   index: number;
   lineNumber: number;
   rawLine: string;
-  syntaxLine?: SyntaxLine;
+  plainLine?: File["plainFile"][number];
+  syntaxLine?: File["syntaxFile"][number];
   diffLine?: DiffLine;
   diffFile: DiffFile;
   enableWrap: boolean;
@@ -119,7 +125,7 @@ const DiffUnifiedNewLine = ({
   return (
     <tr data-line={index} data-state="diff" className="diff-line group">
       <td
-        className="diff-line-num sticky left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
+        className="diff-line-num sticky z-[1] left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
         style={{
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${addLineNumberBGName})`,
@@ -153,6 +159,7 @@ const DiffUnifiedNewLine = ({
           enableHighlight={enableHighlight}
           rawLine={rawLine}
           diffLine={diffLine}
+          plainLine={plainLine}
           syntaxLine={syntaxLine}
         />
       </td>
@@ -161,19 +168,26 @@ const DiffUnifiedNewLine = ({
 };
 
 const _DiffUnifiedLine = memo(
-  ({ index, diffFile, lineNumber }: { index: number; diffFile: DiffFile; lineNumber: number }) => {
+  ({
+    index,
+    diffFile,
+    lineNumber,
+    enableWrap,
+    enableAddWidget,
+    enableHighlight,
+  }: {
+    index: number;
+    diffFile: DiffFile;
+    lineNumber: number;
+    enableWrap: boolean;
+    enableHighlight: boolean;
+    enableAddWidget: boolean;
+  }) => {
     const unifiedLine = diffFile.getUnifiedLine(index);
 
     const { useDiffContext } = useDiffViewContext();
 
-    const { enableWrap, enableHighlight, enableAddWidget, onAddWidgetClick } = useDiffContext.useShallowStableSelector(
-      (s) => ({
-        enableWrap: s.enableWrap,
-        enableHighlight: s.enableHighlight,
-        enableAddWidget: s.enableAddWidget,
-        onAddWidgetClick: s.onAddWidgetClick,
-      })
-    );
+    const onAddWidgetClick = useDiffContext.getReadonlyState().onAddWidgetClick;
 
     const { useWidget } = useDiffWidgetContext();
 
@@ -197,6 +211,12 @@ const _DiffUnifiedLine = memo(
         ? diffFile.getOldSyntaxLine(oldLinenumber)
         : undefined;
 
+    const plainLine = newLineNumber
+      ? diffFile.getNewPlainLine(newLineNumber)
+      : oldLinenumber
+        ? diffFile.getOldPlainLine(oldLinenumber)
+        : undefined;
+
     if (hasChange) {
       if (unifiedLine.oldLineNumber) {
         return (
@@ -207,6 +227,7 @@ const _DiffUnifiedLine = memo(
             rawLine={rawLine}
             diffLine={diffLine}
             setWidget={setWidget}
+            plainLine={plainLine}
             syntaxLine={syntaxLine}
             enableHighlight={enableHighlight}
             enableAddWidget={enableAddWidget}
@@ -223,6 +244,7 @@ const _DiffUnifiedLine = memo(
             diffLine={diffLine}
             diffFile={diffFile}
             setWidget={setWidget}
+            plainLine={plainLine}
             syntaxLine={syntaxLine}
             enableHighlight={enableHighlight}
             enableAddWidget={enableAddWidget}
@@ -235,9 +257,9 @@ const _DiffUnifiedLine = memo(
       return (
         <tr data-line={lineNumber} data-state={unifiedLine.diff ? "diff" : "plain"} className="diff-line group">
           <td
-            className="diff-line-num sticky left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
+            className="diff-line-num sticky z-[1] left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
             style={{
-              color: `var(${plainLineNumberColorName})`,
+              color: `var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName})`,
               width: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
               maxWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
               minWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
@@ -276,6 +298,7 @@ const _DiffUnifiedLine = memo(
               enableHighlight={enableHighlight}
               rawLine={rawLine}
               diffLine={diffLine}
+              plainLine={plainLine}
               syntaxLine={syntaxLine}
             />
           </td>
@@ -291,14 +314,29 @@ export const DiffUnifiedContentLine = ({
   index,
   diffFile,
   lineNumber,
+  enableWrap,
+  enableHighlight,
+  enableAddWidget,
 }: {
   index: number;
   diffFile: DiffFile;
   lineNumber: number;
+  enableWrap: boolean;
+  enableHighlight: boolean;
+  enableAddWidget: boolean;
 }) => {
   const unifiedLine = diffFile.getUnifiedLine(index);
 
   if (unifiedLine?.isHidden) return null;
 
-  return <_DiffUnifiedLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
+  return (
+    <_DiffUnifiedLine
+      index={index}
+      diffFile={diffFile}
+      lineNumber={lineNumber}
+      enableWrap={enableWrap}
+      enableHighlight={enableHighlight}
+      enableAddWidget={enableAddWidget}
+    />
+  );
 };

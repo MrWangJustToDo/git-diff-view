@@ -50,7 +50,7 @@ const InternalDiffUnifiedWidgetLine = ({
   return (
     <tr data-line={`${lineNumber}-widget`} data-state="widget" className="diff-line diff-line-widget">
       <td className="diff-line-widget-content p-0" colSpan={2}>
-        <div className="diff-line-widget-wrapper sticky left-0" style={{ width }}>
+        <div className="diff-line-widget-wrapper sticky left-0 z-[1]" style={{ width }}>
           {width > 0 &&
             oldWidget &&
             renderWidgetLine?.({ diffFile, side: SplitSide.old, lineNumber: unifiedItem.oldLineNumber, onClose })}

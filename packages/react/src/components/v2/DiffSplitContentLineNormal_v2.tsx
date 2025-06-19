@@ -5,6 +5,7 @@ import {
   plainLineNumberColorName,
   emptyBGName,
   diffAsideWidthName,
+  expandLineNumberColorName,
 } from "@git-diff-view/utils";
 import * as React from "react";
 
@@ -26,6 +27,8 @@ const InternalDiffSplitLine = ({
   lineNumber: number;
 }) => {
   const getCurrentSyntaxLine = side === SplitSide.old ? diffFile.getOldSyntaxLine : diffFile.getNewSyntaxLine;
+
+  const getCurrentPlainLine = side === SplitSide.old ? diffFile.getOldPlainLine : diffFile.getNewPlainLine;
 
   const oldLine = diffFile.getSplitLeftLine(index);
 
@@ -59,6 +62,8 @@ const InternalDiffSplitLine = ({
 
   const lineNumberBG = getLineNumberBG(isAdded, isDelete, hasDiff);
 
+  const plainLine = getCurrentPlainLine(currentLine.lineNumber);
+
   const syntaxLine = getCurrentSyntaxLine(currentLine.lineNumber);
 
   return (
@@ -71,10 +76,10 @@ const InternalDiffSplitLine = ({
       {hasContent ? (
         <>
           <div
-            className={`diff-line-${SplitSide[side]}-num sticky left-0 flex w-[1%] min-w-[40px] select-none items-center px-[10px] text-right`}
+            className={`diff-line-${SplitSide[side]}-num sticky z-[1] left-0 flex w-[1%] min-w-[40px] select-none items-center px-[10px] text-right`}
             style={{
               backgroundColor: lineNumberBG,
-              color: `var(${plainLineNumberColorName})`,
+              color: `var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName})`,
               width: `var(${diffAsideWidthName})`,
               minWidth: `var(${diffAsideWidthName})`,
               maxWidth: `var(${diffAsideWidthName})`,
@@ -108,6 +113,7 @@ const InternalDiffSplitLine = ({
               diffFile={diffFile}
               rawLine={currentLine.value!}
               diffLine={currentLine.diff}
+              plainLine={plainLine}
               syntaxLine={syntaxLine}
               enableHighlight={enableHighlight}
             />

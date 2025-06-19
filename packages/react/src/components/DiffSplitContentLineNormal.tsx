@@ -5,6 +5,7 @@ import {
   plainLineNumberColorName,
   diffAsideWidthName,
   emptyBGName,
+  expandLineNumberColorName,
 } from "@git-diff-view/utils";
 import * as React from "react";
 
@@ -21,13 +22,19 @@ const InternalDiffSplitLine = ({
   diffFile,
   lineNumber,
   side,
+  enableAddWidget,
+  enableHighlight,
 }: {
   index: number;
   side: SplitSide;
   diffFile: DiffFile;
   lineNumber: number;
+  enableHighlight: boolean;
+  enableAddWidget: boolean;
 }) => {
   const getCurrentSyntaxLine = side === SplitSide.old ? diffFile.getOldSyntaxLine : diffFile.getNewSyntaxLine;
+
+  const getCurrentPlainLine = side === SplitSide.old ? diffFile.getOldPlainLine : diffFile.getNewPlainLine;
 
   const oldLine = diffFile.getSplitLeftLine(index);
 
@@ -47,11 +54,7 @@ const InternalDiffSplitLine = ({
 
   const { useDiffContext } = useDiffViewContext();
 
-  const { enableHighlight, enableAddWidget, onAddWidgetClick } = useDiffContext.useShallowStableSelector((s) => ({
-    enableHighlight: s.enableHighlight,
-    enableAddWidget: s.enableAddWidget,
-    onAddWidgetClick: s.onAddWidgetClick,
-  }));
+  const onAddWidgetClick = useDiffContext.getReadonlyState().onAddWidgetClick;
 
   const { useWidget } = useDiffWidgetContext();
 
@@ -63,6 +66,8 @@ const InternalDiffSplitLine = ({
 
   const syntaxLine = getCurrentSyntaxLine(currentLine.lineNumber);
 
+  const plainLine = getCurrentPlainLine(currentLine.lineNumber);
+
   return (
     <tr
       data-line={lineNumber}
@@ -73,10 +78,10 @@ const InternalDiffSplitLine = ({
       {hasContent ? (
         <>
           <td
-            className={`diff-line-${SplitSide[side]}-num sticky left-0 w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top`}
+            className={`diff-line-${SplitSide[side]}-num sticky z-[1] left-0 w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top`}
             style={{
               backgroundColor: lineNumberBG,
-              color: `var(${plainLineNumberColorName})`,
+              color: `var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName})`,
               width: `var(${diffAsideWidthName})`,
               minWidth: `var(${diffAsideWidthName})`,
               maxWidth: `var(${diffAsideWidthName})`,
@@ -106,6 +111,7 @@ const InternalDiffSplitLine = ({
               diffFile={diffFile}
               rawLine={currentLine.value!}
               diffLine={currentLine.diff}
+              plainLine={plainLine}
               syntaxLine={syntaxLine}
               enableHighlight={enableHighlight}
             />
@@ -129,11 +135,15 @@ export const DiffSplitContentLine = ({
   diffFile,
   lineNumber,
   side,
+  enableAddWidget,
+  enableHighlight,
 }: {
   index: number;
   side: SplitSide;
   diffFile: DiffFile;
   lineNumber: number;
+  enableHighlight: boolean;
+  enableAddWidget: boolean;
 }) => {
   const getCurrentLine = side === SplitSide.old ? diffFile.getSplitLeftLine : diffFile.getSplitRightLine;
 
@@ -141,5 +151,14 @@ export const DiffSplitContentLine = ({
 
   if (currentLine?.isHidden) return null;
 
-  return <InternalDiffSplitLine index={index} diffFile={diffFile} lineNumber={lineNumber} side={side} />;
+  return (
+    <InternalDiffSplitLine
+      index={index}
+      diffFile={diffFile}
+      lineNumber={lineNumber}
+      side={side}
+      enableAddWidget={enableAddWidget}
+      enableHighlight={enableHighlight}
+    />
+  );
 };

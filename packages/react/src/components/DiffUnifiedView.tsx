@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { getUnifiedContentLine } from "@git-diff-view/core";
+import { getUnifiedContentLine, SplitSide } from "@git-diff-view/core";
 import { diffFontSizeName, removeAllSelection, diffAsideWidthName } from "@git-diff-view/utils";
 import * as React from "react";
 import { Fragment, memo, useEffect, useMemo, useRef } from "react";
@@ -18,18 +18,10 @@ import { createDiffWidgetStore } from "./tools";
 import type { DiffFile } from "@git-diff-view/core";
 import type { MouseEventHandler } from "react";
 
-const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
-  const ele = e.target;
-
-  // need remove all the selection
-  if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
-    removeAllSelection();
-    return;
-  }
-};
-
 export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
   const { useDiffContext } = useDiffViewContext();
+
+  const ref = useRef<HTMLStyleElement>(null);
 
   const useDiffContextRef = useRef(useDiffContext);
 
@@ -40,10 +32,14 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const contextValue = useMemo(() => ({ useWidget }), [useWidget]);
 
-  const { fontSize, enableWrap } = useDiffContext.useShallowStableSelector((s) => ({
-    fontSize: s.fontSize,
-    enableWrap: s.enableWrap,
-  }));
+  const { fontSize, enableWrap, enableHighlight, enableAddWidget, onCreateUseWidgetHook } =
+    useDiffContext.useShallowStableSelector((s) => ({
+      fontSize: s.fontSize,
+      enableWrap: s.enableWrap,
+      enableHighlight: s.enableHighlight,
+      enableAddWidget: s.enableAddWidget,
+      onCreateUseWidgetHook: s.onCreateUseWidgetHook,
+    }));
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
 
@@ -52,6 +48,10 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
     setWidget({});
   }, [diffFile, useWidget]);
+
+  useEffect(() => {
+    onCreateUseWidgetHook?.(useWidget);
+  }, [useWidget, onCreateUseWidgetHook]);
 
   const unifiedLineLength = Math.max(diffFile.unifiedLineLength, diffFile.fileLineLength);
 
@@ -64,9 +64,47 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const lines = getUnifiedContentLine(diffFile);
 
+  const setStyle = (side: SplitSide) => {
+    if (!ref.current) return;
+    if (!side) {
+      ref.current.textContent = "";
+    } else {
+      const id = `diff-root${diffFile.getId()}`;
+      ref.current.textContent = `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`;
+    }
+  };
+
+  const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
+    let ele = e.target;
+
+    // need remove all the selection
+    if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
+      removeAllSelection();
+      return;
+    }
+
+    while (ele && ele instanceof HTMLElement) {
+      const state = ele.getAttribute("data-state");
+      if (state) {
+        if (state === "extend" || state === "hunk" || state === "widget") {
+          setStyle(undefined);
+          removeAllSelection();
+          return;
+        } else {
+          setStyle(SplitSide.new);
+          removeAllSelection();
+          return;
+        }
+      }
+
+      ele = ele.parentElement;
+    }
+  };
+
   return (
     <DiffWidgetContext.Provider value={contextValue}>
       <div className={`unified-diff-view ${enableWrap ? "unified-diff-view-wrap" : "unified-diff-view-normal"} w-full`}>
+        <style data-select-style ref={ref} />
         <div
           className="unified-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
           style={{
@@ -93,7 +131,14 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
               {lines.map((item) => (
                 <Fragment key={item.index}>
                   <DiffUnifiedHunkLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
-                  <DiffUnifiedContentLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
+                  <DiffUnifiedContentLine
+                    index={item.index}
+                    lineNumber={item.lineNumber}
+                    diffFile={diffFile}
+                    enableWrap={enableWrap}
+                    enableHighlight={enableHighlight}
+                    enableAddWidget={enableAddWidget}
+                  />
                   <DiffUnifiedWidgetLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
                   <DiffUnifiedExtendLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
                 </Fragment>

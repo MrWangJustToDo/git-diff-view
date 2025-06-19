@@ -34,7 +34,7 @@ export const DevTool = () => {
     <ButtonGroup className="fixed bottom-16 left-4 z-50" style={{ display: hide ? "none" : undefined }}>
       <Button
         color="red"
-        size="md"
+        size="sm"
         onClick={async () => {
           if (!open) {
             await init();
@@ -49,7 +49,7 @@ export const DevTool = () => {
       >
         {!open ? "Open" : "Close"} DevTool
       </Button>
-      <Button size="md" className="px-2" variant="light" onClick={() => setHide(true)}>
+      <Button size="sm" className="px-2" variant="light" onClick={() => setHide(true)}>
         <IconX />
       </Button>
     </ButtonGroup>

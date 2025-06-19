@@ -1,7 +1,9 @@
 import { relativeChanges } from "./change-range";
 import { DiffLineType } from "./diff-line";
 import { DiffHunkExpansionType } from "./raw-diff";
+import { getPlainDiffTemplate, getSyntaxDiffTemplate } from "./template";
 
+import type { SyntaxLineWithTemplate } from "../file";
 import type { DiffLine } from "./diff-line";
 import type { DiffHunk, DiffHunkHeader } from "./raw-diff";
 
@@ -97,9 +99,13 @@ export const getDiffRange = (
   {
     getAdditionRaw,
     getDeletionRaw,
+    getAdditionSyntax,
+    getDeletionSyntax,
   }: {
     getAdditionRaw: (lineNumber: number) => string;
     getDeletionRaw: (lineNumber: number) => string;
+    getAdditionSyntax: (lineNumber: number) => SyntaxLineWithTemplate;
+    getDeletionSyntax: (lineNumber: number) => SyntaxLineWithTemplate;
   }
 ) => {
   if (additions.length === deletions.length) {
@@ -107,13 +113,32 @@ export const getDiffRange = (
     for (let i = 0; i < len; i++) {
       const addition = additions[i];
       const deletion = deletions[i];
-      // use the original text content to computed diff range
-      // fix: get diff with ignoreWhiteSpace config
-      const _addition = addition.clone(getAdditionRaw(addition.newLineNumber) || addition.text || "");
-      const _deletion = deletion.clone(getDeletionRaw(deletion.oldLineNumber) || deletion.text || "");
-      const { addRange, delRange } = relativeChanges(_addition, _deletion);
-      addition.changes = addRange;
-      deletion.changes = delRange;
+      if (!addition.changes || !deletion.changes) {
+        // use the original text content to computed diff range
+        // fix: get diff with ignoreWhiteSpace config
+        const _addition = addition.clone(getAdditionRaw(addition.newLineNumber) || addition.text || "");
+        const _deletion = deletion.clone(getDeletionRaw(deletion.oldLineNumber) || deletion.text || "");
+        const { addRange, delRange } = relativeChanges(_addition, _deletion);
+        addition.changes = addRange;
+        deletion.changes = delRange;
+      }
+      if (!addition.plainTemplate || !deletion.plainTemplate) {
+        getPlainDiffTemplate({ diffLine: addition, rawLine: getAdditionRaw(addition.newLineNumber), operator: "add" });
+        getPlainDiffTemplate({ diffLine: deletion, rawLine: getDeletionRaw(deletion.oldLineNumber), operator: "del" });
+      }
+      if (!addition.syntaxTemplate || !deletion.syntaxTemplate) {
+        getSyntaxDiffTemplate({
+          diffLine: addition,
+          syntaxLine: getAdditionSyntax(addition.newLineNumber),
+          operator: "add",
+        });
+        getSyntaxDiffTemplate({
+          diffLine: deletion,
+          syntaxLine: getDeletionSyntax(deletion.oldLineNumber),
+          operator: "del",
+        });
+      }
+
       // TODO! support word diff
       // const { addRange: _addRange, delRange: _delRange } = diffChanges(_addition, _deletion);
       // addition.diffChanges = _addRange;

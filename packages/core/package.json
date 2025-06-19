@@ -3,10 +3,11 @@
   "description": "@git-diff-view/core",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.27",
+  "version": "0.0.29",
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
+    "src",
     "dist",
     "index.js",
     "index.d.ts"
@@ -52,7 +53,7 @@
     "diff parse"
   ],
   "dependencies": {
-    "@git-diff-view/lowlight": "^0.0.27",
+    "@git-diff-view/lowlight": "^0.0.29",
     "highlight.js": "^11.11.0",
     "lowlight": "^3.3.0",
     "fast-diff": "^1.3.0"

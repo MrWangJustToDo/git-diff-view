@@ -37,7 +37,7 @@ const InternalDiffUnifiedExtendLine = ({
   return (
     <tr data-line={`${lineNumber}-extend`} data-state="extend" className="diff-line diff-line-extend">
       <td className="diff-line-extend-content p-0 align-top" colSpan={2}>
-        <div className="diff-line-extend-wrapper sticky left-0" style={{ width }}>
+        <div className="diff-line-extend-wrapper sticky left-0 z-[1]" style={{ width }}>
           {width > 0 &&
             oldLineExtend?.data !== undefined &&
             oldLineExtend?.data !== null &&

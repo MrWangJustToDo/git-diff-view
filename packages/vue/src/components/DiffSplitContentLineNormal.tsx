@@ -5,6 +5,7 @@ import {
   plainLineNumberColorName,
   diffAsideWidthName,
   emptyBGName,
+  expandLineNumberColorName,
 } from "@git-diff-view/utils";
 import { defineComponent, ref } from "vue";
 
@@ -45,6 +46,12 @@ export const DiffSplitContentLine = defineComponent(
         : props.diffFile.getNewSyntaxLine(currentLine.value?.lineNumber)
     );
 
+    const currentPlainLine = ref(
+      props.side === SplitSide.old
+        ? props.diffFile.getOldPlainLine(currentLine.value?.lineNumber)
+        : props.diffFile.getNewPlainLine(currentLine.value.lineNumber)
+    );
+
     useSubscribeDiffFile(props, (diffFile) => {
       currentLine.value =
         props.side === SplitSide.old ? diffFile.getSplitLeftLine(props.index) : diffFile.getSplitRightLine(props.index);
@@ -54,6 +61,11 @@ export const DiffSplitContentLine = defineComponent(
           ? diffFile.getOldSyntaxLine(currentLine.value?.lineNumber)
           : diffFile.getNewSyntaxLine(currentLine.value?.lineNumber);
 
+      currentPlainLine.value =
+        props.side === SplitSide.old
+          ? diffFile.getOldPlainLine(currentLine.value?.lineNumber)
+          : diffFile.getNewPlainLine(currentLine.value?.lineNumber);
+
       currentLineHasDiff.value = !!currentLine.value?.diff;
 
       currentLineHasChange.value = checkDiffLineIncludeChange(currentLine.value?.diff);
@@ -62,6 +74,8 @@ export const DiffSplitContentLine = defineComponent(
 
       currentLineHasContent.value = currentLine.value.lineNumber;
     });
+
+    const onOpenAddWidget = (lineNumber: number, side: SplitSide) => setWidget({ side: side, lineNumber: lineNumber });
 
     return () => {
       if (currentLineHasHidden.value) return null;
@@ -84,10 +98,10 @@ export const DiffSplitContentLine = defineComponent(
           {currentLineHasContent.value ? (
             <>
               <td
-                class={`diff-line-${SplitSide[props.side]}-num sticky left-0 w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top`}
+                class={`diff-line-${SplitSide[props.side]}-num sticky z-[1] left-0 w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top`}
                 style={{
                   backgroundColor: lineNumberBG,
-                  color: `var(${plainLineNumberColorName})`,
+                  color: `var(${currentLineHasDiff.value ? plainLineNumberColorName : expandLineNumberColorName})`,
                   width: `var(${diffAsideWidthName})`,
                   minWidth: `var(${diffAsideWidthName})`,
                   maxWidth: `var(${diffAsideWidthName})`,
@@ -101,7 +115,7 @@ export const DiffSplitContentLine = defineComponent(
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
                     className="absolute left-[100%] z-[1] translate-x-[-50%]"
-                    onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber: lineNumber, side: side })}
+                    onOpenAddWidget={onOpenAddWidget}
                   />
                 )}
                 <span
@@ -120,6 +134,7 @@ export const DiffSplitContentLine = defineComponent(
                   diffFile={props.diffFile}
                   rawLine={currentLine.value.value}
                   diffLine={currentLine.value.diff}
+                  plainLine={currentPlainLine.value}
                   syntaxLine={currentSyntaxLine.value}
                   enableHighlight={enableHighlight.value}
                 />
