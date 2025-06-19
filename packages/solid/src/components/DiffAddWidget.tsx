@@ -1,7 +1,6 @@
 import { diffFontSizeName, addWidgetColorName, addWidgetBGName } from "@git-diff-view/utils";
 
-import type { SplitSide } from "./DiffView";
-import type { DiffFile } from "@git-diff-view/core";
+import type { DiffFile, SplitSide } from "@git-diff-view/core";
 
 export const DiffSplitAddWidget = (props: {
   index: number;

@@ -1,4 +1,3 @@
-import typescript from "@rollup/plugin-typescript";
 import * as path from "path";
 import { defineConfig } from "vite";
 import dts from "vite-plugin-dts";
@@ -7,13 +6,7 @@ import solidPlugin from "vite-plugin-solid";
 import pkg from "./package.json";
 
 export default defineConfig({
-  plugins: [
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    typescript({ tsconfig: "./tsconfig.json" }),
-    solidPlugin(),
-    dts(),
-  ],
+  plugins: [solidPlugin(), dts()],
   server: {
     port: 3000,
   },

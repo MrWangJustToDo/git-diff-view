@@ -1,12 +1,7 @@
-import { DiffFile} from "@git-diff-view/core";
+import { DiffFile } from "@git-diff-view/core";
 import { type JSXElement, type JSX, createSignal, createRenderEffect } from "solid-js";
 
 import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/core";
-
-export enum SplitSide {
-  old = 1,
-  new = 2,
-}
 
 export enum DiffModeEnum {
   // github like
@@ -87,7 +82,7 @@ export const DiffView = <T extends unknown>(props: DiffViewProps<T>) => {
     diffFile()?.clear();
 
     setDiffFile(getInstance());
-  })
+  });
 
   return <div>DiffView</div>;
-}
+};

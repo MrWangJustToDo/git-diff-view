@@ -169,7 +169,15 @@ const DiffSyntax = ({
   enableTemplate?: boolean;
 }) => {
   if (!syntaxLine) {
-    return <DiffString rawLine={rawLine} diffLine={diffLine} operator={operator} enableTemplate={enableTemplate} />;
+    return (
+      <DiffString
+        rawLine={rawLine}
+        diffLine={diffLine}
+        operator={operator}
+        enableWrap={enableWrap}
+        enableTemplate={enableTemplate}
+      />
+    );
   }
 
   const changes = diffLine?.changes;
