@@ -224,7 +224,7 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
       ref={wrapperRef}
     >
       <DiffViewContext.Provider value={reactiveHook}>
-        <DiffWidgetContext.Provider value={widgetState}>
+        <DiffWidgetContext.Provider value={[widgetState, setWidgetState]}>
           <div class="diff-style-root" style={{ [diffFontSizeName]: (props.diffViewFontSize || 14) + "px" }}>
             <div
               id={isMounted() ? `diff-root${diffFile()?.getId()}` : undefined}

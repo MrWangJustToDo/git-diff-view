@@ -4,7 +4,7 @@ import type { DiffFile, SplitSide } from "@git-diff-view/core";
 
 export const DiffSplitAddWidget = (props: {
   index: number;
-  className?: string;
+  class?: string;
   lineNumber: number;
   diffFile: DiffFile;
   side: SplitSide;
@@ -15,7 +15,7 @@ export const DiffSplitAddWidget = (props: {
     <div
       class={
         "diff-add-widget-wrapper invisible select-none transition-transform hover:scale-110 group-hover:visible" +
-        (props.className ? " " + props.className : "")
+        (props.class ? " " + props.class : "")
       }
       style={{
         width: `calc(var(${diffFontSizeName}) * 1.4)`,

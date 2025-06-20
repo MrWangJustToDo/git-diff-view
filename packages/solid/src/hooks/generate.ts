@@ -1,6 +1,6 @@
-import { createEffect, createSignal, onCleanup, useContext } from "solid-js";
+import { createEffect, createSignal, onCleanup } from "solid-js";
 
-import { DiffViewContext } from "../components/DiffViewContext";
+import { useDiffViewContext } from "../components/DiffViewContext";
 
 import type { createDiffConfigStore } from "../components/tools";
 
@@ -10,7 +10,7 @@ type Data = ReturnType<ReturnType<typeof createDiffConfigStore>["getReadonlyStat
 
 export const generateHook = <T extends AllKey, K extends Data[T] = Data[T]>(key: T) => {
   return () => {
-    const reactiveHook = useContext(DiffViewContext);
+    const reactiveHook = useDiffViewContext();
 
     const [state, setState] = createSignal<K>(reactiveHook?.getReadonlyState()[key] as K);
 

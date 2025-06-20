@@ -326,6 +326,7 @@ const DiffSyntax = (props: {
 
 export const DiffContent = (props: {
   rawLine: string;
+  plainLine?: File["plainFile"][number];
   syntaxLine?: File["syntaxFile"][number];
   diffLine?: DiffLine;
   diffFile: DiffFile;
@@ -369,6 +370,7 @@ export const DiffContent = (props: {
           operator={getIsAdded() ? "add" : getIsDelete() ? "del" : undefined}
           rawLine={props.rawLine}
           diffLine={props.diffLine}
+          plainLine={props.plainLine}
           enableWrap={props.enableWrap}
           enableTemplate={getIsEnableTemplate()}
         />
