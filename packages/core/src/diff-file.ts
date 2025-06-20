@@ -1416,7 +1416,7 @@ export class DiffFile {
     this.#listeners.push(listener);
 
     return () => {
-      this.#listeners.filter((i) => i !== listener);
+      this.#listeners = this.#listeners.filter((i) => i !== listener);
     };
   };
 
