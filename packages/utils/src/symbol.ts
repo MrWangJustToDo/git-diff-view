@@ -7,7 +7,7 @@ export enum NewLineSymbol {
   NULL = 6,
 }
 
-export const getSymbol = (symbol: NewLineSymbol) => {
+export const getSymbol = (symbol: NewLineSymbol | string | null | undefined) => {
   switch (symbol) {
     case NewLineSymbol.LF:
       return "␊";
@@ -19,3 +19,12 @@ export const getSymbol = (symbol: NewLineSymbol) => {
       return "";
   }
 };
+
+export enum DiffModeEnum {
+  // github like
+  SplitGitHub = 1,
+  // gitlab like
+  SplitGitLab = 2,
+  Split = 1 | 2,
+  Unified = 4,
+}

@@ -40,6 +40,7 @@ export const DiffSplitWidgetLine = defineComponent(
       newLine.value = diffFile.getSplitRightLine(props.index);
     });
 
+    // TODO improve
     const currentIsShow = computed(
       () =>
         (!!oldLineWidget.value || !!newLineWidget.value) &&
