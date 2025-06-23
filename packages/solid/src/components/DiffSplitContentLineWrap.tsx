@@ -56,11 +56,11 @@ export const DiffSplitContentLine = (props: { index: number; diffFile: DiffFile;
       setNewSyntaxLine(props.diffFile.getNewSyntaxLine(newLine()?.lineNumber || 0));
       setOldPlainLine(props.diffFile.getOldPlainLine(oldLine()?.lineNumber || 0));
       setNewPlainLine(props.diffFile.getNewPlainLine(newLine()?.lineNumber || 0));
-      setHasDiff(!!oldLine()?.diff || !!newLine()?.diff);
-      setHasChange(checkDiffLineIncludeChange(oldLine()?.diff) || checkDiffLineIncludeChange(newLine()?.diff));
-      setHasHidden(oldLine()?.isHidden && newLine()?.isHidden);
-      setOldLineIsDelete(oldLine()?.diff?.type === DiffLineType.Delete);
-      setNewLineIsAdded(newLine()?.diff?.type === DiffLineType.Add);
+      setHasDiff(() => !!oldLine()?.diff || !!newLine()?.diff);
+      setHasChange(() => checkDiffLineIncludeChange(oldLine()?.diff) || checkDiffLineIncludeChange(newLine()?.diff));
+      setHasHidden(() => oldLine()?.isHidden && newLine()?.isHidden);
+      setOldLineIsDelete(() => oldLine()?.diff?.type === DiffLineType.Delete);
+      setNewLineIsAdded(() => newLine()?.diff?.type === DiffLineType.Add);
     };
 
     init();

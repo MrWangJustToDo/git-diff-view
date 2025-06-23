@@ -73,10 +73,10 @@ export const DiffSplitContentLine = (props: {
         ? props.diffFile.getOldPlainLine(currentLine()?.lineNumber || 0)
         : props.diffFile.getNewPlainLine(currentLine()?.lineNumber || 0)
     );
-    setCurrentLineHasDiff(!!currentLine()?.diff);
-    setCurrentLineHasChange(checkDiffLineIncludeChange(currentLine()?.diff));
-    setCurrentLineHasHidden(currentLine()?.isHidden);
-    setCurrentLineHasContent(currentLine()?.lineNumber);
+    setCurrentLineHasDiff(() => !!currentLine()?.diff);
+    setCurrentLineHasChange(() => checkDiffLineIncludeChange(currentLine()?.diff));
+    setCurrentLineHasHidden(() => currentLine()?.isHidden);
+    setCurrentLineHasContent(() => currentLine()?.lineNumber);
   };
 
   createEffect(() => {

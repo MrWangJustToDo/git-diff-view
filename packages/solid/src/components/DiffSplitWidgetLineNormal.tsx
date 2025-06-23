@@ -38,7 +38,7 @@ export const DiffSplitWidgetLine = (props: {
     const init = () => {
       setOldLine(props.diffFile.getSplitLeftLine(props.index));
       setNewLine(props.diffFile.getSplitRightLine(props.index));
-      setCurrentIsHidden(currentLine()?.isHidden);
+      setCurrentIsHidden(() => currentLine()?.isHidden);
     };
 
     init();

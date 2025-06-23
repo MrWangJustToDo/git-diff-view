@@ -96,6 +96,7 @@ const InternalDiffView = <T extends unknown>(
     style,
     diffViewMode,
     diffViewWrap,
+    diffViewTheme,
     diffViewFontSize,
     diffViewHighlight,
     renderWidgetLine,
@@ -209,13 +210,17 @@ const InternalDiffView = <T extends unknown>(
   ]);
 
   useEffect(() => {
-    const cb = diffFile.subscribe(() => {
+    const init = () => {
       wrapperRef.current?.setAttribute("data-theme", diffFile._getTheme() || "light");
       wrapperRef.current?.setAttribute("data-highlighter", diffFile._getHighlighterName());
-    });
+    }
+
+    init();
+
+    const cb = diffFile.subscribe(init);
 
     return cb;
-  }, [diffFile]);
+  }, [diffFile, diffViewTheme]);
 
   const value = useMemo(() => ({ useDiffContext }), [useDiffContext]);
 
@@ -315,7 +320,7 @@ const DiffViewWithRef = <T extends unknown>(
       diffFile.initSyntax({ registerHighlighter });
       diffFile.notifyAll();
     }
-  }, [diffFile, props.diffViewHighlight, registerHighlighter, diffViewTheme]);
+  }, [diffFile, props.diffViewHighlight, registerHighlighter]);
 
   // fix react strict mode error
   useUnmount(() => (__DEV__ ? diffFile?._destroy?.() : diffFile?.clear?.()), [diffFile]);
@@ -330,6 +335,7 @@ const DiffViewWithRef = <T extends unknown>(
       {...restProps}
       diffFile={diffFile}
       isMounted={isMounted}
+      diffViewTheme={diffViewTheme}
       diffViewMode={restProps.diffViewMode || DiffModeEnum.SplitGitHub}
       diffViewFontSize={restProps.diffViewFontSize || 14}
     />

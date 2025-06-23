@@ -15,9 +15,7 @@ export const generateHook = <T extends AllKey, K extends Data[T] = Data[T]>(key:
     const [state, setState] = createSignal<K>(reactiveHook?.getReadonlyState()[key] as K);
 
     createEffect(() => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      const init = () => setState(reactiveHook?.getReadonlyState()[key] as K);
+      const init = () => setState(() => reactiveHook?.getReadonlyState()[key] as K);
 
       init();
 

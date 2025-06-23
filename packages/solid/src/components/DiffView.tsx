@@ -99,7 +99,7 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
     return diffFile;
   };
 
-  let wrapperRef: HTMLDivElement | undefined;
+  const [wrapperRef, setWrapRef] = createSignal<HTMLDivElement | null>(null);
 
   const diffFile = createMemo(getInstance);
 
@@ -196,11 +196,17 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
   const initAttribute = () => {
     const mounted = isMounted();
     const currentDiffFile = diffFile();
-    if (mounted && currentDiffFile && wrapperRef) {
-      const cb = currentDiffFile.subscribe(() => {
-        wrapperRef?.setAttribute("data-theme", currentDiffFile._getTheme() || "light");
-        wrapperRef?.setAttribute("data-highlighter", currentDiffFile._getHighlighterName());
-      });
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    props.diffViewTheme;
+    if (mounted && currentDiffFile && wrapperRef()) {
+      const init = () => {
+        wrapperRef()?.setAttribute("data-theme", currentDiffFile._getTheme() || "light");
+        wrapperRef()?.setAttribute("data-highlighter", currentDiffFile._getHighlighterName());
+      };
+
+      init();
+
+      const cb = currentDiffFile.subscribe(init);
 
       onCleanup(() => cb());
     }
@@ -224,7 +230,7 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
         data-theme={diffFile()?._getTheme?.() || "light"}
         data-version={__VERSION__}
         data-highlighter={diffFile()?._getHighlighterName?.()}
-        ref={wrapperRef}
+        ref={setWrapRef}
       >
         <DiffViewContext.Provider value={reactiveHook}>
           <DiffWidgetContext.Provider value={[widgetState, setWidgetState]}>

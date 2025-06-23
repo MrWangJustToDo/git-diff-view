@@ -43,9 +43,9 @@ export const DiffSplitExtendLine = (props: {
       setOldLine(props.diffFile.getSplitLeftLine(props.index));
       setNewLine(props.diffFile.getSplitRightLine(props.index));
       setEnableExpand(props.diffFile.getExpandEnabled());
-      setOldLineExtend(extendData()?.oldFile?.[oldLine()?.lineNumber || ""]);
-      setNewLineExtend(extendData()?.newFile?.[newLine()?.lineNumber || ""]);
-      setCurrentIsHidden(currentItem()?.isHidden);
+      setOldLineExtend(() => extendData()?.oldFile?.[oldLine()?.lineNumber || ""]);
+      setNewLineExtend(() => extendData()?.newFile?.[newLine()?.lineNumber || ""]);
+      setCurrentIsHidden(() => currentItem()?.isHidden);
     };
 
     init();
@@ -89,7 +89,7 @@ export const DiffSplitExtendLine = (props: {
         data-side={SplitSide[props.side]}
         class="diff-line diff-line-extend"
       >
-        {currentExtend() ? (
+        {renderExtend() && currentExtend() ? (
           <td class={`diff-line-extend-${SplitSide[props.side]}-content p-0`} colspan={2}>
             <div
               data-line={`${props.lineNumber}-extend-content`}

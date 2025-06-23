@@ -38,26 +38,7 @@ export const createDiffConfigStore = (props: DiffViewProps<any>, diffFileId: str
     });
 
     const setExtendData = (_extendData: DiffViewProps<any>["extendData"]) => {
-      const existOldKeys = Object.keys(extendData.value.oldFile || {});
-      const inComingOldKeys = Object.keys(_extendData?.oldFile || {});
-      for (const key of existOldKeys) {
-        if (!inComingOldKeys.includes(key)) {
-          delete extendData.value.oldFile[key];
-        }
-      }
-      for (const key of inComingOldKeys) {
-        extendData.value.oldFile[key] = _extendData?.oldFile?.[key];
-      }
-      const existNewKeys = Object.keys(extendData.value.newFile || {});
-      const inComingNewKeys = Object.keys(_extendData?.newFile || {});
-      for (const key of existNewKeys) {
-        if (!inComingNewKeys.includes(key)) {
-          delete extendData.value.newFile[key];
-        }
-      }
-      for (const key of inComingNewKeys) {
-        extendData.value.newFile[key] = _extendData?.newFile?.[key];
-      }
+      extendData.value = { oldFile: { ..._extendData?.oldFile }, newFile: { ..._extendData?.newFile } };
     };
 
     const renderWidgetLine = ref(props.renderWidgetLine);

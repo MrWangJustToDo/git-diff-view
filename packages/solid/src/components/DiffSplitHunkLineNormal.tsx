@@ -57,9 +57,9 @@ const DiffSplitHunkLineGitHub = (props: { index: number; side: SplitSide; diffFi
     const init = () => {
       setCurrentHunk(props.diffFile.getSplitHunkLine(props.index));
       setEnableExpand(props.diffFile.getExpandEnabled());
-      setCouldExpand(enableExpand() && currentHunk()?.splitInfo);
-      setCurrentIsShow(checkCurrentIsShow());
-      setCurrentShowExpandAll(checkCurrentShowExpandAll());
+      setCouldExpand(() => enableExpand() && currentHunk()?.splitInfo);
+      setCurrentIsShow(checkCurrentIsShow);
+      setCurrentShowExpandAll(checkCurrentShowExpandAll);
     };
 
     init();
@@ -213,7 +213,7 @@ const DiffSplitHunkLineGitLab = (props: { index: number; side: SplitSide; diffFi
 
   const currentIsPureHunk = createMemo(() => {
     const hunk = currentHunk();
-    return hunk && !hunk.splitInfo;
+    return hunk && props.diffFile._getIsPureDiffRender() && !hunk.splitInfo;
   });
 
   const currentIsLastLine = createMemo(() => {
@@ -229,9 +229,9 @@ const DiffSplitHunkLineGitLab = (props: { index: number; side: SplitSide; diffFi
     const init = () => {
       setCurrentHunk(props.diffFile.getSplitHunkLine(props.index));
       setEnableExpand(props.diffFile.getExpandEnabled());
-      setCouldExpand(enableExpand() && currentHunk()?.splitInfo);
-      setCurrentIsShow(checkCurrentIsShow());
-      setCurrentShowExpandAll(checkCurrentShowExpandAll());
+      setCouldExpand(() => enableExpand() && currentHunk()?.splitInfo);
+      setCurrentIsShow(checkCurrentIsShow);
+      setCurrentShowExpandAll(checkCurrentShowExpandAll);
     };
 
     init();

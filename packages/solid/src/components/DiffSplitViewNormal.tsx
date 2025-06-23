@@ -110,9 +110,9 @@ const DiffSplitViewTable = (props: { side: SplitSide; diffFile: DiffFile; onSele
 export const DiffSplitViewNormal = (props: { diffFile: DiffFile }) => {
   const isMounted = useIsMounted();
 
-  let ref1 = null as HTMLDivElement | null;
+  const [ref1, setRef1] = createSignal<HTMLDivElement | null>(null);
 
-  let ref2 = null as HTMLDivElement | null;
+  const [ref2, setRef2] = createSignal<HTMLDivElement | null>(null);
 
   const [side, setSide] = createSignal<SplitSide | undefined>(undefined);
 
@@ -128,8 +128,8 @@ export const DiffSplitViewNormal = (props: { diffFile: DiffFile }) => {
 
   const initSyncScroll = () => {
     if (!isMounted()) return;
-    const left = ref1;
-    const right = ref2;
+    const left = ref1();
+    const right = ref2();
     if (!left || !right) return;
     const clean = syncScroll(left, right);
     onCleanup(clean);
@@ -156,7 +156,7 @@ export const DiffSplitViewNormal = (props: { diffFile: DiffFile }) => {
       </style>
       <div
         class="old-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
-        ref={(l) => (ref1 = l)}
+        ref={(l) => setRef1(l)}
         style={{
           [diffAsideWidthName]: `${Math.round(computedWidth())}px`,
           "overscroll-behavior-x": "none",
@@ -169,7 +169,7 @@ export const DiffSplitViewNormal = (props: { diffFile: DiffFile }) => {
       <div class="diff-split-line w-[1.5px]" style={{ "background-color": `var(${borderColorName})` }} />
       <div
         class="new-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
-        ref={(l) => (ref2 = l)}
+        ref={(l) => setRef2(l)}
         style={{
           [diffAsideWidthName]: `${Math.round(computedWidth())}px`,
           "overscroll-behavior-x": "none",

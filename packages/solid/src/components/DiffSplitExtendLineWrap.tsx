@@ -41,9 +41,9 @@ export const DiffSplitExtendLine = (props: { index: number; diffFile: DiffFile; 
       setOldLine(props.diffFile.getSplitLeftLine(props.index));
       setNewLine(props.diffFile.getSplitRightLine(props.index));
       setEnableExpand(props.diffFile.getExpandEnabled());
-      setOldLineExtend(extendData()?.oldFile?.[oldLine()?.lineNumber || ""]);
-      setNewLineExtend(extendData()?.newFile?.[newLine()?.lineNumber || ""]);
-      setCurrentIsShow(!!checkIsShow());
+      setOldLineExtend(() => extendData()?.oldFile?.[oldLine()?.lineNumber || ""]);
+      setNewLineExtend(() => extendData()?.newFile?.[newLine()?.lineNumber || ""]);
+      setCurrentIsShow(() => !!checkIsShow());
     };
 
     init();
@@ -56,7 +56,7 @@ export const DiffSplitExtendLine = (props: { index: number; diffFile: DiffFile; 
   return (
     <Show when={currentIsShow()}>
       <tr data-line={`${props.lineNumber}-extend`} data-state="extend" class="diff-line diff-line-extend">
-        {renderExtend() ? (
+        {renderExtend() && oldLineExtend() ? (
           <td class="diff-line-extend-old-content p-0" colspan={2}>
             <div class="diff-line-extend-wrapper">
               {renderExtend()?.({
@@ -75,7 +75,7 @@ export const DiffSplitExtendLine = (props: { index: number; diffFile: DiffFile; 
             colspan={2}
           />
         )}
-        {renderExtend() ? (
+        {renderExtend() && newLineExtend() ? (
           <td
             class="diff-line-extend-new-content border-l-[1px] p-0"
             colspan={2}
