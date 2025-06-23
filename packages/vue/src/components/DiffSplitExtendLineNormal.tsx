@@ -38,6 +38,8 @@ export const DiffSplitExtendLine = defineComponent(
 
     const currentItem = computed(() => (props.side === SplitSide.old ? oldLine.value : newLine.value));
 
+    const currentIsHidden = ref(currentItem.value.isHidden);
+
     useSubscribeDiffFile(props, (diffFile) => {
       oldLine.value = diffFile.getSplitLeftLine(props.index);
 
@@ -48,6 +50,8 @@ export const DiffSplitExtendLine = defineComponent(
       newLineExtend.value = extendData.value?.newFile?.[newLine.value.lineNumber];
 
       enableExpand.value = diffFile.getExpandEnabled();
+
+      currentIsHidden.value = currentItem.value.isHidden;
     });
 
     const currentExtend = computed(() => (props.side === SplitSide.old ? oldLineExtend.value : newLineExtend.value));
@@ -58,9 +62,7 @@ export const DiffSplitExtendLine = defineComponent(
 
     const currentIsShow = computed(() =>
       Boolean(
-        (oldLineExtend.value || newLineExtend.value) &&
-          (!currentItem.value.isHidden || enableExpand.value) &&
-          slots.extend
+        (oldLineExtend.value || newLineExtend.value) && (!currentIsHidden.value || enableExpand.value) && slots.extend
       )
     );
 

@@ -34,19 +34,18 @@ export const DiffSplitWidgetLine = defineComponent(
         widget.value.lineNumber === newLine.value.lineNumber
     );
 
+    const hasHidden = ref(oldLine.value.isHidden && newLine.value.isHidden);
+
     useSubscribeDiffFile(props, (diffFile) => {
       oldLine.value = diffFile.getSplitLeftLine(props.index);
 
       newLine.value = diffFile.getSplitRightLine(props.index);
+
+      hasHidden.value = oldLine.value.isHidden && newLine.value.isHidden;
     });
 
-    // TODO improve
     const currentIsShow = computed(
-      () =>
-        (!!oldLineWidget.value || !!newLineWidget.value) &&
-        !oldLine.value.isHidden &&
-        !newLine.value.isHidden &&
-        !!slots.widget
+      () => (!!oldLineWidget.value || !!newLineWidget.value) && !hasHidden.value && !!slots.widget
     );
 
     const onCloseWidget = () => setWidget({});

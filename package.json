@@ -27,6 +27,7 @@
   "devDependencies": {
     "@git-diff-view/core": "workspace:*",
     "@git-diff-view/react": "workspace:*",
+    "@git-diff-view/solid": "workspace:*",
     "@git-diff-view/vue": "workspace:*",
     "@git-diff-view/utils": "workspace:*",
     "@swc/core": "^1.10.15",

@@ -92,6 +92,15 @@ const start = async () => {
   await buildType("react");
   await copyCss("react", "diff-view.css");
   await copyCss("react", "diff-view-pure.css");
+  await new Promise<void>((r, j) => {
+    const ls = spawn(`cd packages/solid && pnpm run build`, { shell: true, stdio: "inherit" });
+    ls.on("close", () => r());
+    ls.on("error", (e) => j(e));
+  });
+  await buildCss("solid");
+  await buildType("solid");
+  await copyCss("solid", "diff-view.css");
+  await copyCss("solid", "diff-view-pure.css");
   // 对于 "jsx": "preserve" 最新的rollup已经不支持解析，因此使用vite来进行打包
   // https://github.com/rollup/plugins/issues/72
   // https://rollupjs.org/migration/#configuration-changes

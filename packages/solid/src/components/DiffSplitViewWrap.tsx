@@ -4,6 +4,11 @@ import { createEffect, createMemo, createSignal, onCleanup, For } from "solid-js
 
 import { useFontSize, useTextWidth } from "../hooks";
 
+import { DiffSplitContentLine } from "./DiffSplitContentLineWrap";
+import { DiffSplitExtendLine } from "./DiffSplitExtendLineWrap";
+import { DiffSplitHunkLine } from "./DiffSplitHunkLineWrap";
+import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineWrap";
+
 import type { DiffFile } from "@git-diff-view/core";
 
 const Style = (props: { splitSideInfo: { side?: SplitSide }; id: string }) => {

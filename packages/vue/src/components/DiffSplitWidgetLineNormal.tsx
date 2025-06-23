@@ -36,13 +36,17 @@ export const DiffSplitWidgetLine = defineComponent(
         widget.value.lineNumber === newLine.value.lineNumber
     );
 
+    const currentLine = computed(() => (props.side === SplitSide.old ? oldLine.value : newLine.value));
+
+    const currentIsHidden = ref(currentLine.value.isHidden);
+
     useSubscribeDiffFile(props, (diffFile) => {
       oldLine.value = diffFile.getSplitLeftLine(props.index);
 
       newLine.value = diffFile.getSplitRightLine(props.index);
-    });
 
-    const currentLine = computed(() => (props.side === SplitSide.old ? oldLine.value : newLine.value));
+      currentIsHidden.value = currentLine.value.isHidden;
+    });
 
     const lineSelector = computed(() => `div[data-line="${props.lineNumber}-widget-content"]`);
 
@@ -55,7 +59,7 @@ export const DiffSplitWidgetLine = defineComponent(
     const observeSide = computed(() => SplitSide[props.side]);
 
     const currentIsShow = computed(
-      () => (!!oldLineWidget.value || !!newLineWidget.value) && !currentLine.value.isHidden && !!slots.widget
+      () => (!!oldLineWidget.value || !!newLineWidget.value) && !currentIsHidden.value && !!slots.widget
     );
 
     const currentWidget = computed(

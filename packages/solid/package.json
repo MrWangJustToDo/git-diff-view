@@ -3,12 +3,14 @@
   "description": "@git-diff-view/solid",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.25",
-  "main": "index.js",
+  "version": "0.0.1",
+  "main": "./dist/solid-git-diff-view.mjs",
   "type": "module",
   "types": "index.d.ts",
   "files": [
+    "src",
     "dist",
+    "styles",
     "index.cjs",
     "index.d.ts"
   ],
@@ -19,7 +21,7 @@
   },
   "scripts": {
     "build": "vite build",
-    "gen:type": "dts-bundle-generator -o index.d.ts dist/index.d.ts",
+    "gen:type": "dts-bundle-generator -o index.d.ts dist/types/index.d.ts",
     "gen:css1": "postcss src/tailwind.css -o dist/css/diff-view.css",
     "gen:css2": "postcss src/tailwind_pure.css -o dist/css/diff-view-pure.css",
     "gen:css": "npm run gen:css1 && npm run gen:css2"
@@ -29,7 +31,7 @@
     ".": {
       "require": "./index.cjs",
       "types": "./index.d.ts",
-      "import": "./dist/vue-git-diff-view.mjs"
+      "import": "./dist/solid-git-diff-view.mjs"
     },
     "./styles/*": "./dist/css/*",
     "./package.json": "./package.json"

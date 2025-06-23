@@ -6,13 +6,10 @@ import solidPlugin from "vite-plugin-solid";
 import pkg from "./package.json";
 
 export default defineConfig({
-  plugins: [solidPlugin(), dts()],
-  server: {
-    port: 3000,
-  },
+  plugins: [solidPlugin(), dts({ outDir: "dist/types" })],
   build: {
     lib: {
-      entry: path.resolve(__dirname, "src/index.withStyle.ts"),
+      entry: path.resolve(__dirname, "src/index.ts"),
       name: "GitDiffView",
       formats: ["es", "cjs"],
       fileName: (format) =>
@@ -23,11 +20,9 @@ export default defineConfig({
             : `solid-git-diff-view.js`,
     },
     sourcemap: true,
+    minify: false,
     rollupOptions: {
       external: ["solid-js", "@git-diff-view/core"],
-      output: {
-        assetFileNames: "css/diff-view.css",
-      },
     },
   },
   define: {

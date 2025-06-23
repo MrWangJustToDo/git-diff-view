@@ -24,6 +24,8 @@ export const DiffSplitExtendLine = defineComponent(
 
     const newLineExtend = ref(extendData.value?.newFile?.[newLine.value.lineNumber]);
 
+    const hasHidden = ref(oldLine.value.isHidden && newLine.value.isHidden);
+
     useSubscribeDiffFile(props, (diffFile) => {
       oldLine.value = diffFile.getSplitLeftLine(props.index);
 
@@ -34,14 +36,12 @@ export const DiffSplitExtendLine = defineComponent(
       newLineExtend.value = extendData.value?.newFile?.[newLine.value.lineNumber];
 
       enableExpand.value = diffFile.getExpandEnabled();
+
+      hasHidden.value = oldLine.value.isHidden && newLine.value.isHidden;
     });
 
     const currentIsShow = computed(() =>
-      Boolean(
-        (oldLineExtend.value || newLineExtend.value) &&
-          ((!oldLine.value?.isHidden && !newLine.value?.isHidden) || enableExpand.value) &&
-          slots.extend
-      )
+      Boolean((oldLineExtend.value || newLineExtend.value) && (!hasHidden.value || enableExpand.value) && slots.extend)
     );
 
     return () => {

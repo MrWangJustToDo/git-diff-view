@@ -15,13 +15,15 @@ export const generateHook = <T extends AllKey, K extends Data[T] = Data[T]>(key:
     const [state, setState] = createSignal<K>(reactiveHook?.getReadonlyState()[key] as K);
 
     createEffect(() => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      const init = () => setState(reactiveHook?.getReadonlyState()[key] as K);
+
+      init();
+
       const unsubscribe = reactiveHook?.subscribe(
         (s) => s[key],
-        () => {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
-          setState(reactiveHook?.getReadonlyState()[key]);
-        }
+        () => init()
       );
 
       onCleanup(() => unsubscribe?.());

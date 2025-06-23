@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 import { _cacheMap, DiffFile, SplitSide } from "@git-diff-view/core";
 import { diffFontSizeName, DiffModeEnum } from "@git-diff-view/utils";
-import { type JSXElement, type JSX, createSignal, createEffect, createMemo, onCleanup } from "solid-js";
+import { type JSXElement, type JSX, createSignal, createEffect, createMemo, onCleanup, Show } from "solid-js";
 
+import { DiffSplitView } from "./DiffSplitView";
+import { DiffUnifiedView } from "./DiffUnifiedView";
 import { DiffViewContext } from "./DiffViewContext";
 import { DiffWidgetContext } from "./DiffWidgetContext";
 import { createDiffConfigStore } from "./tools";
@@ -215,32 +217,34 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
   onCleanup(() => reactiveHook.clear());
 
   return (
-    <div
-      class="diff-tailwindcss-wrapper"
-      data-component="git-diff-view"
-      data-theme={diffFile()?._getTheme?.() || "light"}
-      data-version={__VERSION__}
-      data-highlighter={diffFile()?._getHighlighterName?.()}
-      ref={wrapperRef}
-    >
-      <DiffViewContext.Provider value={reactiveHook}>
-        <DiffWidgetContext.Provider value={[widgetState, setWidgetState]}>
-          <div class="diff-style-root" style={{ [diffFontSizeName]: (props.diffViewFontSize || 14) + "px" }}>
-            <div
-              id={isMounted() ? `diff-root${diffFile()?.getId()}` : undefined}
-              class={"diff-view-wrapper" + (props.class ? ` ${props.class}` : "")}
-              style={props.style}
-            >
-              {/* {!props.diffViewMode || props.diffViewMode & DiffModeEnum.Split ? (
-            <DiffSplitView key={DiffModeEnum.Split} diffFile={diffFile.value as DiffFile} />
-          ) : (
-            <DiffUnifiedView key={DiffModeEnum.Unified} diffFile={diffFile.value as DiffFile} />
-          )} */}
+    <Show when={diffFile()}>
+      <div
+        class="diff-tailwindcss-wrapper"
+        data-component="git-diff-view"
+        data-theme={diffFile()?._getTheme?.() || "light"}
+        data-version={__VERSION__}
+        data-highlighter={diffFile()?._getHighlighterName?.()}
+        ref={wrapperRef}
+      >
+        <DiffViewContext.Provider value={reactiveHook}>
+          <DiffWidgetContext.Provider value={[widgetState, setWidgetState]}>
+            <div class="diff-style-root" style={{ [diffFontSizeName]: (props.diffViewFontSize || 14) + "px" }}>
+              <div
+                id={isMounted() ? `diff-root${diffFile()?.getId()}` : undefined}
+                class={"diff-view-wrapper" + (props.class ? ` ${props.class}` : "")}
+                style={props.style}
+              >
+                {!props.diffViewMode || props.diffViewMode & DiffModeEnum.Split ? (
+                  <DiffSplitView diffFile={diffFile() as DiffFile} />
+                ) : (
+                  <DiffUnifiedView diffFile={diffFile() as DiffFile} />
+                )}
+              </div>
             </div>
-          </div>
-        </DiffWidgetContext.Provider>
-      </DiffViewContext.Provider>
-    </div>
+          </DiffWidgetContext.Provider>
+        </DiffViewContext.Provider>
+      </div>
+    </Show>
   );
 };
 

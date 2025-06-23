@@ -19,16 +19,20 @@ export const DiffUnifiedExtendLine = defineComponent(
 
     const newExtend = ref(extendData.value?.newFile?.[unifiedItem.value.newLineNumber]);
 
+    const currentIsHidden = ref(unifiedItem.value.isHidden);
+
     useSubscribeDiffFile(props, (diffFile) => {
       unifiedItem.value = diffFile.getUnifiedLine(props.index);
 
       oldExtend.value = extendData.value?.oldFile?.[unifiedItem.value.oldLineNumber];
 
       newExtend.value = extendData.value?.newFile?.[unifiedItem.value.newLineNumber];
+
+      currentIsHidden.value = unifiedItem.value.isHidden;
     });
 
     const currentIsShow = computed(() =>
-      Boolean((oldExtend.value || newExtend.value) && !unifiedItem.value.isHidden && slots.extend)
+      Boolean((oldExtend.value || newExtend.value) && !currentIsHidden.value && slots.extend)
     );
 
     const width = useDomWidth({

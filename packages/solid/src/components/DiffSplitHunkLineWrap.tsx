@@ -22,7 +22,7 @@ const DiffSplitHunkLineGitHub = (props: { index: number; diffFile: DiffFile; lin
 
   const checkCurrentShowExpandAll = () => {
     const hunk = currentHunk();
-    return hunk && hunk.splitInfo && hunk.splitInfo.endHiddenIndex - hunk.splitInfo.startHiddenIndex >= composeLen;
+    return hunk && hunk.splitInfo && hunk.splitInfo.endHiddenIndex - hunk.splitInfo.startHiddenIndex < composeLen;
   };
 
   const [currentShowExpandAll, setCurrentShowExpandAll] = createSignal(checkCurrentShowExpandAll());
@@ -140,7 +140,7 @@ const DiffSplitHunkLineGitHub = (props: { index: number; diffFile: DiffFile; lin
               color: `var(${hunkContentColorName})`,
             }}
           >
-            {currentHunk().splitInfo?.plainText || currentHunk().text}
+            {currentHunk()?.splitInfo?.plainText || currentHunk()?.text}
           </div>
         </td>
       </tr>
@@ -157,7 +157,7 @@ const DiffSplitHunkLineGitLab = (props: { index: number; diffFile: DiffFile; lin
 
   const checkCurrentShowExpandAll = () => {
     const hunk = currentHunk();
-    return hunk && hunk.splitInfo && hunk.splitInfo.endHiddenIndex - hunk.splitInfo.startHiddenIndex >= composeLen;
+    return hunk && hunk.splitInfo && hunk.splitInfo.endHiddenIndex - hunk.splitInfo.startHiddenIndex < composeLen;
   };
 
   const [currentShowExpandAll, setCurrentShowExpandAll] = createSignal(checkCurrentShowExpandAll());
@@ -274,7 +274,7 @@ const DiffSplitHunkLineGitLab = (props: { index: number; diffFile: DiffFile; lin
               color: `var(${hunkContentColorName})`,
             }}
           >
-            {currentHunk().splitInfo?.plainText || currentHunk().text}
+            {currentHunk()?.splitInfo?.plainText || currentHunk()?.text}
           </div>
         </td>
         <td
@@ -348,7 +348,7 @@ const DiffSplitHunkLineGitLab = (props: { index: number; diffFile: DiffFile; lin
               color: `var(${hunkContentColorName})`,
             }}
           >
-            {currentHunk().splitInfo?.plainText || currentHunk().text}
+            {currentHunk()?.splitInfo?.plainText || currentHunk()?.text}
           </div>
         </td>
       </tr>
@@ -362,7 +362,7 @@ export const DiffSplitHunkLine = (props: { index: number; diffFile: DiffFile; li
   return (
     <Show
       when={mode() === DiffModeEnum.SplitGitHub || mode() === DiffModeEnum.Split}
-      fallback={<DiffSplitHunkLineGitLab {...props} />}
+      fallback={<DiffSplitHunkLineGitLab index={props.index} diffFile={props.diffFile} lineNumber={props.lineNumber} />}
     >
       <DiffSplitHunkLineGitHub index={props.index} diffFile={props.diffFile} lineNumber={props.lineNumber} />
     </Show>

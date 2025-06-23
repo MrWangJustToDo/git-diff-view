@@ -31,10 +31,16 @@ export const DiffUnifiedWidgetLine = defineComponent(
         widget.value.lineNumber === unifiedItem.value.newLineNumber
     );
 
-    useSubscribeDiffFile(props, (diffFile) => (unifiedItem.value = diffFile.getUnifiedLine(props.index)));
+    const currentIsHidden = ref(unifiedItem.value.isHidden);
+
+    useSubscribeDiffFile(props, (diffFile) => {
+      unifiedItem.value = diffFile.getUnifiedLine(props.index);
+      
+      currentIsHidden.value = unifiedItem.value.isHidden;
+    });
 
     const currentIsShow = computed(
-      () => (oldWidget.value || newWidget.value) && !unifiedItem.value.isHidden && !!slots.widget
+      () => (oldWidget.value || newWidget.value) && !currentIsHidden.value && !!slots.widget
     );
 
     const onCloseWidget = () => setWidget({});

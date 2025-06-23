@@ -1,6 +1,7 @@
 import { diffFontSizeName, addWidgetColorName, addWidgetBGName } from "@git-diff-view/utils";
 
 import type { DiffFile, SplitSide } from "@git-diff-view/core";
+import type { Accessor } from "solid-js";
 
 export const DiffSplitAddWidget = (props: {
   index: number;
@@ -9,7 +10,7 @@ export const DiffSplitAddWidget = (props: {
   diffFile: DiffFile;
   side: SplitSide;
   onOpenAddWidget: (lineNumber: number, side: SplitSide) => void;
-  onWidgetClick?: (event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void;
+  onWidgetClick?: Accessor<{ current?: (lineNumber: number, side: SplitSide) => void }>;
 }) => {
   return (
     <div
@@ -30,7 +31,7 @@ export const DiffSplitAddWidget = (props: {
         }}
         onClick={() => {
           props.onOpenAddWidget(props.lineNumber, props.side);
-          props.onWidgetClick?.("onAddWidgetClick", props.lineNumber, props.side);
+          props.onWidgetClick?.()?.current?.(props.lineNumber, props.side);
         }}
       >
         +
@@ -45,7 +46,7 @@ export const DiffUnifiedAddWidget = (props: {
   lineNumber: number;
   side: SplitSide;
   onOpenAddWidget: (lineNumber: number, side: SplitSide) => void;
-  onWidgetClick?: (event: "onAddWidgetClick", lineNumber: number, side: SplitSide) => void;
+  onWidgetClick?: Accessor<{ current?: (lineNumber: number, side: SplitSide) => void }>;
 }) => {
   return (
     <div
@@ -63,7 +64,7 @@ export const DiffUnifiedAddWidget = (props: {
         }}
         onClick={() => {
           props.onOpenAddWidget(props.lineNumber, props.side);
-          props.onWidgetClick?.("onAddWidgetClick", props.lineNumber, props.side);
+          props.onWidgetClick?.()?.current?.(props.lineNumber, props.side);
         }}
       >
         +
