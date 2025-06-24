@@ -44,7 +44,7 @@ const InternalDiffSplitLine = ({
 
   const hasDiff = !!currentLine?.diff;
 
-  const hasContent = !!currentLine.lineNumber;
+  const hasContent = !!currentLine?.lineNumber;
 
   const hasChange = checkDiffLineIncludeChange(currentLine?.diff);
 
@@ -109,8 +109,8 @@ const InternalDiffSplitLine = ({
             <DiffContent
               enableWrap={false}
               diffFile={diffFile}
-              rawLine={currentLine.value!}
-              diffLine={currentLine.diff}
+              rawLine={currentLine?.value || ''}
+              diffLine={currentLine?.diff}
               plainLine={plainLine}
               syntaxLine={syntaxLine}
               enableHighlight={enableHighlight}

@@ -44,9 +44,9 @@ export const DiffSplitContentLine = (props: { index: number; diffFile: DiffFile;
 
   const [hasHidden, setHasHidden] = createSignal(oldLine()?.isHidden && newLine()?.isHidden);
 
-  const [oldLineIsDelete, setOldLineIsDelete] = createSignal(oldLine()?.diff?.type === DiffLineType.Delete);
+  const oldLineIsDelete = () => oldLine()?.diff?.type === DiffLineType.Delete;
 
-  const [newLineIsAdded, setNewLineIsAdded] = createSignal(newLine()?.diff?.type === DiffLineType.Add);
+  const newLineIsAdded = () => newLine()?.diff?.type === DiffLineType.Add;
 
   createEffect(() => {
     const init = () => {
@@ -59,8 +59,6 @@ export const DiffSplitContentLine = (props: { index: number; diffFile: DiffFile;
       setHasDiff(() => !!oldLine()?.diff || !!newLine()?.diff);
       setHasChange(() => checkDiffLineIncludeChange(oldLine()?.diff) || checkDiffLineIncludeChange(newLine()?.diff));
       setHasHidden(() => oldLine()?.isHidden && newLine()?.isHidden);
-      setOldLineIsDelete(() => oldLine()?.diff?.type === DiffLineType.Delete);
-      setNewLineIsAdded(() => newLine()?.diff?.type === DiffLineType.Add);
     };
 
     init();

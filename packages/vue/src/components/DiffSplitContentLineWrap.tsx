@@ -46,10 +46,6 @@ export const DiffSplitContentLine = defineComponent(
 
     const hasHidden = ref(oldLine.value?.isHidden && newLine.value?.isHidden);
 
-    const oldLineIsDelete = ref(oldLine.value?.diff?.type === DiffLineType.Delete);
-
-    const newLineIsAdded = ref(newLine.value?.diff?.type === DiffLineType.Add);
-
     useSubscribeDiffFile(props, (diffFile) => {
       oldLine.value = diffFile.getSplitLeftLine(props.index);
 
@@ -69,10 +65,6 @@ export const DiffSplitContentLine = defineComponent(
         checkDiffLineIncludeChange(oldLine.value?.diff) || checkDiffLineIncludeChange(newLine.value?.diff);
 
       hasHidden.value = oldLine.value?.isHidden && newLine.value?.isHidden;
-
-      oldLineIsDelete.value = oldLine.value?.diff?.type === DiffLineType.Delete;
-
-      newLineIsAdded.value = newLine.value?.diff?.type === DiffLineType.Add;
     });
 
     const onOpenAddWidget = (lineNumber: number, side: SplitSide) => setWidget({ side: side, lineNumber: lineNumber });
@@ -84,13 +76,17 @@ export const DiffSplitContentLine = defineComponent(
 
       const hasNewLine = !!newLine.value?.lineNumber;
 
-      const oldLineContentBG = getContentBG(false, oldLineIsDelete.value, hasDiff.value);
+      const oldLineIsDelete = oldLine.value?.diff?.type === DiffLineType.Delete;
 
-      const oldLineNumberBG = getLineNumberBG(false, oldLineIsDelete.value, hasDiff.value);
+      const newLineIsAdded = newLine.value?.diff?.type === DiffLineType.Add;
 
-      const newLineContentBG = getContentBG(newLineIsAdded.value, false, hasDiff.value);
+      const oldLineContentBG = getContentBG(false, oldLineIsDelete, hasDiff.value);
 
-      const newLineNumberBG = getLineNumberBG(newLineIsAdded.value, false, hasDiff.value);
+      const oldLineNumberBG = getLineNumberBG(false, oldLineIsDelete, hasDiff.value);
+
+      const newLineContentBG = getContentBG(newLineIsAdded, false, hasDiff.value);
+
+      const newLineNumberBG = getLineNumberBG(newLineIsAdded, false, hasDiff.value);
 
       return (
         <tr data-line={props.lineNumber} data-state={hasDiff.value ? "diff" : "plain"} class="diff-line">
@@ -137,8 +133,8 @@ export const DiffSplitContentLine = defineComponent(
                 <DiffContent
                   enableWrap={true}
                   diffFile={props.diffFile}
-                  rawLine={oldLine.value.value}
-                  diffLine={oldLine.value.diff}
+                  rawLine={oldLine.value?.value}
+                  diffLine={oldLine.value?.diff}
                   plainLine={oldPlainLine.value}
                   syntaxLine={oldSyntaxLine.value}
                   enableHighlight={enableHighlight.value}
@@ -199,8 +195,8 @@ export const DiffSplitContentLine = defineComponent(
                 <DiffContent
                   enableWrap={true}
                   diffFile={props.diffFile}
-                  rawLine={newLine.value.value || ""}
-                  diffLine={newLine.value.diff}
+                  rawLine={newLine.value?.value || ""}
+                  diffLine={newLine.value?.diff}
                   plainLine={newPlainLine.value}
                   syntaxLine={newSyntaxLine.value}
                   enableHighlight={enableHighlight.value}

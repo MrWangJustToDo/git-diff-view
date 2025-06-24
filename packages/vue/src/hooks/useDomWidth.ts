@@ -4,7 +4,7 @@ import { useId, useIsMounted } from "../context";
 
 import type { Ref } from "vue";
 
-type ObserveElement = HTMLElement & {
+export type ObserveElement = HTMLElement & {
   __observeCallback: Set<() => void>;
   __observeInstance: ResizeObserver;
 };

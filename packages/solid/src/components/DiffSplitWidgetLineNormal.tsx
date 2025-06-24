@@ -30,7 +30,7 @@ export const DiffSplitWidgetLine = (props: {
       !!newLine()?.lineNumber && widget?.()?.side === SplitSide.new && widget?.()?.lineNumber === newLine()?.lineNumber
   );
 
-  const currentLine = createMemo(() => (props.side === SplitSide.old ? oldLine() : newLine()));
+  const [currentLine, setCUrrentLine] = createSignal(props.side === SplitSide.old ? oldLine() : newLine());
 
   const [currentIsHidden, setCurrentIsHidden] = createSignal(currentLine()?.isHidden);
 
@@ -38,6 +38,7 @@ export const DiffSplitWidgetLine = (props: {
     const init = () => {
       setOldLine(props.diffFile.getSplitLeftLine(props.index));
       setNewLine(props.diffFile.getSplitRightLine(props.index));
+      setCUrrentLine(() => (props.side === SplitSide.old ? oldLine() : newLine()));
       setCurrentIsHidden(() => currentLine()?.isHidden);
     };
 
@@ -56,15 +57,17 @@ export const DiffSplitWidgetLine = (props: {
     props.side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper"
   );
 
-  const observeSide = createMemo(() => SplitSide[props.side]);
+  const currentWidget = createMemo(() => (props.side === SplitSide.old ? oldLineWidget() : newLineWidget()));
+
+  const observeSide = createMemo(
+    () => SplitSide[currentWidget() ? props.side : props.side === SplitSide.old ? SplitSide.new : SplitSide.old]
+  );
 
   const currentIsShow = createMemo(
     () => (!!oldLineWidget() || !!newLineWidget()) && !currentIsHidden() && !newLine()?.isHidden && !!renderWidget
   );
 
-  const currentWidget = createMemo(
-    () => (props.side === SplitSide.old ? oldLineWidget() : newLineWidget()) && !!currentIsShow()
-  );
+  const currentEnable = createMemo(() => currentWidget() && !!currentIsShow());
 
   const onCloseWidget = () => setWidget?.({});
 
@@ -77,7 +80,7 @@ export const DiffSplitWidgetLine = (props: {
 
   const width = useDomWidth({
     selector: wrapperSelector,
-    enable: currentWidget,
+    enable: currentEnable,
   });
 
   return (

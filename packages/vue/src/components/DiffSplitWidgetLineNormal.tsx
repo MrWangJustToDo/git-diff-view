@@ -36,7 +36,7 @@ export const DiffSplitWidgetLine = defineComponent(
         widget.value.lineNumber === newLine.value.lineNumber
     );
 
-    const currentLine = computed(() => (props.side === SplitSide.old ? oldLine.value : newLine.value));
+    const currentLine = ref(props.side === SplitSide.old ? oldLine.value : newLine.value);
 
     const currentIsHidden = ref(currentLine.value.isHidden);
 
@@ -44,6 +44,8 @@ export const DiffSplitWidgetLine = defineComponent(
       oldLine.value = diffFile.getSplitLeftLine(props.index);
 
       newLine.value = diffFile.getSplitRightLine(props.index);
+
+      currentLine.value = props.side === SplitSide.old ? oldLine.value : newLine.value;
 
       currentIsHidden.value = currentLine.value.isHidden;
     });
@@ -56,15 +58,17 @@ export const DiffSplitWidgetLine = defineComponent(
       props.side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper"
     );
 
-    const observeSide = computed(() => SplitSide[props.side]);
+    const currentWidget = computed(() => (props.side === SplitSide.old ? oldLineWidget.value : newLineWidget.value));
+
+    const observeSide = computed(
+      () => SplitSide[currentWidget ? props.side : props.side === SplitSide.old ? SplitSide.new : SplitSide.old]
+    );
 
     const currentIsShow = computed(
       () => (!!oldLineWidget.value || !!newLineWidget.value) && !currentIsHidden.value && !!slots.widget
     );
 
-    const currentWidget = computed(
-      () => (props.side === SplitSide.old ? oldLineWidget.value : newLineWidget.value) && !!currentIsShow.value
-    );
+    const currentEnable = computed(() => currentWidget.value && !!currentIsShow.value);
 
     const onCloseWidget = () => setWidget({});
 
@@ -77,7 +81,7 @@ export const DiffSplitWidgetLine = defineComponent(
 
     const width = useDomWidth({
       selector: wrapperSelector,
-      enable: currentWidget,
+      enable: currentEnable,
     });
 
     return () => {

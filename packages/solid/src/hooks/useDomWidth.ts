@@ -3,7 +3,7 @@ import { createEffect, createSignal, onCleanup, type Accessor } from "solid-js";
 import { useId } from "./useId";
 import { useIsMounted } from "./useIsMounted";
 
-type ObserveElement = HTMLElement & {
+export type ObserveElement = HTMLElement & {
   __observeCallback?: Set<() => void>;
   __observeInstance?: ResizeObserver;
 };
