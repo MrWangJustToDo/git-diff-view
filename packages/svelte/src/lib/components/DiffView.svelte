@@ -1,6 +1,5 @@
 <script lang="ts" generics="T extends any">
 	import { diffFontSizeName, DiffModeEnum } from '@git-diff-view/utils';
-
 	import { DiffFile, type DiffHighlighter, SplitSide } from '@git-diff-view/core';
 	import type { Snippet } from 'svelte';
 
