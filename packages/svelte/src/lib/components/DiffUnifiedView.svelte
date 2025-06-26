@@ -1,0 +1,104 @@
+<script lang="ts">
+	import { getEnableWrap } from '$lib/context/enableWrap.js';
+	import { getFontSize } from '$lib/context/fontSize.js';
+	import { useTextWidth } from '$lib/hooks/useTextWidth.svelte.js';
+	import { getUnifiedContentLine, type DiffFile } from '@git-diff-view/core';
+	import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from '@git-diff-view/utils';
+
+	interface Props {
+		diffFile: DiffFile;
+	}
+
+	const props: Props = $props();
+
+	let lines = $state(getUnifiedContentLine(props.diffFile));
+
+	let maxText = $state(props.diffFile.unifiedLineLength.toString());
+
+	let styleRef = $state<HTMLStyleElement | null>(null);
+
+	const fontSize = $derived.by(getFontSize);
+
+	const enableWrap = $derived.by(getEnableWrap);
+
+	const unSubscribe = { current: () => {} };
+
+	const init = () => {
+		const diffFile = props.diffFile;
+		lines = getUnifiedContentLine(diffFile);
+		maxText = diffFile.unifiedLineLength.toString();
+	};
+
+	$effect(() => {
+		unSubscribe.current?.();
+
+		init();
+
+		unSubscribe.current = props.diffFile.subscribe(init);
+	});
+
+	const onMouseDown = (e: MouseEvent) => {
+		let ele = e.target as HTMLElement | null;
+
+		if (!styleRef) return;
+
+		if (ele && ele?.nodeName === 'BUTTON') {
+			removeAllSelection();
+			return;
+		}
+
+		while (ele && ele instanceof HTMLElement) {
+			const state = ele.getAttribute('data-state');
+			if (state) {
+				if (state === 'extend' || state === 'hunk' || state === 'widget') {
+					styleRef.innerHTML = '';
+					removeAllSelection();
+				} else {
+					styleRef.innerHTML = `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`
+					removeAllSelection();
+				}
+				return;
+			}
+			ele = ele.parentElement;
+		}
+	};
+
+	const font = $derived.by(() => ({
+		fontSize: fontSize + 'px',
+		fontFamily: 'Menlo, Consolas, monospace'
+	}));
+
+	const width = useTextWidth({ text: () => maxText, font: () => font });
+
+	const computedWidth = $derived.by(() => Math.max(40, width() + 10));
+
+	const id = $derived.by(() => `diff-root${props.diffFile.getId()}`);
+</script>
+
+<div
+	class={`unified-diff-view ${enableWrap ? 'unified-diff-view-wrap' : 'unified-diff-view-normal'} w-full`}
+>
+	<style data-select-style {@attach (e) => (styleRef = e)}></style>
+	<div
+		class="unified-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
+		style={`${diffAsideWidthName}: ${Math.round(computedWidth)}px, font-family: Menlo, Consolas, monospace, font-size: var(${diffFontSizeName})`}
+	>
+		<table
+			class={`unified-diff-table w-full border-collapse border-spacing-0 ${enableWrap ? 'table-fixed' : ''}`}
+		>
+			<colgroup>
+				<col class="unified-diff-table-num-col" />
+				<col class="unified-diff-table-content-col" />
+			</colgroup>
+			<thead class="hidden">
+				<tr>
+					<th scope="col">line number</th>
+					<th scope="col">line content</th>
+				</tr>
+			</thead>
+			<tbody class="diff-table-body leading-[1.4]" onmousedown={onMouseDown}>
+
+			</tbody>
+		</table>
+	</div>
+</div>
