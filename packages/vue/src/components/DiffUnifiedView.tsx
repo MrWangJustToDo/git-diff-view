@@ -17,18 +17,32 @@ export const DiffUnifiedView = defineComponent(
   (props: { diffFile: DiffFile }) => {
     const lines = ref(getUnifiedContentLine(props.diffFile));
 
-    const maxText = ref(props.diffFile.unifiedLineLength.toString());
+    const maxText = computed(() =>
+      Math.max(props.diffFile.unifiedLineLength, props.diffFile.fileLineLength).toString()
+    );
 
     useSubscribeDiffFile(props, (diffFile) => {
       lines.value = getUnifiedContentLine(diffFile);
-      maxText.value = Math.max(diffFile.splitLineLength, diffFile.fileLineLength).toString();
     });
 
     const fontSize = useFontSize();
 
     const enableWrap = useEnableWrap();
 
-    const stateRef = ref<boolean>();
+    const styleRef = ref<HTMLStyleElement | null>(null);
+
+    const onSelect = (state?: boolean) => {
+      const ele = styleRef.value;
+
+      if (!ele) return;
+
+      if (state === undefined) {
+        ele.textContent = "";
+      } else {
+        const id = `diff-root${props.diffFile.getId()}`;
+        ele.textContent = `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`;
+      }
+    };
 
     const onMouseDown = (e: MouseEvent) => {
       let ele = e.target as HTMLElement;
@@ -42,10 +56,10 @@ export const DiffUnifiedView = defineComponent(
         const state = ele.getAttribute("data-state");
         if (state) {
           if (state === "extend" || state === "hunk" || state === "widget") {
-            stateRef.value = false;
+            onSelect(undefined);
             removeAllSelection();
           } else {
-            stateRef.value = true;
+            onSelect(true);
             removeAllSelection();
           }
           return;
@@ -61,17 +75,11 @@ export const DiffUnifiedView = defineComponent(
     const computedWidth = computed(() => Math.max(40, width.value + 10));
 
     return () => {
-      const id = `diff-root${props.diffFile.getId()}`;
-
       return (
         <div
           class={`unified-diff-view ${enableWrap.value ? "unified-diff-view-wrap" : "unified-diff-view-normal"} w-full`}
         >
-          <style data-select-style>
-            {stateRef.value
-              ? `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`
-              : ""}
-          </style>
+          <style data-select-style ref={styleRef} />
           <div
             class="unified-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
             style={{

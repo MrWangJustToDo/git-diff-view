@@ -1,6 +1,6 @@
 import { SplitSide, type DiffFile } from "@git-diff-view/core";
 import { borderColorName, emptyBGName } from "@git-diff-view/utils";
-import { createEffect, createSignal, onCleanup, Show } from "solid-js";
+import { createMemo, Show } from "solid-js";
 
 import { useExtendData, useRenderExtend } from "../hooks";
 
@@ -9,15 +9,15 @@ export const DiffSplitExtendLine = (props: { index: number; diffFile: DiffFile; 
 
   const renderExtend = useRenderExtend();
 
-  const [oldLine, setOldLine] = createSignal(props.diffFile.getSplitLeftLine(props.index));
+  const oldLine = createMemo(() => props.diffFile.getSplitLeftLine(props.index));
 
-  const [newLine, setNewLine] = createSignal(props.diffFile.getSplitRightLine(props.index));
+  const newLine = createMemo(() => props.diffFile.getSplitRightLine(props.index));
 
-  const [enableExpand, setEnableExpand] = createSignal(props.diffFile.getExpandEnabled());
+  const enableExpand = createMemo(() => props.diffFile.getExpandEnabled());
 
-  const [oldLineExtend, setOldLineExtend] = createSignal(extendData()?.oldFile?.[oldLine()?.lineNumber || ""]);
+  const oldLineExtend = createMemo(() => extendData()?.oldFile?.[oldLine()?.lineNumber || ""]);
 
-  const [newLineExtend, setNewLineExtend] = createSignal(extendData()?.newFile?.[newLine()?.lineNumber || ""]);
+  const newLineExtend = createMemo(() => extendData()?.newFile?.[newLine()?.lineNumber || ""]);
 
   const checkIsShow = () => {
     const oldExtend = oldLineExtend();
@@ -34,24 +34,7 @@ export const DiffSplitExtendLine = (props: { index: number; diffFile: DiffFile; 
     );
   };
 
-  const [currentIsShow, setCurrentIsShow] = createSignal(!!checkIsShow());
-
-  createEffect(() => {
-    const init = () => {
-      setOldLine(props.diffFile.getSplitLeftLine(props.index));
-      setNewLine(props.diffFile.getSplitRightLine(props.index));
-      setEnableExpand(props.diffFile.getExpandEnabled());
-      setOldLineExtend(() => extendData()?.oldFile?.[oldLine()?.lineNumber || ""]);
-      setNewLineExtend(() => extendData()?.newFile?.[newLine()?.lineNumber || ""]);
-      setCurrentIsShow(() => !!checkIsShow());
-    };
-
-    init();
-
-    const cb = props.diffFile.subscribe(init);
-
-    onCleanup(cb);
-  });
+  const currentIsShow = createMemo(checkIsShow);
 
   return (
     <Show when={currentIsShow()}>

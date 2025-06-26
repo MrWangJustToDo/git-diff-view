@@ -14,25 +14,26 @@ import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineWrap";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const Style = ({ splitSideInfo, id }: { splitSideInfo: { side: SplitSide }; id: string }) => {
-  return (
-    <style data-select-style>
-      {splitSideInfo.side === SplitSide.old
-        ? `#${id} [data-side="${SplitSide[SplitSide.new]}"] {user-select: none} \n#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`
-        : splitSideInfo.side === SplitSide.new
-          ? `#${id} [data-side="${SplitSide[SplitSide.old]}"] {user-select: none} \n#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`
-          : ""}
-    </style>
-  );
-};
-
 export const DiffSplitViewWrap = defineComponent(
   (props: { diffFile: DiffFile }) => {
     const lines = ref(getSplitContentLines(props.diffFile));
 
-    const maxText = ref(props.diffFile.splitLineLength.toString());
+    const maxText = computed(() => Math.max(props.diffFile.splitLineLength, props.diffFile.fileLineLength).toString());
 
-    const splitSideInfo = ref({ side: undefined as SplitSide });
+    const styleRef = ref<HTMLStyleElement | null>(null);
+
+    const onSelect = (side?: SplitSide) => {
+      const ele = styleRef.value;
+
+      if (!ele) return;
+
+      if (!side) {
+        ele.textContent = "";
+      } else {
+        const id = `diff-root${props.diffFile.getId()}`;
+        ele.textContent = `#${id} [data-side="${SplitSide[side === SplitSide.old ? SplitSide.new : SplitSide.old]}"] {user-select: none} \n#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`;
+      }
+    };
 
     const onMouseDown = (e: MouseEvent) => {
       let ele = e.target;
@@ -47,12 +48,12 @@ export const DiffSplitViewWrap = defineComponent(
         const state = ele.getAttribute("data-state");
         const side = ele.getAttribute("data-side");
         if (side) {
-          splitSideInfo.value.side = SplitSide[side];
+          onSelect(SplitSide[side]);
           removeAllSelection();
         }
         if (state) {
           if (state === "extend" || state === "hunk" || state === "widget") {
-            splitSideInfo.value.side = undefined;
+            onSelect(undefined);
             removeAllSelection();
             return;
           } else {
@@ -70,7 +71,6 @@ export const DiffSplitViewWrap = defineComponent(
 
     useSubscribeDiffFile(props, (diffFile) => {
       lines.value = getSplitContentLines(diffFile);
-      maxText.value = Math.max(diffFile.splitLineLength, diffFile.fileLineLength).toString();
     });
 
     const width = useTextWidth({ text: maxText, font });
@@ -88,7 +88,7 @@ export const DiffSplitViewWrap = defineComponent(
               fontSize: `var(${diffFontSizeName})`,
             }}
           >
-            <Style splitSideInfo={splitSideInfo.value} id={`diff-root${props.diffFile.getId()}`} />
+            <style data-select-style ref={styleRef} />
             <table class="diff-table w-full table-fixed border-collapse border-spacing-0">
               <colgroup>
                 <col class="diff-table-old-num-col" width={Math.round(computedWidth.value)} />

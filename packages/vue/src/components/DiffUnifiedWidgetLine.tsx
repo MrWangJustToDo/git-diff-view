@@ -3,7 +3,6 @@ import { computed, defineComponent, ref } from "vue";
 import { SplitSide } from "..";
 import { useSetWidget, useSlots, useWidget } from "../context";
 import { useDomWidth } from "../hooks/useDomWidth";
-import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 
 import type { DiffFile } from "@git-diff-view/core";
 
@@ -15,7 +14,7 @@ export const DiffUnifiedWidgetLine = defineComponent(
 
     const setWidget = useSetWidget();
 
-    const unifiedItem = ref(props.diffFile.getUnifiedLine(props.index));
+    const unifiedItem = computed(() => props.diffFile.getUnifiedLine(props.index));
 
     const oldWidget = computed(
       () =>
@@ -31,13 +30,7 @@ export const DiffUnifiedWidgetLine = defineComponent(
         widget.value.lineNumber === unifiedItem.value.newLineNumber
     );
 
-    const currentIsHidden = ref(unifiedItem.value.isHidden);
-
-    useSubscribeDiffFile(props, (diffFile) => {
-      unifiedItem.value = diffFile.getUnifiedLine(props.index);
-      
-      currentIsHidden.value = unifiedItem.value.isHidden;
-    });
+    const currentIsHidden = computed(() => unifiedItem.value.isHidden);
 
     const currentIsShow = computed(
       () => (oldWidget.value || newWidget.value) && !currentIsHidden.value && !!slots.widget

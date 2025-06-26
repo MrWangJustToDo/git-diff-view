@@ -7,7 +7,7 @@ import {
   getLineNumberBG,
   plainLineNumberColorName,
 } from "@git-diff-view/utils";
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 
 import { useEnableAddWidget, useEnableHighlight, useOnAddWidgetClick, useSetWidget } from "../context";
 import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
@@ -26,9 +26,9 @@ export const DiffSplitContentLine = defineComponent(
 
     const onAddWidgetClick = useOnAddWidgetClick();
 
-    const oldLine = ref(props.diffFile.getSplitLeftLine(props.index));
+    const oldLine = computed(() => props.diffFile.getSplitLeftLine(props.index));
 
-    const newLine = ref(props.diffFile.getSplitRightLine(props.index));
+    const newLine = computed(() => props.diffFile.getSplitRightLine(props.index));
 
     const oldSyntaxLine = ref(props.diffFile.getOldSyntaxLine(oldLine.value?.lineNumber));
 
@@ -38,19 +38,15 @@ export const DiffSplitContentLine = defineComponent(
 
     const newPlainLine = ref(props.diffFile.getNewPlainLine(newLine.value.lineNumber));
 
-    const hasDiff = ref(!!oldLine.value?.diff || !!newLine.value?.diff);
+    const hasDiff = computed(() => !!oldLine.value?.diff || !!newLine.value?.diff);
 
-    const hasChange = ref(
-      checkDiffLineIncludeChange(oldLine.value?.diff) || checkDiffLineIncludeChange(newLine.value?.diff)
+    const hasChange = computed(
+      () => checkDiffLineIncludeChange(oldLine.value?.diff) || checkDiffLineIncludeChange(newLine.value?.diff)
     );
 
-    const hasHidden = ref(oldLine.value?.isHidden && newLine.value?.isHidden);
+    const hasHidden = computed(() => oldLine.value?.isHidden && newLine.value?.isHidden);
 
     useSubscribeDiffFile(props, (diffFile) => {
-      oldLine.value = diffFile.getSplitLeftLine(props.index);
-
-      newLine.value = diffFile.getSplitRightLine(props.index);
-
       oldSyntaxLine.value = diffFile.getOldSyntaxLine(oldLine.value?.lineNumber);
 
       newSyntaxLine.value = diffFile.getNewSyntaxLine(newLine.value?.lineNumber);
@@ -58,13 +54,6 @@ export const DiffSplitContentLine = defineComponent(
       oldPlainLine.value = diffFile.getOldPlainLine(oldLine.value.lineNumber);
 
       newPlainLine.value = diffFile.getNewPlainLine(newLine.value.lineNumber);
-
-      hasDiff.value = !!oldLine.value?.diff || !!newLine.value?.diff;
-
-      hasChange.value =
-        checkDiffLineIncludeChange(oldLine.value?.diff) || checkDiffLineIncludeChange(newLine.value?.diff);
-
-      hasHidden.value = oldLine.value?.isHidden && newLine.value?.isHidden;
     });
 
     const onOpenAddWidget = (lineNumber: number, side: SplitSide) => setWidget({ side: side, lineNumber: lineNumber });

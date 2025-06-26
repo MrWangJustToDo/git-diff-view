@@ -26,10 +26,6 @@
 
 	let props: Props = $props();
 
-	let change = () => props.diffLine?.changes;
-
-	const getRange = () => props.diffLine?.changes?.range;
-
 	const initTemplate = () => {
 		if (props.diffLine?.changes?.hasLineChange) {
 			if (
@@ -52,49 +48,7 @@
 		}
 	};
 
-	const isNewLineSymbolChanged = () => props.diffLine?.changes?.newLineSymbol;
-
 	initTemplate();
-
-	const getIndex1 = (node: File['syntaxFile'][number]['nodeList'][number]['node']) => {
-		const range = getRange();
-		if (!range) return 0;
-		return range.location - node.startIndex;
-	};
-
-	const getIndex2 = (node: File['syntaxFile'][number]['nodeList'][number]['node']) => {
-		const i1 = getIndex1(node);
-		return i1 < 0 ? 0 : i1;
-	};
-
-	const getStr1 = (node: File['syntaxFile'][number]['nodeList'][number]['node']) => {
-		const index2 = getIndex2(node);
-		return node?.value?.substring(0, index2);
-	};
-
-	const getStr2 = (node: File['syntaxFile'][number]['nodeList'][number]['node']) => {
-		const index1 = getIndex1(node);
-		const index2 = getIndex2(node);
-		return node?.value?.substring(index2, index1 + getRange()!.length);
-	};
-
-	const getStr3 = (node: File['syntaxFile'][number]['nodeList'][number]['node']) => {
-		const index1 = getIndex1(node);
-		return node?.value?.substring(index1 + getRange()!.length);
-	};
-
-	const isStart = (str1: string, node: File['syntaxFile'][number]['nodeList'][number]['node']) => {
-		return str1.length || getRange()?.location === node.startIndex;
-	};
-
-	const isEnd = (str3: string, node: File['syntaxFile'][number]['nodeList'][number]['node']) => {
-		return str3.length || getRange()!.location + getRange()!.length - 1 === node.endIndex;
-	};
-
-	const isLast = (str2: string) => str2.includes('\n');
-
-	const get_Str2 = (isLast: boolean, str2: string) =>
-		isLast ? str2.replace('\n', '').replace('\r', '') : str2;
 </script>
 
 {#if !props.syntaxLine}
@@ -111,7 +65,7 @@
 			<span data-template>
 				{@html props.diffLine.syntaxTemplate}
 			</span>
-			{#if isNewLineSymbolChanged() === NewLineSymbol.NEWLINE}
+			{#if props.diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE}
 				<span
 					data-no-newline-at-end-of-file-symbol
 					class={props.enableWrap
@@ -133,7 +87,8 @@
 				data-range-end={props.diffLine.changes.range.location + props.diffLine.changes.range.length}
 			>
 				{#each props.syntaxLine.nodeList as { node, wrapper }}
-					{#if node.endIndex < getRange()!.location || getRange()!.location + getRange()!.length < node.startIndex}
+					{@const range = props.diffLine.changes.range}
+					{#if node.endIndex < range.location || range.location + range.length < node.startIndex}
 						<span
 							data-start={node.startIndex}
 							data-end={node.endIndex}
@@ -143,37 +98,46 @@
 							{node.value}
 						</span>
 					{:else}
+						{@const index1 = range.location - node.startIndex}
+						{@const index2 = index1 < 0 ? 0 : index1}
+						{@const str1 = node.value.substring(0, index2)}
+						{@const str2 = node.value.substring(index2, index1 + range.length)}
+						{@const str3 = node.value.substring(index1 + range.length)}
+						{@const isStart = str1.length || range.location === node.startIndex}
+						{@const isEnd = str3.length || range.location + range.length - 1 === node.endIndex}
+						{@const isLast = str2.includes('\n')}
+						{@const _str2 = isLast ? str2.replace('\n', '').replace('\r', '') : str2}
 						<span
 							data-start={node.startIndex}
 							data-end={node.endIndex}
 							class={wrapper?.properties?.className?.join(' ')}
 							style={wrapper?.properties?.style}
 						>
-							{getStr1(node)}
+							{str1}
 							<span
 								data-diff-highlight
 								style={`
                         background-color:
                           ${props.operator === 'add' ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`},
-                        border-top-left-radius: ${isStart(getStr1(node), node) ? '0.2em' : undefined},
-                        border-bottom-left-radius: ${isStart(getStr1(node), node) ? '0.2em' : undefined},
-                        border-top-right-radius: ${isEnd(getStr3(node), node) || isLast(getStr2(node)) ? '0.2em' : undefined},
-                        border-bottom-right-radius: ${isEnd(getStr3(node), node) || isLast(getStr2(node)) ? '0.2em' : undefined},
+                        border-top-left-radius: ${isStart ? '0.2em' : undefined},
+                        border-bottom-left-radius: ${isStart ? '0.2em' : undefined},
+                        border-top-right-radius: ${isEnd || isLast ? '0.2em' : undefined},
+                        border-bottom-right-radius: ${isEnd || isLast ? '0.2em' : undefined},
                       `}
 							>
-								{#if isLast(getStr2(node))}
-									{get_Str2(isLast(getStr2(node)), getStr2(node))}
-									<span data-newline-symbol>{getSymbol(isNewLineSymbolChanged())}</span>
+								{#if isLast}
+									{_str2}
+									<span data-newline-symbol>{getSymbol(props.diffLine.changes.newLineSymbol)}</span>
 								{:else}
-									{getStr2(node)}
+									{str2}
 								{/if}
 							</span>
-							{getStr3(node)}
+							{str3}
 						</span>
 					{/if}
 				{/each}
 			</span>
-			{#if isNewLineSymbolChanged() === NewLineSymbol.NEWLINE}
+			{#if props.diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE}
 				<span
 					data-no-newline-at-end-of-file-symbol
 					class={props.enableWrap

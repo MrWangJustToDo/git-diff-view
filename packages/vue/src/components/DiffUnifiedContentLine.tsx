@@ -11,7 +11,7 @@ import {
   plainLineNumberColorName,
   expandLineNumberColorName,
 } from "@git-diff-view/utils";
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 
 import { SplitSide } from "..";
 import { useEnableAddWidget, useEnableHighlight, useEnableWrap, useOnAddWidgetClick, useSetWidget } from "../context";
@@ -50,7 +50,7 @@ const DiffUnifiedOldLine = ({
   return (
     <tr data-line={index} data-state="diff" class="diff-line group">
       <td
-        class="diff-line-num sticky z-[1] left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
+        class="diff-line-num sticky left-0 z-[1] w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
         style={{
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${delLineNumberBGName})`,
@@ -122,7 +122,7 @@ const DiffUnifiedNewLine = ({
   return (
     <tr data-line={index} data-state="diff" class="diff-line group">
       <td
-        class="diff-line-num sticky z-[1] left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
+        class="diff-line-num sticky left-0 z-[1] w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
         style={{
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${addLineNumberBGName})`,
@@ -166,7 +166,7 @@ const DiffUnifiedNewLine = ({
 
 export const DiffUnifiedContentLine = defineComponent(
   (props: { index: number; diffFile: DiffFile; lineNumber: number }) => {
-    const unifiedItem = ref(props.diffFile.getUnifiedLine(props.index));
+    const unifiedItem = computed(() => props.diffFile.getUnifiedLine(props.index));
 
     const enableWrap = useEnableWrap();
 
@@ -178,9 +178,9 @@ export const DiffUnifiedContentLine = defineComponent(
 
     const enableAddWidget = useEnableAddWidget();
 
-    const currentItemHasHidden = ref(unifiedItem.value?.isHidden);
+    const currentItemHasHidden = computed(() => unifiedItem.value?.isHidden);
 
-    const currentItemHasChange = ref(checkDiffLineIncludeChange(unifiedItem.value?.diff));
+    const currentItemHasChange = computed(() => checkDiffLineIncludeChange(unifiedItem.value?.diff));
 
     const currentSyntaxLine = ref(
       unifiedItem.value?.newLineNumber
@@ -199,8 +199,6 @@ export const DiffUnifiedContentLine = defineComponent(
     );
 
     useSubscribeDiffFile(props, (diffFile) => {
-      unifiedItem.value = diffFile.getUnifiedLine(props.index);
-
       currentSyntaxLine.value = unifiedItem.value?.newLineNumber
         ? diffFile.getNewSyntaxLine(unifiedItem.value.newLineNumber)
         : unifiedItem.value?.oldLineNumber
@@ -212,10 +210,6 @@ export const DiffUnifiedContentLine = defineComponent(
         : unifiedItem.value?.oldLineNumber
           ? diffFile.getOldPlainLine(unifiedItem.value.oldLineNumber)
           : undefined;
-
-      currentItemHasHidden.value = unifiedItem.value?.isHidden;
-
-      currentItemHasChange.value = checkDiffLineIncludeChange(unifiedItem.value?.diff);
     });
 
     const onOpenAddWidget = (lineNumber: number, side: SplitSide) => setWidget({ side: side, lineNumber: lineNumber });
@@ -267,7 +261,7 @@ export const DiffUnifiedContentLine = defineComponent(
             class="diff-line group"
           >
             <td
-              class="diff-line-num sticky z-[1] left-0 w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
+              class="diff-line-num sticky left-0 z-[1] w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
               style={{
                 color: `var(${unifiedItem.value.diff ? plainLineNumberColorName : expandLineNumberColorName})`,
                 backgroundColor: unifiedItem.value.diff

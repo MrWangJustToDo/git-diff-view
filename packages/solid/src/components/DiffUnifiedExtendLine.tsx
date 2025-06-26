@@ -1,36 +1,20 @@
 import { SplitSide, type DiffFile } from "@git-diff-view/core";
-import { createEffect, createMemo, createSignal, onCleanup, Show } from "solid-js";
+import { createMemo, Show } from "solid-js";
 
 import { useDomWidth, useExtendData, useRenderExtend } from "../hooks";
-
 
 export const DiffUnifiedExtendLine = (props: { index: number; diffFile: DiffFile; lineNumber: number }) => {
   const extendData = useExtendData();
 
   const renderExtend = useRenderExtend();
 
-  const [unifiedItem, setUnifiedItem] = createSignal(props.diffFile.getUnifiedLine(props.index));
+  const unifiedItem = createMemo(() => props.diffFile.getUnifiedLine(props.index));
 
-  const [oldExtend, setOldExtend] = createSignal(extendData()?.oldFile?.[unifiedItem()?.oldLineNumber || 0]);
+  const oldExtend = createMemo(() => extendData()?.oldFile?.[unifiedItem()?.oldLineNumber || 0]);
 
-  const [newExtend, setNewExtend] = createSignal(extendData()?.newFile?.[unifiedItem()?.newLineNumber || 0]);
+  const newExtend = createMemo(() => extendData()?.newFile?.[unifiedItem()?.newLineNumber || 0]);
 
-  const [currentIsHidden, setCurrentIsHidden] = createSignal(unifiedItem()?.isHidden);
-
-  createEffect(() => {
-    const init = () => {
-      setUnifiedItem(props.diffFile.getUnifiedLine(props.index));
-      setOldExtend(() => extendData()?.oldFile?.[unifiedItem()?.oldLineNumber || 0]);
-      setNewExtend(() => extendData()?.newFile?.[unifiedItem()?.newLineNumber || 0]);
-      setCurrentIsHidden(() => unifiedItem()?.isHidden);
-    };
-
-    init();
-
-    const unsubscribe = props.diffFile.subscribe(init);
-
-    onCleanup(unsubscribe);
-  });
+  const currentIsHidden = createMemo(() => unifiedItem()?.isHidden);
 
   const currentIsShow = createMemo(() => Boolean((oldExtend() || newExtend()) && !currentIsHidden() && renderExtend()));
 

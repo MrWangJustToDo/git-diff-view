@@ -1,8 +1,7 @@
 import { borderColorName, emptyBGName } from "@git-diff-view/utils";
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent } from "vue";
 
 import { useExtendData, useSlots } from "../context";
-import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 
 import { SplitSide } from "./DiffView";
 
@@ -14,31 +13,17 @@ export const DiffSplitExtendLine = defineComponent(
 
     const slots = useSlots();
 
-    const oldLine = ref(props.diffFile.getSplitLeftLine(props.index));
+    const oldLine = computed(() => props.diffFile.getSplitLeftLine(props.index));
 
-    const newLine = ref(props.diffFile.getSplitRightLine(props.index));
+    const newLine = computed(() => props.diffFile.getSplitRightLine(props.index));
 
-    const enableExpand = ref(props.diffFile.getExpandEnabled());
+    const enableExpand = computed(() => props.diffFile.getExpandEnabled());
 
-    const oldLineExtend = ref(extendData.value?.oldFile?.[oldLine.value?.lineNumber]);
+    const oldLineExtend = computed(() => extendData.value?.oldFile?.[oldLine.value?.lineNumber]);
 
-    const newLineExtend = ref(extendData.value?.newFile?.[newLine.value.lineNumber]);
+    const newLineExtend = computed(() => extendData.value?.newFile?.[newLine.value.lineNumber]);
 
-    const hasHidden = ref(oldLine.value.isHidden && newLine.value.isHidden);
-
-    useSubscribeDiffFile(props, (diffFile) => {
-      oldLine.value = diffFile.getSplitLeftLine(props.index);
-
-      newLine.value = diffFile.getSplitRightLine(props.index);
-
-      oldLineExtend.value = extendData.value?.oldFile?.[oldLine.value?.lineNumber];
-
-      newLineExtend.value = extendData.value?.newFile?.[newLine.value.lineNumber];
-
-      enableExpand.value = diffFile.getExpandEnabled();
-
-      hasHidden.value = oldLine.value.isHidden && newLine.value.isHidden;
-    });
+    const hasHidden = computed(() => oldLine.value.isHidden && newLine.value.isHidden);
 
     const currentIsShow = computed(() =>
       Boolean((oldLineExtend.value || newLineExtend.value) && (!hasHidden.value || enableExpand.value) && slots.extend)

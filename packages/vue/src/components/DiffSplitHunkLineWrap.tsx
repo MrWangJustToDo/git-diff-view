@@ -16,9 +16,9 @@ import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 
 const DiffSplitHunkLineGitHub = defineComponent(
   (props: { index: number; diffFile: DiffFile; lineNumber: number }) => {
-    const currentHunk = ref(props.diffFile.getSplitHunkLine(props.index));
+    const currentHunk = computed(() => props.diffFile.getSplitHunkLine(props.index));
 
-    const enableExpand = ref(props.diffFile.getExpandEnabled());
+    const enableExpand = computed(() => props.diffFile.getExpandEnabled());
 
     const couldExpand = computed(() => enableExpand.value && currentHunk.value && currentHunk.value.splitInfo);
 
@@ -34,17 +34,15 @@ const DiffSplitHunkLineGitHub = defineComponent(
         currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex
     );
 
-    const currentIsFirstLine = ref(currentHunk.value && currentHunk.value.isFirst);
+    const currentIsFirstLine = computed(() => currentHunk.value && currentHunk.value.isFirst);
 
-    const currentIsPureHunk = ref(currentHunk.value && !currentHunk.value.splitInfo);
+    const currentIsLastLine = computed(() => currentHunk.value && currentHunk.value.isLast);
 
-    const currentIsLastLine = ref(currentHunk.value && currentHunk.value.isLast);
+    const currentIsPureHunk = computed(
+      () => currentHunk.value && props.diffFile._getIsPureDiffRender() && !currentHunk.value.splitInfo
+    );
 
-    useSubscribeDiffFile(props, (diffFile) => {
-      currentHunk.value = diffFile.getSplitHunkLine(props.index);
-
-      enableExpand.value = diffFile.getExpandEnabled();
-
+    useSubscribeDiffFile(props, () => {
       currentShowExpandAll.value =
         currentHunk.value &&
         currentHunk.value.splitInfo &&
@@ -54,12 +52,6 @@ const DiffSplitHunkLineGitHub = defineComponent(
         currentHunk.value &&
         currentHunk.value.splitInfo &&
         currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex;
-
-      currentIsFirstLine.value = currentHunk.value && currentHunk.value.isFirst;
-
-      currentIsLastLine.value = currentHunk.value && currentHunk.value.isLast;
-
-      currentIsPureHunk.value = currentHunk.value && diffFile._getIsPureDiffRender() && !currentHunk.value.splitInfo;
     });
 
     return () => {

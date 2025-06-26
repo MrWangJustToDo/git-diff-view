@@ -14,11 +14,11 @@ import { useMode, useSyncHeight } from "../hooks";
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 
 const DiffSplitHunkLineGitHub = (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
-  const [currentHunk, setCurrentHunk] = createSignal(props.diffFile.getSplitHunkLine(props.index));
+  const currentHunk = createMemo(() => props.diffFile.getSplitHunkLine(props.index));
 
-  const [enableExpand, setEnableExpand] = createSignal(props.diffFile.getExpandEnabled());
+  const enableExpand = createMemo(() => props.diffFile.getExpandEnabled());
 
-  const [couldExpand, setCouldExpand] = createSignal(enableExpand() && currentHunk()?.splitInfo);
+  const couldExpand = createMemo(() => enableExpand() && currentHunk()?.splitInfo);
 
   const lineSelector = createMemo(() => `tr[data-line="${props.lineNumber}-hunk"]`);
 
@@ -55,9 +55,6 @@ const DiffSplitHunkLineGitHub = (props: { index: number; side: SplitSide; diffFi
 
   createEffect(() => {
     const init = () => {
-      setCurrentHunk(props.diffFile.getSplitHunkLine(props.index));
-      setEnableExpand(props.diffFile.getExpandEnabled());
-      setCouldExpand(() => enableExpand() && currentHunk()?.splitInfo);
       setCurrentIsShow(checkCurrentIsShow);
       setCurrentShowExpandAll(checkCurrentShowExpandAll);
     };
@@ -184,11 +181,11 @@ const DiffSplitHunkLineGitHub = (props: { index: number; side: SplitSide; diffFi
 };
 
 const DiffSplitHunkLineGitLab = (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
-  const [currentHunk, setCurrentHunk] = createSignal(props.diffFile.getSplitHunkLine(props.index));
+  const currentHunk = createMemo(() => props.diffFile.getSplitHunkLine(props.index));
 
-  const [enableExpand, setEnableExpand] = createSignal(props.diffFile.getExpandEnabled());
+  const enableExpand = createMemo(() => props.diffFile.getExpandEnabled());
 
-  const [couldExpand, setCouldExpand] = createSignal(enableExpand() && currentHunk()?.splitInfo);
+  const couldExpand = createMemo(() => enableExpand() && currentHunk()?.splitInfo);
 
   const lineSelector = createMemo(() => `tr[data-line="${props.lineNumber}-hunk"]`);
 
@@ -227,9 +224,6 @@ const DiffSplitHunkLineGitLab = (props: { index: number; side: SplitSide; diffFi
 
   createEffect(() => {
     const init = () => {
-      setCurrentHunk(props.diffFile.getSplitHunkLine(props.index));
-      setEnableExpand(props.diffFile.getExpandEnabled());
-      setCouldExpand(() => enableExpand() && currentHunk()?.splitInfo);
       setCurrentIsShow(checkCurrentIsShow);
       setCurrentShowExpandAll(checkCurrentShowExpandAll);
     };

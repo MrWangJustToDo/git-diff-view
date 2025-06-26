@@ -13,9 +13,9 @@ import { useEnableWrap } from "../hooks";
 import { ExpandUp, ExpandDown, ExpandAll } from "./DiffExpand";
 
 export const DiffUnifiedHunkLine = (props: { index: number; diffFile: DiffFile; lineNumber: number }) => {
-  const [currentHunk, setCurrentHunk] = createSignal(props.diffFile.getUnifiedHunkLine(props.index));
+  const currentHunk = createMemo(() => props.diffFile.getUnifiedHunkLine(props.index));
 
-  const [enableExpand, setEnableExpand] = createSignal(props.diffFile.getExpandEnabled());
+  const enableExpand = createMemo(() => props.diffFile.getExpandEnabled());
 
   const couldExpand = createMemo(() => enableExpand() && !!currentHunk()?.unifiedInfo);
 
@@ -35,25 +35,18 @@ export const DiffUnifiedHunkLine = (props: { index: number; diffFile: DiffFile; 
 
   const [currentIsEnableAll, setCurrentIsEnableAll] = createSignal(checkCurrentIsEnableAll());
 
-  const [currentIsFirstLine, setCurrentIsFirstLine] = createSignal(currentHunk()?.isFirst);
+  const currentIsFirstLine = createMemo(() => currentHunk()?.isFirst);
 
-  const [currentIsLastLine, setCurrentIsLastLine] = createSignal(currentHunk()?.isLast);
+  const currentIsLastLine = createMemo(() => currentHunk()?.isLast);
 
-  const [currentIsPureHunk, setCurrentIsPureHunk] = createSignal(
-    currentHunk() && props.diffFile._getIsPureDiffRender() && !currentHunk()?.unifiedInfo
+  const currentIsPureHunk = createMemo(
+    () => currentHunk() && props.diffFile._getIsPureDiffRender() && !currentHunk()?.unifiedInfo
   );
 
   createEffect(() => {
     const init = () => {
-      setCurrentHunk(props.diffFile.getUnifiedHunkLine(props.index));
-
-      setEnableExpand(props.diffFile.getExpandEnabled());
-
       setCurrentIsShow(checkCurrentIsShow);
       setCurrentIsEnableAll(checkCurrentIsEnableAll);
-      setCurrentIsFirstLine(() => currentHunk()?.isFirst);
-      setCurrentIsLastLine(() => currentHunk()?.isLast);
-      setCurrentIsPureHunk(() => currentHunk() && props.diffFile._getIsPureDiffRender() && !currentHunk()?.unifiedInfo);
     };
 
     init();

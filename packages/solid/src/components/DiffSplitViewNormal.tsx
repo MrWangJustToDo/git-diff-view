@@ -20,12 +20,17 @@ import type { DiffFile } from "@git-diff-view/core";
 const DiffSplitViewTable = (props: { side: SplitSide; diffFile: DiffFile; onSelect?: (side?: SplitSide) => void }) => {
   const className = createMemo(() => (props.side === SplitSide.new ? "new-diff-table" : "old-diff-table"));
 
-  const [lines, setLines] = createSignal(getSplitContentLines(props.diffFile));
+  const getAllLines = () => getSplitContentLines(props.diffFile);
+
+  const [lines, setLines] = createSignal(getAllLines());
 
   createEffect(() => {
-    const init = () => setLines(getSplitContentLines(props.diffFile));
+    const init = () => setLines(getAllLines);
+
     init();
+
     const cb = props.diffFile.subscribe(init);
+
     onCleanup(cb);
   });
 
@@ -114,17 +119,9 @@ export const DiffSplitViewNormal = (props: { diffFile: DiffFile }) => {
 
   const [ref2, setRef2] = createSignal<HTMLDivElement | null>(null);
 
-  const [side, setSide] = createSignal<SplitSide | undefined>(undefined);
+  const [styleRef, setStyleRef] = createSignal<HTMLStyleElement | null>(null);
 
-  const [maxText, setMaxText] = createSignal(props.diffFile.splitLineLength.toString());
-
-  createEffect(() => {
-    const init = () => {
-      setMaxText(Math.max(props.diffFile.splitLineLength, props.diffFile.fileLineLength).toString());
-    };
-    const cb = props.diffFile.subscribe(init);
-    onCleanup(cb);
-  });
+  const maxText = createMemo(() => Math.max(props.diffFile.fileLineLength, props.diffFile.splitLineLength).toString());
 
   const initSyncScroll = () => {
     if (!isMounted()) return;
@@ -136,6 +133,18 @@ export const DiffSplitViewNormal = (props: { diffFile: DiffFile }) => {
   };
 
   createEffect(initSyncScroll);
+
+  const onSelect = (side?: SplitSide) => {
+    const ele = styleRef();
+
+    if (!ele) return;
+
+    if (!side) {
+      ele.textContent = "";
+    } else {
+      ele.textContent = `#${getId()} [data-state="extend"] {user-select: none} \n#${getId()} [data-state="hunk"] {user-select: none} \n#${getId()} [data-state="widget"] {user-select: none}`;
+    }
+  };
 
   const fontSize = useFontSize();
 
@@ -149,14 +158,10 @@ export const DiffSplitViewNormal = (props: { diffFile: DiffFile }) => {
 
   return (
     <div class="split-diff-view split-diff-view-normal flex w-full basis-[50%]">
-      <style data-select-style>
-        {side()
-          ? `#${getId()} [data-state="extend"] {user-select: none} \n#${getId()} [data-state="hunk"] {user-select: none} \n#${getId()} [data-state="widget"] {user-select: none}`
-          : ""}
-      </style>
+      <style data-select-style ref={setStyleRef} />
       <div
         class="old-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
-        ref={(l) => setRef1(l)}
+        ref={setRef1}
         style={{
           [diffAsideWidthName]: `${Math.round(computedWidth())}px`,
           "overscroll-behavior-x": "none",
@@ -164,12 +169,12 @@ export const DiffSplitViewNormal = (props: { diffFile: DiffFile }) => {
           "font-size": `var(${diffFontSizeName})`,
         }}
       >
-        <DiffSplitViewTable side={SplitSide.old} diffFile={props.diffFile} onSelect={(s) => setSide(s)} />
+        <DiffSplitViewTable side={SplitSide.old} diffFile={props.diffFile} onSelect={onSelect} />
       </div>
       <div class="diff-split-line w-[1.5px]" style={{ "background-color": `var(${borderColorName})` }} />
       <div
         class="new-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
-        ref={(l) => setRef2(l)}
+        ref={setRef2}
         style={{
           [diffAsideWidthName]: `${Math.round(computedWidth())}px`,
           "overscroll-behavior-x": "none",
@@ -177,7 +182,7 @@ export const DiffSplitViewNormal = (props: { diffFile: DiffFile }) => {
           "font-size": `var(${diffFontSizeName})`,
         }}
       >
-        <DiffSplitViewTable side={SplitSide.new} diffFile={props.diffFile} onSelect={(s) => setSide(s)} />
+        <DiffSplitViewTable side={SplitSide.new} diffFile={props.diffFile} onSelect={onSelect} />
       </div>
     </div>
   );

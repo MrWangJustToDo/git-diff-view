@@ -26,26 +26,6 @@
 
 	let props: Props = $props();
 
-	let isNewLineSymbolChanged = () => props.diffLine?.changes?.newLineSymbol;
-
-	const range = () => props.diffLine?.changes?.range;
-
-	const str1 = () => props.rawLine.slice(0, range()?.location);
-
-	const str2 = () => {
-		const r = range();
-		return r ? props.rawLine.slice(r.location, r.location + r.length) : '';
-	};
-
-	const str3 = () => {
-		const r = range();
-		return r ? props.rawLine.slice(r.location + r.length) : '';
-	};
-
-	const isLast = () => str2().includes('\n');
-
-	const _str2 = () => (isLast() ? str2().replace('\n', '').replace('\r', '') : str2);
-
 	const initTemplate = () => {
 		if (props.diffLine?.changes?.hasLineChange) {
 			if (
@@ -75,7 +55,7 @@
 			<span data-template>
 				{@html props.diffLine.plainTemplate}
 			</span>
-			{#if isNewLineSymbolChanged() === NewLineSymbol.NEWLINE}
+			{#if props.diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE}
 				<span
 					data-no-newline-at-end-of-file-symbol
 					class={props.enableWrap
@@ -91,12 +71,15 @@
 			{/if}
 		</span>
 	{:else}
+		{@const range = props.diffLine.changes.range}
+		{@const str1 = props.rawLine.slice(0, range.location)}
+		{@const str2 = props.rawLine.slice(range.location, range.location + range.length)}
+		{@const str3 = props.rawLine.slice(range.location + range.length)}
+		{@const isLast = str2.includes('\n')}
+		{@const _str2 = isLast ? str2.replace('\n', '').replace('\r', '') : str2}
 		<span class="diff-line-content-raw">
-			<span
-				data-range-start={range()?.location}
-				data-range-end={range() ? range()!.location + range()!.length : 0}
-			>
-				{str1()}
+			<span data-range-start={range.location} data-range-end={range.location + range.length}>
+				{str1}
 				<span
 					data-diff-highlight
 					class="rounded-[0.2em]"
@@ -105,16 +88,16 @@
                   operator === "add" ? var(${addContentHighlightBGName}) : var(${delContentHighlightBGName}),
               `}
 				>
-					{#if isLast()}
-						{_str2()}
-						<span data-newline-symbol>{getSymbol(isNewLineSymbolChanged())}</span>
+					{#if isLast}
+						{_str2}
+						<span data-newline-symbol>{getSymbol(props.diffLine.changes.newLineSymbol)}</span>
 					{:else}
-						{str2()}
+						{str2}
 					{/if}
 				</span>
 				{str3}
 			</span>
-			{#if isNewLineSymbolChanged() === NewLineSymbol.NEWLINE}
+			{#if props.diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE}
 				<span
 					data-no-newline-at-end-of-file-symbol
 					class={props.enableWrap

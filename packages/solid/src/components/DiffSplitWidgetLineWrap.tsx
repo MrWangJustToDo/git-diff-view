@@ -1,6 +1,6 @@
 import { SplitSide, type DiffFile } from "@git-diff-view/core";
 import { borderColorName, emptyBGName } from "@git-diff-view/utils";
-import { createEffect, createMemo, createSignal, onCleanup, Show } from "solid-js";
+import { createMemo, Show } from "solid-js";
 
 import { useRenderWidget } from "../hooks";
 
@@ -11,32 +11,20 @@ export const DiffSplitWidgetLine = (props: { index: number; diffFile: DiffFile; 
 
   const [widget, setWidget] = useDiffWidgetContext() || [];
 
-  const [oldLine, setOldLine] = createSignal(props.diffFile.getSplitLeftLine(props.index));
+  const oldLine = createMemo(() => props.diffFile.getSplitLeftLine(props.index));
 
-  const [newLine, setNewLine] = createSignal(props.diffFile.getSplitRightLine(props.index));
+  const newLine = createMemo(() => props.diffFile.getSplitRightLine(props.index));
 
   const oldLineWidget = createMemo(
-    () => oldLine()?.lineNumber && widget?.()?.side === SplitSide.old && widget?.()?.lineNumber === oldLine()?.lineNumber
+    () =>
+      oldLine()?.lineNumber && widget?.()?.side === SplitSide.old && widget?.()?.lineNumber === oldLine()?.lineNumber
   );
 
   const newLineWidget = createMemo(
-    () => newLine()?.lineNumber && widget?.()?.side === SplitSide.new && widget?.()?.lineNumber === newLine()?.lineNumber
+    () =>
+      newLine()?.lineNumber && widget?.()?.side === SplitSide.new && widget?.()?.lineNumber === newLine()?.lineNumber
   );
 
-  createEffect(() => {
-    const init = () => {
-      setOldLine(props.diffFile.getSplitLeftLine(props.index));
-      setNewLine(props.diffFile.getSplitRightLine(props.index));
-    };
-
-    init();
-
-    const cb = props.diffFile.subscribe(init);
-
-    onCleanup(cb);
-  });
-
-  // TODO improve
   const currentIsShow = createMemo(
     () => (!!oldLineWidget() || !!newLineWidget()) && !oldLine()?.isHidden && !newLine()?.isHidden && !!renderWidget
   );

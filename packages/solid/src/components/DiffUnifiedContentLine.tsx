@@ -11,7 +11,7 @@ import {
   plainLineNumberBGName,
   plainLineNumberColorName,
 } from "@git-diff-view/utils";
-import { createEffect, createSignal, onCleanup, Show } from "solid-js";
+import { createEffect, createMemo, createSignal, onCleanup, Show } from "solid-js";
 
 import { useEnableAddWidget, useEnableHighlight, useEnableWrap, useOnAddWidgetClick } from "../hooks";
 
@@ -140,7 +140,7 @@ const DiffUnifiedNewLine = (props: {
 };
 
 export const DiffUnifiedContentLine = (props: { index: number; diffFile: DiffFile; lineNumber: number }) => {
-  const [unifiedItem, setUnifiedItem] = createSignal(props.diffFile.getUnifiedLine(props.index));
+  const unifiedItem = createMemo(() => props.diffFile.getUnifiedLine(props.index));
 
   const enableWrap = useEnableWrap();
 
@@ -152,45 +152,32 @@ export const DiffUnifiedContentLine = (props: { index: number; diffFile: DiffFil
 
   const enableAddWidget = useEnableAddWidget();
 
-  const [currentItemHasHidden, setCurrentItemHasHidden] = createSignal(unifiedItem()?.isHidden);
+  const currentItemHasHidden = createMemo(() => unifiedItem()?.isHidden);
 
-  const [currentItemHasChange, setCurrentItemHasChange] = createSignal(checkDiffLineIncludeChange(unifiedItem()?.diff));
+  const currentItemHasChange = createMemo(() => checkDiffLineIncludeChange(unifiedItem()?.diff));
 
-  const [currentSyntaxLine, setCurrentSyntaxLine] = createSignal(
+  const getCurrentSyntaxLine = () =>
     unifiedItem()?.newLineNumber
       ? props.diffFile.getNewSyntaxLine(unifiedItem()?.newLineNumber || 0)
       : unifiedItem()?.oldLineNumber
         ? props.diffFile.getOldSyntaxLine(unifiedItem()?.oldLineNumber || 0)
-        : undefined
-  );
+        : undefined;
 
-  const [currentPlainLine, setCurrentPlainLine] = createSignal(
+  const [currentSyntaxLine, setCurrentSyntaxLine] = createSignal(getCurrentSyntaxLine());
+
+  const getCurrentPlainLine = () =>
     unifiedItem()?.newLineNumber
       ? props.diffFile.getNewPlainLine(unifiedItem()?.newLineNumber || 0)
       : unifiedItem()?.oldLineNumber
         ? props.diffFile.getOldPlainLine(unifiedItem()?.oldLineNumber || 0)
-        : undefined
-  );
+        : undefined;
+
+  const [currentPlainLine, setCurrentPlainLine] = createSignal(getCurrentPlainLine());
 
   createEffect(() => {
     const init = () => {
-      setUnifiedItem(props.diffFile.getUnifiedLine(props.index));
-      setCurrentItemHasHidden(() => unifiedItem()?.isHidden);
-      setCurrentItemHasChange(() => checkDiffLineIncludeChange(unifiedItem()?.diff));
-      setCurrentSyntaxLine(() =>
-        unifiedItem()?.newLineNumber
-          ? props.diffFile.getNewSyntaxLine(unifiedItem()?.newLineNumber || 0)
-          : unifiedItem()?.oldLineNumber
-            ? props.diffFile.getOldSyntaxLine(unifiedItem()?.oldLineNumber || 0)
-            : undefined
-      );
-      setCurrentPlainLine(() =>
-        unifiedItem()?.newLineNumber
-          ? props.diffFile.getNewPlainLine(unifiedItem()?.newLineNumber || 0)
-          : unifiedItem()?.oldLineNumber
-            ? props.diffFile.getOldPlainLine(unifiedItem()?.oldLineNumber || 0)
-            : undefined
-      );
+      setCurrentSyntaxLine(getCurrentSyntaxLine);
+      setCurrentPlainLine(getCurrentPlainLine);
     };
 
     init();

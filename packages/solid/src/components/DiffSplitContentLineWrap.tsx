@@ -7,7 +7,7 @@ import {
   getLineNumberBG,
   plainLineNumberColorName,
 } from "@git-diff-view/utils";
-import { createEffect, createSignal, onCleanup, Show } from "solid-js";
+import { createEffect, createMemo, createSignal, onCleanup, Show } from "solid-js";
 
 import { useEnableAddWidget, useEnableHighlight, useOnAddWidgetClick } from "../hooks";
 
@@ -24,25 +24,38 @@ export const DiffSplitContentLine = (props: { index: number; diffFile: DiffFile;
 
   const onAddWidgetClick = useOnAddWidgetClick();
 
-  const [oldLine, setOldLine] = createSignal(props.diffFile.getSplitLeftLine(props.index));
+  const oldLine = createMemo(() => props.diffFile.getSplitLeftLine(props.index));
 
-  const [newLine, setNewLine] = createSignal(props.diffFile.getSplitRightLine(props.index));
+  const newLine = createMemo(() => props.diffFile.getSplitRightLine(props.index));
 
-  const [oldSyntaxLine, setOldSyntaxLine] = createSignal(props.diffFile.getOldSyntaxLine(oldLine()?.lineNumber || 0));
+  const getOldSyntaxLine = () => props.diffFile.getOldSyntaxLine(oldLine()?.lineNumber || 0);
 
-  const [newSyntaxLine, setNewSyntaxLine] = createSignal(props.diffFile.getNewSyntaxLine(newLine()?.lineNumber || 0));
+  const getNewSyntaxLine = () => props.diffFile.getNewSyntaxLine(newLine()?.lineNumber || 0);
 
-  const [oldPlainLine, setOldPlainLine] = createSignal(props.diffFile.getOldPlainLine(oldLine()?.lineNumber || 0));
+  const [oldSyntaxLine, setOldSyntaxLine] = createSignal(getOldSyntaxLine());
 
-  const [newPlainLine, setNewPlainLine] = createSignal(props.diffFile.getNewPlainLine(newLine()?.lineNumber || 0));
+  const [newSyntaxLine, setNewSyntaxLine] = createSignal(getNewSyntaxLine());
 
-  const [hasDiff, setHasDiff] = createSignal(!!oldLine()?.diff || !!newLine()?.diff);
+  const getOldPlainLine = () => props.diffFile.getOldPlainLine(oldLine()?.lineNumber || 0);
 
-  const [hasChange, setHasChange] = createSignal(
-    checkDiffLineIncludeChange(oldLine()?.diff) || checkDiffLineIncludeChange(newLine()?.diff)
-  );
+  const getNewPlainLine = () => props.diffFile.getNewPlainLine(newLine()?.lineNumber || 0);
 
-  const [hasHidden, setHasHidden] = createSignal(oldLine()?.isHidden && newLine()?.isHidden);
+  const [oldPlainLine, setOldPlainLine] = createSignal(getOldPlainLine());
+
+  const [newPlainLine, setNewPlainLine] = createSignal(getNewPlainLine());
+
+  const checkHasDiff = () => !!oldLine()?.diff || !!newLine()?.diff;
+
+  const hasDiff = createMemo(checkHasDiff);
+
+  const checkHasChange = () =>
+    checkDiffLineIncludeChange(oldLine()?.diff) || checkDiffLineIncludeChange(newLine()?.diff);
+
+  const hasChange = createMemo(checkHasChange);
+
+  const checkHasHidden = () => oldLine()?.isHidden && newLine()?.isHidden;
+
+  const hasHidden = createMemo(checkHasHidden);
 
   const oldLineIsDelete = () => oldLine()?.diff?.type === DiffLineType.Delete;
 
@@ -50,15 +63,10 @@ export const DiffSplitContentLine = (props: { index: number; diffFile: DiffFile;
 
   createEffect(() => {
     const init = () => {
-      setOldLine(props.diffFile.getSplitLeftLine(props.index));
-      setNewLine(props.diffFile.getSplitRightLine(props.index));
-      setOldSyntaxLine(props.diffFile.getOldSyntaxLine(oldLine()?.lineNumber || 0));
-      setNewSyntaxLine(props.diffFile.getNewSyntaxLine(newLine()?.lineNumber || 0));
-      setOldPlainLine(props.diffFile.getOldPlainLine(oldLine()?.lineNumber || 0));
-      setNewPlainLine(props.diffFile.getNewPlainLine(newLine()?.lineNumber || 0));
-      setHasDiff(() => !!oldLine()?.diff || !!newLine()?.diff);
-      setHasChange(() => checkDiffLineIncludeChange(oldLine()?.diff) || checkDiffLineIncludeChange(newLine()?.diff));
-      setHasHidden(() => oldLine()?.isHidden && newLine()?.isHidden);
+      setOldSyntaxLine(getOldSyntaxLine);
+      setNewSyntaxLine(getNewSyntaxLine);
+      setOldPlainLine(getOldPlainLine);
+      setNewPlainLine(getNewPlainLine);
     };
 
     init();

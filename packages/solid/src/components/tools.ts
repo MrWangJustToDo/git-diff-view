@@ -1,6 +1,6 @@
 import { createStore, ref } from "reactivity-store";
 
-import type { DiffModeEnum, DiffViewProps, SplitSide } from "./DiffView";
+import type { DiffModeEnum, DiffViewProps } from "./DiffView";
 
 export const createDiffConfigStore = (props: DiffViewProps<any>, diffFileId: string) => {
   return createStore(() => {
@@ -81,25 +81,5 @@ export const createDiffConfigStore = (props: DiffViewProps<any>, diffFileId: str
       onAddWidgetClick,
       setOnAddWidgetClick,
     };
-  });
-};
-
-export const createDiffWidgetStore = (useDiffContextRef: ReturnType<typeof createDiffConfigStore>) => {
-  return createStore(() => {
-    const widgetSide = ref<SplitSide>();
-
-    const widgetLineNumber = ref<number>();
-
-    const setWidget = ({ side, lineNumber }: { side?: SplitSide; lineNumber?: number }) => {
-      const { renderWidgetLine } = useDiffContextRef?.getReadonlyState?.() || {};
-
-      if (typeof renderWidgetLine !== "function") return;
-
-      widgetSide.value = side;
-
-      widgetLineNumber.value = lineNumber;
-    };
-
-    return { widgetSide, widgetLineNumber, setWidget };
   });
 };

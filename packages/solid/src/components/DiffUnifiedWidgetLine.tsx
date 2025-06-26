@@ -1,5 +1,5 @@
 import { SplitSide, type DiffFile } from "@git-diff-view/core";
-import { createEffect, createMemo, createSignal, onCleanup, Show } from "solid-js";
+import { createMemo, Show } from "solid-js";
 
 import { useDomWidth, useRenderWidget } from "../hooks";
 
@@ -10,7 +10,7 @@ export const DiffUnifiedWidgetLine = (props: { index: number; diffFile: DiffFile
 
   const [widget, setWidget] = useDiffWidgetContext() || [];
 
-  const [unifiedItem, setUnifiedItem] = createSignal(props.diffFile.getUnifiedLine(props.index));
+  const unifiedItem = createMemo(() => props.diffFile.getUnifiedLine(props.index));
 
   const oldWidget = createMemo(
     () =>
@@ -26,20 +26,7 @@ export const DiffUnifiedWidgetLine = (props: { index: number; diffFile: DiffFile
       widget?.()?.lineNumber === unifiedItem()?.newLineNumber
   );
 
-  const [currentIsHidden, setCurrentIsHidden] = createSignal(unifiedItem()?.isHidden);
-
-  createEffect(() => {
-    const init = () => {
-      setUnifiedItem(props.diffFile.getUnifiedLine(props.index));
-      setCurrentIsHidden(() => unifiedItem()?.isHidden);
-    };
-
-    init();
-
-    const unsubscribe = props.diffFile.subscribe(init);
-
-    onCleanup(unsubscribe);
-  });
+  const currentIsHidden = createMemo(() => unifiedItem()?.isHidden);
 
   const currenIsShow = createMemo(() => !!(oldWidget() || newWidget()) && !currentIsHidden() && !!renderWidget());
 

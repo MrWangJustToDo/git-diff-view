@@ -1,9 +1,8 @@
 import { emptyBGName } from "@git-diff-view/utils";
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent } from "vue";
 
 import { useSetWidget, useSlots, useWidget } from "../context";
 import { useDomWidth } from "../hooks/useDomWidth";
-import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
 import { SplitSide } from "./DiffView";
@@ -18,9 +17,9 @@ export const DiffSplitWidgetLine = defineComponent(
 
     const setWidget = useSetWidget();
 
-    const oldLine = ref(props.diffFile.getSplitLeftLine(props.index));
+    const oldLine = computed(() => props.diffFile.getSplitLeftLine(props.index));
 
-    const newLine = ref(props.diffFile.getSplitRightLine(props.index));
+    const newLine = computed(() => props.diffFile.getSplitRightLine(props.index));
 
     const oldLineWidget = computed(
       () =>
@@ -36,19 +35,9 @@ export const DiffSplitWidgetLine = defineComponent(
         widget.value.lineNumber === newLine.value.lineNumber
     );
 
-    const currentLine = ref(props.side === SplitSide.old ? oldLine.value : newLine.value);
+    const currentLine = computed(() => (props.side === SplitSide.old ? oldLine.value : newLine.value));
 
-    const currentIsHidden = ref(currentLine.value.isHidden);
-
-    useSubscribeDiffFile(props, (diffFile) => {
-      oldLine.value = diffFile.getSplitLeftLine(props.index);
-
-      newLine.value = diffFile.getSplitRightLine(props.index);
-
-      currentLine.value = props.side === SplitSide.old ? oldLine.value : newLine.value;
-
-      currentIsHidden.value = currentLine.value.isHidden;
-    });
+    const currentIsHidden = computed(() => currentLine.value.isHidden);
 
     const lineSelector = computed(() => `div[data-line="${props.lineNumber}-widget-content"]`);
 

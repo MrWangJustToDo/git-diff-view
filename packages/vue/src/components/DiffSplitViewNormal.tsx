@@ -119,13 +119,9 @@ export const DiffSplitViewNormal = defineComponent(
 
     const ref2 = ref<HTMLDivElement>();
 
-    const side = ref<SplitSide>();
+    const styleRef = ref<HTMLStyleElement>();
 
-    const maxText = ref(props.diffFile.splitLineLength.toString());
-
-    useSubscribeDiffFile(props, (diffFile) => {
-      maxText.value = Math.max(diffFile.splitLineLength, diffFile.fileLineLength).toString();
-    });
+    const maxText = computed(() => Math.max(props.diffFile.splitLineLength, props.diffFile.fileLineLength).toString());
 
     const initSyncScroll = (onClean: (cb: () => void) => void) => {
       if (!isMounted.value) return;
@@ -138,6 +134,19 @@ export const DiffSplitViewNormal = defineComponent(
 
     watchPostEffect(initSyncScroll);
 
+    const onSelect = (side?: SplitSide) => {
+      const ele = styleRef.value;
+
+      if (!ele) return;
+
+      if (!side) {
+        ele.textContent = "";
+      } else {
+        const id = `diff-root${props.diffFile.getId()}`;
+        ele.textContent = `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`;
+      }
+    };
+
     const fontSize = useFontSize();
 
     const font = computed(() => ({ fontSize: fontSize.value + "px", fontFamily: "Menlo, Consolas, monospace" }));
@@ -147,15 +156,9 @@ export const DiffSplitViewNormal = defineComponent(
     const computedWidth = computed(() => Math.max(40, width.value + 25));
 
     return () => {
-      const id = `diff-root${props.diffFile.getId()}`;
-
       return (
         <div class="split-diff-view split-diff-view-normal flex w-full basis-[50%]">
-          <style data-select-style>
-            {side.value
-              ? `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`
-              : ""}
-          </style>
+          <style data-select-style ref={styleRef} />
           <div
             class="old-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
             ref={ref1}
@@ -166,13 +169,7 @@ export const DiffSplitViewNormal = defineComponent(
               fontSize: `var(${diffFontSizeName})`,
             }}
           >
-            <DiffSplitViewTable
-              side={SplitSide.old}
-              diffFile={props.diffFile}
-              onSelect={(s) => {
-                side.value = s;
-              }}
-            />
+            <DiffSplitViewTable side={SplitSide.old} diffFile={props.diffFile} onSelect={onSelect} />
           </div>
           <div class="diff-split-line w-[1.5px]" style={{ backgroundColor: `var(${borderColorName})` }} />
           <div
@@ -185,13 +182,7 @@ export const DiffSplitViewNormal = defineComponent(
               fontSize: `var(${diffFontSizeName})`,
             }}
           >
-            <DiffSplitViewTable
-              side={SplitSide.new}
-              diffFile={props.diffFile}
-              onSelect={(s) => {
-                side.value = s;
-              }}
-            />
+            <DiffSplitViewTable side={SplitSide.new} diffFile={props.diffFile} onSelect={onSelect} />
           </div>
         </div>
       );

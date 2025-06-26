@@ -10,15 +10,16 @@ import { DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
 import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine";
 
 export const DiffUnifiedView = (props: { diffFile: DiffFile }) => {
-  const [lines, setLines] = createSignal(getUnifiedContentLine(props.diffFile));
+  const getAllLines = () => getUnifiedContentLine(props.diffFile);
 
-  const [maxText, setMaxText] = createSignal(props.diffFile.unifiedLineLength.toString());
+  const [lines, setLines] = createSignal(getAllLines());
+
+  const maxText = createMemo(() =>
+    Math.max(props.diffFile.unifiedLineLength, props.diffFile.fileLineLength).toString()
+  );
 
   createEffect(() => {
-    const init = () => {
-      setLines(getUnifiedContentLine(props.diffFile));
-      setMaxText(props.diffFile.unifiedLineLength.toString());
-    };
+    const init = () => setLines(getAllLines);
 
     init();
 
@@ -31,7 +32,19 @@ export const DiffUnifiedView = (props: { diffFile: DiffFile }) => {
 
   const enableWrap = useEnableWrap();
 
-  const [state, setState] = createSignal<boolean>();
+  const [styleRef, setStyleRef] = createSignal<HTMLStyleElement | null>();
+
+  const onSelect = (s: boolean) => {
+    const ele = styleRef();
+
+    if (!ele) return;
+
+    if (s) {
+      ele.textContent = `#${getId()} [data-state="extend"] {user-select: none} \n#${getId()} [data-state="hunk"] {user-select: none} \n#${getId()} [data-state="widget"] {user-select: none}`;
+    } else {
+      ele.textContent = "";
+    }
+  };
 
   const onMouseDown = (e: MouseEvent) => {
     let ele = e.target as HTMLElement | null;
@@ -45,10 +58,10 @@ export const DiffUnifiedView = (props: { diffFile: DiffFile }) => {
       const state = ele.getAttribute("data-state");
       if (state) {
         if (state === "extend" || state === "hunk" || state === "widget") {
-          setState(false);
+          onSelect(false);
           removeAllSelection();
         } else {
-          setState(true);
+          onSelect(true);
           removeAllSelection();
         }
         return;
@@ -67,11 +80,7 @@ export const DiffUnifiedView = (props: { diffFile: DiffFile }) => {
 
   return (
     <div class={`unified-diff-view ${enableWrap() ? "unified-diff-view-wrap" : "unified-diff-view-normal"} w-full`}>
-      <style data-select-style>
-        {state()
-          ? `#${getId()} [data-state="extend"] {user-select: none} \n#${getId()} [data-state="hunk"] {user-select: none} \n#${getId()} [data-state="widget"] {user-select: none}`
-          : ""}
-      </style>
+      <style data-select-style ref={setStyleRef} />
       <div
         class="unified-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
         style={{

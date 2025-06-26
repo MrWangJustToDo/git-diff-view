@@ -3,7 +3,6 @@ import { computed, defineComponent, ref } from "vue";
 import { SplitSide } from "..";
 import { useExtendData, useSlots } from "../context";
 import { useDomWidth } from "../hooks/useDomWidth";
-import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 
 import type { DiffFile } from "@git-diff-view/core";
 
@@ -13,23 +12,13 @@ export const DiffUnifiedExtendLine = defineComponent(
 
     const slots = useSlots();
 
-    const unifiedItem = ref(props.diffFile.getUnifiedLine(props.index));
+    const unifiedItem = computed(() => props.diffFile.getUnifiedLine(props.index));
 
-    const oldExtend = ref(extendData.value?.oldFile?.[unifiedItem.value.oldLineNumber]);
+    const oldExtend = computed(() => extendData.value?.oldFile?.[unifiedItem.value.oldLineNumber]);
 
-    const newExtend = ref(extendData.value?.newFile?.[unifiedItem.value.newLineNumber]);
+    const newExtend = computed(() => extendData.value?.newFile?.[unifiedItem.value.newLineNumber]);
 
-    const currentIsHidden = ref(unifiedItem.value.isHidden);
-
-    useSubscribeDiffFile(props, (diffFile) => {
-      unifiedItem.value = diffFile.getUnifiedLine(props.index);
-
-      oldExtend.value = extendData.value?.oldFile?.[unifiedItem.value.oldLineNumber];
-
-      newExtend.value = extendData.value?.newFile?.[unifiedItem.value.newLineNumber];
-
-      currentIsHidden.value = unifiedItem.value.isHidden;
-    });
+    const currentIsHidden = computed(() => unifiedItem.value.isHidden);
 
     const currentIsShow = computed(() =>
       Boolean((oldExtend.value || newExtend.value) && !currentIsHidden.value && slots.extend)

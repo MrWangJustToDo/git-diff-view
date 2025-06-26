@@ -1,8 +1,7 @@
 import { borderColorName, emptyBGName } from "@git-diff-view/utils";
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent } from "vue";
 
 import { useSetWidget, useSlots, useWidget } from "../context";
-import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 
 import { SplitSide } from "./DiffView";
 
@@ -16,9 +15,9 @@ export const DiffSplitWidgetLine = defineComponent(
 
     const setWidget = useSetWidget();
 
-    const oldLine = ref(props.diffFile.getSplitLeftLine(props.index));
+    const oldLine = computed(() => props.diffFile.getSplitLeftLine(props.index));
 
-    const newLine = ref(props.diffFile.getSplitRightLine(props.index));
+    const newLine = computed(() => props.diffFile.getSplitRightLine(props.index));
 
     const oldLineWidget = computed(
       () =>
@@ -34,15 +33,7 @@ export const DiffSplitWidgetLine = defineComponent(
         widget.value.lineNumber === newLine.value.lineNumber
     );
 
-    const hasHidden = ref(oldLine.value.isHidden && newLine.value.isHidden);
-
-    useSubscribeDiffFile(props, (diffFile) => {
-      oldLine.value = diffFile.getSplitLeftLine(props.index);
-
-      newLine.value = diffFile.getSplitRightLine(props.index);
-
-      hasHidden.value = oldLine.value.isHidden && newLine.value.isHidden;
-    });
+    const hasHidden = computed(() => oldLine.value.isHidden && newLine.value.isHidden);
 
     const currentIsShow = computed(
       () => (!!oldLineWidget.value || !!newLineWidget.value) && !hasHidden.value && !!slots.widget

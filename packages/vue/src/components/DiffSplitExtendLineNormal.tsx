@@ -1,9 +1,8 @@
 import { emptyBGName } from "@git-diff-view/utils";
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent } from "vue";
 
 import { useExtendData, useSlots } from "../context";
 import { useDomWidth } from "../hooks/useDomWidth";
-import { useSubscribeDiffFile } from "../hooks/useSubscribeDiffFile";
 import { useSyncHeight } from "../hooks/useSyncHeight";
 
 import { SplitSide } from "./DiffView";
@@ -24,35 +23,19 @@ export const DiffSplitExtendLine = defineComponent(
       props.side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper"
     );
 
-    const oldLine = ref(props.diffFile.getSplitLeftLine(props.index));
+    const oldLine = computed(() => props.diffFile.getSplitLeftLine(props.index));
 
-    const newLine = ref(props.diffFile.getSplitRightLine(props.index));
+    const newLine = computed(() => props.diffFile.getSplitRightLine(props.index));
 
-    const enableExpand = ref(props.diffFile.getExpandEnabled());
+    const enableExpand = computed(() => props.diffFile.getExpandEnabled());
 
-    const oldLineExtend = ref(extendData.value?.oldFile?.[oldLine.value?.lineNumber]);
+    const oldLineExtend = computed(() => extendData.value?.oldFile?.[oldLine.value?.lineNumber]);
 
-    const newLineExtend = ref(extendData.value?.newFile?.[newLine.value.lineNumber]);
+    const newLineExtend = computed(() => extendData.value?.newFile?.[newLine.value.lineNumber]);
 
-    const currentItem = ref(props.side === SplitSide.old ? oldLine.value : newLine.value);
+    const currentItem = computed(() => (props.side === SplitSide.old ? oldLine.value : newLine.value));
 
-    const currentIsHidden = ref(currentItem.value.isHidden);
-
-    useSubscribeDiffFile(props, (diffFile) => {
-      oldLine.value = diffFile.getSplitLeftLine(props.index);
-
-      newLine.value = diffFile.getSplitRightLine(props.index);
-
-      oldLineExtend.value = extendData.value?.oldFile?.[oldLine.value?.lineNumber];
-
-      newLineExtend.value = extendData.value?.newFile?.[newLine.value.lineNumber];
-
-      enableExpand.value = diffFile.getExpandEnabled();
-
-      currentItem.value = props.side === SplitSide.old ? oldLine.value : newLine.value;
-
-      currentIsHidden.value = currentItem.value.isHidden;
-    });
+    const currentIsHidden = computed(() => currentItem.value.isHidden);
 
     const currentExtend = computed(() => (props.side === SplitSide.old ? oldLineExtend.value : newLineExtend.value));
 

@@ -1,6 +1,6 @@
 import { SplitSide, type DiffFile } from "@git-diff-view/core";
 import { emptyBGName } from "@git-diff-view/utils";
-import { createEffect, createMemo, createSignal, onCleanup, Show } from "solid-js";
+import { createMemo, Show } from "solid-js";
 
 import { useDomWidth, useExtendData, useRenderExtend, useSyncHeight } from "../hooks";
 
@@ -22,37 +22,19 @@ export const DiffSplitExtendLine = (props: {
     props.side === SplitSide.old ? ".old-diff-table-wrapper" : ".new-diff-table-wrapper"
   );
 
-  const [oldLine, setOldLine] = createSignal(props.diffFile.getSplitLeftLine(props.index));
+  const oldLine = createMemo(() => props.diffFile.getSplitLeftLine(props.index));
 
-  const [newLine, setNewLine] = createSignal(props.diffFile.getSplitRightLine(props.index));
+  const newLine = createMemo(() => props.diffFile.getSplitRightLine(props.index));
 
-  const [enableExpand, setEnableExpand] = createSignal(props.diffFile.getExpandEnabled());
+  const enableExpand = createMemo(() => props.diffFile.getExpandEnabled());
 
-  const [oldLineExtend, setOldLineExtend] = createSignal(extendData()?.oldFile?.[oldLine()?.lineNumber || ""]);
+  const oldLineExtend = createMemo(() => extendData()?.oldFile?.[oldLine()?.lineNumber || ""]);
 
-  const [newLineExtend, setNewLineExtend] = createSignal(extendData()?.newFile?.[newLine()?.lineNumber || ""]);
+  const newLineExtend = createMemo(() => extendData()?.newFile?.[newLine()?.lineNumber || ""]);
 
-  const [currentItem, setCurrentItem] = createSignal(props.side === SplitSide.old ? oldLine() : newLine());
+  const currentItem = createMemo(() => (props.side === SplitSide.old ? oldLine() : newLine()));
 
-  const [currentIsHidden, setCurrentIsHidden] = createSignal(currentItem()?.isHidden);
-
-  createEffect(() => {
-    const init = () => {
-      setOldLine(props.diffFile.getSplitLeftLine(props.index));
-      setNewLine(props.diffFile.getSplitRightLine(props.index));
-      setEnableExpand(props.diffFile.getExpandEnabled());
-      setOldLineExtend(() => extendData()?.oldFile?.[oldLine()?.lineNumber || ""]);
-      setNewLineExtend(() => extendData()?.newFile?.[newLine()?.lineNumber || ""]);
-      setCurrentItem(() => (props.side === SplitSide.old ? oldLine() : newLine()));
-      setCurrentIsHidden(() => currentItem()?.isHidden);
-    };
-
-    init();
-
-    const cb = props.diffFile.subscribe(init);
-
-    onCleanup(cb);
-  });
+  const currentIsHidden = createMemo(() => currentItem()?.isHidden);
 
   const currentExtend = createMemo(() => (props.side === SplitSide.old ? oldLineExtend() : newLineExtend()));
 
@@ -68,7 +50,9 @@ export const DiffSplitExtendLine = (props: {
     () => (props.side === SplitSide.old ? !!oldLineExtend() : !!newLineExtend()) && currentIsShow()
   );
 
-  const extendSide = createMemo(() => SplitSide[currentExtend() ? props.side : props.side === SplitSide.new ? SplitSide.old : SplitSide.new]);
+  const extendSide = createMemo(
+    () => SplitSide[currentExtend() ? props.side : props.side === SplitSide.new ? SplitSide.old : SplitSide.new]
+  );
 
   useSyncHeight({
     selector: lineSelector,

@@ -27,20 +27,7 @@ const DiffString = (props: {
   enableWrap?: boolean;
   enableTemplate?: boolean;
 }) => {
-  const getRange = () => props.diffLine?.changes?.range;
-
-  const getStr1 = () => props.rawLine.slice(0, getRange?.()?.location);
-
-  const getStr2 = () =>
-    props.rawLine.slice(getRange?.()?.location, (getRange?.()?.location || 0) + (getRange?.()?.length || 0));
-
-  const getStr3 = () => props.rawLine.slice((getRange?.()?.location || 0) + (getRange?.()?.length || 0));
-
-  const getIsLast = () => getStr2().includes("\n");
-
-  const get_Str2 = () => (getIsLast() ? getStr2().replace("\n", "").replace("\r", "") : getStr2());
-
-  const getIsNewLineSymbolChanged = () => (getStr3() === "" ? props.diffLine?.changes?.newLineSymbol : null);
+  const getIsNewLineSymbolChanged = () => props.diffLine?.changes?.newLineSymbol;
 
   const initTemplateIfNeed = () => {
     if (
@@ -78,48 +65,53 @@ const DiffString = (props: {
     >
       <Show
         when={props.enableTemplate && props.diffLine?.plainTemplate}
-        fallback={
-          <span class="diff-line-content-raw">
-            <span
-              data-range-start={getRange()?.location}
-              data-range-end={(getRange()?.location || 0) + (getRange()?.length || 0)}
-            >
-              {getStr1()}
-              <span
-                data-diff-highlight
-                class="rounded-[0.2em]"
-                style={{
-                  "background-color":
-                    props.operator === "add"
-                      ? `var(${addContentHighlightBGName})`
-                      : `var(${delContentHighlightBGName})`,
-                }}
-              >
-                {getIsLast() ? (
-                  <>
-                    {get_Str2()}
-                    <span data-newline-symbol>{getSymbol(getIsNewLineSymbolChanged())}</span>
-                  </>
-                ) : (
-                  getStr2()
-                )}
+        fallback={(function () {
+          const range = props.diffLine?.changes?.range;
+          const str1 = props.rawLine.slice(0, range?.location);
+          const str2 = props.rawLine.slice(range?.location, (range?.location || 0) + (range?.length || 0));
+          const str3 = props.rawLine.slice((range?.location || 0) + (range?.length || 0));
+          const isLast = str2.includes("\n");
+          const _str2 = isLast ? str2.replace("\n", "").replace("\r", "") : str2;
+          return (
+            <span class="diff-line-content-raw">
+              <span data-range-start={range?.location} data-range-end={(range?.location || 0) + (range?.length || 0)}>
+                {str1}
+                <span
+                  data-diff-highlight
+                  class="rounded-[0.2em]"
+                  style={{
+                    "background-color":
+                      props.operator === "add"
+                        ? `var(${addContentHighlightBGName})`
+                        : `var(${delContentHighlightBGName})`,
+                  }}
+                >
+                  {isLast ? (
+                    <>
+                      {_str2}
+                      <span data-newline-symbol>{getSymbol(getIsNewLineSymbolChanged())}</span>
+                    </>
+                  ) : (
+                    str2
+                  )}
+                </span>
+                {str3}
               </span>
-              {getStr3()}
+              {getIsNewLineSymbolChanged() === NewLineSymbol.NEWLINE && (
+                <span
+                  data-no-newline-at-end-of-file-symbol
+                  class={props.enableWrap ? "block !text-red-500" : "inline-block align-middle !text-red-500"}
+                  style={{
+                    width: `var(${diffFontSizeName})`,
+                    height: `var(${diffFontSizeName})`,
+                  }}
+                >
+                  <DiffNoNewLine />
+                </span>
+              )}
             </span>
-            {getIsNewLineSymbolChanged() === NewLineSymbol.NEWLINE && (
-              <span
-                data-no-newline-at-end-of-file-symbol
-                class={props.enableWrap ? "block !text-red-500" : "inline-block align-middle !text-red-500"}
-                style={{
-                  width: `var(${diffFontSizeName})`,
-                  height: `var(${diffFontSizeName})`,
-                }}
-              >
-                <DiffNoNewLine />
-              </span>
-            )}
-          </span>
-        }
+          );
+        })()}
       >
         <span class="diff-line-content-raw">
           {/* eslint-disable-next-line solid/no-innerhtml */}

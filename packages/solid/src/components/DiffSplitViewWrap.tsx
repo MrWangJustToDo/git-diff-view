@@ -11,34 +11,21 @@ import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineWrap";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const Style = (props: { splitSideInfo: { side?: SplitSide }; id: string }) => {
-  return (
-    <style data-select-style>
-      {props.splitSideInfo.side === SplitSide.old
-        ? `#${props.id} [data-side="${SplitSide[SplitSide.new]}"] {user-select: none} \n#${props.id} [data-state="extend"] {user-select: none} \n#${props.id} [data-state="hunk"] {user-select: none} \n#${props.id} [data-state="widget"] {user-select: none}`
-        : props.splitSideInfo.side === SplitSide.new
-          ? `#${props.id} [data-side="${SplitSide[SplitSide.old]}"] {user-select: none} \n#${props.id} [data-state="extend"] {user-select: none} \n#${props.id} [data-state="hunk"] {user-select: none} \n#${props.id} [data-state="widget"] {user-select: none}`
-          : ""}
-    </style>
-  );
-};
-
 export const DiffSplitViewWrap = (props: { diffFile: DiffFile }) => {
-  const [lines, setLines] = createSignal(getSplitContentLines(props.diffFile));
+  const getAllLines = () => getSplitContentLines(props.diffFile);
 
-  const [maxText, setMaxText] = createSignal(props.diffFile.splitLineLength.toString());
+  const [lines, setLines] = createSignal(getAllLines());
 
-  const [splitSideInfo, setSplitInfo] = createSignal<{ side?: SplitSide }>({ side: undefined });
+  const [styleRef, setStyleRef] = createSignal<HTMLStyleElement | null>();
+
+  const maxText = createMemo(() => Math.max(props.diffFile.splitLineLength, props.diffFile.fileLineLength).toString());
 
   const fontSize = useFontSize();
 
   const font = createMemo(() => ({ fontSize: `${fontSize() || 14}px`, fontFamily: "Menlo, Consolas, monospace" }));
 
   createEffect(() => {
-    const init = () => {
-      setLines(getSplitContentLines(props.diffFile));
-      setMaxText(props.diffFile.splitLineLength.toString());
-    };
+    const init = () => setLines(getAllLines);
 
     init();
 
@@ -46,6 +33,19 @@ export const DiffSplitViewWrap = (props: { diffFile: DiffFile }) => {
 
     onCleanup(cb);
   });
+
+  const onSelect = (side?: SplitSide) => {
+    const ele = styleRef();
+
+    if (!ele) return;
+
+    if (side) {
+      const targetSide = side === SplitSide.old ? SplitSide.new : SplitSide.old;
+      ele.textContent = `#diff-root${props.diffFile.getId()} [data-side="${SplitSide[targetSide]}"] {user-select: none} \n#diff-root${props.diffFile.getId()} [data-state="extend"] {user-select: none} \n#diff-root${props.diffFile.getId()} [data-state="hunk"] {user-select: none} \n#diff-root${props.diffFile.getId()} [data-state="widget"] {user-select: none}`;
+    } else {
+      ele.textContent = "";
+    }
+  };
 
   const onMouseDown = (e: MouseEvent) => {
     let ele = e.target;
@@ -62,12 +62,12 @@ export const DiffSplitViewWrap = (props: { diffFile: DiffFile }) => {
       if (side) {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        setSplitInfo({ side: SplitSide[side] });
+        onSelect(SplitSide[side]);
         removeAllSelection();
       }
       if (state) {
         if (state === "extend" || state === "hunk" || state === "widget") {
-          setSplitInfo({ side: undefined });
+          onSelect(undefined);
           removeAllSelection();
           return;
         } else {
@@ -93,7 +93,7 @@ export const DiffSplitViewWrap = (props: { diffFile: DiffFile }) => {
           "font-size": `var(${diffFontSizeName})`,
         }}
       >
-        <Style splitSideInfo={splitSideInfo()} id={`diff-root${props.diffFile.getId()}`} />
+        <style data-select-style ref={setStyleRef} />
         <table class="diff-table w-full table-fixed border-collapse border-spacing-0">
           <colgroup>
             <col class="diff-table-old-num-col" width={Math.round(memoWidth())} />
