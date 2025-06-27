@@ -16,7 +16,7 @@ import { createDiffConfigStore } from "./tools";
 
 import type { createDiffWidgetStore } from "./tools";
 import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/core";
-import type { CSSProperties, ForwardedRef, ReactNode } from "react";
+import type { CSSProperties, ForwardedRef, ReactNode, RefObject } from "react";
 
 _cacheMap.name = "@git-diff-view/react";
 
@@ -88,15 +88,15 @@ type DiffViewProps_2<T> = Omit<DiffViewProps<T>, "data"> & {
 };
 
 const InternalDiffView = <T extends unknown>(
-  props: Omit<DiffViewProps<T>, "data" | "registerHighlighter"> & { isMounted: boolean }
+  props: Omit<DiffViewProps<T>, "data" | "registerHighlighter"> & { isMounted: boolean, wrapperRef?: RefObject<HTMLDivElement> }
 ) => {
   const {
     diffFile,
     className,
     style,
+    wrapperRef,
     diffViewMode,
     diffViewWrap,
-    diffViewTheme,
     diffViewFontSize,
     diffViewHighlight,
     renderWidgetLine,
@@ -109,8 +109,6 @@ const InternalDiffView = <T extends unknown>(
   } = props;
 
   const diffFileId = useMemo(() => diffFile.getId(), [diffFile]);
-
-  const wrapperRef = useRef<HTMLDivElement>();
 
   // performance optimization
   const useDiffContext = useMemo(
@@ -209,19 +207,6 @@ const InternalDiffView = <T extends unknown>(
     onCreateUseWidgetHook,
   ]);
 
-  useEffect(() => {
-    const init = () => {
-      wrapperRef.current?.setAttribute("data-theme", diffFile._getTheme() || "light");
-      wrapperRef.current?.setAttribute("data-highlighter", diffFile._getHighlighterName());
-    }
-
-    init();
-
-    const cb = diffFile.subscribe(init);
-
-    return cb;
-  }, [diffFile, diffViewTheme]);
-
   const value = useMemo(() => ({ useDiffContext }), [useDiffContext]);
 
   return (
@@ -290,6 +275,8 @@ const DiffViewWithRef = <T extends unknown>(
 
   const diffFileRef = useRef(diffFile);
 
+  const wrapperRef = useRef<HTMLDivElement>();
+
   if (diffFileRef.current && diffFileRef.current !== diffFile) {
     diffFileRef.current.clear?.();
     diffFileRef.current = diffFile;
@@ -322,6 +309,19 @@ const DiffViewWithRef = <T extends unknown>(
     }
   }, [diffFile, props.diffViewHighlight, registerHighlighter]);
 
+  useEffect(() => {
+    const init = () => {
+      wrapperRef.current?.setAttribute("data-theme", diffFile._getTheme() || "light");
+      wrapperRef.current?.setAttribute("data-highlighter", diffFile._getHighlighterName());
+    };
+
+    init();
+
+    const cb = diffFile.subscribe(init);
+
+    return cb;
+  }, [diffFile, diffViewTheme]);
+
   // fix react strict mode error
   useUnmount(() => (__DEV__ ? diffFile?._destroy?.() : diffFile?.clear?.()), [diffFile]);
 
@@ -335,6 +335,7 @@ const DiffViewWithRef = <T extends unknown>(
       {...restProps}
       diffFile={diffFile}
       isMounted={isMounted}
+      wrapperRef={wrapperRef}
       diffViewTheme={diffViewTheme}
       diffViewMode={restProps.diffViewMode || DiffModeEnum.SplitGitHub}
       diffViewFontSize={restProps.diffViewFontSize || 14}
