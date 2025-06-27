@@ -17,9 +17,9 @@
 
 	let styleRef = $state<HTMLStyleElement | null>(null);
 
-	const fontSize = $derived.by(getFontSize);
+	const fontSize = $derived.by(getFontSize());
 
-	const enableWrap = $derived.by(getEnableWrap);
+	const enableWrap = $derived.by(getEnableWrap());
 
 	const unSubscribe = { current: () => {} };
 
@@ -68,9 +68,9 @@
 		fontFamily: 'Menlo, Consolas, monospace'
 	}));
 
-	const width = useTextWidth({ text: () => maxText, font: () => font });
+	const width = $derived.by(useTextWidth({ text: () => maxText, font: () => font }));
 
-	const computedWidth = $derived.by(() => Math.max(40, width() + 10));
+	const computedWidth = $derived.by(() => Math.max(40, width + 10));
 
 	const id = $derived.by(() => `diff-root${props.diffFile.getId()}`);
 </script>

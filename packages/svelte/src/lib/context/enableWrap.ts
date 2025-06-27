@@ -7,5 +7,5 @@ export function setEnableWrap(props: { diffViewWrap?: boolean }) {
 }
 
 export function getEnableWrap() {
-	return getContext(key);
+	return getContext(key) as () => boolean;
 }

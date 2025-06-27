@@ -7,5 +7,5 @@ export function setFontSize(props: { diffViewFontSize?: number }) {
 }
 
 export function getFontSize() {
-	return getContext(key);
+	return getContext(key) as () => number;
 }

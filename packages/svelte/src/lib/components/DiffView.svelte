@@ -6,6 +6,13 @@
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { setFontSize } from '$lib/context/fontSize.js';
 	import { setEnableWrap } from '$lib/context/enableWrap.js';
+	import { setRenderWidget } from '$lib/context/renderWidget.js';
+	import { setId } from '$lib/context/id.js';
+	import { setExtend } from '$lib/context/extend.js';
+	import { setRenderExtend } from '$lib/context/renderExtend.js';
+	import { setOnAddWidgetClick } from '$lib/context/onAddWidgetClick.js';
+	import { setEnableHighlight } from '$lib/context/enableHighlight.js';
+	import { setEnableAddWidget } from '$lib/context/enableAddWidget.js';
 
 	interface Props {
 		data?: {
@@ -25,30 +32,27 @@
 		diffViewFontSize?: number;
 		diffViewHighlight?: boolean;
 		diffViewAddWidget?: boolean;
-		renderWidgetLine?: ({
-			diffFile,
-			side,
-			lineNumber,
-			onClose
-		}: {
-			lineNumber: number;
-			side: SplitSide;
-			diffFile: DiffFile;
-			onClose: () => void;
-		}) => Snippet;
-		renderExtendLine?: ({
-			diffFile,
-			side,
-			data,
-			lineNumber,
-			onUpdate
-		}: {
-			lineNumber: number;
-			side: SplitSide;
-			data: T;
-			diffFile: DiffFile;
-			onUpdate: () => void;
-		}) => Snippet;
+		renderWidgetLine?: Snippet<
+			[
+				{
+					lineNumber: number;
+					side: SplitSide;
+					diffFile: DiffFile;
+					onClose: () => void;
+				}
+			]
+		>;
+		renderExtendLine?: Snippet<
+			[
+				{
+					lineNumber: number;
+					side: SplitSide;
+					data: T;
+					diffFile: DiffFile;
+					onUpdate: () => void;
+				}
+			]
+		>;
 		onAddWidgetClick?: (lineNumber: number, side: SplitSide) => void;
 	}
 
@@ -177,6 +181,20 @@
 	setFontSize(props);
 
 	setEnableWrap(props);
+
+	setRenderWidget(props);
+
+	setRenderExtend(props);
+
+	setOnAddWidgetClick(props);
+
+	setEnableHighlight(props);
+
+	setEnableAddWidget(props);
+
+	setExtend<T>(props);
+
+	setId(() => diffFile?.getId() || '');
 </script>
 
 <div
