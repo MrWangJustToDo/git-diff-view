@@ -13,6 +13,10 @@
 	import { setOnAddWidgetClick } from '$lib/context/onAddWidgetClick.js';
 	import { setEnableHighlight } from '$lib/context/enableHighlight.js';
 	import { setEnableAddWidget } from '$lib/context/enableAddWidget.js';
+	import { setMode } from '$lib/context/mode.js';
+
+	import DiffSplitView from './DiffSplitView.svelte';
+	import DiffUnifiedView from './DiffUnifiedView.svelte';
 
 	interface Props {
 		data?: {
@@ -192,23 +196,33 @@
 
 	setEnableAddWidget(props);
 
+	setMode(props);
+
 	setExtend<T>(props);
 
 	setId(() => diffFile?.getId() || '');
 </script>
 
-<div
-	class="diff-tailwindcss-wrapper"
-	data-component="git-diff-view"
-	data-theme={diffFile?._getTheme() || 'light'}
-	data-highlighter={diffFile?._getHighlighterName()}
-	{@attach (e) => (wrapperRef = e)}
->
-	<div class="diff-style-root" style={`${diffFontSizeName}:${props.diffViewFontSize || 14}px`}>
-		<div
-			id={isMounted ? `diff-root${id}` : undefined}
-			class={`diff-view-wrapper` + (props.class ? ` ${props.class}` : '')}
-			style={props.style}
-		></div>
+{#if diffFile}
+	<div
+		class="diff-tailwindcss-wrapper"
+		data-component="git-diff-view"
+		data-theme={diffFile?._getTheme() || 'light'}
+		data-highlighter={diffFile?._getHighlighterName()}
+		{@attach (e) => (wrapperRef = e)}
+	>
+		<div class="diff-style-root" style={`${diffFontSizeName}:${props.diffViewFontSize || 14}px`}>
+			<div
+				id={isMounted ? `diff-root${id}` : undefined}
+				class={`diff-view-wrapper` + (props.class ? ` ${props.class}` : '')}
+				style={props.style}
+			>
+				{#if !props.diffViewMode || props.diffViewMode & DiffModeEnum.Split}
+					<DiffSplitView {diffFile} />
+				{:else}
+					<DiffUnifiedView {diffFile} />
+				{/if}
+			</div>
+		</div>
 	</div>
-</div>
+{/if}

@@ -30,6 +30,7 @@
     "@git-diff-view/react": "workspace:*",
     "@git-diff-view/solid": "workspace:*",
     "@git-diff-view/vue": "workspace:*",
+    "@git-diff-view/svelte": "workspace:*",
     "@git-diff-view/utils": "workspace:*",
     "@swc/core": "^1.10.15",
     "@types/lodash": "^4.17.15",

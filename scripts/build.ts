@@ -51,7 +51,7 @@ const buildCss = async (packageName: string) => {
   });
 };
 
-const start = async () => {
+const buildLowlight = async () => {
   await rollupBuild({
     packageName: "lowlight",
     packageScope: "packages",
@@ -67,22 +67,37 @@ const start = async () => {
     },
   });
   await buildType("lowlight");
+};
+
+const buildShiki = async () => {
   await rollupBuild({ packageName: "shiki", packageScope: "packages", external: external });
   await buildType("shiki");
+};
+
+const buildUtils = async () => {
   await rollupBuild({ packageName: "utils", packageScope: "packages", external: externalCorePackage });
   await buildType("utils");
+};
+
+const buildCore = async () => {
   await rollupBuild({
     packageName: "core",
     packageScope: "packages",
     external: externalCorePackage,
   });
   await buildType("core");
+};
+
+const buildFile = async () => {
   await rollupBuild({
     packageName: "file",
     packageScope: "packages",
     external: externalCorePackage,
   });
   await buildType("file");
+};
+
+const buildReact = async () => {
   await rollupBuild({
     packageName: "react",
     packageScope: "packages",
@@ -92,6 +107,9 @@ const start = async () => {
   await buildType("react");
   await copyCss("react", "diff-view.css");
   await copyCss("react", "diff-view-pure.css");
+};
+
+const buildSolid = async () => {
   await new Promise<void>((r, j) => {
     const ls = spawn(`cd packages/solid && pnpm run build`, { shell: true, stdio: "inherit" });
     ls.on("close", () => r());
@@ -101,6 +119,21 @@ const start = async () => {
   await buildType("solid");
   await copyCss("solid", "diff-view.css");
   await copyCss("solid", "diff-view-pure.css");
+};
+
+const buildSvelte = async () => {
+  await new Promise<void>((r, j) => {
+    const ls = spawn(`cd packages/svelte && pnpm run build`, { shell: true, stdio: "inherit" });
+    ls.on("close", () => r());
+    ls.on("error", (e) => j(e));
+  });
+  await buildCss("svelte");
+  // await buildType("solid");
+  await copyCss("svelte", "diff-view.css");
+  await copyCss("svelte", "diff-view-pure.css");
+};
+
+const buildVue = async () => {
   // 对于 "jsx": "preserve" 最新的rollup已经不支持解析，因此使用vite来进行打包
   // https://github.com/rollup/plugins/issues/72
   // https://rollupjs.org/migration/#configuration-changes
@@ -113,22 +146,21 @@ const start = async () => {
   await buildType("vue");
   await copyCss("vue", "diff-view.css");
   await copyCss("vue", "diff-view-pure.css");
+};
+
+const start = async () => {
+  await buildLowlight();
+  await buildShiki();
+  await buildUtils();
+  await buildCore();
+  await buildFile();
+  await buildReact();
+  await buildSolid();
+  await buildSvelte();
+  await buildVue();
   process.exit(0);
 };
 
 start();
 
-// (async () => {
-//   await rollupBuild({ packageName: "utils", packageScope: "packages", external: externalCorePackage });
-//   await buildType("utils");
-// })();
-
-// (async () => {
-//   await buildCss('react');
-//   await buildCss('vue');
-// })();
-
-// (async () => {
-//   await rollupBuild({ packageName: "utils", packageScope: "packages", external: externalCorePackage });
-//   await buildType("utils");
-// })();
+// buildSvelte();

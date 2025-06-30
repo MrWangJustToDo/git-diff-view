@@ -5,6 +5,7 @@ import importPlugin from 'eslint-plugin-import';
 import svelte from 'eslint-plugin-svelte';
 import globals from 'globals';
 import { fileURLToPath } from 'node:url';
+import parser from 'svelte-eslint-parser';
 import ts from 'typescript-eslint';
 
 import svelteConfig from './svelte.config.js';
@@ -25,7 +26,19 @@ export default ts.config(
 		rules: { 'no-undef': 'off' }
 	},
 	{
-		files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js'],
+		files: ['**/*.svelte'],
+		languageOptions: {
+			parser: parser,
+			ecmaVersion: 5,
+			sourceType: 'script',
+			parserOptions: {
+				parser: '@typescript-eslint/parser',
+				svelteConfig
+			}
+		}
+	},
+	{
+		files: ['**/*.svelte.ts', '**/*.svelte.js'],
 		languageOptions: {
 			parserOptions: {
 				projectService: true,
@@ -36,12 +49,14 @@ export default ts.config(
 		}
 	},
 	{
-		files: ['**/*.svelte', '**/*.svelte.ts', '**/*.svelte.js', '**/*.ts', '**/*.js'],
+		files: ['**/*.svelte.ts', '**/*.svelte.js', '**/*.ts', '**/*.js'],
 		extends: [importPlugin.flatConfigs.recommended, importPlugin.flatConfigs.typescript],
 		settings: {
 			'import/extensions': ['.js', '.ts', '.svelte'],
 			'import/parsers': {
-				'@typescript-eslint/parser': ['.ts', '.js', '.svelte']
+				'@typescript-eslint/parser': ['.ts', '.js'],
+				// https://github.com/import-js/eslint-plugin-import/issues/2837#issuecomment-1646122243
+				'svelte-eslint-parser': ['.svelte']
 			},
 			'import/resolver': {
 				typescript: {

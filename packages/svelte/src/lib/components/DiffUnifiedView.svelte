@@ -5,6 +5,11 @@
 	import { getUnifiedContentLine, type DiffFile } from '@git-diff-view/core';
 	import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from '@git-diff-view/utils';
 
+	import DiffUnifiedContentLine from './DiffUnifiedContentLine.svelte';
+	import DiffUnifiedExtendLine from './DiffUnifiedExtendLine.svelte';
+	import DiffUnifiedHunkLine from './DiffUnifiedHunkLine.svelte';
+	import DiffUnifiedWidgetLine from './DiffUnifiedWidgetLine.svelte';
+
 	interface Props {
 		diffFile: DiffFile;
 	}
@@ -54,7 +59,7 @@
 					styleRef.innerHTML = '';
 					removeAllSelection();
 				} else {
-					styleRef.innerHTML = `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`
+					styleRef.innerHTML = `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`;
 					removeAllSelection();
 				}
 				return;
@@ -96,8 +101,35 @@
 					<th scope="col">line content</th>
 				</tr>
 			</thead>
+			<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
 			<tbody class="diff-table-body leading-[1.4]" onmousedown={onMouseDown}>
-
+				{#each lines as item}
+					<DiffUnifiedHunkLine
+						index={item.index}
+						lineNumber={item.lineNumber}
+						diffFile={props.diffFile}
+					/>
+					<DiffUnifiedContentLine
+						index={item.index}
+						lineNumber={item.lineNumber}
+						diffFile={props.diffFile}
+					/>
+					<DiffUnifiedWidgetLine
+						index={item.index}
+						lineNumber={item.lineNumber}
+						diffFile={props.diffFile}
+					/>
+					<DiffUnifiedExtendLine
+						index={item.index}
+						lineNumber={item.lineNumber}
+						diffFile={props.diffFile}
+					/>
+				{/each}
+				<DiffUnifiedHunkLine
+					index={props.diffFile.unifiedLineLength}
+					lineNumber={props.diffFile.unifiedLineLength}
+					diffFile={props.diffFile}
+				/>
 			</tbody>
 		</table>
 	</div>

@@ -17,6 +17,9 @@ importers:
       '@git-diff-view/solid':
         specifier: workspace:*
         version: link:packages/solid
+      '@git-diff-view/svelte':
+        specifier: workspace:*
+        version: link:packages/svelte
       '@git-diff-view/utils':
         specifier: workspace:*
         version: link:packages/utils

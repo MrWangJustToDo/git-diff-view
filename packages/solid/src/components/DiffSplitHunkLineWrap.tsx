@@ -7,7 +7,7 @@ import {
   hunkLineNumberBGName,
   plainLineNumberColorName,
 } from "@git-diff-view/utils";
-import { createEffect, createMemo, createSignal, Show } from "solid-js";
+import { createEffect, createMemo, createSignal, onCleanup, Show } from "solid-js";
 
 import { useMode } from "../hooks";
 
@@ -59,9 +59,7 @@ const DiffSplitHunkLineGitHub = (props: { index: number; diffFile: DiffFile; lin
 
     const cb = props.diffFile.subscribe(init);
 
-    return () => {
-      cb();
-    };
+    onCleanup(cb);
   });
 
   return (
@@ -173,7 +171,7 @@ const DiffSplitHunkLineGitLab = (props: { index: number; diffFile: DiffFile; lin
 
   const currentIsPureHunk = createMemo(() => {
     const hunk = currentHunk();
-    return hunk && !hunk.splitInfo;
+    return hunk && props.diffFile._getIsPureDiffRender() && !hunk.splitInfo;
   });
 
   const currentIsLastLine = createMemo(() => {
@@ -191,9 +189,7 @@ const DiffSplitHunkLineGitLab = (props: { index: number; diffFile: DiffFile; lin
 
     const cb = props.diffFile.subscribe(init);
 
-    return () => {
-      cb();
-    };
+    onCleanup(cb);
   });
 
   return (
