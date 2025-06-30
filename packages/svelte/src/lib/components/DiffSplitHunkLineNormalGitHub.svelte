@@ -4,6 +4,7 @@
 	import {
 		diffAsideWidthName,
 		hunkContentBGName,
+		hunkContentColorName,
 		hunkLineNumberBGName,
 		plainLineNumberColorName
 	} from '@git-diff-view/utils';
@@ -106,11 +107,11 @@
 			<td
 				class="diff-line-hunk-action sticky left-0 w-[1%] min-w-[40px] select-none p-[1px]"
 				style={`
-					background-color: var(${hunkLineNumberBGName}),
-					color: var(${plainLineNumberColorName}),
-					width: var(${diffAsideWidthName}),
-					min-width: var(${diffAsideWidthName}),
-					max-width: var(${diffAsideWidthName})
+					background-color: var(${hunkLineNumberBGName});
+					color: var(${plainLineNumberColorName});
+					width: var(${diffAsideWidthName});
+					min-width: var(${diffAsideWidthName});
+					max-width: var(${diffAsideWidthName});
 				`}
 			>
 				{#if couldExpand}
@@ -162,6 +163,27 @@
 				{:else}
 					<div class="min-h-[28px]">&ensp;</div>
 				{/if}
+			</td>
+			<td
+				class="diff-line-hunk-content pr-[10px] align-middle"
+				style={`background-color: var(${hunkContentBGName})`}
+			>
+				<div
+					class="pl-[1.5em]"
+					style={`
+						color: var(${hunkContentColorName})
+					`}
+				>
+					{currentHunk?.splitInfo?.plainText || currentHunk?.text}
+				</div>
+			</td>
+		{:else}
+			<td
+				class="diff-line-hunk-placeholder select-none"
+				colspan={2}
+				style={`background-color: var(${hunkContentBGName})`}
+			>
+				<div class="min-h-[28px]">&ensp;</div>
 			</td>
 		{/if}
 	</tr>

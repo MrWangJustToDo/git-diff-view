@@ -29,7 +29,7 @@ const InternalDiffSplitWidgetLine = ({
 
   const newLine = diffFile.getSplitRightLine(index);
 
-  const widgetSide = useWidget.getReadonlyState().widgetSide;
+  const widgetSide = useWidget.useShallowStableSelector(s => s.widgetSide);
 
   const widgetLineNumber = useWidget.getReadonlyState().widgetLineNumber;
 

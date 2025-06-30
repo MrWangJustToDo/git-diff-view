@@ -41,7 +41,6 @@
 		const { data, bundle } = e.data;
 		const instance = DiffFile.createInstance(data || {}, bundle);
 		diffFile = instance;
-		console.log('diffFile', diffFile);
 	});
 
 	$effect(() => {

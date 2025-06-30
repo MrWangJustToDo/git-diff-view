@@ -29,7 +29,7 @@
 	const currentIsShow = $derived.by(() =>
 		Boolean(
 			(oldLineExtend || newLineExtend) &&
-				((!oldLine?.isHidden && !newLine.isHidden) || enableExpand) &&
+				((!oldLine?.isHidden && !newLine?.isHidden) || enableExpand) &&
 				renderExtend
 		)
 	);
@@ -64,7 +64,7 @@
 			<td
 				class="diff-line-extend-new-content border-l-[1px] p-0"
 				colspan={2}
-				style={`border-left-color: var(${borderColorName}), border-left-style: solid `}
+				style={`border-left-color: var(${borderColorName}); border-left-style: solid `}
 			>
 				<div class="diff-line-extend-wrapper">
 					{@render renderExtend({
@@ -80,9 +80,9 @@
 			<td
 				class="diff-line-extend-new-placeholder select-none border-l-[1px] p-0"
 				style={`
-					background-color: var(${emptyBGName}),
-					border-left-color: var(${borderColorName}),
-					border-left-style: solid
+					background-color: var(${emptyBGName});
+					border-left-color: var(${borderColorName});
+					border-left-style: solid;
 				`}
 				colspan={2}
 			></td>

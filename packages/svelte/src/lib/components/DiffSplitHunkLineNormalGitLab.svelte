@@ -104,10 +104,10 @@
 		<td
 			class="diff-line-hunk-action sticky left-0 w-[1%] min-w-[40px] select-none p-[1px]"
 			style={`
-				background-color: var(${hunkLineNumberBGName}),
-				color: var(${plainLineNumberColorName}),
-				width: var(${diffAsideWidthName}),
-				min-width: var(${diffAsideWidthName}),
+				background-color: var(${hunkLineNumberBGName});
+				color: var(${plainLineNumberColorName});
+				width: var(${diffAsideWidthName});
+				min-width: var(${diffAsideWidthName});
 				max-width: var(${diffAsideWidthName})
 			`}
 		>

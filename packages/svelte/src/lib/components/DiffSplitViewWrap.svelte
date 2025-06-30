@@ -98,9 +98,9 @@
 	<div
 		class="diff-table-wrapper w-full"
 		style={`
-			${diffAsideWidthName}: ${Math.round(memoWidth)}px,
-			font-family: Menlo, Consolas, monospace,
-			font-size: var(${diffFontSizeName})
+			${diffAsideWidthName}: ${Math.round(memoWidth)}px;
+			font-family: Menlo, Consolas, monospace;
+			font-size: var(${diffFontSizeName});
 		`}
 	>
 		<style data-select-style {@attach (e) => (styleRef = e)}></style>

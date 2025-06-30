@@ -18,15 +18,15 @@
 <div
 	class="diff-add-widget-wrapper invisible absolute left-[100%] top-[1px] translate-x-[-50%] select-none transition-transform hover:scale-110 group-hover:visible"
 	style={`
-		width: calc(var(${diffFontSizeName}) * 1.4),
-		height: calc(var(${diffFontSizeName}) * 1.4)
+		width: calc(var(${diffFontSizeName}) * 1.4);
+		height: calc(var(${diffFontSizeName}) * 1.4);
 	`}
 >
 	<button
 		class="diff-add-widget z-[1] flex h-full w-full origin-center cursor-pointer items-center justify-center rounded-md text-[1.2em]"
 		style={`
-			color: var(${addWidgetColorName}),
-			backgroundColor: var(${addWidgetBGName})
+			color: var(${addWidgetColorName});
+			backgroundColor: var(${addWidgetBGName});
 		`}
 		onclick={() => {
 			props.onOpenAddWidget(props.lineNumber, props.side);

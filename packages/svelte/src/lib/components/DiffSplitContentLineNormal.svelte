@@ -101,11 +101,11 @@
 			<td
 				class={`diff-line-${SplitSide[props.side]}-num sticky left-0 z-[1] w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top`}
 				style={`
-					background-color: ${getLineNumberBG(isAdded(), isDelete(), currentLineHasDiff)},
-					color: var(${currentLineHasDiff ? plainLineNumberColorName : expandLineNumberColorName}),
-					width: var(${diffAsideWidthName}),
-					min-width': var(${diffAsideWidthName}),
-					max-width': var(${diffAsideWidthName})
+					background-color: ${getLineNumberBG(isAdded(), isDelete(), currentLineHasDiff)};
+					color: var(${currentLineHasDiff ? plainLineNumberColorName : expandLineNumberColorName});
+					width: var(${diffAsideWidthName});
+					min-width: var(${diffAsideWidthName});
+					max-width: var(${diffAsideWidthName})
 				`}
 			>
 				{#if currentLineHasDiff && enableAddWidget}
@@ -143,7 +143,7 @@
 		{:else}
 			<td
 				class={`diff-line-${SplitSide[props.side]}-placeholder select-none`}
-				style={`background-color': var(${emptyBGName}) `}
+				style={`background-color: var(${emptyBGName}) `}
 				colspan={2}
 			>
 				<span>&ensp;</span>

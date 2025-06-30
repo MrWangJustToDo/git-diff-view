@@ -76,7 +76,7 @@
 			<td
 				class="diff-line-widget-new-content border-l-[1px] p-0"
 				colspan={2}
-				style={`border-left-color: var(${borderColorName}), border-left-style: solid `}
+				style={`border-left-color: var(${borderColorName}); border-left-style: solid `}
 			>
 				<div class="diff-line-widget-wrapper">
 					{@render renderWidget?.({
@@ -91,9 +91,9 @@
 			<td
 				class="diff-line-widget-new-placeholder select-none border-l-[1px] p-0"
 				style={`
-					background-color: var(${emptyBGName}),
-					border-left-color: var(${borderColorName}),
-					border-left-style: solid
+					background-color: var(${emptyBGName});
+					border-left-color: var(${borderColorName});
+					border-left-style: solid;
 				`}
 				colspan={2}
 			></td>

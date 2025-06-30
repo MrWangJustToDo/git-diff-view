@@ -62,7 +62,7 @@
 						? 'block !text-red-500'
 						: 'inline-block align-middle !text-red-500'}
 					style={`
-						width: var(${diffFontSizeName}),
+						width: var(${diffFontSizeName});
 						height: var(${diffFontSizeName})
 					`}
 				>
@@ -85,7 +85,7 @@
 					class="rounded-[0.2em]"
 					style={`
                 background-color:
-                  operator === "add" ? var(${addContentHighlightBGName}) : var(${delContentHighlightBGName}),
+                  ${props.operator === 'add' ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`},
               `}
 				>
 					{#if isLast}
@@ -104,7 +104,7 @@
 						? 'block !text-red-500'
 						: 'inline-block align-middle !text-red-500'}
 					style={`
-						width: var(${diffFontSizeName}),
+						width: var(${diffFontSizeName});
 						height: var(${diffFontSizeName})
 					`}
 				>

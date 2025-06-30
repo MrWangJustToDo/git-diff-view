@@ -80,7 +80,7 @@
 		<td
 			class="diff-line-hunk-action relative w-[1%] min-w-[40px] select-none p-[1px]"
 			style={`
-				background-color: var(${hunkLineNumberBGName}),
+				background-color: var(${hunkLineNumberBGName});
 				color: var(${plainLineNumberColorName})
 			`}
 		>

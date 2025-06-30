@@ -109,11 +109,11 @@
 				<td
 					class="diff-line-num sticky left-0 z-[1] w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
 					style={`
-          color: var(${plainLineNumberColorName}),
-          background-color: var(${delLineNumberBGName}),
-          width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2),
-          max-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2),
-          min-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2),
+          color: var(${plainLineNumberColorName});
+          background-color: var(${delLineNumberBGName});
+          width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
+          max-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
+          min-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
         `}
 				>
 					{#if props.enableAddWidget}
@@ -168,11 +168,11 @@
 				<td
 					class="diff-line-num sticky left-0 z-[1] w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
 					style={`
-          color: var(${plainLineNumberColorName}),
-          background-color: var(${addLineNumberBGName}),
-          width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2),
-          max-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2),
-          min-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2),
+          color: var(${plainLineNumberColorName});
+          background-color: var(${addLineNumberBGName});
+          width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
+          max-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
+          min-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
         `}
 				>
 					{#if props.enableAddWidget}
@@ -214,8 +214,8 @@
 				index: props.lineNumber,
 				enableWrap: enableWrap,
 				diffFile: props.diffFile,
-				rawLine: unifiedItem.value || '',
-				diffLine: unifiedItem.diff,
+				rawLine: unifiedItem?.value || '',
+				diffLine: unifiedItem?.diff,
 				plainLine: currentPlainLine,
 				syntaxLine: currentSyntaxLine,
 				enableHighlight: enableHighlight,
@@ -230,8 +230,8 @@
 				index: props.lineNumber,
 				enableWrap: enableWrap,
 				diffFile: props.diffFile,
-				rawLine: unifiedItem.value || '',
-				diffLine: unifiedItem.diff,
+				rawLine: unifiedItem?.value || '',
+				diffLine: unifiedItem?.diff,
 				plainLine: currentPlainLine,
 				syntaxLine: currentSyntaxLine,
 				enableHighlight: enableHighlight,
@@ -250,13 +250,13 @@
 			<td
 				class="diff-line-num sticky left-0 z-[1] w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
 				style={`
-					color: var(${unifiedItem?.diff ? plainLineNumberColorName : expandLineNumberColorName}),
+					color: var(${unifiedItem?.diff ? plainLineNumberColorName : expandLineNumberColorName});
 					background-color: ${
 						unifiedItem?.diff ? `var(${plainLineNumberBGName})` : `var(${expandContentBGName})`
-					},
-					width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2)
-					max-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2)
-					min-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2
+					};
+					width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
+					max-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
+					min-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2;
 				`}
 			>
 				{#if enableAddWidget && unifiedItem?.diff}

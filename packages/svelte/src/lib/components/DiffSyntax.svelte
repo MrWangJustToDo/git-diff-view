@@ -72,8 +72,8 @@
 						? 'block !text-red-500'
 						: 'inline-block align-middle !text-red-500'}
 					style={`
-                width: var(${diffFontSizeName}),
-                height: var(${diffFontSizeName}),
+                width: var(${diffFontSizeName});
+                height: var(${diffFontSizeName});
               `}
 				>
 					<DiffNoNewLine />
@@ -118,11 +118,11 @@
 								data-diff-highlight
 								style={`
                         background-color:
-                          ${props.operator === 'add' ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`},
-                        border-top-left-radius: ${isStart ? '0.2em' : undefined},
-                        border-bottom-left-radius: ${isStart ? '0.2em' : undefined},
-                        border-top-right-radius: ${isEnd || isLast ? '0.2em' : undefined},
-                        border-bottom-right-radius: ${isEnd || isLast ? '0.2em' : undefined},
+                          ${props.operator === 'add' ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`};
+                        border-top-left-radius: ${isStart ? '0.2em' : undefined};
+                        border-bottom-left-radius: ${isStart ? '0.2em' : undefined};
+                        border-top-right-radius: ${isEnd || isLast ? '0.2em' : undefined};
+                        border-bottom-right-radius: ${isEnd || isLast ? '0.2em' : undefined};
                       `}
 							>
 								{#if isLast}
@@ -144,8 +144,8 @@
 						? 'block !text-red-500'
 						: 'inline-block align-middle !text-red-500'}
 					style={`
-								width: var(${diffFontSizeName}),
-								height: var(${diffFontSizeName}),
+								width: var(${diffFontSizeName});
+								height: var(${diffFontSizeName});
 							`}
 				>
 					<DiffNoNewLine />

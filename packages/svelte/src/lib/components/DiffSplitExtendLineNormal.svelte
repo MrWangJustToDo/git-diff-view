@@ -107,7 +107,7 @@
 		{:else}
 			<td
 				class={`diff-line-extend-${SplitSide[props.side]}-placeholder select-none p-0`}
-				style={` background-color': var(${emptyBGName})`}
+				style={` background-color: var(${emptyBGName})`}
 				colspan={2}
 			>
 				<div

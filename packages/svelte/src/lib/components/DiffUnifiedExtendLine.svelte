@@ -48,8 +48,8 @@
 					{@render renderExtend({
 						diffFile: props.diffFile,
 						side: SplitSide.old,
-						data: oldExtend.data,
-						lineNumber: unifiedItem.oldLineNumber || 0,
+						data: oldExtend?.data,
+						lineNumber: unifiedItem?.oldLineNumber || 0,
 						onUpdate: () => props.diffFile.notifyAll()
 					})}
 				{/if}
@@ -57,8 +57,8 @@
 					{@render renderExtend({
 						diffFile: props.diffFile,
 						side: SplitSide.new,
-						data: newExtend.data,
-						lineNumber: unifiedItem.newLineNumber || 0,
+						data: newExtend?.data,
+						lineNumber: unifiedItem?.newLineNumber || 0,
 						onUpdate: () => props.diffFile.notifyAll()
 					})}
 				{/if}

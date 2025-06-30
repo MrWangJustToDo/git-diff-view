@@ -86,7 +86,7 @@
 	<style data-select-style {@attach (e) => (styleRef = e)}></style>
 	<div
 		class="unified-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
-		style={`${diffAsideWidthName}: ${Math.round(computedWidth)}px, font-family: Menlo, Consolas, monospace, font-size: var(${diffFontSizeName})`}
+		style={`${diffAsideWidthName}: ${Math.round(computedWidth)}px; font-family: Menlo, Consolas, monospace; font-size: var(${diffFontSizeName})`}
 	>
 		<table
 			class={`unified-diff-table w-full border-collapse border-spacing-0 ${enableWrap ? 'table-fixed' : ''}`}

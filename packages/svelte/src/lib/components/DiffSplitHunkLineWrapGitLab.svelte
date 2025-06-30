@@ -81,7 +81,7 @@
 		<td
 			class="diff-line-hunk-action relative w-[1%] min-w-[40px] select-none p-[1px]"
 			style={`
-				background-color: var(${hunkLineNumberBGName}),
+				background-color: var(${hunkLineNumberBGName});
 				color: var(${plainLineNumberColorName})
 			`}
 		>
@@ -151,9 +151,9 @@
 		<td
 			class="diff-line-hunk-action relative z-[1] w-[1%] min-w-[40px] select-none border-l-[1px] p-[1px]"
 			style={`
-				background-color: var(${hunkLineNumberBGName}),
-				color: var(${plainLineNumberColorName}),
-				border-left-color: var(${borderColorName}),
+				background-color: var(${hunkLineNumberBGName});
+				color: var(${plainLineNumberColorName});
+				border-left-color: var(${borderColorName});
 				border-left-style: solid
 			`}
 		>

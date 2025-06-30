@@ -29,7 +29,7 @@
 <div
 	class="diff-line-content-item pl-[2.0em]"
 	style={`
-		white-space: ${props.enableWrap ? 'pre-wrap' : 'pre'},
+		white-space: ${props.enableWrap ? 'pre-wrap' : 'pre'};
 		word-break: ${props.enableWrap ? 'break-all' : 'initial'}
 	`}
 >

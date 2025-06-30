@@ -93,11 +93,11 @@
 
 {#if !hasHidden}
 	<tr data-line={props.lineNumber} data-state={hasDiff ? 'diff' : 'plain'} class="diff-line">
-		{#if oldLine.lineNumber}
+		{#if oldLine?.lineNumber}
 			<td
 				class="diff-line-old-num group relative w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top"
 				style={`
-					background-color: ${getLineNumberBG(false, oldLineIsDelete(), hasDiff)},
+					background-color: ${getLineNumberBG(false, oldLineIsDelete(), hasDiff)};
 					color: var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName})
 				`}
 			>
@@ -114,7 +114,7 @@
 				{/if}
 				<span
 					data-line-num={oldLine?.lineNumber}
-					style={` opacity: ${hasChange ? undefined : 0.5} `}
+					style={`opacity: ${hasChange ? undefined : 0.5} `}
 				>
 					{oldLine?.lineNumber}
 				</span>
@@ -148,19 +148,19 @@
 		{:else}
 			<td
 				class="diff-line-old-placeholder select-none"
-				style={`background-color': var(${emptyBGName}) `}
+				style={`background-color: var(${emptyBGName}) `}
 				colspan={2}
 			>
 				<span>&ensp;</span>
 			</td>
 		{/if}
-		{#if newLine.lineNumber}
+		{#if newLine?.lineNumber}
 			<td
 				class="diff-line-new-num group relative w-[1%] min-w-[40px] select-none border-l-[1px] pl-[10px] pr-[10px] text-right align-top"
 				style={`
-					background-color: ${getLineNumberBG(newLineIsAdded(), false, hasDiff)},
-					color: var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName}),
-					border-left-color: var(${borderColorName}),
+					background-color: ${getLineNumberBG(newLineIsAdded(), false, hasDiff)};
+					color: var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName});
+					border-left-color: var(${borderColorName});
 					border-left-style: solid
 				`}
 			>
@@ -212,9 +212,9 @@
 			<td
 				class="diff-line-new-placeholder select-none border-l-[1px]"
 				style={`
-					background-color: var(${emptyBGName}),
-					border-left-color: var(${borderColorName}),
-					border-left-style: solid
+					background-color: var(${emptyBGName});
+					border-left-color: var(${borderColorName});
+					border-left-style: solid;
 				`}
 				colspan={2}
 			>

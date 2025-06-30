@@ -77,11 +77,11 @@
 		<td
 			class="diff-line-hunk-action sticky left-0 w-[1%] min-w-[100px] select-none"
 			style={`
-				background-color: var(${hunkLineNumberBGName}),
-				color: var(${plainLineNumberColorName}),
-				width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2),
-				max-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2),
-				min-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2)
+				background-color: var(${hunkLineNumberBGName});
+				color: var(${plainLineNumberColorName});
+				width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
+				max-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
+				min-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
 			`}
 		>
 			{#if couldExpand}
@@ -141,12 +141,12 @@
 			<div
 				class="pl-[1.5em]"
 				style={`
-					white-space: ${enableWrap ? 'pre-wrap' : 'pre'},
-					word-break: ${enableWrap ? 'break-all' : 'initial'},
-					color: var(${hunkContentColorName})
+					white-space: ${enableWrap ? 'pre-wrap' : 'pre'};
+					word-break: ${enableWrap ? 'break-all' : 'initial'};
+					color: var(${hunkContentColorName});
 				`}
 			>
-				{currentHunk.unifiedInfo?.plainText || currentHunk.text}
+				{currentHunk?.unifiedInfo?.plainText || currentHunk.text}
 			</div>
 		</td>
 	</tr>

@@ -74,10 +74,10 @@
 	<div
 		class="old-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
 		style={`
-      ${diffAsideWidthName}: ${Math.round(computedWidth)}px,
-      overscroll-behavior-x: none,
-      font-family: Menlo, Consolas, monospace,
-      font-size: var(${diffFontSizeName}),
+      ${diffAsideWidthName}: ${Math.round(computedWidth)}px;
+      overscroll-behavior-x: none;
+      font-family: Menlo, Consolas, monospace;
+      font-size: var(${diffFontSizeName});
     `}
 		{@attach (e) => {
 			ref1 = e;
@@ -89,10 +89,10 @@
 	<div
 		class="new-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
 		style={`
-			${diffAsideWidthName}: ${Math.round(computedWidth)}px,
-			overscroll-behavior-x: none,
-			font-family: Menlo, Consolas, monospace,
-			font-size: var(${diffFontSizeName})
+			${diffAsideWidthName}: ${Math.round(computedWidth)}px;
+			overscroll-behavior-x: none;
+			font-family: Menlo, Consolas, monospace;
+			font-size: var(${diffFontSizeName});
 		`}
 		{@attach (e) => {
 			ref2 = e;

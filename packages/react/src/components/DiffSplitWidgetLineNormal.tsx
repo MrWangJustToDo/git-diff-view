@@ -134,11 +134,13 @@ export const DiffSplitWidgetLine = ({
         const newLineWidget =
           newLine.lineNumber && widgetSide === SplitSide.new && widgetLineNumber === newLine.lineNumber;
 
-        const currentIsShow = oldLineWidget || newLineWidget;
+        const currentLineWidget = side === SplitSide.old ? oldLineWidget : newLineWidget;
+
+        const currentIsShow = currentLineWidget;
 
         return currentIsShow;
       },
-      [diffFile, index]
+      [diffFile, index, side]
     ),
     (p, c) => p === c
   );

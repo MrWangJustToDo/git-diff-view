@@ -21,18 +21,18 @@
 	const oldWidget = $derived.by(
 		() =>
 			unifiedItem?.oldLineNumber &&
-			widget.side === SplitSide.old &&
-			widget.lineNumber === unifiedItem.oldLineNumber
+			widget?.side === SplitSide.old &&
+			widget?.lineNumber === unifiedItem?.oldLineNumber
 	);
 
 	const newWidget = $derived.by(
 		() =>
 			unifiedItem?.newLineNumber &&
-			widget.side === SplitSide.new &&
-			widget.lineNumber === unifiedItem.newLineNumber
+			widget?.side === SplitSide.new &&
+			widget?.lineNumber === unifiedItem?.newLineNumber
 	);
 
-	const currentIsHidden = $derived.by(() => unifiedItem.isHidden);
+	const currentIsHidden = $derived.by(() => unifiedItem?.isHidden);
 
 	const currentIsShow = $derived.by(() =>
 		Boolean((oldWidget || newWidget) && !currentIsHidden && renderWidget)
@@ -63,7 +63,7 @@
 					{@render renderWidget({
 						diffFile: props.diffFile,
 						side: SplitSide.old,
-						lineNumber: unifiedItem.oldLineNumber || 0,
+						lineNumber: unifiedItem?.oldLineNumber || 0,
 						onClose: onCloseWidget
 					})}
 				{/if}
@@ -71,7 +71,7 @@
 					{@render renderWidget?.({
 						diffFile: props.diffFile,
 						side: SplitSide.new,
-						lineNumber: unifiedItem.newLineNumber || 0,
+						lineNumber: unifiedItem?.newLineNumber || 0,
 						onClose: onCloseWidget
 					})}
 				{/if}
