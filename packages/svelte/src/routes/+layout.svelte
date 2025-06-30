@@ -1,10 +1,10 @@
 <script lang="ts">
 	import '../app.css';
-	import "../../styles/diff-view.css";
+	import "../tailwind_pure.css";
 
 	let { children } = $props();
 </script>
 
-<div>
+<div class="diff-tailwindcss-wrapper">
 	{@render children()}
 </div>
