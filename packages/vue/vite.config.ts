@@ -17,6 +17,7 @@ export default defineConfig({
         format === "cjs" ? `vue-git-diff-view.cjs` : format === "es" ? `vue-git-diff-view.mjs` : `vue-git-diff-view.js`,
     },
     sourcemap: true,
+    minify: false,
     rollupOptions: {
       external: ["vue", "@git-diff-view/core"],
       output: {

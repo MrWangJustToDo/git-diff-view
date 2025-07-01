@@ -32,7 +32,9 @@
 			"types": "./dist/index.d.ts",
 			"svelte": "./dist/index.js",
 			"import": "./dist/index.js"
-		}
+		},
+		"./styles/*": "./dist/css/*",
+		"./package.json": "./package.json"
 	},
 	"dependencies": {
 		"@git-diff-view/core": "^0.0.29",
@@ -70,6 +72,7 @@
 		"vite-plugin-devtools-json": "^0.2.0"
 	},
 	"keywords": [
-		"svelte"
+		"diff component",
+    "svelte diff component"
 	]
 }
