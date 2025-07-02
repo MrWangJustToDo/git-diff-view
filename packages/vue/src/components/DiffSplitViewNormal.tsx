@@ -22,7 +22,12 @@ import { SplitSide } from "./DiffView";
 import type { DiffFile } from "@git-diff-view/core";
 
 const DiffSplitViewTable = defineComponent(
-  (props: { side: SplitSide; diffFile: DiffFile; onSelect?: (side?: SplitSide) => void }) => {
+  (props: {
+    side: SplitSide;
+    diffFile: DiffFile;
+    onSelect?: (side?: SplitSide) => void;
+    selectState: { current?: SplitSide };
+  }) => {
     const className = computed(() => (props.side === SplitSide.new ? "new-diff-table" : "old-diff-table"));
 
     const lines = ref(getSplitContentLines(props.diffFile));
@@ -30,6 +35,8 @@ const DiffSplitViewTable = defineComponent(
     useSubscribeDiffFile(props, (diffFile) => {
       lines.value = getSplitContentLines(diffFile);
     });
+
+    const selectState = props.selectState;
 
     const onMouseDown = (e: MouseEvent) => {
       let ele = e.target as HTMLElement;
@@ -43,11 +50,17 @@ const DiffSplitViewTable = defineComponent(
         const state = ele.getAttribute("data-state");
         if (state) {
           if (state === "extend" || state === "hunk" || state === "widget") {
-            props.onSelect?.(undefined);
-            removeAllSelection();
+            if (selectState.current !== undefined) {
+              selectState.current = undefined;
+              props.onSelect?.(undefined);
+              removeAllSelection();
+            }
           } else {
-            props.onSelect?.(props.side);
-            removeAllSelection();
+            if (selectState.current !== props.side) {
+              selectState.current = props.side;
+              props.onSelect?.(props.side);
+              removeAllSelection();
+            }
           }
           return;
         }
@@ -108,7 +121,7 @@ const DiffSplitViewTable = defineComponent(
       );
     };
   },
-  { name: "DiffSplitViewTable", props: ["diffFile", "side", "onSelect"] }
+  { name: "DiffSplitViewTable", props: ["diffFile", "side", "onSelect", "selectState"] }
 );
 
 export const DiffSplitViewNormal = defineComponent(
@@ -149,6 +162,8 @@ export const DiffSplitViewNormal = defineComponent(
 
     const fontSize = useFontSize();
 
+    const selectState = { current: undefined as SplitSide | undefined };
+
     const font = computed(() => ({ fontSize: fontSize.value + "px", fontFamily: "Menlo, Consolas, monospace" }));
 
     const width = useTextWidth({ text: maxText, font });
@@ -169,7 +184,12 @@ export const DiffSplitViewNormal = defineComponent(
               fontSize: `var(${diffFontSizeName})`,
             }}
           >
-            <DiffSplitViewTable side={SplitSide.old} diffFile={props.diffFile} onSelect={onSelect} />
+            <DiffSplitViewTable
+              side={SplitSide.old}
+              diffFile={props.diffFile}
+              onSelect={onSelect}
+              selectState={selectState}
+            />
           </div>
           <div class="diff-split-line w-[1.5px]" style={{ backgroundColor: `var(${borderColorName})` }} />
           <div
@@ -182,7 +202,12 @@ export const DiffSplitViewNormal = defineComponent(
               fontSize: `var(${diffFontSizeName})`,
             }}
           >
-            <DiffSplitViewTable side={SplitSide.new} diffFile={props.diffFile} onSelect={onSelect} />
+            <DiffSplitViewTable
+              side={SplitSide.new}
+              diffFile={props.diffFile}
+              onSelect={onSelect}
+              selectState={selectState}
+            />
           </div>
         </div>
       );

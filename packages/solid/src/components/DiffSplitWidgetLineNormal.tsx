@@ -49,7 +49,7 @@ export const DiffSplitWidgetLine = (props: {
   );
 
   const currentIsShow = createMemo(
-    () => (!!oldLineWidget() || !!newLineWidget()) && !currentIsHidden() && !newLine()?.isHidden && !!renderWidget
+    () => (!!oldLineWidget() || !!newLineWidget()) && !currentIsHidden() && !!renderWidget
   );
 
   const currentEnable = createMemo(() => currentWidget() && !!currentIsShow());

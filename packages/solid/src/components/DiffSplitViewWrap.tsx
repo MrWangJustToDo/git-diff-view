@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { getSplitContentLines, SplitSide } from "@git-diff-view/core";
 import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from "@git-diff-view/utils";
 import { createEffect, createMemo, createSignal, onCleanup, For } from "solid-js";
@@ -34,6 +35,8 @@ export const DiffSplitViewWrap = (props: { diffFile: DiffFile }) => {
     onCleanup(cb);
   });
 
+  const selectState = { current: undefined as SplitSide | undefined };
+
   const onSelect = (side?: SplitSide) => {
     const ele = styleRef();
 
@@ -60,15 +63,22 @@ export const DiffSplitViewWrap = (props: { diffFile: DiffFile }) => {
       const state = ele.getAttribute("data-state");
       const side = ele.getAttribute("data-side");
       if (side) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        onSelect(SplitSide[side]);
-        removeAllSelection();
+        if (selectState.current !== SplitSide[side]) {
+          // @ts-ignore
+          selectState.current = SplitSide[side];
+          // @ts-ignore
+          onSelect(SplitSide[side]);
+          removeAllSelection();
+        }
       }
       if (state) {
         if (state === "extend" || state === "hunk" || state === "widget") {
-          onSelect(undefined);
-          removeAllSelection();
+          if (selectState.current !== undefined) {
+            selectState.current = undefined;
+            onSelect(undefined);
+            removeAllSelection();
+          }
           return;
         } else {
           return;

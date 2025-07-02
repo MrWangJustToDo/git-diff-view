@@ -85,6 +85,8 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
 
   const ref = useRef<HTMLStyleElement>();
 
+  const tempRef = useRef<SplitSide>();
+
   const splitLineLength = Math.max(diffFile.splitLineLength, diffFile.fileLineLength);
 
   const { useDiffContext } = useDiffViewContext();
@@ -139,13 +141,19 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
       const state = ele.getAttribute("data-state");
       const side = ele.getAttribute("data-side");
       if (side) {
-        setStyle(SplitSide[side]);
-        removeAllSelection();
+        if (tempRef.current !== SplitSide[side]) {
+          tempRef.current = SplitSide[side];
+          setStyle(SplitSide[side]);
+          removeAllSelection();
+        }
       }
       if (state) {
         if (state === "extend" || state === "hunk" || state === "widget") {
-          setStyle(undefined);
-          removeAllSelection();
+          if (tempRef.current !== undefined) {
+            tempRef.current = undefined;
+            setStyle(undefined);
+            removeAllSelection();
+          }
           return;
         } else {
           return;

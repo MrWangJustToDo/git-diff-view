@@ -1,7 +1,9 @@
-import devtoolsJson from 'vite-plugin-devtools-json';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { defineConfig } from 'vite';
+import devtoolsJson from 'vite-plugin-devtools-json';
 
 export default defineConfig({
-	plugins: [sveltekit(), devtoolsJson()]
+	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+	plugins: [sveltekit(), devtoolsJson()],
 });

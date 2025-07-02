@@ -23,6 +23,8 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const ref = useRef<HTMLStyleElement>(null);
 
+  const tempRef = useRef<SplitSide>();
+
   const useDiffContextRef = useRef(useDiffContext);
 
   useDiffContextRef.current = useDiffContext;
@@ -87,12 +89,18 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
       const state = ele.getAttribute("data-state");
       if (state) {
         if (state === "extend" || state === "hunk" || state === "widget") {
-          setStyle(undefined);
-          removeAllSelection();
+          if (tempRef.current !== undefined) {
+            tempRef.current = undefined;
+            setStyle(undefined);
+            removeAllSelection();
+          }
           return;
         } else {
-          setStyle(SplitSide.new);
-          removeAllSelection();
+          if (tempRef.current !== SplitSide.new) {
+            tempRef.current = SplitSide.new;
+            setStyle(SplitSide.new);
+            removeAllSelection();
+          }
           return;
         }
       }

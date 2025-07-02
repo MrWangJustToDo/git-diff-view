@@ -5,12 +5,12 @@
 	import { getEnableWrap } from '$lib/context/enableWrap.js';
 	import { composeLen, type DiffFile } from '@git-diff-view/core';
 	import {
-		diffAsideWidthName,
 		hunkContentBGName,
 		hunkContentColorName,
 		hunkLineNumberBGName,
 		plainLineNumberColorName
-	} from '@git-diff-view/utils';
+	} from '$lib/utils/color.js';
+	import { diffAsideWidthName } from '$lib/utils/size.js';
 
 	interface Props {
 		index: number;

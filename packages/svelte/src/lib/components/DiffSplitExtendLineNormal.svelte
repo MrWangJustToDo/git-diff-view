@@ -4,7 +4,7 @@
 	import { useDomWidth } from '$lib/hooks/useDomWidth.svelte.js';
 	import { useSyncHeight } from '$lib/hooks/useSyncHeight.svelte.js';
 	import { SplitSide, type DiffFile } from '@git-diff-view/core';
-	import { emptyBGName } from '@git-diff-view/utils';
+	import { emptyBGName } from '$lib/utils/color.js';
 
 	interface Props {
 		index: number;

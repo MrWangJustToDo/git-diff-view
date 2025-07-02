@@ -16,7 +16,7 @@
 		getContentBG,
 		getLineNumberBG,
 		plainLineNumberColorName
-	} from '@git-diff-view/utils';
+	} from '$lib/utils/color.js';
 	import DiffSplitAddWidget from './DiffSplitAddWidget.svelte';
 	import DiffContent from './DiffContent.svelte';
 

@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { DiffFile, SplitSide } from '@git-diff-view/core';
-	import { addWidgetBGName, addWidgetColorName, diffFontSizeName } from '@git-diff-view/utils';
+	import { addWidgetBGName, addWidgetColorName } from '$lib/utils/color.js';
+	import { diffFontSizeName } from '$lib/utils/size.js';
 
 	interface Props {
 		index: number;

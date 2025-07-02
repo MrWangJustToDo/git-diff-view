@@ -1,5 +1,6 @@
 import { _cacheMap, DiffFile, SplitSide, type DiffHighlighter } from '@git-diff-view/core';
-import { DiffModeEnum } from '@git-diff-view/utils';
+
+import { DiffModeEnum } from '$lib/utils/symbol.js';
 
 // eslint-disable-next-line import/namespace
 import { default as DiffView } from './DiffView.svelte';

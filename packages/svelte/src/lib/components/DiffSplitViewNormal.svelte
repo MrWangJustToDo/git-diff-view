@@ -3,12 +3,9 @@
 	import { useIsMounted } from '$lib/hooks/useIsMounted.svelte.js';
 	import { useTextWidth } from '$lib/hooks/useTextWidth.svelte.js';
 	import { DiffFile, SplitSide } from '@git-diff-view/core';
-	import {
-		borderColorName,
-		diffAsideWidthName,
-		diffFontSizeName,
-		syncScroll
-	} from '@git-diff-view/utils';
+	import { borderColorName } from '$lib/utils/color.js';
+	import { diffAsideWidthName, diffFontSizeName } from '$lib/utils/size.js';
+	import { syncScroll } from '$lib/utils/dom.js';
 
 	import DiffSplitViewNormalTable from './DiffSplitViewNormalTable.svelte';
 
@@ -31,6 +28,8 @@
 	);
 
 	const unSubscribe = { current: () => {} };
+
+	const selectState = { current: undefined as SplitSide | undefined };
 
 	const initSyncScroll = () => {
 		unSubscribe.current();
@@ -83,7 +82,12 @@
 			ref1 = e;
 		}}
 	>
-		<DiffSplitViewNormalTable side={SplitSide.old} diffFile={props.diffFile} {onSelect} />
+		<DiffSplitViewNormalTable
+			side={SplitSide.old}
+			diffFile={props.diffFile}
+			{onSelect}
+			{selectState}
+		/>
 	</div>
 	<div class="diff-split-line w-[1.5px]" style={`background-color: var(${borderColorName})`}></div>
 	<div
@@ -98,6 +102,11 @@
 			ref2 = e;
 		}}
 	>
-		<DiffSplitViewNormalTable side={SplitSide.new} diffFile={props.diffFile} {onSelect} />
+		<DiffSplitViewNormalTable
+			side={SplitSide.new}
+			diffFile={props.diffFile}
+			{onSelect}
+			{selectState}
+		/>
 	</div>
 </div>

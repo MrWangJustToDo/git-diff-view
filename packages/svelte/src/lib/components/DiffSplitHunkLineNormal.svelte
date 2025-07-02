@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getMode } from '$lib/context/mode.js';
 	import type { DiffFile, SplitSide } from '@git-diff-view/core';
-	import { DiffModeEnum } from '@git-diff-view/utils';
+	import { DiffModeEnum } from '$lib/utils/symbol.js';
 
 	import DiffSplitHunkLineGitHub from './DiffSplitHunkLineNormalGitHub.svelte';
 	import DiffSplitHunkLineGitLab from './DiffSplitHunkLineNormalGitLab.svelte';

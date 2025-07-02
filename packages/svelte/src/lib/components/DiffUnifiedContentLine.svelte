@@ -15,13 +15,13 @@
 		addLineNumberBGName,
 		delContentBGName,
 		delLineNumberBGName,
-		diffAsideWidthName,
 		expandContentBGName,
 		expandLineNumberColorName,
 		plainContentBGName,
 		plainLineNumberBGName,
 		plainLineNumberColorName
-	} from '@git-diff-view/utils';
+	} from '$lib/utils/color.js';
+	import { diffAsideWidthName } from '$lib/utils/size.js';
 	import DiffUnifiedAddWidget from './DiffUnifiedAddWidget.svelte';
 	import DiffContent from './DiffContent.svelte';
 	import { getEnableAddWidget } from '$lib/context/enableAddWidget.js';

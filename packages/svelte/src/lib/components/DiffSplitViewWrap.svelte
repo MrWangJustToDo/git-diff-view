@@ -2,7 +2,8 @@
 	import { getFontSize } from '$lib/context/fontSize.js';
 	import { useTextWidth } from '$lib/hooks/useTextWidth.svelte.js';
 	import { getSplitContentLines, SplitSide, type DiffFile } from '@git-diff-view/core';
-	import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from '@git-diff-view/utils';
+	import { diffAsideWidthName, diffFontSizeName } from '$lib/utils/size.js';
+	import { removeAllSelection } from '$lib/utils/dom.js';
 
 	import DiffSplitContentLine from './DiffSplitContentLineWrap.svelte';
 	import DiffSplitExtendLine from './DiffSplitExtendLineWrap.svelte';
@@ -18,6 +19,8 @@
 	const getAllLines = () => getSplitContentLines(props.diffFile);
 
 	let lines = $state(getAllLines());
+
+	const selectState = { current: undefined as SplitSide | undefined };
 
 	let styleRef = $state<HTMLStyleElement | null>();
 
@@ -70,15 +73,22 @@
 			const state = ele.getAttribute('data-state');
 			const side = ele.getAttribute('data-side');
 			if (side) {
-				// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 				// @ts-ignore
-				onSelect(SplitSide[side]);
-				removeAllSelection();
+				if (selectState.current !== SplitSide[side]) {
+					// @ts-ignore
+					selectState.current = SplitSide[side];
+					// @ts-ignore
+					onSelect(SplitSide[side]);
+					removeAllSelection();
+				}
 			}
 			if (state) {
 				if (state === 'extend' || state === 'hunk' || state === 'widget') {
-					onSelect(undefined);
-					removeAllSelection();
+					if (selectState.current !== undefined) {
+						selectState.current = undefined;
+						onSelect(undefined);
+						removeAllSelection();
+					}
 					return;
 				} else {
 					return;

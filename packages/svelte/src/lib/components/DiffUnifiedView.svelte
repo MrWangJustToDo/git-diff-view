@@ -3,7 +3,8 @@
 	import { getFontSize } from '$lib/context/fontSize.js';
 	import { useTextWidth } from '$lib/hooks/useTextWidth.svelte.js';
 	import { getUnifiedContentLine, type DiffFile } from '@git-diff-view/core';
-	import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from '@git-diff-view/utils';
+	import { diffAsideWidthName, diffFontSizeName } from '$lib/utils/size.js';
+	import { removeAllSelection } from '$lib/utils/dom.js';
 
 	import DiffUnifiedContentLine from './DiffUnifiedContentLine.svelte';
 	import DiffUnifiedExtendLine from './DiffUnifiedExtendLine.svelte';
@@ -27,6 +28,8 @@
 	const enableWrap = $derived.by(getEnableWrap());
 
 	const unSubscribe = { current: () => {} };
+
+	const selectState = { current: undefined as boolean | undefined };
 
 	const init = () => {
 		const diffFile = props.diffFile;
@@ -56,11 +59,17 @@
 			const state = ele.getAttribute('data-state');
 			if (state) {
 				if (state === 'extend' || state === 'hunk' || state === 'widget') {
-					styleRef.innerHTML = '';
-					removeAllSelection();
+					if (selectState.current !== false) {
+						selectState.current = false;
+						styleRef.innerHTML = '';
+						removeAllSelection();
+					}
 				} else {
-					styleRef.innerHTML = `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`;
-					removeAllSelection();
+					if (selectState.current !== true) {
+						selectState.current = true;
+						styleRef.innerHTML = `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`;
+						removeAllSelection();
+					}
 				}
 				return;
 			}

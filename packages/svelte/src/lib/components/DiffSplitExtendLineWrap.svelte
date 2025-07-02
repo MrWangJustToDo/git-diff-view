@@ -2,7 +2,7 @@
 	import { getExtend } from '$lib/context/extend.js';
 	import { getRenderExtend } from '$lib/context/renderExtend.js';
 	import { SplitSide, type DiffFile } from '@git-diff-view/core';
-	import { borderColorName, emptyBGName } from '@git-diff-view/utils';
+	import { borderColorName, emptyBGName } from '$lib/utils/color.js';
 
 	interface Props {
 		index: number;

@@ -29,7 +29,7 @@ const InternalDiffSplitWidgetLine = ({
 
   const newLine = diffFile.getSplitRightLine(index);
 
-  const widgetSide = useWidget.getReadonlyState().widgetSide;
+  const widgetSide = useWidget.useShallowStableSelector((s) => s.widgetSide);
 
   const widgetLineNumber = useWidget.getReadonlyState().widgetLineNumber;
 
@@ -134,13 +134,11 @@ export const DiffSplitWidgetLine = ({
         const newLineWidget =
           newLine.lineNumber && widgetSide === SplitSide.new && widgetLineNumber === newLine.lineNumber;
 
-        const currentLineWidget = side === SplitSide.old ? oldLineWidget : newLineWidget;
-
-        const currentIsShow = currentLineWidget;
+        const currentIsShow = oldLineWidget || newLineWidget;
 
         return currentIsShow;
       },
-      [diffFile, index, side]
+      [diffFile, index]
     ),
     (p, c) => p === c
   );

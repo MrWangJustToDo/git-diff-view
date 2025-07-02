@@ -1,4 +1,4 @@
-import { getTextMeasureInstance } from '@git-diff-view/utils';
+import { getTextMeasureInstance } from '$lib/utils/textMeasure.js';
 
 import { useIsMounted } from './useIsMounted.svelte.js';
 

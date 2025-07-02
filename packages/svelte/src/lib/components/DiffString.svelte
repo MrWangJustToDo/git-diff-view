@@ -7,13 +7,9 @@
 	} from '@git-diff-view/core';
 
 	import DiffNoNewLine from './DiffNoNewLine.svelte';
-	import {
-		addContentHighlightBGName,
-		delContentHighlightBGName,
-		diffFontSizeName,
-		getSymbol,
-		NewLineSymbol
-	} from '@git-diff-view/utils';
+	import { addContentHighlightBGName, delContentHighlightBGName } from '$lib/utils/color.js';
+	import { diffFontSizeName } from '$lib/utils/size.js';
+	import { getSymbol, NewLineSymbol } from '$lib/utils/symbol.js';
 
 	interface Props {
 		rawLine: string;

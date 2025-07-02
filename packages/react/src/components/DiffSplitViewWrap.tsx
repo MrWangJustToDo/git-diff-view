@@ -24,6 +24,8 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
 
   const ref = useRef<HTMLStyleElement>(null);
 
+  const tempRef = useRef<SplitSide>();
+
   const { fontSize, enableAddWidget, enableHighlight } = useDiffContext.useShallowStableSelector((s) => ({
     fontSize: s.fontSize,
     enableAddWidget: s.enableAddWidget,
@@ -67,13 +69,19 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
       const state = ele.getAttribute("data-state");
       const side = ele.getAttribute("data-side");
       if (side) {
-        setStyle(SplitSide[side]);
-        removeAllSelection();
+        if (tempRef.current !== SplitSide[side]) {
+          tempRef.current = SplitSide[side];
+          setStyle(SplitSide[side]);
+          removeAllSelection();
+        }
       }
       if (state) {
         if (state === "extend" || state === "hunk" || state === "widget") {
-          setStyle(undefined);
-          removeAllSelection();
+          if (tempRef.current !== undefined) {
+            tempRef.current = undefined;
+            setStyle(undefined);
+            removeAllSelection();
+          }
           return;
         } else {
           return;

@@ -5,7 +5,7 @@
 		hunkContentColorName,
 		hunkLineNumberBGName,
 		plainLineNumberColorName
-	} from '@git-diff-view/utils';
+	} from '$lib/utils/color.js';
 	import ExpandUp from './DiffExpandUp.svelte';
 	import ExpandDown from './DiffExpandDown.svelte';
 	import ExpandAll from './DiffExpandAll.svelte';

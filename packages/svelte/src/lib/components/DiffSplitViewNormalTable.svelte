@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getSplitContentLines, SplitSide, type DiffFile } from '@git-diff-view/core';
-	import { removeAllSelection } from '@git-diff-view/utils';
+	import { removeAllSelection } from '$lib/utils/dom.js';
 
 	import DiffSplitContentLine from './DiffSplitContentLineNormal.svelte';
 	import DiffSplitExtendLine from './DiffSplitExtendLineNormal.svelte';
@@ -11,6 +11,7 @@
 		side: SplitSide;
 		diffFile: DiffFile;
 		onSelect?: (side?: SplitSide) => void;
+		selectState: { current?: SplitSide };
 	}
 
 	let props: Props = $props();
@@ -24,6 +25,8 @@
 	let lines = $state(getAllLines());
 
 	const unSubscribe = { current: () => {} };
+
+	const selectState = props.selectState;
 
 	$effect(() => {
 		unSubscribe.current();
@@ -47,11 +50,17 @@
 			const state = ele.getAttribute('data-state');
 			if (state) {
 				if (state === 'extend' || state === 'hunk' || state === 'widget') {
-					props.onSelect?.(undefined);
-					removeAllSelection();
+					if (selectState.current !== undefined) {
+						selectState.current = undefined;
+						props.onSelect?.(undefined);
+						removeAllSelection();
+					}
 				} else {
-					props.onSelect?.(props.side);
-					removeAllSelection();
+					if (selectState.current !== props.side) {
+						selectState.current = props.side;
+						props.onSelect?.(props.side);
+						removeAllSelection();
+					}
 				}
 				return;
 			}

@@ -17,12 +17,19 @@ import { DiffSplitWidgetLine } from "./DiffSplitWidgetLineNormal";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-const DiffSplitViewTable = (props: { side: SplitSide; diffFile: DiffFile; onSelect?: (side?: SplitSide) => void }) => {
+const DiffSplitViewTable = (props: {
+  side: SplitSide;
+  diffFile: DiffFile;
+  onSelect?: (side?: SplitSide) => void;
+  selectState: { current?: SplitSide };
+}) => {
   const className = createMemo(() => (props.side === SplitSide.new ? "new-diff-table" : "old-diff-table"));
 
   const getAllLines = () => getSplitContentLines(props.diffFile);
 
   const [lines, setLines] = createSignal(getAllLines());
+
+  const selectState = props.selectState;
 
   createEffect(() => {
     const init = () => setLines(getAllLines);
@@ -46,11 +53,17 @@ const DiffSplitViewTable = (props: { side: SplitSide; diffFile: DiffFile; onSele
       const state = ele.getAttribute("data-state");
       if (state) {
         if (state === "extend" || state === "hunk" || state === "widget") {
-          props.onSelect?.(undefined);
-          removeAllSelection();
+          if (selectState.current !== undefined) {
+            selectState.current = undefined;
+            props.onSelect?.(undefined);
+            removeAllSelection();
+          }
         } else {
-          props.onSelect?.(props.side);
-          removeAllSelection();
+          if (selectState.current !== props.side) {
+            selectState.current = props.side;
+            props.onSelect?.(props.side);
+            removeAllSelection();
+          }
         }
         return;
       }
@@ -134,6 +147,8 @@ export const DiffSplitViewNormal = (props: { diffFile: DiffFile }) => {
 
   createEffect(initSyncScroll);
 
+  const selectState = { current: undefined as SplitSide | undefined };
+
   const onSelect = (side?: SplitSide) => {
     const ele = styleRef();
 
@@ -169,7 +184,12 @@ export const DiffSplitViewNormal = (props: { diffFile: DiffFile }) => {
           "font-size": `var(${diffFontSizeName})`,
         }}
       >
-        <DiffSplitViewTable side={SplitSide.old} diffFile={props.diffFile} onSelect={onSelect} />
+        <DiffSplitViewTable
+          side={SplitSide.old}
+          diffFile={props.diffFile}
+          onSelect={onSelect}
+          selectState={selectState}
+        />
       </div>
       <div class="diff-split-line w-[1.5px]" style={{ "background-color": `var(${borderColorName})` }} />
       <div
@@ -182,7 +202,12 @@ export const DiffSplitViewNormal = (props: { diffFile: DiffFile }) => {
           "font-size": `var(${diffFontSizeName})`,
         }}
       >
-        <DiffSplitViewTable side={SplitSide.new} diffFile={props.diffFile} onSelect={onSelect} />
+        <DiffSplitViewTable
+          side={SplitSide.new}
+          diffFile={props.diffFile}
+          onSelect={onSelect}
+          selectState={selectState}
+        />
       </div>
     </div>
   );

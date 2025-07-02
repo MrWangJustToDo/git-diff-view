@@ -22,6 +22,8 @@ export const DiffSplitViewWrap = defineComponent(
 
     const styleRef = ref<HTMLStyleElement | null>(null);
 
+    const selectState = { current: undefined as SplitSide | undefined };
+
     const onSelect = (side?: SplitSide) => {
       const ele = styleRef.value;
 
@@ -48,13 +50,19 @@ export const DiffSplitViewWrap = defineComponent(
         const state = ele.getAttribute("data-state");
         const side = ele.getAttribute("data-side");
         if (side) {
-          onSelect(SplitSide[side]);
-          removeAllSelection();
+          if (selectState.current !== SplitSide[side]) {
+            selectState.current = SplitSide[side];
+            onSelect(SplitSide[side]);
+            removeAllSelection();
+          }
         }
         if (state) {
           if (state === "extend" || state === "hunk" || state === "widget") {
-            onSelect(undefined);
-            removeAllSelection();
+            if (selectState.current !== undefined) {
+              selectState.current = undefined;
+              onSelect(undefined);
+              removeAllSelection();
+            }
             return;
           } else {
             return;

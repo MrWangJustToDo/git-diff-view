@@ -34,6 +34,8 @@ export const DiffUnifiedView = (props: { diffFile: DiffFile }) => {
 
   const [styleRef, setStyleRef] = createSignal<HTMLStyleElement | null>();
 
+  const selectState = { current: undefined as boolean | undefined };
+
   const onSelect = (s: boolean) => {
     const ele = styleRef();
 
@@ -58,11 +60,17 @@ export const DiffUnifiedView = (props: { diffFile: DiffFile }) => {
       const state = ele.getAttribute("data-state");
       if (state) {
         if (state === "extend" || state === "hunk" || state === "widget") {
-          onSelect(false);
-          removeAllSelection();
+          if (selectState.current !== false) {
+            selectState.current = false;
+            onSelect(false);
+            removeAllSelection();
+          }
         } else {
-          onSelect(true);
-          removeAllSelection();
+          if (selectState.current !== true) {
+            selectState.current = true;
+            onSelect(true);
+            removeAllSelection();
+          }
         }
         return;
       }

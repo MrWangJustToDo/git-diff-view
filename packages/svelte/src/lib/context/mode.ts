@@ -1,5 +1,6 @@
-import { DiffModeEnum } from '@git-diff-view/utils';
 import { setContext, getContext } from 'svelte';
+
+import { DiffModeEnum } from '$lib/utils/symbol.js';
 
 const key = Symbol('mode');
 

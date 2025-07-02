@@ -2,12 +2,12 @@
 	import { useSyncHeight } from '$lib/hooks/useSyncHeight.svelte.js';
 	import { composeLen, SplitSide, type DiffFile } from '@git-diff-view/core';
 	import {
-		diffAsideWidthName,
 		hunkContentBGName,
 		hunkContentColorName,
 		hunkLineNumberBGName,
 		plainLineNumberColorName
-	} from '@git-diff-view/utils';
+	} from '$lib/utils/color.js';
+	import { diffAsideWidthName } from '$lib/utils/size.js';
 	import ExpandUp from './DiffExpandUp.svelte';
 	import ExpandDown from './DiffExpandDown.svelte';
 	import ExpandAll from './DiffExpandAll.svelte';

@@ -29,6 +29,8 @@ export const DiffUnifiedView = defineComponent(
 
     const enableWrap = useEnableWrap();
 
+    const selectState = { current: undefined as boolean | undefined };
+
     const styleRef = ref<HTMLStyleElement | null>(null);
 
     const onSelect = (state?: boolean) => {
@@ -56,11 +58,17 @@ export const DiffUnifiedView = defineComponent(
         const state = ele.getAttribute("data-state");
         if (state) {
           if (state === "extend" || state === "hunk" || state === "widget") {
-            onSelect(undefined);
-            removeAllSelection();
+            if (selectState.current !== false) {
+              selectState.current = false;
+              onSelect(false);
+              removeAllSelection();
+            }
           } else {
-            onSelect(true);
-            removeAllSelection();
+            if (selectState.current !== true) {
+              selectState.current = true;
+              onSelect(true);
+              removeAllSelection();
+            }
           }
           return;
         }
