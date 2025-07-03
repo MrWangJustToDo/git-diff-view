@@ -1,56 +1,6 @@
 import { spawn } from "node:child_process";
-import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
-import { resolve } from "node:path";
 import { rollupBuild } from "project-tool/rollup";
-import { preSvelte } from "./utils";
-
-const externalCorePackage = (id: string) =>
-  (id.includes("node_modules") || (id.includes("@git-diff-view/") && !id.endsWith("@git-diff-view/utils"))) &&
-  !id.includes("tslib");
-
-const external = (id: string) =>
-  (id.includes("node_modules") || (id.includes("@git-diff-view/") && !id.endsWith("@git-diff-view/utils"))) &&
-  !id.includes("tslib") &&
-  !id.endsWith(".css");
-
-// fix css path not found in legacy module bundler
-const copyCss = async (packageName: string, file: string) => {
-  const cssPath = resolve(process.cwd(), "packages", packageName, "dist", "css", file);
-  const cssContent = await readFile(cssPath, "utf-8");
-  const legacyCssDirPath = resolve(process.cwd(), "packages", packageName, "styles");
-  await mkdir(legacyCssDirPath).catch(() => void 0);
-  const cssDistPath = resolve(legacyCssDirPath, file);
-  await writeFile(cssDistPath, cssContent);
-};
-
-const clean = async (packageName: string) => {
-  const typePath = resolve(process.cwd(), "packages", packageName, "index.d.ts");
-  const content = await readFile(typePath, "utf-8");
-  await writeFile(typePath, content.replace(/#private;/g, ""));
-};
-
-const clear = async (packageName: string) => {
-  const typeDirs = resolve(process.cwd(), "packages", packageName, "dist", "types");
-  await rm(typeDirs, { recursive: true, force: true });
-};
-
-const buildType = async (packageName: string) => {
-  await new Promise<void>((r, j) => {
-    const ls = spawn(`cd packages/${packageName} && pnpm run gen:type`, { shell: true, stdio: "inherit" });
-    ls.on("close", () => r());
-    ls.on("error", (e) => j(e));
-  });
-  await clean(packageName);
-  await clear(packageName);
-};
-
-const buildCss = async (packageName: string) => {
-  await new Promise<void>((r, j) => {
-    const ls = spawn(`cd packages/${packageName} && pnpm run gen:css`, { shell: true, stdio: "inherit" });
-    ls.on("close", () => r());
-    ls.on("error", (e) => j(e));
-  });
-};
+import { buildCss, buildType, copyCss, externalCorePackage, preSvelte, external } from "./utils";
 
 const buildLowlight = async () => {
   await rollupBuild({
@@ -130,7 +80,6 @@ const buildSvelte = async () => {
     ls.on("error", (e) => j(e));
   });
   await buildCss("svelte");
-  // await buildType("solid");
   await copyCss("svelte", "diff-view.css");
   await copyCss("svelte", "diff-view-pure.css");
 };
