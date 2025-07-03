@@ -1,10 +1,4 @@
-import {
-  DiffLineType,
-  type DiffFile,
-  type DiffLine,
-  type diffChanges,
-  type SyntaxLine,
-} from "@git-diff-view/core";
+import { DiffLineType, type DiffFile, type DiffLine, type diffChanges, type SyntaxLine } from "@git-diff-view/core";
 import {
   addContentHighlightBGName,
   delContentHighlightBGName,

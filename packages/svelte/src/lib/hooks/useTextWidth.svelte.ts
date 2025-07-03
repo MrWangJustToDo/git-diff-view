@@ -11,21 +11,21 @@ export const useTextWidth = ({
 }) => {
 	const isMounted = $derived.by(useIsMounted());
 
-  const fontSize = parseInt(font().fontSize || '14');
+	const fontSize = parseInt(font().fontSize || '14');
 
-  let baseSize = 6;
+	let baseSize = 6;
 
-  baseSize += fontSize > 10 ? (fontSize - 10) * 0.6 : 0;
+	baseSize += fontSize > 10 ? (fontSize - 10) * 0.6 : 0;
 
-  let width = $state(baseSize * text().length);
+	let width = $state(baseSize * text().length);
 
-  const measureText = () => {
-    if (!isMounted) return;
+	const measureText = () => {
+		if (!isMounted) return;
 
-    width = getTextMeasureInstance().measure(text() || '', font());
-  }
+		width = getTextMeasureInstance().measure(text() || '', font());
+	};
 
-  $effect(measureText);
+	$effect(measureText);
 
-  return () => width;
+	return () => width;
 };

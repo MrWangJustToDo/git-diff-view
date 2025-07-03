@@ -76,7 +76,7 @@ const InternalDiffSplitLine = ({
       {hasContent ? (
         <>
           <div
-            className={`diff-line-${SplitSide[side]}-num sticky z-[1] left-0 flex w-[1%] min-w-[40px] select-none items-center px-[10px] text-right`}
+            className={`diff-line-${SplitSide[side]}-num sticky left-0 z-[1] flex w-[1%] min-w-[40px] select-none items-center px-[10px] text-right`}
             style={{
               backgroundColor: lineNumberBG,
               color: `var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName})`,

@@ -78,7 +78,7 @@ const InternalDiffSplitLine = ({
       {hasContent ? (
         <>
           <td
-            className={`diff-line-${SplitSide[side]}-num sticky z-[1] left-0 w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top`}
+            className={`diff-line-${SplitSide[side]}-num sticky left-0 z-[1] w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top`}
             style={{
               backgroundColor: lineNumberBG,
               color: `var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName})`,
@@ -109,7 +109,7 @@ const InternalDiffSplitLine = ({
             <DiffContent
               enableWrap={false}
               diffFile={diffFile}
-              rawLine={currentLine?.value || ''}
+              rawLine={currentLine?.value || ""}
               diffLine={currentLine?.diff}
               plainLine={plainLine}
               syntaxLine={syntaxLine}

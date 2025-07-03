@@ -119,7 +119,11 @@ function App() {
             onAddWidgetClick={() => setV("")}
             renderWidgetLine={({ side, lineNumber, onClose }) => (
               <div class="flex w-full flex-col border px-[4px] py-[8px]">
-                <textarea class="min-h-[80px] w-full border p-[2px]" value={v()} onChange={e => setV(e.target.value)} />
+                <textarea
+                  class="min-h-[80px] w-full border p-[2px]"
+                  value={v()}
+                  onChange={(e) => setV(e.target.value)}
+                />
                 <div class="m-[5px] mt-[0.8em] text-right">
                   <div class="inline-flex justify-end gap-x-[12px]">
                     <button class="rounded-[4px] border px-[12px] py-[6px]" onClick={onClose}>

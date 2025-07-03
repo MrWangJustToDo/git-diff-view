@@ -1579,7 +1579,7 @@ export class DiffFile {
     }
   };
 
-  _getHighlighterName = () => this.#highlighterName || '';
+  _getHighlighterName = () => this.#highlighterName || "";
 
   _getIsPureDiffRender = () => this.#composeByDiff;
 

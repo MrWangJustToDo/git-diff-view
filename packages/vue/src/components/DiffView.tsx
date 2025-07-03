@@ -155,7 +155,7 @@ export const DiffView = defineComponent<
 
     const initSyntax = () => {
       if (!isMounted.value || !enableHighlight.value || !diffFile.value) return;
-      
+
       const instance = diffFile.value;
       instance.initSyntax({
         registerHighlighter: props.registerHighlighter,
@@ -172,7 +172,7 @@ export const DiffView = defineComponent<
       const init = () => {
         wrapperRef.value?.setAttribute("data-theme", instance._getTheme() || "light");
         wrapperRef.value?.setAttribute("data-highlighter", instance._getHighlighterName());
-      }
+      };
 
       init();
 

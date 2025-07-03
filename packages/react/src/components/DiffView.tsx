@@ -88,7 +88,10 @@ type DiffViewProps_2<T> = Omit<DiffViewProps<T>, "data"> & {
 };
 
 const InternalDiffView = <T extends unknown>(
-  props: Omit<DiffViewProps<T>, "data" | "registerHighlighter"> & { isMounted: boolean, wrapperRef?: RefObject<HTMLDivElement> }
+  props: Omit<DiffViewProps<T>, "data" | "registerHighlighter"> & {
+    isMounted: boolean;
+    wrapperRef?: RefObject<HTMLDivElement>;
+  }
 ) => {
   const {
     diffFile,

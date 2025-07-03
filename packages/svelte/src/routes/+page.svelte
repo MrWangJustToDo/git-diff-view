@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { DiffFile, DiffModeEnum, DiffView } from '$lib/index.js';
+	import { DiffFile, DiffModeEnum, DiffView } from '@git-diff-view/svelte';
 	import { SplitSide } from '@git-diff-view/core';
 
 	import * as data from '../data.js';

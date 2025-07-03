@@ -3,6 +3,7 @@
 **/next-page-example
 **/dist
 **/dev
+**/.svelte-kit
 **/*.md
 **/*.d.ts
 package.json

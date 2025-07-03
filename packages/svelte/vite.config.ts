@@ -6,4 +6,9 @@ export default defineConfig({
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	plugins: [sveltekit(), devtoolsJson()],
+	server: {
+		fs: {
+			allow: ['dist']
+		}
+	}
 });

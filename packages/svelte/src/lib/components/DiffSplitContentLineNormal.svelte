@@ -9,10 +9,16 @@
 		SplitSide,
 		type DiffFile
 	} from '@git-diff-view/core';
-	
+
 	import DiffSplitAddWidget from './DiffSplitAddWidget.svelte';
 	import DiffContent from './DiffContent.svelte';
-	import { emptyBGName, expandLineNumberColorName, getContentBG, plainLineNumberColorName, getLineNumberBG } from '$lib/utils/color.js';
+	import {
+		emptyBGName,
+		expandLineNumberColorName,
+		getContentBG,
+		plainLineNumberColorName,
+		getLineNumberBG
+	} from '$lib/utils/color.js';
 	import { diffAsideWidthName } from '$lib/utils/size.js';
 
 	interface Props {

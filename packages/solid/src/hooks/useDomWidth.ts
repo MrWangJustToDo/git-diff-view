@@ -68,7 +68,7 @@ export const useDomWidth = ({ selector, enable }: { selector: Accessor<string>; 
     }
   };
 
-  createEffect(observeWidth)
+  createEffect(observeWidth);
 
   return width;
 };

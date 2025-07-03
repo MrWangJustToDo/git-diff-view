@@ -489,11 +489,11 @@ importers:
         specifier: ^7.17.8
         version: 7.17.8(react@18.3.1)
       '@my-react/react':
-        specifier: ^0.3.13
-        version: 0.3.13
+        specifier: ^0.3.14
+        version: 0.3.14
       '@my-react/react-dom':
-        specifier: ^0.3.13
-        version: 0.3.13(@my-react/react@0.3.13)
+        specifier: ^0.3.14
+        version: 0.3.14(@my-react/react@0.3.14)
       '@tabler/icons-react':
         specifier: ^3.31.0
         version: 3.31.0(react@18.3.1)
@@ -514,11 +514,11 @@ importers:
         version: 0.3.11(react@18.3.1)
     devDependencies:
       '@my-react/react-refresh':
-        specifier: ^0.3.13
-        version: 0.3.13(@my-react/react@0.3.13)
+        specifier: ^0.3.14
+        version: 0.3.14(@my-react/react@0.3.14)
       '@my-react/react-vite':
-        specifier: ^0.0.17
-        version: 0.0.17(@my-react/react-refresh@0.3.13(@my-react/react@0.3.13))(vite@5.4.19(@types/node@22.13.1)(lightningcss@1.30.1)(sugarss@4.0.1(postcss@8.5.6))(terser@5.38.1))
+        specifier: ^0.0.18
+        version: 0.0.18(@my-react/react-refresh@0.3.14(@my-react/react@0.3.14))(vite@5.4.19(@types/node@22.13.1)(lightningcss@1.30.1)(sugarss@4.0.1(postcss@8.5.6))(terser@5.38.1))
       '@types/lodash':
         specifier: ^4.17.15
         version: 4.17.15
@@ -1551,29 +1551,29 @@ packages:
   '@microsoft/tsdoc@0.15.1':
     resolution: {integrity: sha512-4aErSrCR/On/e5G2hDP0wjooqDdauzEbIq8hIkIe5pXV0rtWJZvdCEKL0ykZxex+IxIwBp0eGeV48hQN07dXtw==}
 
-  '@my-react/react-dom@0.3.13':
-    resolution: {integrity: sha512-dLZSDcvH20uEEyCPutLa1OdZL7pyR5NC/Ym0oTpFPpP9Qo4qAY7TT3Ik4TK7EGxy7gKJfv7mBpMFLD77SQUMJA==}
+  '@my-react/react-dom@0.3.14':
+    resolution: {integrity: sha512-tI6btTzM10cXkrzq8kUdVr5jVA0w8kZiPUqUiHzZT6Vu4gFgdM/h5Z4V0LOED4TKWgTiV/1NWFnjYa7HXaVYRw==}
     peerDependencies:
-      '@my-react/react': '>=0.3.13'
+      '@my-react/react': '>=0.3.14'
 
-  '@my-react/react-jsx@0.3.13':
-    resolution: {integrity: sha512-t+C6TpULMa140toW6DVNfxQxMlHUJ8tchRKxCTyqbNrpDfcBt+7xA/gT/2WUVW1tgDLhUA4jLURTN7Q6gRrWUQ==}
+  '@my-react/react-jsx@0.3.14':
+    resolution: {integrity: sha512-23Di7wD4xTAGhSh4OuVbvBa2dWwtnizsihd3iKvLZ/hGtcRLFc4sQXzqrSMbX2Q17/A7arT782eMu5SpwH+w6A==}
     peerDependencies:
-      '@my-react/react': '>=0.3.13'
+      '@my-react/react': '>=0.3.14'
 
-  '@my-react/react-refresh@0.3.13':
-    resolution: {integrity: sha512-ntagAwXiRIXqMHj+cAX1MR2wSwXmr1PI6xPAifLYcKp/xBWw/bYzwB19/JC43Vv97tYYs1J8xM5mTWQ9wc0JQw==}
+  '@my-react/react-refresh@0.3.14':
+    resolution: {integrity: sha512-VikgOVzO4qjgus9TSTps2ImCGZ8/X7SY5gX4RfPU1HL1usDuJSvRlAfXaPH6JRRXzh3NgDp8Ps+kalFYYN8NDw==}
     peerDependencies:
-      '@my-react/react': '>=0.3.13'
+      '@my-react/react': '>=0.3.14'
 
-  '@my-react/react-vite@0.0.17':
-    resolution: {integrity: sha512-dLFXZEKGdGmv74LCUFkjI1U40gDcGe+VOeRiw75fBy6TZ7CjIIdsKzueyzMcpA8HZAbuhiJEd85tkwGFPTZ51w==}
+  '@my-react/react-vite@0.0.18':
+    resolution: {integrity: sha512-PWD7AOKhYu3kKwv9TdXb4ofYXA5ri6vHhToXnsH4SFcGX/u6QRXW7U3d2fpsNbeSHi5zzInPL5SFAQM4q9tF4Q==}
     peerDependencies:
-      '@my-react/react-refresh': '>=0.3.13'
+      '@my-react/react-refresh': '>=0.3.14'
       vite: ^4 || ^5 || ^6
 
-  '@my-react/react@0.3.13':
-    resolution: {integrity: sha512-E2pTdtIwIsO8R1C2Z8yQ2fFga17bQ9MwFFKPZjWhca17fKR9g80iHwmYMflRaVQ0wmogocrWXNT04o8FnGDAOQ==}
+  '@my-react/react@0.3.14':
+    resolution: {integrity: sha512-rGNB9I3X13KmDjjm9rqFjlRUM12OEkZQ872NRc3dN/xhlPwkoIJMWeyDeMRwsGQ68kaZglZaKpnjnQ37Ru59Qw==}
 
   '@next/env@15.3.3':
     resolution: {integrity: sha512-OdiMrzCl2Xi0VTjiQQUK0Xh7bJHnOuET2s+3V+Y40WJBAXrJeGA3f+I8MZJ/YQ3mVGi5XGR1L66oFlgqXhQ4Vw==}
@@ -6482,9 +6482,19 @@ snapshots:
       '@babel/core': 7.26.8
       '@babel/helper-plugin-utils': 7.26.5
 
+  '@babel/plugin-transform-react-jsx-self@7.25.9(@babel/core@7.27.4)':
+    dependencies:
+      '@babel/core': 7.27.4
+      '@babel/helper-plugin-utils': 7.26.5
+
   '@babel/plugin-transform-react-jsx-source@7.25.9(@babel/core@7.26.8)':
     dependencies:
       '@babel/core': 7.26.8
+      '@babel/helper-plugin-utils': 7.26.5
+
+  '@babel/plugin-transform-react-jsx-source@7.25.9(@babel/core@7.27.4)':
+    dependencies:
+      '@babel/core': 7.27.4
       '@babel/helper-plugin-utils': 7.26.5
 
   '@babel/plugin-transform-typescript@7.26.8(@babel/core@7.26.8)':
@@ -7160,31 +7170,31 @@ snapshots:
 
   '@microsoft/tsdoc@0.15.1': {}
 
-  '@my-react/react-dom@0.3.13(@my-react/react@0.3.13)':
+  '@my-react/react-dom@0.3.14(@my-react/react@0.3.14)':
     dependencies:
-      '@my-react/react': 0.3.13
+      '@my-react/react': 0.3.14
 
-  '@my-react/react-jsx@0.3.13(@my-react/react@0.3.13)':
+  '@my-react/react-jsx@0.3.14(@my-react/react@0.3.14)':
     dependencies:
-      '@my-react/react': 0.3.13
+      '@my-react/react': 0.3.14
 
-  '@my-react/react-refresh@0.3.13(@my-react/react@0.3.13)':
+  '@my-react/react-refresh@0.3.14(@my-react/react@0.3.14)':
     dependencies:
-      '@my-react/react': 0.3.13
+      '@my-react/react': 0.3.14
 
-  '@my-react/react-vite@0.0.17(@my-react/react-refresh@0.3.13(@my-react/react@0.3.13))(vite@5.4.19(@types/node@22.13.1)(lightningcss@1.30.1)(sugarss@4.0.1(postcss@8.5.6))(terser@5.38.1))':
+  '@my-react/react-vite@0.0.18(@my-react/react-refresh@0.3.14(@my-react/react@0.3.14))(vite@5.4.19(@types/node@22.13.1)(lightningcss@1.30.1)(sugarss@4.0.1(postcss@8.5.6))(terser@5.38.1))':
     dependencies:
-      '@babel/core': 7.26.8
-      '@babel/plugin-transform-react-jsx-self': 7.25.9(@babel/core@7.26.8)
-      '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.26.8)
-      '@my-react/react-refresh': 0.3.13(@my-react/react@0.3.13)
+      '@babel/core': 7.27.4
+      '@babel/plugin-transform-react-jsx-self': 7.25.9(@babel/core@7.27.4)
+      '@babel/plugin-transform-react-jsx-source': 7.25.9(@babel/core@7.27.4)
+      '@my-react/react-refresh': 0.3.14(@my-react/react@0.3.14)
       vite: 5.4.19(@types/node@22.13.1)(lightningcss@1.30.1)(sugarss@4.0.1(postcss@8.5.6))(terser@5.38.1)
     transitivePeerDependencies:
       - supports-color
 
-  '@my-react/react@0.3.13':
+  '@my-react/react@0.3.14':
     dependencies:
-      '@my-react/react-jsx': 0.3.13(@my-react/react@0.3.13)
+      '@my-react/react-jsx': 0.3.14(@my-react/react@0.3.14)
 
   '@next/env@15.3.3': {}
 
