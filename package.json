@@ -22,7 +22,8 @@
     "lint:fix": "pnpm run lint --fix",
     "prettier": "prettier --ignore-path .prettierignore --write .",
     "clean": "pnpm -p -r -c exec rm -rf dist dev .cache",
-    "purge": "pnpm -p -r -c exec rm -rf node_modules"
+    "purge": "pnpm -p -r -c exec rm -rf node_modules",
+    "prepare": "ts-node ./scripts/pre.ts"
   },
   "packageManager": "pnpm@9.12.0",
   "devDependencies": {

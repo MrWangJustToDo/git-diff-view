@@ -1,7 +1,8 @@
 import { spawn } from "node:child_process";
-import { mkdir, readdir, readFile, rm, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { rollupBuild } from "project-tool/rollup";
+import { preSvelte } from "./utils";
 
 const externalCorePackage = (id: string) =>
   (id.includes("node_modules") || (id.includes("@git-diff-view/") && !id.endsWith("@git-diff-view/utils"))) &&
@@ -20,19 +21,6 @@ const copyCss = async (packageName: string, file: string) => {
   await mkdir(legacyCssDirPath).catch(() => void 0);
   const cssDistPath = resolve(legacyCssDirPath, file);
   await writeFile(cssDistPath, cssContent);
-};
-
-const copyDir = async (srcDir: string, tarDir: string) => {
-  const srcPath = resolve(process.cwd(), "packages", srcDir);
-  const tarPath = resolve(process.cwd(), "packages", tarDir);
-  await mkdir(tarPath, { recursive: true }).catch(() => void 0);
-  const files = await readdir(srcPath);
-  for (const file of files) {
-    if (file.endsWith("index.ts")) continue;
-    const srcFilePath = resolve(srcPath, file);
-    const tarFilePath = resolve(tarPath, file);
-    await writeFile(tarFilePath, await readFile(srcFilePath));
-  }
 };
 
 const clean = async (packageName: string) => {
@@ -135,7 +123,7 @@ const buildSolid = async () => {
 };
 
 const buildSvelte = async () => {
-  await copyDir("utils/src", "svelte/src/lib/utils");
+  await preSvelte();
   await new Promise<void>((r, j) => {
     const ls = spawn(`cd packages/svelte && pnpm run build`, { shell: true, stdio: "inherit" });
     ls.on("close", () => r());
