@@ -9,6 +9,8 @@ const pkgNameAlias = {
   "@git-diff-view/react": "react",
   "@git-diff-view/lowlight": "lowlight",
   "@git-diff-view/shiki": "shiki",
+  "@git-diff-view/solid": "solid",
+  "@git-diff-view/svelte": "svelte",
 };
 
 const getVersion = (pkgName: string) =>
@@ -69,6 +71,9 @@ const run = async () => {
   await release("@git-diff-view/file");
   await release("@git-diff-view/react");
   await release("@git-diff-view/vue");
+  await release("@git-diff-view/solid");
+  await release("@git-diff-view/svelte");
+  console.log("release @git-dff-view packages done");
 };
 
 run();
