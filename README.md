@@ -6,7 +6,7 @@
 
 # Git Diff Component
 
-A Diff view component for React / Vue,
+A Diff view component for React / Vue / Solid / Svelte,
 The most one component what easy to use and feature complete.
 
 [![Deploy](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml/badge.svg)](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml)
@@ -38,6 +38,8 @@ See example project [Example](https://github.com/MrWangJustToDo/git-diff-view/tr
 | [`@git-diff-view/file`](packages/file)   | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/file)](https://www.npmjs.com/package/@git-diff-view/file)   |
 | [`@git-diff-view/react`](packages/react) | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/react)](https://www.npmjs.com/package/@git-diff-view/react) |
 | [`@git-diff-view/vue`](packages/vue)     | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/vue)](https://www.npmjs.com/package/@git-diff-view/vue)     |
+| [`@git-diff-view/solid`](packages/solid) | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/solid)](https://www.npmjs.com/package/@git-diff-view/solid) |
+| [`@git-diff-view/svelte`](packages/svelte)|[![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/svelte)](https://www.npmjs.com/package/@git-diff-view/svelte)|
 
 ### syntax highlighter
 

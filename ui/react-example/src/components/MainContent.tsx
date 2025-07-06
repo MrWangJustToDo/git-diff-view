@@ -38,7 +38,7 @@ export const MainContent = () => {
           <Title>Git Diff View</Title>
           <Space h="12" />
           <Text size="lg" component="div">
-            A <Code>Diff</Code> view component for React / Vue,
+            A <Code>Diff</Code> view component for React / Vue / Solid / Svelte,
             <Highlight highlight={["easy to use", "feature complete"]} color={color}>
               The most one component what easy to use and feature complete.
             </Highlight>

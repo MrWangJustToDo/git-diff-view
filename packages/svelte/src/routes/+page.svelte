@@ -58,7 +58,7 @@
 </script>
 
 <div class="m-auto mb-[1em] mt-[1em] w-[90%]">
-	<h2 class="text-[24px]">A Solid component to show the file diff</h2>
+	<h2 class="text-[24px]">A Svelte component to show the file diff</h2>
 	<br />
 	<p>
 		Select a file to show the diff: &nbsp;
