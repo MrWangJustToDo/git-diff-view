@@ -43,10 +43,11 @@
     "reactivity-store": "^0.3.11"
   },
   "devDependencies": {
-    "react": "^18.0.0"
+    "@my-react/react": "^0.3.15",
+    "@my-react/react-terminal": "^0.0.8"
   },
   "peerDependencies": {
-    "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0",
+    "react": "^19.1.0",
     "ink": "^6.0.1"
   }
 }
