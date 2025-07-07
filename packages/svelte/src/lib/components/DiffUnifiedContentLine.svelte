@@ -25,6 +25,7 @@
 	import DiffUnifiedAddWidget from './DiffUnifiedAddWidget.svelte';
 	import DiffContent from './DiffContent.svelte';
 	import { getEnableAddWidget } from '$lib/context/enableAddWidget.js';
+	import { onDestroy } from 'svelte';
 
 	interface Props {
 		index: number;
@@ -82,6 +83,8 @@
 
 		unSubscribe.current = props.diffFile.subscribe(init);
 	});
+
+	onDestroy(() => unSubscribe.current());
 
 	const onClickAddWidget = (lineNumber: number, side: SplitSide) => {
 		widget.side = side;

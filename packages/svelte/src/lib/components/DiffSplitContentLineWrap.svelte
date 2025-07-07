@@ -19,6 +19,7 @@
 	} from '$lib/utils/color.js';
 	import DiffSplitAddWidget from './DiffSplitAddWidget.svelte';
 	import DiffContent from './DiffContent.svelte';
+	import { onDestroy } from 'svelte';
 
 	interface Props {
 		index: number;
@@ -84,6 +85,8 @@
 
 		unSubscribe.current = props.diffFile.subscribe(init);
 	});
+
+	onDestroy(() => unSubscribe.current());
 
 	const onOpenAddWidget = (lineNumber: number, side: SplitSide) => {
 		widget.side = side;

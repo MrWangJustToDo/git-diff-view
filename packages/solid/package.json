@@ -3,7 +3,7 @@
   "description": "@git-diff-view/solid",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./dist/solid-git-diff-view.mjs",
   "type": "module",
   "types": "index.d.ts",

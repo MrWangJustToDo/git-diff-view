@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "target": "ESNext",
+    "esModuleInterop": true,
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "jsxImportSource": "@my-react/react"
+  },
+  "include": ["./src"],
+  "exclude": ["node_modules"]
+}

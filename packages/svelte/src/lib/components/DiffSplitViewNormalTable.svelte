@@ -6,6 +6,7 @@
 	import DiffSplitExtendLine from './DiffSplitExtendLineNormal.svelte';
 	import DiffSplitHunkLine from './DiffSplitHunkLineNormal.svelte';
 	import DiffSplitWidgetLine from './DiffSplitWidgetLineNormal.svelte';
+	import { onDestroy } from 'svelte';
 
 	interface Props {
 		side: SplitSide;
@@ -37,6 +38,8 @@
 
 		unSubscribe.current = props.diffFile.subscribe(init);
 	});
+
+	onDestroy(() => unSubscribe.current());
 
 	const onMouseDown = (e: MouseEvent) => {
 		let ele = e.target as HTMLElement | null;

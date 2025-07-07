@@ -1,4 +1,4 @@
-## A React DiffView Component like GitHub, Easy to use and feature complete. 
+## A Solid DiffView Component like GitHub, Easy to use and feature complete. 
 
 ### Usage
 
@@ -7,8 +7,8 @@
 1. Use the `DiffView` component directly.
 
 ```tsx
-import { DiffView, DiffModeEnum } from "@git-diff-view/react";
-import "@git-diff-view/react/styles/diff-view.css";
+import { DiffView, DiffModeEnum } from "@git-diff-view/solid";
+import "@git-diff-view/solid/styles/diff-view.css";
 
 <DiffView<string>
   // use data
@@ -18,7 +18,7 @@ import "@git-diff-view/react/styles/diff-view.css";
     hunks: string[];
   }}
   extendData={{oldFile: {10: {data: 'foo'}}, newFile: {20: {data: 'bar'}}}}
-  renderExtendLine={({ data }) => ReactNode}
+  renderExtendLine={({ data }) => JSXElement}
   diffViewFontSize={number}
   diffViewHighlight={boolean}
   diffViewMode={DiffModeEnum.Split | DiffModeEnum.Unified}
@@ -26,7 +26,7 @@ import "@git-diff-view/react/styles/diff-view.css";
   diffViewTheme={'light' | 'dark'}
   diffViewAddWidget
   onAddWidgetClick={({ side, lineNumber }) => void}
-  renderWidgetLine={({ onClose, side, lineNumber }) => ReactNode}
+  renderWidgetLine={({ onClose, side, lineNumber }) => JSXElement}
 />
 
 ```
@@ -74,9 +74,7 @@ const diffFile = DiffFile.createInstance(data || {}, bundle);
 ```
 ### example
 
-#### [react-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/react-example)
-#### [react-ssr-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/next-page-example)
-#### [react-rsc-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/next-app-example)
+#### [solid-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/solid-example)
 
 ### Screen Shot
 
@@ -90,8 +88,8 @@ const diffFile = DiffFile.createInstance(data || {}, bundle);
 | :--------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | data             | The diff data need to show, type: `{ oldFile: {fileName?: string, content?: string}, newFile: {fileName?: string, content?: string}, hunks: string[] }`, you can only pass hunks data, and the component will generate the oldFile and newFile data automatically |
 | diffFile         | the target data to render |
-| renderWidgetLine | return a valid `react` element to show the widget, this element will render when you click the `addWidget` button in the diff view  |
-| renderExtendLine | return a valid `react` element to show the extend data |
+| renderWidgetLine | return a valid `solid` element to show the widget, this element will render when you click the `addWidget` button in the diff view  |
+| renderExtendLine | return a valid `solid` element to show the extend data |
 | extendData       | a list to store the extend data to show in the `Diff View`, type: {oldFile: {lineNumber: {data: any}}, newFile: {lineNumber: {data: any}}}   |
 | diffViewFontSize | the fontSize for the DiffView component, type: number |
 | diffViewHighlight | enable syntax highlight, type: boolean |

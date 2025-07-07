@@ -1,58 +1,112 @@
-# Svelte library
+## A Svelte DiffView Component like GitHub, Easy to use and feature complete. 
 
-Everything you need to build a Svelte library, powered by [`sv`](https://npmjs.com/package/sv).
+### Usage
 
-Read more about creating a library [in the docs](https://svelte.dev/docs/kit/packaging).
+#### There are two ways to use this component:
 
-## Creating a project
+1. Use the `DiffView` component directly.
 
-If you're seeing this, you've probably already done this step. Congrats!
+```tsx
+import { DiffView, DiffModeEnum } from "@git-diff-view/svelte";
+import "@git-diff-view/Svelte/styles/diff-view.css";
 
-```bash
-# create a new project in the current directory
-npx sv create
+<DiffView
+  // use data
+  data={{
+    oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+    newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+    hunks: string[];
+  }}
+  extendData={{oldFile: {10: {data: 'foo'}}, newFile: {20: {data: 'bar'}}}}
+  renderExtendLine=Snippet<[{
+    lineNumber: number;
+    side: SplitSide;
+    data: string;
+    diffFile: DiffFile;
+    onUpdate: () => void;
+  }]>
+  diffViewFontSize={number}
+  diffViewHighlight={boolean}
+  diffViewMode={DiffModeEnum.Split | DiffModeEnum.Unified}
+  diffViewWrap={boolean}
+  diffViewTheme={'light' | 'dark'}
+  diffViewAddWidget
+  onAddWidgetClick={({ side, lineNumber }) => void}
+  renderWidgetLine=Snippet<[{
+    lineNumber: number;
+    side: SplitSide;
+    diffFile: DiffFile;
+    onClose: () => void;
+  }]> 
+/>
 
-# create a new project in my-app
-npx sv create my-app
 ```
 
-## Developing
+2. Use the `DiffView` component with `@git-diff-view/core` or `@git-diff-view/file`
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+```tsx
+// with @git-diff-view/file
+import { DiffFile, generateDiffFile } from "@git-diff-view/file";
+const file = generateDiffFile(
+  data?.oldFile?.fileName || "",
+  data?.oldFile?.content || "",
+  data?.newFile?.fileName || "",
+  data?.newFile?.content || "",
+  data?.oldFile?.fileLang || "",
+  data?.newFile?.fileLang || ""
+);
+file.initTheme('light' / 'dark');
+file.init();
+file.buildSplitDiffLines();
+file.buildUnifiedDiffLines();
 
-```bash
-npm run dev
+// with @git-diff-view/core
+import { DiffFile } from "@git-diff-view/core";
+const file = new DiffFile(
+  data?.oldFile?.fileName || "",
+  data?.oldFile?.content || "",
+  data?.newFile?.fileName || "",
+  data?.newFile?.content || "",
+  data?.hunks || [],
+  data?.oldFile?.fileLang || "",
+  data?.newFile?.fileLang || ""
+);
+file.initTheme('light' / 'dark');
+file.init();
+file.buildSplitDiffLines();
+file.buildUnifiedDiffLines();
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+// use current data to render
+<DiffView diffFile={file} {...props} />;
+// or use the bundle data to render, eg: postMessage/httpRequest
+const bundle = file.getBundle();
+const diffFile = DiffFile.createInstance(data || {}, bundle);
+<DiffView diffFile={diffFile} {...props} />;
 ```
+### example
 
-Everything inside `src/lib` is part of your library, everything inside `src/routes` can be used as a showcase or preview app.
+#### [svelte-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/svelte-example)
 
-## Building
+### Screen Shot
 
-To build your library:
+![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/1.png)
+![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/69c801e5eb5fcabc9c9655825eb1228f18dc1e0c/5.png)
+![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/theme.png)
 
-```bash
-npm run package
-```
+### Props
 
-To create a production version of your showcase app:
+| Props  | Description  |
+| :--------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| data             | The diff data need to show, type: `{ oldFile: {fileName?: string, content?: string}, newFile: {fileName?: string, content?: string}, hunks: string[] }`, you can only pass hunks data, and the component will generate the oldFile and newFile data automatically |
+| diffFile         | the target data to render |
+| renderWidgetLine | a valid `svelte` snippet to show the widget, this element will render when you click the `addWidget` button in the diff view  |
+| renderExtendLine | a valid `svelte` snippet to show the extend data |
+| extendData       | a list to store the extend data to show in the `Diff View`, type: {oldFile: {lineNumber: {data: any}}, newFile: {lineNumber: {data: any}}}   |
+| diffViewFontSize | the fontSize for the DiffView component, type: number |
+| diffViewHighlight | enable syntax highlight, type: boolean |
+| diffViewMode     | the mode for the DiffView component, type: `DiffModeEnum.Split` / `DiffModeEnum.Unified` |
+| diffViewWrap     | enable code line auto wrap, type: boolean |
+| diffViewTheme    | the theme for the DiffView component, type: `light` / `dark` |
+| diffViewAddWidget| enable `addWidget` button, type: boolean |
+| onAddWidgetClick | when the `addWidget` button clicked, type: `({ side: "old" / "new", lineNumber: number }) => void` |
 
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
-
-## Publishing
-
-Go into the `package.json` and give your package the desired name through the `"name"` option. Also consider adding a `"license"` field and point it to a `LICENSE` file which you can create from a template (one popular option is the [MIT license](https://opensource.org/license/mit/)).
-
-To publish your library to [npm](https://www.npmjs.com):
-
-```bash
-npm publish
-```

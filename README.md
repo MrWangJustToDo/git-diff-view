@@ -26,7 +26,7 @@ The most one component what easy to use and feature complete.
 
 ![GitHub compare](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/4.png)
 
-## How to use
+## How to use （React / Vue / Solid / Svelte）
 
 See example project [Example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui)
 
@@ -170,15 +170,11 @@ const diffFile = DiffFile.createInstance(data || {}, bundle);
 | extendData       | a list to store the extend data to show in the `Diff View`, type: {oldFile: {lineNumber: {data: any}}, newFile: {lineNumber: {data: any}}}   |
 | diffViewFontSize | the fontSize for the DiffView component, type: number |
 | diffViewHighlight | enable syntax highlight, type: boolean |
-| diffViewMode     | the mode for the DiffView component, type: `DiffModeEnum.Split` or `DiffModeEnum.Unified` |
+| diffViewMode     | the mode for the DiffView component, type: `DiffModeEnum.Split` / `DiffModeEnum.Unified` |
 | diffViewWrap     | enable code line auto wrap, type: boolean |
-| diffViewTheme    | the theme for the DiffView component, type: `light` or `dark` |
+| diffViewTheme    | the theme for the DiffView component, type: `light` / `dark` |
 | diffViewAddWidget| enable `addWidget` button, type: boolean |
-| onAddWidgetClick | when the `addWidget` button clicked, type: `({ side: "old" | "new", lineNumber: number }) => void` |
-
-## Use in Vue
-
-Same with the React, see [detail](https://github.com/MrWangJustToDo/git-diff-view/tree/main/packages/vue)
+| onAddWidgetClick | when the `addWidget` button clicked, type: `({ side: "old" / "new", lineNumber: number }) => void` |
 
 ## Development
 

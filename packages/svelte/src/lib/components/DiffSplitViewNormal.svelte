@@ -8,6 +8,7 @@
 	import { syncScroll } from '$lib/utils/dom.js';
 
 	import DiffSplitViewNormalTable from './DiffSplitViewNormalTable.svelte';
+	import { onDestroy } from 'svelte';
 
 	interface Props {
 		diffFile: DiffFile;
@@ -41,6 +42,8 @@
 	};
 
 	$effect(initSyncScroll);
+
+	onDestroy(() => unSubscribe.current());
 
 	const onSelect = (side?: SplitSide) => {
 		const ele = styleRef;

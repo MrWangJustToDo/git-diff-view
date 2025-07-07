@@ -11,6 +11,7 @@
 	import ExpandUp from './DiffExpandUp.svelte';
 	import ExpandDown from './DiffExpandDown.svelte';
 	import ExpandAll from './DiffExpandAll.svelte';
+	import { onDestroy } from 'svelte';
 
 	interface Props {
 		index: number;
@@ -80,6 +81,8 @@
 
 		unSubscribe.current = props.diffFile.subscribe(init);
 	});
+
+	onDestroy(() => unSubscribe.current());
 
 	const currentSyncHeightSide = $derived.by(() => SplitSide[SplitSide.old]);
 

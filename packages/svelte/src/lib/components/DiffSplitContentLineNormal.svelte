@@ -20,6 +20,7 @@
 		getLineNumberBG
 	} from '$lib/utils/color.js';
 	import { diffAsideWidthName } from '$lib/utils/size.js';
+	import { onDestroy } from 'svelte';
 
 	interface Props {
 		index: number;
@@ -80,6 +81,8 @@
 
 		unSubscribe.current = props.diffFile.subscribe(init);
 	});
+
+	onDestroy(() => unSubscribe.current());
 
 	const onOpenAddWidget = (lineNumber: number, side: SplitSide) => {
 		widget.side = side;

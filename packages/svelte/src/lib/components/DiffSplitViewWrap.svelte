@@ -9,6 +9,7 @@
 	import DiffSplitExtendLine from './DiffSplitExtendLineWrap.svelte';
 	import DiffSplitHunkLine from './DiffSplitHunkLineWrap.svelte';
 	import DiffSplitWidgetLine from './DiffSplitWidgetLineWrap.svelte';
+	import { onDestroy } from 'svelte';
 
 	interface Props {
 		diffFile: DiffFile;
@@ -46,6 +47,8 @@
 
 		unSubscribe.current = props.diffFile.subscribe(init);
 	});
+
+	onDestroy(() => unSubscribe.current());
 
 	const onSelect = (side?: SplitSide) => {
 		const ele = styleRef;

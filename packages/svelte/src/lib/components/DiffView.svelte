@@ -2,7 +2,7 @@
 	import { diffFontSizeName } from '$lib/utils/size.js';
 	import { DiffModeEnum } from '$lib/utils/symbol.js';
 	import { DiffFile, type DiffHighlighter, SplitSide } from '@git-diff-view/core';
-	import type { Snippet } from 'svelte';
+	import { onDestroy, type Snippet } from 'svelte';
 	import { useIsMounted } from '$lib/hooks/useIsMounted.svelte.js';
 	import type { HTMLAttributes } from 'svelte/elements';
 	import { setFontSize } from '$lib/context/fontSize.js';
@@ -143,6 +143,8 @@
 
 	$effect(initSubscribe);
 
+	onDestroy(() => unSubscribe.current());
+
 	const initDiff = () => {
 		if (!diffFile || !isMounted) return;
 		diffFile.initTheme(theme);
@@ -183,6 +185,8 @@
 	};
 
 	$effect(initAttribute);
+
+	onDestroy(() => unSubscribeAttr.current());
 
 	setFontSize(props);
 

@@ -10,6 +10,7 @@
 	import DiffUnifiedExtendLine from './DiffUnifiedExtendLine.svelte';
 	import DiffUnifiedHunkLine from './DiffUnifiedHunkLine.svelte';
 	import DiffUnifiedWidgetLine from './DiffUnifiedWidgetLine.svelte';
+	import { onDestroy } from 'svelte';
 
 	interface Props {
 		diffFile: DiffFile;
@@ -44,6 +45,8 @@
 
 		unSubscribe.current = props.diffFile.subscribe(init);
 	});
+
+	onDestroy(() => unSubscribe.current());
 
 	const onMouseDown = (e: MouseEvent) => {
 		let ele = e.target as HTMLElement | null;
