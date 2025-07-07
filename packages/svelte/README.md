@@ -8,7 +8,7 @@
 
 ```tsx
 import { DiffView, DiffModeEnum } from "@git-diff-view/svelte";
-import "@git-diff-view/Svelte/styles/diff-view.css";
+import "@git-diff-view/svelte/styles/diff-view.css";
 
 <DiffView
   // use data
