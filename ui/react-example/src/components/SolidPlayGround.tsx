@@ -7,44 +7,45 @@ import {
   SandpackProvider,
 } from "@codesandbox/sandpack-react";
 import { Box, Card, useMantineColorScheme } from "@mantine/core";
-import { IconBrandVue } from "@tabler/icons-react";
+import { IconBrandSolidjs } from "@tabler/icons-react";
 
 // import { Vue } from "./icons";
 import { f1, f2 } from "./ReactPlayGround";
 
-export const VuePlayGround = () => {
+// not work
+export const SolidPlayGround = () => {
   const { colorScheme } = useMantineColorScheme();
 
   return (
     <Card className="p-0" withBorder>
       <Box className="flex items-center px-2 py-2 font-sans text-[14px]">
-        <IconBrandVue size="16" color="#42b883" className="mr-2" />
-        Vue
+        <IconBrandSolidjs size="16" color="#42b883" className="mr-2" />
+        Solid
       </Box>
       <SandpackProvider
-        template="vite-vue-ts"
+        // no vite template
+        template="solid"
         customSetup={{
           dependencies: {
             "@git-diff-view/file": "0.0.30",
-            "@git-diff-view/vue": "0.0.30",
+            "@git-diff-view/solid": "0.0.3",
           },
         }}
         files={{
-          "/src/App.vue": `<script setup lang='ts'>
-  import { DiffModeEnum, DiffView, DiffViewProps, SplitSide, DiffFile } from "@git-diff-view/vue";
+          "/App.tsx": `
+  import { DiffModeEnum, DiffView, DiffViewProps, SplitSide, DiffFile } from "@git-diff-view/solid";
   import { generateDiffFile } from "@git-diff-view/file";
-  import { ref, computed } from 'vue';
-  import "@git-diff-view/vue/styles/diff-view.css";
+  import "@git-diff-view/solid/styles/diff-view.css";
 
-  const temp1 = ref(\`${f1}\`);
-  const temp2 = ref(\`${f2}\`);
+  const temp1 = \`${f1}\`;
+  const temp2 = \`${f2}\`;
 
   const getDiffFile = () => {
     const instance = generateDiffFile(
       "oldFileName",
-      temp1.value,
+      temp1,
       "newFileName",
-      temp2.value,
+      temp2,
       "tsx",
       "tsx"
     );
@@ -52,11 +53,14 @@ export const VuePlayGround = () => {
     return instance;
   };
 
-  const diffFile: DiffFile = computed(() => getDiffFile());
-</script>
-<template>
-  <DiffView :diff-file="diffFile" :diff-view-mode="DiffModeEnum.Split" :diff-view-highlight="true" />
-</template>`,
+const App = () => {
+  const diffFile: DiffFile = getDiffFile();
+
+  return <DiffView diffFile={diffFile} diffViewMode={DiffModeEnum.Split} diffViewHighlight={true} />
+}
+
+export default App;
+`,
         }}
         theme={colorScheme === "dark" ? "dark" : "light"}
       >

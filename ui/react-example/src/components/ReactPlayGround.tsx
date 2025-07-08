@@ -46,8 +46,8 @@ export const ReactPlayGround = () => {
         template="vite-react-ts"
         customSetup={{
           dependencies: {
-            "@git-diff-view/file": "0.0.26",
-            "@git-diff-view/react": "0.0.26",
+            "@git-diff-view/file": "0.0.30",
+            "@git-diff-view/react": "0.0.30",
           },
         }}
         theme={colorScheme === "dark" ? "dark" : "light"}
