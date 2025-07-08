@@ -4,8 +4,7 @@
     "target": "ESNext",
     "esModuleInterop": true,
     "moduleResolution": "Bundler",
-    "jsx": "react-jsx",
-    "jsxImportSource": "@my-react/react"
+    "jsx": "react"
   },
   "include": ["./src"],
   "exclude": ["node_modules"]

@@ -189,10 +189,6 @@ export class DiffFile {
 
   deletionLength: number = 0;
 
-  // hasExpandSplitAll: boolean = false;
-
-  // hasExpandUnifiedAll: boolean = false;
-
   hasSomeLineCollapsed: boolean = false;
 
   #id: string = "";

@@ -306,6 +306,7 @@ const DiffViewWithRef = <T extends unknown>(
 
   useEffect(() => {
     if (!diffFile) return;
+    
     if (props.diffViewHighlight) {
       diffFile.initSyntax({ registerHighlighter });
       diffFile.notifyAll();
@@ -313,6 +314,8 @@ const DiffViewWithRef = <T extends unknown>(
   }, [diffFile, props.diffViewHighlight, registerHighlighter]);
 
   useEffect(() => {
+    if (!diffFile) return;
+
     const init = () => {
       wrapperRef.current?.setAttribute("data-theme", diffFile._getTheme() || "light");
       wrapperRef.current?.setAttribute("data-highlighter", diffFile._getHighlighterName());
