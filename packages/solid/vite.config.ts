@@ -22,7 +22,7 @@ export default defineConfig({
     sourcemap: true,
     minify: false,
     rollupOptions: {
-      external: ["solid-js", "@git-diff-view/core"],
+      external: ["solid-js", "@git-diff-view/core", "reactivity-store"],
     },
   },
   define: {
