@@ -1,11 +1,19 @@
 /* eslint-disable max-lines */
 import { DiffLineType } from "@git-diff-view/core";
-import { memoFunc, getSymbol, NewLineSymbol } from "@git-diff-view/utils";
+import { memoFunc, NewLineSymbol } from "@git-diff-view/utils";
 import { Box, Text } from "ink";
 import * as React from "react";
 
-import { diffAddContentHighlight, diffDelContentHighlight, GitHubDark, GitHubLight } from "./color";
-import { DiffNoNewLine } from "./DiffNoNewLine";
+import {
+  diffAddContent,
+  diffAddContentHighlight,
+  diffDelContent,
+  diffDelContentHighlight,
+  diffExpandContent,
+  diffPlainContent,
+  GitHubDark,
+  GitHubLight,
+} from "./color";
 
 import type { DiffFile, DiffLine, File } from "@git-diff-view/core";
 
@@ -42,12 +50,18 @@ export const getStyleFromClassName = memoFunc((className: string) => {
 });
 
 const DiffString = ({
+  bg,
+  width,
   theme,
+  height,
   rawLine,
   diffLine,
   operator,
 }: {
+  bg: string;
+  width: number;
   theme: "light" | "dark";
+  height: number;
   rawLine: string;
   diffLine?: DiffLine;
   operator?: "add" | "del";
@@ -62,62 +76,104 @@ const DiffString = ({
     const str1 = rawLine.slice(0, range.location);
     const str2 = rawLine.slice(range.location, range.location + range.length);
     const str3 = rawLine.slice(range.location + range.length);
-    const isLast = str2.includes("\n");
-    const _str2 = isLast ? str2.replace("\n", "").replace("\r", "") : str2;
+
+    const highlightBG =
+      operator === "add"
+        ? theme === "light"
+          ? diffAddContentHighlight.light
+          : diffAddContentHighlight.dark
+        : theme === "light"
+          ? diffDelContentHighlight.light
+          : diffDelContentHighlight.dark;
+
     return (
-      <Box>
-        <Box data-range-start={range.location} data-range-end={range.location + range.length}>
-          <Text>{str1}</Text>
-          <Text
-            data-diff-highlight
-            backgroundColor={
-              operator === "add"
-                ? theme === "light"
-                  ? diffAddContentHighlight.light
-                  : diffAddContentHighlight.dark
-                : theme === "light"
-                  ? diffDelContentHighlight.light
-                  : diffDelContentHighlight.dark
-            }
-          >
-            {isLast ? (
-              <>
-                {_str2}
-                <Text data-newline-symbol>{getSymbol(isNewLineSymbolChanged)}</Text>
-              </>
-            ) : (
-              str2
-            )}
-          </Text>
-          <Text>{str3}</Text>
+      <>
+        <Box
+          width={width - 1}
+          data-range-start={range.location}
+          data-range-end={range.location + range.length}
+          flexWrap="wrap"
+        >
+          {str1.split("").map((char, index) => (
+            <Text key={index} backgroundColor={bg}>
+              {char}
+            </Text>
+          ))}
+          {str2.split("").map((char, index) => (
+            <Text key={index} backgroundColor={highlightBG}>
+              {char}
+            </Text>
+          ))}
+          {str3.split("").map((char, index) => (
+            <Text key={index} backgroundColor={bg}>
+              {char}
+            </Text>
+          ))}
+          {""
+            .padStart(height * width - rawLine.length)
+            .split("")
+            .map((char, index) => (
+              <Text key={char + "-" + index} backgroundColor={bg}>
+                {char}
+              </Text>
+            ))}
         </Box>
-        {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && <DiffNoNewLine />}
-      </Box>
+        {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
+          <Box width={width - 1}>
+            <Text backgroundColor={bg} wrap="truncate">
+              {"\\ No newline at end of file".padEnd(width)}
+            </Text>
+          </Box>
+        )}
+      </>
     );
   }
 
   return (
-    <Box>
-      <Text>{rawLine}</Text>
+    <Box width={width - 1} flexWrap="wrap">
+      {rawLine
+        .padEnd(width * height)
+        .split("")
+        .map((char, index) => (
+          <Text key={index} backgroundColor={bg}>
+            {char}
+          </Text>
+        ))}
     </Box>
   );
 };
 
 const DiffSyntax = ({
+  bg,
+  width,
   theme,
+  height,
   rawLine,
   diffLine,
   operator,
   syntaxLine,
 }: {
+  bg: string;
+  width: number;
   theme: "light" | "dark";
+  height: number;
   rawLine: string;
   diffLine?: DiffLine;
   syntaxLine?: File["syntaxFile"][number];
   operator?: "add" | "del";
 }) => {
   if (!syntaxLine) {
-    return <DiffString theme={theme} rawLine={rawLine} diffLine={diffLine} operator={operator} />;
+    return (
+      <DiffString
+        bg={bg}
+        width={width}
+        theme={theme}
+        height={height}
+        rawLine={rawLine}
+        diffLine={diffLine}
+        operator={operator}
+      />
+    );
   }
 
   const changes = diffLine?.changes;
@@ -128,8 +184,13 @@ const DiffSyntax = ({
     const range = changes.range;
 
     return (
-      <Box>
-        <Box data-range-start={range.location} data-range-end={range.location + range.length}>
+      <>
+        <Box
+          width={width - 1}
+          data-range-start={range.location}
+          data-range-end={range.location + range.length}
+          flexWrap="wrap"
+        >
           {syntaxLine.nodeList?.map(({ node, wrapper }, index) => {
             const lowlightStyles = getStyleFromClassName(wrapper?.properties?.className?.join(" ") || "");
             const lowlightStyle = theme === "dark" ? lowlightStyles.dark : lowlightStyles.light;
@@ -137,15 +198,13 @@ const DiffSyntax = ({
             const shikiStyle = theme === "dark" ? shikiStyles.dark : shikiStyles.light;
             if (node.endIndex < range.location || range.location + range.length < node.startIndex) {
               return (
-                <Text
-                  key={index}
-                  data-start={node.startIndex}
-                  data-end={node.endIndex}
-                  {...lowlightStyle}
-                  {...shikiStyle}
-                >
-                  {node.value}
-                </Text>
+                <React.Fragment key={index}>
+                  {node.value.split("").map((char, index) => (
+                    <Text key={index} backgroundColor={bg} {...lowlightStyle} {...shikiStyle}>
+                      {char}
+                    </Text>
+                  ))}
+                </React.Fragment>
               );
             } else {
               const index1 = range.location - node.startIndex;
@@ -153,76 +212,98 @@ const DiffSyntax = ({
               const str1 = node.value.slice(0, index2);
               const str2 = node.value.slice(index2, index1 + range.length);
               const str3 = node.value.slice(index1 + range.length);
-              const isLast = str2.includes("\n");
-              const _str2 = isLast ? str2.replace("\n", "").replace("\r", "") : str2;
+              const highlightBG =
+                operator === "add"
+                  ? theme === "light"
+                    ? diffAddContentHighlight.light
+                    : diffAddContentHighlight.dark
+                  : theme === "light"
+                    ? diffDelContentHighlight.light
+                    : diffDelContentHighlight.dark;
               return (
-                <Text
-                  key={index}
-                  data-start={node.startIndex}
-                  data-end={node.endIndex}
-                  {...lowlightStyle}
-                  {...shikiStyle}
-                >
-                  <Text>{str1}</Text>
-                  <Text
-                    data-diff-highlight
-                    backgroundColor={
-                      operator === "add"
-                        ? theme === "light"
-                          ? diffAddContentHighlight.light
-                          : diffAddContentHighlight.dark
-                        : theme === "light"
-                          ? diffDelContentHighlight.light
-                          : diffDelContentHighlight.dark
-                    }
-                  >
-                    {isLast ? (
-                      <>
-                        {_str2}
-                        <Text data-newline-symbol>{getSymbol(isNewLineSymbolChanged)}</Text>
-                      </>
-                    ) : (
-                      str2
-                    )}
-                  </Text>
-                  <Text>{str3}</Text>
-                </Text>
+                <React.Fragment key={index}>
+                  {str1.split("").map((char, index) => (
+                    <Text key={index} backgroundColor={bg} {...lowlightStyle} {...shikiStyle}>
+                      {char}
+                    </Text>
+                  ))}
+                  {str2.split("").map((char, index) => (
+                    <Text key={index} backgroundColor={highlightBG} {...lowlightStyle} {...shikiStyle}>
+                      {char}
+                    </Text>
+                  ))}
+                  {str3.split("").map((char, index) => (
+                    <Text key={index} backgroundColor={bg} {...lowlightStyle} {...shikiStyle}>
+                      {char}
+                    </Text>
+                  ))}
+                </React.Fragment>
               );
             }
           })}
+          {" "
+            .padEnd(height * width - rawLine.length)
+            .split("")
+            .map((char, index) => (
+              <Text key={char + "-" + index} backgroundColor={bg}>
+                {char}
+              </Text>
+            ))}
         </Box>
-        {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && <DiffNoNewLine />}
-      </Box>
+        {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
+          <Box width={width - 1}>
+            <Text backgroundColor={bg} wrap="truncate">
+              {"\\ No newline at end of file".padEnd(width)}
+            </Text>
+          </Box>
+        )}
+      </>
     );
   }
 
   return (
-    <Box>
+    <Box width={width - 1} flexWrap="wrap">
       {syntaxLine?.nodeList?.map(({ node, wrapper }, index) => {
         const lowlightStyles = getStyleFromClassName(wrapper?.properties?.className?.join(" ") || "");
         const lowlightStyle = theme === "dark" ? lowlightStyles.dark : lowlightStyles.light;
         const shikiStyles = getStyleObjectFromString(wrapper?.properties?.style || "");
         const shikiStyle = theme === "dark" ? shikiStyles.dark : shikiStyles.light;
         return (
-          <Text key={index} data-start={node.startIndex} data-end={node.endIndex} {...lowlightStyle} {...shikiStyle}>
-            {node.value}
-          </Text>
+          <React.Fragment key={index}>
+            {node.value.split("").map((char, index) => (
+              <Text key={index} backgroundColor={bg} {...lowlightStyle} {...shikiStyle}>
+                {char}
+              </Text>
+            ))}
+          </React.Fragment>
         );
       })}
+      {" "
+        .padEnd(height * width - rawLine.length)
+        .split("")
+        .map((char, index) => (
+          <Text key={index} backgroundColor={bg}>
+            {char}
+          </Text>
+        ))}
     </Box>
   );
 };
 
 export const DiffContent = ({
   theme,
+  width,
+  height,
   diffLine,
   rawLine,
   plainLine,
   syntaxLine,
   enableHighlight,
 }: {
-  rawLine: string;
+  width: number;
+  height: number;
   theme: "light" | "dark";
+  rawLine: string;
   plainLine?: File["plainFile"][number];
   syntaxLine?: File["syntaxFile"][number];
   diffLine?: DiffLine;
@@ -235,12 +316,34 @@ export const DiffContent = ({
 
   const isMaxLineLengthToIgnoreSyntax = syntaxLine?.nodeList?.length > 150;
 
+  const addBG = theme === "light" ? diffAddContent.light : diffAddContent.dark;
+  const delBG = theme === "light" ? diffDelContent.light : diffDelContent.dark;
+  const normalBG =
+    theme === "light"
+      ? diffLine
+        ? diffPlainContent.light
+        : diffExpandContent.light
+      : diffLine
+        ? diffPlainContent.dark
+        : diffExpandContent.dark;
+
   return (
-    <Box>
-      <Text data-operator={isAdded ? "+" : isDelete ? "-" : undefined}>{isAdded ? "+" : isDelete ? "-" : " "}</Text>
+    <Box height={height}>
+      <Box width={1}>
+        <Text
+          backgroundColor={isAdded ? addBG : isDelete ? delBG : normalBG}
+          data-operator={isAdded ? "+" : isDelete ? "-" : undefined}
+          wrap="wrap"
+        >
+          {(isAdded ? "+" : isDelete ? "-" : " ").padEnd(height)}
+        </Text>
+      </Box>
       {enableHighlight && syntaxLine && !isMaxLineLengthToIgnoreSyntax ? (
         <DiffSyntax
+          bg={isAdded ? addBG : isDelete ? delBG : normalBG}
           theme={theme}
+          width={width}
+          height={height}
           operator={isAdded ? "add" : isDelete ? "del" : undefined}
           rawLine={rawLine}
           diffLine={diffLine}
@@ -248,7 +351,10 @@ export const DiffContent = ({
         />
       ) : (
         <DiffString
+          bg={isAdded ? addBG : isDelete ? delBG : normalBG}
           theme={theme}
+          width={width}
+          height={height}
           operator={isAdded ? "add" : isDelete ? "del" : undefined}
           rawLine={rawLine}
           diffLine={diffLine}

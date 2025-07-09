@@ -86,9 +86,10 @@ const InternalDiffView = (
         data-component="git-diff-view"
         data-theme={diffFile._getTheme() || "light"}
         data-version={__VERSION__}
+        flexDirection="column"
         data-highlighter={diffFile._getHighlighterName()}
       >
-        {diffViewMode && DiffModeEnum.Split ? (
+        {diffViewMode & DiffModeEnum.Split ? (
           <DiffSplitView diffFile={diffFile} />
         ) : (
           <DiffUnifiedView diffFile={diffFile} />
@@ -154,9 +155,10 @@ const DiffViewWithRef = (props: DiffViewProps) => {
   useEffect(() => {
     if (!diffFile) return;
     if (props.diffViewHighlight) {
+      diffFile.initSyntax();
       diffFile.notifyAll();
     }
-  }, [diffFile, props.diffViewHighlight]);
+  }, [diffFile, props.diffViewHighlight, props.diffViewTheme]);
 
   // fix react strict mode error
   useUnmount(() => (__DEV__ ? diffFile?._destroy?.() : diffFile?.clear?.()), [diffFile]);

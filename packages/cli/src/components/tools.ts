@@ -1,6 +1,7 @@
 import { createStore, ref } from "reactivity-store";
 
 import type { DiffModeEnum, DiffViewProps } from "./DiffView";
+import type { DiffLine } from "@git-diff-view/core";
 
 export const createDiffConfigStore = (props: DiffViewProps & { isMounted: boolean }, diffFileId: string) => {
   return createStore(() => {
@@ -31,4 +32,35 @@ export const createDiffConfigStore = (props: DiffViewProps & { isMounted: boolea
       setEnableHighlight,
     };
   });
+};
+
+export const getCurrentLineRow = ({ content, width }: { content: string; width: number }) => {
+  return Math.ceil(content.length / width);
+};
+
+export const getStringContentWithFixedWidth = ({
+  diffLine,
+  rawLine,
+  width,
+}: {
+  diffLine?: DiffLine;
+  rawLine: string;
+  width: number;
+}) => {
+  if (!diffLine || !diffLine.changes) {
+    const re: string[] = [];
+    let temp = "";
+    for (let i = 0; i < rawLine.length; i++) {
+      if (temp.length === width) {
+        re.push(temp);
+        temp = rawLine[i];
+      } else {
+        temp += rawLine[i];
+      }
+    }
+    if (temp) {
+      re.push(temp);
+    }
+    return re.map((item) => item.padEnd(width, " "));
+  }
 };

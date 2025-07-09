@@ -10,7 +10,6 @@
   "files": [
     "src",
     "dist",
-    "styles",
     "index.mjs",
     "index.d.ts"
   ],
@@ -20,6 +19,7 @@
     "directory": "packages/cli"
   },
   "scripts": {
+    "dev": "DEV=true node ./test/index.mjs",
     "gen:type": "dts-bundle-generator -o index.d.ts dist/types/index.d.ts"
   },
   "homepage": "https://mrwangjusttodo.github.io/git-diff-view",
@@ -30,12 +30,26 @@
     },
     "./package.json": "./package.json"
   },
+  "buildOptions": [
+    {
+      "input": "./src/index.ts",
+      "output": [
+        {
+          "dir": "./dist",
+          "entryFileNames": "esm/index.mjs",
+          "format": "esm",
+          "type": true,
+          "sourcemap": true
+        }
+      ]
+    }
+  ],
   "keywords": [
     "diff component",
     "cli diff component"
   ],
   "dependencies": {
-    "@git-diff-view/core": "^0.0.30",
+    "@git-diff-view/core": "^0.0.31",
     "@types/hast": "^3.0.0",
     "highlight.js": "^11.11.0",
     "lowlight": "^3.3.0",

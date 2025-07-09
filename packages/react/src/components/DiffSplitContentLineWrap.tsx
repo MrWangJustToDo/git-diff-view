@@ -77,7 +77,10 @@ const InternalDiffSplitLine = ({
           <td
             className="diff-line-old-num group relative w-[1%] min-w-[40px] select-none pl-[10px] pr-[10px] text-right align-top"
             data-side={SplitSide[SplitSide.old]}
-            style={{ backgroundColor: oldLineNumberBG, color: `var(${plainLineNumberColorName})` }}
+            style={{
+              backgroundColor: oldLineNumberBG,
+              color: `var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName})`,
+            }}
           >
             {hasDiff && enableAddWidget && (
               <DiffSplitAddWidget

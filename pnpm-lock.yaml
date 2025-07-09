@@ -8,6 +8,9 @@ importers:
 
   .:
     devDependencies:
+      '@git-diff-view/cli':
+        specifier: workspace:*
+        version: link:packages/cli
       '@git-diff-view/core':
         specifier: workspace:*
         version: link:packages/core
@@ -26,6 +29,9 @@ importers:
       '@git-diff-view/vue':
         specifier: workspace:*
         version: link:packages/vue
+      '@rollup/plugin-alias':
+        specifier: ^5.1.1
+        version: 5.1.1(rollup@4.44.0)
       '@swc/core':
         specifier: ^1.10.15
         version: 1.10.15(@swc/helpers@0.5.15)
@@ -1724,6 +1730,15 @@ packages:
     resolution: {integrity: sha512-IwEphTD75liO8g+6taS+4oqz+nnroocNfWVHWz7j+N+ZO2vYrc6PV1q7GQhuahL0IOR7JccFTsFKQ/mb6iZWAg==}
     peerDependencies:
       react: '>=16.8'
+
+  '@rollup/plugin-alias@5.1.1':
+    resolution: {integrity: sha512-PR9zDb+rOzkRb2VD+EuKB7UC41vU5DIwZ5qqCpk0KJudcWAyi8rvYOhS7+L5aZCspw1stTViLgN5v6FF1p5cgQ==}
+    engines: {node: '>=14.0.0'}
+    peerDependencies:
+      rollup: ^1.20.0||^2.0.0||^3.0.0||^4.0.0
+    peerDependenciesMeta:
+      rollup:
+        optional: true
 
   '@rollup/plugin-commonjs@28.0.6':
     resolution: {integrity: sha512-XSQB1K7FUU5QP+3lOQmVCE3I0FcbbNvmNT4VJSj93iUjayaARrTQeoRdiYQoftAJBLrR9t2agwAd3ekaTgHNlw==}
@@ -7534,6 +7549,10 @@ snapshots:
   '@react-hook/passive-layout-effect@1.2.1(react@18.3.1)':
     dependencies:
       react: 18.3.1
+
+  '@rollup/plugin-alias@5.1.1(rollup@4.44.0)':
+    optionalDependencies:
+      rollup: 4.44.0
 
   '@rollup/plugin-commonjs@28.0.6(rollup@4.44.0)':
     dependencies:

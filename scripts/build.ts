@@ -60,6 +60,14 @@ const buildReact = async () => {
   await copyCss("react", "diff-view-pure.css");
 };
 
+const buildCli = async () => {
+  await rollupBuild({
+    packageName: "cli",
+    packageScope: "packages",
+    external: external,
+  });
+};
+
 const buildSolid = async () => {
   await new Promise<void>((r, j) => {
     const ls = spawn(`cd packages/solid && pnpm run build`, { shell: true, stdio: "inherit" });
@@ -113,5 +121,7 @@ const start = async () => {
 };
 
 start();
+
+// buildCli();
 
 // buildSvelte();
