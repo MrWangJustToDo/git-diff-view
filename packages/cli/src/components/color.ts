@@ -1,3 +1,5 @@
+// color from gemini-cli  SEE https://github.com/google-gemini/gemini-cli/tree/main/packages/cli/src/ui/themes
+
 const githubLightColors = {
   type: "light",
   Background: "#f8f8f8",

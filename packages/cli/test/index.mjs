@@ -1,7 +1,7 @@
-import { createElement } from "@my-react/react";
-import { render } from "@my-react/react-terminal";
-// import { render } from "ink";
-// import { createElement } from "react";
+// import { createElement } from "@my-react/react";
+// import { render } from "@my-react/react-terminal";
+import { render } from "ink";
+import { createElement } from "react";
 
 import { DiffView, DiffModeEnum } from "@git-diff-view/cli";
 
@@ -61,7 +61,7 @@ index 5b301628..15aac42f 100644
 render(
   createElement(DiffView, {
     data: { hunks: [hunks], newFile: { fileLang: "tsx" } },
-    diffViewTheme: "dark",
+    diffViewTheme: "light",
     diffViewHighlight: true,
     diffViewMode: DiffModeEnum.SplitGitLab
   })
