@@ -30,10 +30,10 @@ const DiffSplitHunkLineGitHub = ({
 
   const hunkContentColor = theme === "light" ? diffHunkContentColor.light : diffHunkContentColor.dark;
 
-  const contentWidth = columns - width - 4;
+  const contentWidth = columns - width - 2;
 
   return (
-    <Box data-line={`${lineNumber}-hunk`} data-state="hunk">
+    <Box data-line={`${lineNumber}-hunk`} data-state="hunk" height={1}>
       <Box width={width + 2}>
         <Text backgroundColor={hunkLineNumberBG}>{" ".padEnd(width + 2)}</Text>
       </Box>
@@ -69,10 +69,10 @@ const DiffSplitHunkLineGitLab = ({
 
   const hunkContentColor = theme === "light" ? diffHunkContentColor.light : diffHunkContentColor.dark;
 
-  const contentWidth = columns / 2 - width - 2 - 1;
+  const contentWidth = columns / 2 - width - 2;
 
   return (
-    <Box data-line={`${lineNumber}-hunk`} data-state="hunk">
+    <Box data-line={`${lineNumber}-hunk`} data-state="hunk" height={1}>
       <Box width={width + 2}>
         <Text backgroundColor={hunkLineNumberBG}>{" ".padEnd(width + 2)}</Text>
       </Box>

@@ -13,7 +13,6 @@ index 5b301628..15aac42f 100644
  
      componentWillUnmount(): void {
        this.props.$$__instance__$$.onUnmounted.forEach((f) => f());
--      this.effect.stop();
 +      this.reactiveEffect.stop();
      }
  
@@ -64,6 +63,6 @@ render(
     data: { hunks: [hunks], newFile: { fileLang: "tsx" } },
     diffViewTheme: "dark",
     diffViewHighlight: true,
-    diffViewMode: DiffModeEnum.Unified
+    diffViewMode: DiffModeEnum.SplitGitLab
   })
 );

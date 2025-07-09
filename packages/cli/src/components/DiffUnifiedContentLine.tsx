@@ -20,6 +20,7 @@ const DiffUnifiedOldLine = ({
   width,
   theme,
   height,
+  columns,
   rawLine,
   diffLine,
   plainLine,
@@ -33,6 +34,7 @@ const DiffUnifiedOldLine = ({
   width: number;
   height: number;
   theme: "light" | "dark";
+  columns: number;
   rawLine: string;
   lineNumber: number;
   plainLine?: File["plainFile"][number];
@@ -45,7 +47,7 @@ const DiffUnifiedOldLine = ({
   const color = theme === "light" ? diffPlainLineNumberColor.light : diffPlainLineNumberColor.dark;
   const bg = theme === "light" ? diffDelLineNumber.light : diffDelLineNumber.dark;
   return (
-    <Box data-line={index} data-state="diff" height={height}>
+    <Box data-line={index} data-state="diff" height={height} width={columns}>
       <Box width={width * 2 + 2} flexShrink={0}>
         <Box width={width} justifyContent="flex-end">
           <Text color={color} wrap="wrap" backgroundColor={bg} data-line-old-num={lineNumber}>
@@ -91,6 +93,7 @@ const DiffUnifiedNewLine = ({
   width,
   theme,
   height,
+  columns,
   rawLine,
   diffLine,
   plainLine,
@@ -104,6 +107,7 @@ const DiffUnifiedNewLine = ({
   width: number;
   height: number;
   theme: "light" | "dark";
+  columns: number;
   rawLine: string;
   lineNumber: number;
   plainLine?: File["plainFile"][number];
@@ -116,7 +120,7 @@ const DiffUnifiedNewLine = ({
   const color = theme === "light" ? diffPlainLineNumberColor.light : diffPlainLineNumberColor.dark;
   const bg = theme === "light" ? diffAddLineNumber.light : diffAddLineNumber.dark;
   return (
-    <Box data-line={index} data-state="diff" height={height}>
+    <Box data-line={index} data-state="diff" height={height} width={columns}>
       <Box width={width * 2 + 2} flexShrink={0}>
         <Box width={width}>
           <Text backgroundColor={bg} wrap="wrap">
@@ -201,14 +205,11 @@ const _DiffUnifiedLine = memo(
         ? diffFile.getOldPlainLine(oldLinenumber)
         : undefined;
 
-    const contentWidth = columns - (width + 1) * 2 - 1;
+    const contentWidth = columns - (width + 1) * 2;
 
     let row = getCurrentLineRow({ content: rawLine, width: contentWidth });
 
-    row =
-      diffLine?.changes?.hasLineChange && diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE
-        ? row + 1
-        : row;
+    row = diffLine?.changes?.hasLineChange && diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE ? row + 1 : row;
 
     const color = hasDiff
       ? theme === "light"
@@ -233,6 +234,7 @@ const _DiffUnifiedLine = memo(
             theme={theme}
             width={width}
             height={row}
+            columns={columns}
             rawLine={rawLine}
             diffFile={diffFile}
             index={lineNumber}
@@ -250,6 +252,7 @@ const _DiffUnifiedLine = memo(
             theme={theme}
             width={width}
             height={row}
+            columns={columns}
             rawLine={rawLine}
             index={lineNumber}
             diffLine={diffLine}

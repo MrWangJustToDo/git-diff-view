@@ -76,7 +76,7 @@ const InternalDiffSplitLine = ({
 
   const row = Math.max(oldRow, newRow);
 
-  const contentWidth = columns / 2 - width - 3;
+  const contentWidth = columns / 2 - width - 2;
 
   const oldLineNumberBG = oldLineIsDelete
     ? theme === "light"
@@ -113,7 +113,7 @@ const InternalDiffSplitLine = ({
   return (
     <Box data-line={lineNumber} data-state={hasDiff ? "diff" : "plain"} height={row} width={columns}>
       {hasOldLine ? (
-        <Box width={halfColumns - 1} flexShrink={0}>
+        <>
           <Box width={width + 2} flexShrink={0}>
             <Box width={1}>
               <Text backgroundColor={oldLineNumberBG} wrap="wrap">
@@ -145,16 +145,16 @@ const InternalDiffSplitLine = ({
             syntaxLine={oldSyntaxLine}
             enableHighlight={enableHighlight}
           />
-        </Box>
+        </>
       ) : (
-        <Box width={halfColumns - 1}>
+        <Box width={halfColumns}>
           <Text backgroundColor={emptyBG} wrap="wrap">
             {" ".padEnd(halfColumns * row)}
           </Text>
         </Box>
       )}
       {hasNewLine ? (
-        <Box width={halfColumns - 1} flexShrink={0}>
+        <>
           <Box width={width + 2} flexShrink={0}>
             <Box width={1}>
               <Text backgroundColor={newLineNumberBG} wrap="wrap">
@@ -186,9 +186,9 @@ const InternalDiffSplitLine = ({
             syntaxLine={newSyntaxLine}
             enableHighlight={enableHighlight}
           />
-        </Box>
+        </>
       ) : (
-        <Box width={halfColumns - 1}>
+        <Box width={halfColumns}>
           <Text backgroundColor={emptyBG} wrap="wrap">
             {" ".padEnd(halfColumns * row)}
           </Text>

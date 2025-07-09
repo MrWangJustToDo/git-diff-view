@@ -28,7 +28,7 @@ const InternalDiffUnifiedHunkLine = ({
 
   const hunkContentColor = theme === "light" ? diffHunkContentColor.light : diffHunkContentColor.dark;
 
-  const contentWidth = columns - width * 2 - 2 - 1;
+  const contentWidth = columns - width * 2 - 2;
 
   return (
     <Box data-line={`${lineNumber}-hunk`} data-state="hunk" height={1}>
