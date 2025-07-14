@@ -11,7 +11,7 @@ import { DiffUnifiedView } from "./DiffUnifiedView";
 import { DiffViewContext } from "./DiffViewContext";
 import { createDiffConfigStore } from "./tools";
 
-import type { DiffHighlighterLang } from "@git-diff-view/core";
+import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/core";
 
 _cacheMap.name = "@git-diff-view/cli";
 
@@ -26,6 +26,7 @@ export type DiffViewProps = {
   diffFile?: DiffFile;
   diffViewMode?: DiffModeEnum;
   diffViewTheme?: "light" | "dark";
+  registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
   diffViewHighlight?: boolean;
 };
 
@@ -102,7 +103,7 @@ const InternalDiffView = (
 const MemoedInternalDiffView = memo(InternalDiffView);
 
 const DiffViewWithRef = (props: DiffViewProps) => {
-  const { data, diffViewTheme, diffFile: _diffFile, ...restProps } = props;
+  const { registerHighlighter, data, diffViewTheme, diffFile: _diffFile, ...restProps } = props;
 
   const diffFile = useMemo(() => {
     if (_diffFile) {
@@ -155,10 +156,10 @@ const DiffViewWithRef = (props: DiffViewProps) => {
   useEffect(() => {
     if (!diffFile) return;
     if (props.diffViewHighlight) {
-      diffFile.initSyntax();
-      diffFile.notifyAll();
+      diffFile.initSyntax({ registerHighlighter: registerHighlighter });
     }
-  }, [diffFile, props.diffViewHighlight, props.diffViewTheme]);
+    diffFile.notifyAll();
+  }, [diffFile, props.diffViewHighlight, props.diffViewTheme, registerHighlighter]);
 
   // fix react strict mode error
   useUnmount(() => (__DEV__ ? diffFile?._destroy?.() : diffFile?.clear?.()), [diffFile]);

@@ -1,3 +1,4 @@
+import { getDiffViewHighlighter } from "@git-diff-view/shiki";
 // import { createElement } from "@my-react/react";
 // import { render } from "@my-react/react-terminal";
 import { render } from "ink";
@@ -58,11 +59,23 @@ index 5b301628..15aac42f 100644
    }
 `;
 
-render(
-  createElement(DiffView, {
-    data: { hunks: [hunks], newFile: { fileLang: "tsx" } },
-    diffViewTheme: "light",
-    diffViewHighlight: true,
-    diffViewMode: DiffModeEnum.SplitGitLab
-  })
-);
+getDiffViewHighlighter().then((highlighter) => {
+  render(
+    createElement(DiffView, {
+      data: { hunks: [hunks], newFile: { fileLang: "tsx" } },
+      diffViewTheme: "light",
+      diffViewHighlight: true,
+      registerHighlighter: highlighter,
+      diffViewMode: DiffModeEnum.SplitGitLab,
+    })
+  );
+});
+
+// render(
+//   createElement(DiffView, {
+//     data: { hunks: [hunks], newFile: { fileLang: "tsx" } },
+//     diffViewTheme: "light",
+//     diffViewHighlight: true,
+//     diffViewMode: DiffModeEnum.SplitGitLab,
+//   })
+// );

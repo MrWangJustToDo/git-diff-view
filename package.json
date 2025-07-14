@@ -34,6 +34,7 @@
     "@git-diff-view/svelte": "workspace:*",
     "@git-diff-view/utils": "workspace:*",
     "@git-diff-view/cli": "workspace:*",
+    "@git-diff-view/shiki": "workspace:*",
     "@rollup/plugin-alias": "^5.1.1",
     "@swc/core": "^1.10.15",
     "@types/lodash": "^4.17.15",

@@ -17,6 +17,9 @@ importers:
       '@git-diff-view/react':
         specifier: workspace:*
         version: link:packages/react
+      '@git-diff-view/shiki':
+        specifier: workspace:*
+        version: link:packages/shiki
       '@git-diff-view/solid':
         specifier: workspace:*
         version: link:packages/solid
