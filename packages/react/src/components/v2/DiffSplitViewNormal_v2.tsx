@@ -55,6 +55,8 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
 
   const ref = useRef<HTMLStyleElement>();
 
+  const tempRef = useRef<SplitSide>();
+
   const splitLineLength = Math.max(diffFile.splitLineLength, diffFile.fileLineLength);
 
   const { useDiffContext } = useDiffViewContext();
@@ -105,13 +107,19 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
       const state = ele.getAttribute("data-state");
       const side = ele.getAttribute("data-side");
       if (side) {
-        setStyle(SplitSide[side]);
-        removeAllSelection();
+        if (tempRef.current !== SplitSide[side]) {
+          tempRef.current = SplitSide[side];
+          setStyle(SplitSide[side]);
+          removeAllSelection();
+        }
       }
       if (state) {
         if (state === "extend" || state === "hunk" || state === "widget") {
-          setStyle(undefined);
-          removeAllSelection();
+          if (tempRef.current !== undefined) {
+            tempRef.current = undefined;
+            setStyle(undefined);
+            removeAllSelection();
+          }
           return;
         } else {
           return;
@@ -125,6 +133,16 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
   return (
     <div className="split-diff-view split-diff-view-normal flex w-full basis-[50%]">
       <style data-select-style ref={ref} />
+      <style>
+        {`
+.diff-tailwindcss-wrapper .diff-add-widget-wrapper.diff-add-widget-wrapper.diff-add-widget-wrapper {
+  transform: translate(-50%, -50%) !important;
+}
+.diff-tailwindcss-wrapper .diff-add-widget-wrapper.diff-add-widget-wrapper.diff-add-widget-wrapper:hover {
+  transform: translate(-50%, -50%) scale(1.1) !important;
+}
+        `}
+      </style>
       <div
         className="old-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
         ref={ref1}
