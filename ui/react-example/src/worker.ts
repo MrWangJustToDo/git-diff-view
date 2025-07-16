@@ -1,4 +1,4 @@
-import { DiffFile, highlighter as buildInHighlighter } from "@git-diff-view/react";
+import { DiffFile, highlighter as buildInHighlighter } from "@git-diff-view/core";
 import { highlighterReady } from "@git-diff-view/shiki";
 
 import type { DiffViewProps } from "@git-diff-view/react";
