@@ -156,10 +156,16 @@
 	$effect(initDiff);
 
 	const initSyntax = () => {
-		if (!diffFile || !isMounted || !enableHighlight) return;
-		diffFile.initSyntax({
-			registerHighlighter: props.registerHighlighter
-		});
+		if (!diffFile || !isMounted) return;
+
+		theme;
+
+		if (enableHighlight) {
+			diffFile.initSyntax({
+				registerHighlighter: props.registerHighlighter
+			});
+		}
+
 		diffFile.notifyAll();
 	};
 
@@ -171,8 +177,6 @@
 		unSubscribeAttr?.current?.();
 
 		if (!isMounted || !diffFile || !wrapperRef) return;
-
-		theme;
 
 		const init = () => {
 			wrapperRef?.setAttribute('data-theme', diffFile._getTheme() || 'light');

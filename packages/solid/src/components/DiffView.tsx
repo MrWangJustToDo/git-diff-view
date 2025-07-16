@@ -187,8 +187,12 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
   const initSyntax = () => {
     const mounted = isMounted();
     const currentDiffFile = diffFile();
-    if (mounted && currentDiffFile && props.diffViewHighlight) {
-      currentDiffFile.initSyntax({ registerHighlighter: props.registerHighlighter });
+    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+    props.diffViewTheme;
+    if (mounted && currentDiffFile) {
+      if (props.diffViewHighlight) {
+        currentDiffFile.initSyntax({ registerHighlighter: props.registerHighlighter });
+      }
       currentDiffFile.notifyAll();
     }
   };
@@ -196,8 +200,6 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
   const initAttribute = () => {
     const mounted = isMounted();
     const currentDiffFile = diffFile();
-    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-    props.diffViewTheme;
     if (mounted && currentDiffFile && wrapperRef()) {
       const init = () => {
         wrapperRef()?.setAttribute("data-theme", currentDiffFile._getTheme() || "light");

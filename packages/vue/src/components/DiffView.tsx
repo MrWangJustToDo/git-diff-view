@@ -154,21 +154,26 @@ export const DiffView = defineComponent<
     };
 
     const initSyntax = () => {
-      if (!isMounted.value || !enableHighlight.value || !diffFile.value) return;
+      if (!isMounted.value || !diffFile.value) return;
 
       const instance = diffFile.value;
-      instance.initSyntax({
-        registerHighlighter: props.registerHighlighter,
-      });
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+      theme.value;
+
+      if (enableHighlight.value) {
+        instance.initSyntax({
+          registerHighlighter: props.registerHighlighter,
+        });
+      }
+
       instance.notifyAll();
     };
 
     const initAttribute = (onClean: (cb: () => void) => void) => {
       if (!isMounted.value || !diffFile.value || !wrapperRef.value) return;
       const instance = diffFile.value;
-      // hack to track the value change
-      // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-      theme.value;
+
       const init = () => {
         wrapperRef.value?.setAttribute("data-theme", instance._getTheme() || "light");
         wrapperRef.value?.setAttribute("data-highlighter", instance._getHighlighterName());

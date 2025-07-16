@@ -299,19 +299,23 @@ const DiffViewWithRef = <T extends unknown>(
   useEffect(() => {
     if (!diffFile) return;
     diffFile.initTheme(diffViewTheme);
+
     diffFile.initRaw();
+
     diffFile.buildSplitDiffLines();
+
     diffFile.buildUnifiedDiffLines();
   }, [diffFile, diffViewTheme]);
 
   useEffect(() => {
     if (!diffFile) return;
-    
+
     if (props.diffViewHighlight) {
       diffFile.initSyntax({ registerHighlighter });
-      diffFile.notifyAll();
     }
-  }, [diffFile, props.diffViewHighlight, registerHighlighter]);
+
+    diffFile.notifyAll();
+  }, [diffFile, props.diffViewHighlight, registerHighlighter, diffViewTheme]);
 
   useEffect(() => {
     if (!diffFile) return;
@@ -326,7 +330,7 @@ const DiffViewWithRef = <T extends unknown>(
     const cb = diffFile.subscribe(init);
 
     return cb;
-  }, [diffFile, diffViewTheme]);
+  }, [diffFile]);
 
   // fix react strict mode error
   useUnmount(() => (__DEV__ ? diffFile?._destroy?.() : diffFile?.clear?.()), [diffFile]);
