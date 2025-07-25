@@ -1,7 +1,13 @@
-import { relativeChanges } from "./change-range";
+import { diffChanges, relativeChanges } from "./change-range";
 import { DiffLineType } from "./diff-line";
 import { DiffHunkExpansionType } from "./raw-diff";
-import { getPlainDiffTemplate, getSyntaxDiffTemplate } from "./template";
+import {
+  getEnableFastDiffTemplate,
+  getPlainDiffTemplate,
+  getPlainDiffTemplateByFastDiff,
+  getSyntaxDiffTemplate,
+  getSyntaxDiffTemplateByFastDiff,
+} from "./template";
 
 import type { SyntaxLineWithTemplate } from "../file";
 import type { DiffLine } from "./diff-line";
@@ -122,25 +128,53 @@ export const getDiffRange = (
         addition.changes = addRange;
         deletion.changes = delRange;
       }
-      if (!addition.plainTemplate || !deletion.plainTemplate) {
-        getPlainDiffTemplate({
+      if (!getEnableFastDiffTemplate()) {
+        if (!addition.plainTemplate || !deletion.plainTemplate) {
+          getPlainDiffTemplate({
+            diffLine: addition,
+            rawLine: getAdditionRaw(addition.newLineNumber),
+            operator: "add",
+          });
+          getPlainDiffTemplate({
+            diffLine: deletion,
+            rawLine: getDeletionRaw(deletion.oldLineNumber),
+            operator: "del",
+          });
+        }
+        if (!addition.syntaxTemplate || !deletion.syntaxTemplate) {
+          getSyntaxDiffTemplate({
+            diffLine: addition,
+            syntaxLine: getAdditionSyntax(addition.newLineNumber),
+            operator: "add",
+          });
+          getSyntaxDiffTemplate({
+            diffLine: deletion,
+            syntaxLine: getDeletionSyntax(deletion.oldLineNumber),
+            operator: "del",
+          });
+        }
+      } else {
+        const _addition = addition.clone(getAdditionRaw(addition.newLineNumber) || addition.text || "");
+        const _deletion = deletion.clone(getDeletionRaw(deletion.oldLineNumber) || deletion.text || "");
+        const { addRange, delRange } = diffChanges(_addition, _deletion);
+        addition.diffChanges = addRange;
+        deletion.diffChanges = delRange;
+        getPlainDiffTemplateByFastDiff({
           diffLine: addition,
           rawLine: getAdditionRaw(addition.newLineNumber),
           operator: "add",
         });
-        getPlainDiffTemplate({
+        getPlainDiffTemplateByFastDiff({
           diffLine: deletion,
           rawLine: getDeletionRaw(deletion.oldLineNumber),
           operator: "del",
         });
-      }
-      if (!addition.syntaxTemplate || !deletion.syntaxTemplate) {
-        getSyntaxDiffTemplate({
+        getSyntaxDiffTemplateByFastDiff({
           diffLine: addition,
           syntaxLine: getAdditionSyntax(addition.newLineNumber),
           operator: "add",
         });
-        getSyntaxDiffTemplate({
+        getSyntaxDiffTemplateByFastDiff({
           diffLine: deletion,
           syntaxLine: getDeletionSyntax(deletion.oldLineNumber),
           operator: "del",

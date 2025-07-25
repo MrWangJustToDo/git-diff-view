@@ -8,7 +8,19 @@ import type { SyntaxLineWithTemplate } from "../file";
 import type { DiffLine } from "./diff-line";
 import type { SyntaxLine } from "@git-diff-view/lowlight";
 
-const defaultTransform = (content: string) => escapeHtml(content).replace(/\n/g, "").replace(/\r/g, "");
+let enableFastDiffTemplate = false;
+
+export const getEnableFastDiffTemplate = () => enableFastDiffTemplate;
+
+export const setEnableFastDiffTemplate = (enable: boolean) => {
+  enableFastDiffTemplate = enable;
+};
+
+export const resetEnableFastDiffTemplate = () => {
+  enableFastDiffTemplate = false;
+};
+
+export const defaultTransform = (content: string) => escapeHtml(content).replace(/\n/g, "").replace(/\r/g, "");
 
 export const getPlainDiffTemplate = ({
   diffLine,
@@ -77,7 +89,7 @@ export const getPlainDiffTemplateByFastDiff = ({
 
   let template = ``;
 
-  changes.range.forEach(({ type, str, location, length }, index, array) => {
+  changes.range.forEach(({ type, str, startIndex, endIndex }, index, array) => {
     const isLatest = index === array.length - 1;
     if (type === 0) {
       template += `<span>${transform(str)}`;
@@ -87,7 +99,7 @@ export const getPlainDiffTemplateByFastDiff = ({
           : "";
       template += `</span>`;
     } else {
-      template += `<span data-range-start="${location}" data-range-end="${location + length}">`;
+      template += `<span data-range-start="${startIndex}" data-range-end="${endIndex}">`;
       template += `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-radius: 0.2em;">${transform(str)}`;
       template +=
         isLatest && changes.newLineSymbol
@@ -164,6 +176,125 @@ export const getSyntaxDiffTemplate = ({
   diffLine.syntaxTemplate = template;
 
   diffLine.syntaxTemplateMode = "relative";
+};
+
+export const getSyntaxDiffTemplateByFastDiff = ({
+  diffLine,
+  syntaxLine,
+  operator,
+}: {
+  diffLine: DiffLine;
+  syntaxLine: SyntaxLineWithTemplate;
+  operator: "add" | "del";
+}) => {
+  if (!syntaxLine) return;
+
+  if (diffLine.syntaxTemplate && diffLine.syntaxTemplateMode === "fast-diff") return;
+
+  const changes = diffLine.diffChanges;
+
+  if (!changes || !changes.hasLineChange) return;
+
+  const transform = isTransformEnabled() ? processTransformTemplateContent : defaultTransform;
+
+  let template = "";
+
+  const allRange = changes.range.filter((item) => item.type !== 0);
+
+  let rangeIndex = 0;
+
+  syntaxLine?.nodeList?.forEach(({ node, wrapper }, index, array) => {
+    template += `<span data-start="${node.startIndex}" data-end="${node.endIndex}" class="${(
+      wrapper?.properties?.className || []
+    )?.join(" ")}" style="${wrapper?.properties?.style || ""}">`;
+
+    let range = allRange[rangeIndex];
+
+    const isLastNode = index === array.length - 1;
+
+    for (let i = 0; i < node.value.length; i++) {
+      const index = node.startIndex + i;
+      const value = node.value[i];
+      const isLastStr = i === node.value.length - 1;
+      const isEndStr = isLastNode && i === node.value.length - 1;
+      if (range) {
+        // before start
+        if (index < range.startIndex) {
+          template += transform(value);
+          if (isEndStr && changes.newLineSymbol) {
+            template += `<span data-newline-symbol data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-radius: 0.2em;">${getSymbol(changes.newLineSymbol)}</span>`;
+          }
+          // start of range
+        } else if (index === range.startIndex) {
+          // current range all in the same node
+          const isInSameNode = range.endIndex <= node.endIndex;
+          if (isInSameNode) {
+            template += `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-radius: 0.2em;">`;
+          } else {
+            template += `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-top-left-radius: 0.2em;border-bottom-left-radius: 0.2em;">`;
+          }
+          template += transform(value);
+          if (isEndStr && changes.newLineSymbol) {
+            template += `<span data-newline-symbol>${getSymbol(changes.newLineSymbol)}</span>`;
+          }
+          if (isLastStr) {
+            template += `</span>`;
+          } else if (range.startIndex === range.endIndex) {
+            template += `</span>`;
+            rangeIndex++;
+            range = allRange[rangeIndex];
+          }
+          // inside range
+        } else if (index < range.endIndex) {
+          if (i === 0) {
+            // current range all in the same node
+            const isInSameNode = range.startIndex >= node.startIndex && range.endIndex <= node.endIndex;
+            // current range end is in the same node
+            const isEndInSameNode = range.endIndex <= node.endIndex;
+            template += isInSameNode
+              ? `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-radius: 0.2em;">`
+              : isEndInSameNode
+                ? `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-top-right-radius: 0.2em;border-bottom-right-radius: 0.2em;">`
+                // current range crosses the node boundary
+                : `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});">`;
+          }
+          template += transform(value);
+          if (isEndStr && changes.newLineSymbol) {
+            template += `<span data-newline-symbol>${getSymbol(changes.newLineSymbol)}</span>`;
+          }
+          if (isLastStr) {
+            template += `</span>`;
+          }
+          // end of range
+        } else if (index === range.endIndex) {
+          // current range all in the same node
+          const isInSameNode = range.startIndex >= node.startIndex;
+          if (isInSameNode) {
+            template += transform(value);
+          } else {
+            if (i === 0) {
+              template += `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-top-right-radius: 0.2em;border-bottom-right-radius: 0.2em;">`;
+            }
+            template += transform(value);
+          }
+          if (isEndStr && changes.newLineSymbol) {
+            template += `<span data-newline-symbol>${getSymbol(changes.newLineSymbol)}</span>`;
+          }
+          template += `</span>`;
+          rangeIndex++;
+          range = allRange[rangeIndex];
+          // after range
+        }
+      } else {
+        template += transform(value);
+      }
+    }
+    template += `</span>`;
+  });
+
+  diffLine.syntaxTemplate = template;
+
+  diffLine.syntaxTemplateMode = "fast-diff";
 };
 
 export const getSyntaxLineTemplate = (line: SyntaxLine) => {

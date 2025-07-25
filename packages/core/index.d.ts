@@ -437,6 +437,7 @@ export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[]
 	getAdditionSyntax: (lineNumber: number) => SyntaxLineWithTemplate;
 	getDeletionSyntax: (lineNumber: number) => SyntaxLineWithTemplate;
 }) => void;
+export declare const getEnableFastDiffTemplate: () => boolean;
 export declare const getLang: (fileName: string) => string;
 export declare const getPlainDiffTemplate: ({ diffLine, rawLine, operator, }: {
 	diffLine: DiffLine;
@@ -452,6 +453,11 @@ export declare const getPlainLineTemplate: (line: string) => string;
 export declare const getSplitContentLines: (diffFile: DiffFile) => DiffSplitContentLineItem[];
 export declare const getSplitLines: (diffFile: DiffFile) => DiffSplitLineItem[];
 export declare const getSyntaxDiffTemplate: ({ diffLine, syntaxLine, operator, }: {
+	diffLine: DiffLine;
+	syntaxLine: SyntaxLineWithTemplate;
+	operator: "add" | "del";
+}) => void;
+export declare const getSyntaxDiffTemplateByFastDiff: ({ diffLine, syntaxLine, operator, }: {
 	diffLine: DiffLine;
 	syntaxLine: SyntaxLineWithTemplate;
 	operator: "add" | "del";
@@ -504,6 +510,7 @@ export declare const processTransformForFile: (content: string) => string;
  */
 export declare const processTransformTemplateContent: (content: string) => string;
 export declare const resetDefaultComposeLength: () => void;
+export declare const resetEnableFastDiffTemplate: () => void;
 /**
  * Resets all transformation functions to their default state and disables transformation.
  *
@@ -513,6 +520,7 @@ export declare const resetDefaultComposeLength: () => void;
  * ```
  */
 export declare const resetTransform: () => void;
+export declare const setEnableFastDiffTemplate: (enable: boolean) => void;
 /**
  * ⚠️ **WARNING: DANGEROUS OPERATION** ⚠️
  *
@@ -610,6 +618,7 @@ export declare function relativeChanges(addition: DiffLine, deletion: DiffLine):
 	delRange: IRange;
 };
 export declare let composeLen: number;
+export declare let enableFastDiffTemplate: boolean;
 export interface DiffHunkItem extends DiffLineItem {
 	isFirst: boolean;
 	isLast: boolean;
@@ -625,7 +634,8 @@ export interface DiffRange {
 	readonly range: {
 		type: 1 | -1 | 0;
 		str: string;
-		location: number;
+		startIndex: number;
+		endIndex: number;
 		length: number;
 	}[];
 	readonly hasLineChange?: boolean;

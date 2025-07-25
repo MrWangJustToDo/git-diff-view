@@ -18,7 +18,7 @@ export interface IRange {
 }
 
 export interface DiffRange {
-  readonly range: { type: 1 | -1 | 0; str: string; location: number; length: number }[];
+  readonly range: { type: 1 | -1 | 0; str: string; startIndex: number; endIndex: number; length: number }[];
 
   readonly hasLineChange?: boolean;
 
@@ -216,11 +216,23 @@ export function diffChanges(addition: DiffLine, deletion: DiffLine): { addRange:
 
   const aRange = diffRange
     .filter((i) => i[0] !== -1)
-    .map((i) => ({ type: i[0], str: i[1], location: aStart, length: ((aStart += i[1].length), i[1].length) }));
+    .map((i) => ({
+      type: i[0],
+      str: i[1],
+      startIndex: aStart,
+      endIndex: aStart + i[1].length - 1,
+      length: ((aStart += i[1].length), i[1].length),
+    }));
 
   const bRange = diffRange
     .filter((i) => i[0] !== 1)
-    .map((i) => ({ type: i[0], str: i[1], location: bStart, length: ((bStart += i[1].length), i[1].length) }));
+    .map((i) => ({
+      type: i[0],
+      str: i[1],
+      startIndex: bStart,
+      endIndex: bStart + i[1].length - 1,
+      length: ((bStart += i[1].length), i[1].length),
+    }));
 
   return {
     addRange: {

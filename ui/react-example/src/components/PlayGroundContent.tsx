@@ -1,6 +1,7 @@
 import { /* escapeHtml, */ generateDiffFile /* setTransformForContent */ } from "@git-diff-view/file";
-import { DiffView, DiffFile } from "@git-diff-view/react";
+import { DiffView, DiffFile, getEnableFastDiffTemplate, setEnableFastDiffTemplate } from "@git-diff-view/react";
 import { Button, Code, Switch, useMantineColorScheme } from "@mantine/core";
+import { useCallbackRef } from "@mantine/hooks";
 import { debounce } from "lodash";
 import { useCallback, useEffect, useState } from "react";
 
@@ -27,6 +28,8 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
 
   const [diffInstance, setDiffInstance] = useState<DiffFile>();
 
+  const [fastDiffTemplate, setFastDiffTemplate] = useState(getEnableFastDiffTemplate());
+
   const [diffString, setDiffString] = useState(temp);
 
   const [content, setContent] = useState(rawTemp);
@@ -52,9 +55,18 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
     []
   );
 
+  const reloadDiffInstance = useCallbackRef(() => {
+    setDiffInstanceCb(lang, diffString, content);
+  });
+
   useEffect(() => {
     setDiffInstanceCb(lang, diffString, content);
   }, [diffString, content, lang]);
+
+  useEffect(() => {
+    setEnableFastDiffTemplate(fastDiffTemplate);
+    reloadDiffInstance();
+  }, [fastDiffTemplate]);
 
   return (
     <div className="m-auto mb-[1em] mt-[1em] w-[90%]">
@@ -64,6 +76,13 @@ const _PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
         </span>
         <div className="inline-block text-[14px]">
           <Button onClick={onClick}>Go to `File diff` mode</Button>
+        </div>
+        <div className="inline-flex gap-x-4">
+          <Switch
+            checked={fastDiffTemplate}
+            onChange={(e) => setFastDiffTemplate(e.target.checked)}
+            label="Fast Diff Template (better line diff)"
+          />
         </div>
       </h2>
       <div className="mt-[10px] flex flex-col gap-y-[10px]">
@@ -119,6 +138,8 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
 
   const [ignoreWhiteSpace, setIgnoreWhiteSpace] = useState(false);
 
+  const [fastDiffTemplate, setFastDiffTemplate] = useState(getEnableFastDiffTemplate());
+
   const [file1, setFile1] = useState(
     'import { createLowlight, all } from "lowlight";\n\nimport { processAST, type SyntaxLine } from "./processAST";\n\nconst lowlight = createLowlight(all);\n\n// !SEE https://github.com/highlightjs/highlightjs-vue\n\nlowlight.register("vue", function hljsDefineVue(hljs) {\n  return {\n    subLanguage: "xml",\n    contains: [\n      hljs.COMMENT("\x3C!--", "-->", {\n        relevance: 10,\n      }),\n      {\n        begin: /^(\\s*)(\x3Cscript>)/gm,\n        end: /^(\\s*)(<\\/script>)/gm,\n        subLanguage: "javascript",\n        excludeBegin: true,\n        excludeEnd: true,\n      },\n      {\n        begin: /^(?:\\s*)(?:\x3Cscript\\s+lang=(["\'])ts\\1>)/gm,\n        end: /^(\\s*)(<\\/script>)/gm,\n        subLanguage: "typescript",\n        excludeBegin: true,\n        excludeEnd: true,\n      },\n      {\n        begin: /^(\\s*)(<style(\\s+scoped)?>)/gm,\n        end: /^(\\s*)(<\\/style>)/gm,\n        subLanguage: "css",\n        excludeBegin: true,\n        excludeEnd: true,\n      },\n      {\n        begin: /^(?:\\s*)(?:<style(?:\\s+scoped)?\\s+lang=(["\'])(?:s[ca]ss)\\1(?:\\s+scoped)?>)/gm,\n        end: /^(\\s*)(<\\/style>)/gm,\n        subLanguage: "scss",\n        excludeBegin: true,\n        excludeEnd: true,\n      },\n      {\n        begin: /^(?:\\s*)(?:<style(?:\\s+scoped)?\\s+lang=(["\'])stylus\\1(?:\\s+scoped)?>)/gm,\n        end: /^(\\s*)(<\\/style>)/gm,\n        subLanguage: "stylus",\n        excludeBegin: true,\n        excludeEnd: true,\n      },\n    ],\n  };\n});\n\nexport type DiffAST = ReturnType<typeof lowlight.highlight>;\n\nexport type DiffHighlighter = {\n  name: string;\n  maxLineToIgnoreSyntax: number;\n  setMaxLineToIgnoreSyntax: (v: number) => void;\n  ignoreSyntaxHighlightList: (string | RegExp)[];\n  setIgnoreSyntaxHighlightList: (v: (string | RegExp)[]) => void;\n  getAST: (raw: string, fileName?: string, lang?: string) => DiffAST;\n  processAST: (ast: DiffAST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };\n  hasRegisteredCurrentLang: (lang: string) => boolean;\n  getHighlighterEngine: () => typeof lowlight;\n};\n\nconst instance = { name: "lowlight" };\n\nlet _maxLineToIgnoreSyntax = 2000;\n\nconst _ignoreSyntaxHighlightList: (string | RegExp)[] = [];\n\nObject.defineProperty(instance, "maxLineToIgnoreSyntax", {\n  get: () => _maxLineToIgnoreSyntax,\n});\n\nObject.defineProperty(instance, "setMaxLineToIgnoreSyntax", {\n  value: (v: number) => {\n    _maxLineToIgnoreSyntax = v;\n  },\n});\n\nObject.defineProperty(instance, "ignoreSyntaxHighlightList", {\n  get: () => _ignoreSyntaxHighlightList,\n});\n\nObject.defineProperty(instance, "setIgnoreSyntaxHighlightList", {\n  value: (v: (string | RegExp)[]) => {\n    _ignoreSyntaxHighlightList.length = 0;\n    _ignoreSyntaxHighlightList.push(...v);\n  },\n});\n\nObject.defineProperty(instance, "getAST", {\n  value: (raw: string, fileName?: string, lang?: string) => {\n    let hasRegisteredLang = true;\n\n    if (!lowlight.registered(lang)) {\n      __DEV__ && console.warn(`not support current lang: ${lang} yet`);\n      hasRegisteredLang = false;\n    }\n\n    if (\n      fileName &&\n      highlighter.ignoreSyntaxHighlightList.some((item) =>\n        item instanceof RegExp ? item.test(fileName) : fileName === item\n      )\n    ) {\n      __DEV__ &&\n        console.warn(\n          `ignore syntax for current file, because the fileName is in the ignoreSyntaxHighlightList: ${fileName}`\n        );\n      return;\n    }\n\n    if (hasRegisteredLang) {\n      return lowlight.highlight(lang, raw);\n    } else {\n      return lowlight.highlightAuto(raw);\n    }\n  },\n});\n\nObject.defineProperty(instance, "processAST", {\n  value: (ast: DiffAST) => {\n    return processAST(ast);\n  },\n});\n\nObject.defineProperty(instance, "hasRegisteredCurrentLang", {\n  value: (lang: string) => {\n    return lowlight.registered(lang);\n  },\n});\n\nexport { processAST } from "./processAST";\n\nexport const versions = __VERSION__;\n\nexport const highlighter: DiffHighlighter = instance as DiffHighlighter;\n'
   );
@@ -151,9 +172,18 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
     []
   );
 
+  const reloadDiffInstance = useCallbackRef(() => {
+    setDiffInstanceCb(lang1, lang2, file1, file2, ignoreWhiteSpace);
+  });
+
   useEffect(() => {
     setDiffInstanceCb(lang1, lang2, file1, file2, ignoreWhiteSpace);
   }, [file1, file2, lang1, lang2, ignoreWhiteSpace]);
+
+  useEffect(() => {
+    setEnableFastDiffTemplate(fastDiffTemplate);
+    reloadDiffInstance();
+  }, [fastDiffTemplate]);
 
   return (
     <div className="m-auto mb-[1em] mt-[1em] w-[90%]">
@@ -164,11 +194,16 @@ const _PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
         <div className="inline-block text-[14px]">
           <Button onClick={onClick}>Go to `Git diff` mode</Button>
         </div>
-        <div className="inline-flex">
+        <div className="inline-flex gap-x-4">
           <Switch
             checked={ignoreWhiteSpace}
             onChange={(e) => setIgnoreWhiteSpace(e.target.checked)}
             label="Ignore WhiteSpace"
+          />
+          <Switch
+            checked={fastDiffTemplate}
+            onChange={(e) => setFastDiffTemplate(e.target.checked)}
+            label="Fast Diff Template (better line diff)"
           />
         </div>
       </h2>

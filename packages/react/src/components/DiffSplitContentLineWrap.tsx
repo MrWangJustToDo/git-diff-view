@@ -13,7 +13,6 @@ import { SplitSide } from "..";
 
 import { DiffSplitAddWidget } from "./DiffAddWidget";
 import { DiffContent } from "./DiffContent";
-// import { DiffContent_v2 } from "./DiffContent_v2";
 import { useDiffViewContext } from "./DiffViewContext";
 import { useDiffWidgetContext } from "./DiffWidgetContext";
 
