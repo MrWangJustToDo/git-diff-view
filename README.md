@@ -58,14 +58,14 @@ See example project [Example](https://github.com/MrWangJustToDo/git-diff-view/tr
 
 ### Template mode
 
-For better performance and customization, now the `DiffView` component support template mode, and it's the default setting. SEE [Template Mode](https://github.com/MrWangJustToDo/git-diff-view/blob/main/packages/core/src/parse/template.ts)
+For better performance and customization, now the `DiffView` component support `template mode`, and it's the default setting. SEE [Template Mode](https://github.com/MrWangJustToDo/git-diff-view/blob/main/packages/core/src/parse/template.ts)
 
 ### FastDiff template
 
 Using the `template mode`, the `DiffView` component can utilize the `fast-diff` package to generate diffLine templates for better readability of differences. SEE [FastDiffTemplate](https://github.com/MrWangJustToDo/git-diff-view/blob/main/packages/core/src/parse/template.ts)
 
 #### Default diffLine
-![Screenshot](https://github.com/MrWangJustToDo/git-diff-view/blob/main/default.png);
+![Screenshot](https://github.com/MrWangJustToDo/git-diff-view/blob/main/default.png)
 
 #### FastDiff diffLine
 ![Screenshot](https://github.com/MrWangJustToDo/git-diff-view/blob/main/enableFastDiffTemplate.png)
