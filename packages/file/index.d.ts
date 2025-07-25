@@ -428,6 +428,7 @@ export declare const checkCurrentLineIsHidden: (diffFile: DiffFile, lineNumber: 
 	unified: boolean;
 };
 export declare const checkDiffLineIncludeChange: (diffLine?: DiffLine) => boolean;
+export declare const defaultTransform: (content: string) => string;
 export declare const disableCache: () => void;
 export declare const getCurrentComposeLength: () => number;
 export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[], { getAdditionRaw, getDeletionRaw, getAdditionSyntax, getDeletionSyntax, }: {
@@ -617,7 +618,6 @@ export declare function relativeChanges(addition: DiffLine, deletion: DiffLine):
 	delRange: IRange;
 };
 export declare let composeLen: number;
-export declare let enableFastDiffTemplate: boolean;
 export interface DiffHunkItem extends DiffLineItem {
 	isFirst: boolean;
 	isLast: boolean;
