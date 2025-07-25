@@ -22,7 +22,9 @@ export class DiffLine {
     public changes?: IRange,
     public diffChanges?: DiffRange,
     public plainTemplate?: string,
-    public syntaxTemplate?: string
+    public plainTemplateMode?: "fast-diff" | "relative",
+    public syntaxTemplate?: string,
+    public syntaxTemplateMode?: "fast-diff" | "relative",
   ) {}
 
   public withNoTrailingNewLine(noTrailingNewLine: boolean): DiffLine {

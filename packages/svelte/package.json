@@ -5,6 +5,7 @@
 		"dev": "vite dev",
 		"build": "npm run prepack",
 		"preview": "vite preview",
+		"prepack": "svelte-kit sync && svelte-package",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",

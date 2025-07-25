@@ -277,8 +277,10 @@ export declare class DiffLine {
 	changes?: IRange;
 	diffChanges?: DiffRange;
 	plainTemplate?: string;
+	plainTemplateMode?: "fast-diff" | "relative";
 	syntaxTemplate?: string;
-	constructor(text: string, type: DiffLineType, originalLineNumber: number | null, oldLineNumber: number | null, newLineNumber: number | null, noTrailingNewLine?: boolean, changes?: IRange, diffChanges?: DiffRange, plainTemplate?: string, syntaxTemplate?: string);
+	syntaxTemplateMode?: "fast-diff" | "relative";
+	constructor(text: string, type: DiffLineType, originalLineNumber: number | null, oldLineNumber: number | null, newLineNumber: number | null, noTrailingNewLine?: boolean, changes?: IRange, diffChanges?: DiffRange, plainTemplate?: string, plainTemplateMode?: "fast-diff" | "relative", syntaxTemplate?: string, syntaxTemplateMode?: "fast-diff" | "relative");
 	withNoTrailingNewLine(noTrailingNewLine: boolean): DiffLine;
 	isIncludeableLine(): boolean;
 	equals(other: DiffLine): boolean;
@@ -437,6 +439,11 @@ export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[]
 }) => void;
 export declare const getLang: (fileName: string) => string;
 export declare const getPlainDiffTemplate: ({ diffLine, rawLine, operator, }: {
+	diffLine: DiffLine;
+	rawLine: string;
+	operator: "add" | "del";
+}) => void;
+export declare const getPlainDiffTemplateByFastDiff: ({ diffLine, rawLine, operator, }: {
 	diffLine: DiffLine;
 	rawLine: string;
 	operator: "add" | "del";

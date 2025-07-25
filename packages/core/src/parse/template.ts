@@ -19,7 +19,7 @@ export const getPlainDiffTemplate = ({
   rawLine: string;
   operator: "add" | "del";
 }) => {
-  if (diffLine.plainTemplate) return;
+  if (diffLine.plainTemplate && diffLine.plainTemplateMode === "relative") return;
 
   const changes = diffLine.changes;
 
@@ -28,22 +28,78 @@ export const getPlainDiffTemplate = ({
   const transform = isTransformEnabled() ? processTransformTemplateContent : defaultTransform;
 
   const range = changes.range;
+
   const str1 = rawLine.slice(0, range.location);
+
   const str2 = rawLine.slice(range.location, range.location + range.length);
+
   const str3 = rawLine.slice(range.location + range.length);
+
   const isLast = str2.includes("\n");
-  const _str2 = isLast ? str2.replace("\n", "").replace("\r", "") : str2;
+
   const isNewLineSymbolChanged = changes.newLineSymbol;
 
-  const template = `<span data-range-start="${range.location}" data-range-end="${
-    range.location + range.length
-  }">${transform(str1)}<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-radius: 0.2em;">${
-    isLast
-      ? `${transform(_str2)}<span data-newline-symbol>${getSymbol(isNewLineSymbolChanged)}</span>`
-      : transform(str2)
-  }</span>${transform(str3)}</span>`;
+  let template = `<span data-range-start="${range.location}" data-range-end="${range.location + range.length}">`;
+
+  template += transform(str1);
+
+  template += `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-radius: 0.2em;">`;
+
+  template += isLast
+    ? `${transform(str2)}<span data-newline-symbol>${getSymbol(isNewLineSymbolChanged)}</span>`
+    : transform(str2);
+
+  template += `</span>`;
+
+  template += transform(str3);
+
+  template += `</span>`;
 
   diffLine.plainTemplate = template;
+
+  diffLine.plainTemplateMode = "relative";
+};
+
+export const getPlainDiffTemplateByFastDiff = ({
+  diffLine,
+  rawLine,
+  operator,
+}: {
+  diffLine: DiffLine;
+  rawLine: string;
+  operator: "add" | "del";
+}) => {
+  const changes = diffLine.diffChanges;
+
+  if (!changes || !changes.hasLineChange || !rawLine) return;
+
+  const transform = isTransformEnabled() ? processTransformTemplateContent : defaultTransform;
+
+  let template = ``;
+
+  changes.range.forEach(({ type, str, location, length }, index, array) => {
+    const isLatest = index === array.length - 1;
+    if (type === 0) {
+      template += `<span>${transform(str)}`;
+      template +=
+        isLatest && changes.newLineSymbol
+          ? `<span data-newline-symbol data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-radius: 0.2em;">${getSymbol(changes.newLineSymbol)}</span>`
+          : "";
+      template += `</span>`;
+    } else {
+      template += `<span data-range-start="${location}" data-range-end="${location + length}">`;
+      template += `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-radius: 0.2em;">${transform(str)}`;
+      template +=
+        isLatest && changes.newLineSymbol
+          ? `<span data-newline-symbol data-diff-highlight>${getSymbol(changes.newLineSymbol)}</span>`
+          : "";
+      template += `</span></span>`;
+    }
+  });
+
+  diffLine.plainTemplate = template;
+
+  diffLine.plainTemplateMode = "fast-diff";
 };
 
 export const getSyntaxDiffTemplate = ({
@@ -55,7 +111,9 @@ export const getSyntaxDiffTemplate = ({
   syntaxLine: SyntaxLineWithTemplate;
   operator: "add" | "del";
 }) => {
-  if (diffLine.syntaxTemplate || !syntaxLine) return;
+  if (!syntaxLine) return;
+
+  if (diffLine.syntaxTemplate && diffLine.syntaxTemplateMode === "relative") return;
 
   const changes = diffLine.changes;
 
@@ -74,21 +132,28 @@ export const getSyntaxDiffTemplate = ({
       )?.join(" ")}" style="${wrapper?.properties?.style || ""}">${transform(node.value)}</span>`;
     } else {
       const index1 = range.location - node.startIndex;
+
       const index2 = index1 < 0 ? 0 : index1;
+
       const str1 = node.value.slice(0, index2);
+
       const str2 = node.value.slice(index2, index1 + range.length);
+
       const str3 = node.value.slice(index1 + range.length);
+
       const isStart = str1.length || range.location === node.startIndex;
+
       const isEnd = str3.length || node.endIndex === range.location + range.length - 1;
+
       const isLast = str2.includes("\n");
-      const _str2 = isLast ? str2.replace("\n", "").replace("\r", "") : str2;
+
       template += `<span data-start="${node.startIndex}" data-end="${node.endIndex}" class="${(
         wrapper?.properties?.className || []
       )?.join(
         " "
       )}" style="${wrapper?.properties?.style || ""}">${transform(str1)}<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-top-left-radius: ${isStart ? "0.2em" : "0"};border-bottom-left-radius: ${isStart ? "0.2em" : "0"};border-top-right-radius: ${isEnd || isLast ? "0.2em" : "0"};border-bottom-right-radius: ${isEnd || isLast ? "0.2em" : "0"}">${
         isLast
-          ? `${transform(_str2)}<span data-newline-symbol>${getSymbol(changes.newLineSymbol)}</span>`
+          ? `${transform(str2)}<span data-newline-symbol>${getSymbol(changes.newLineSymbol)}</span>`
           : transform(str2)
       }</span>${transform(str3)}</span>`;
     }
@@ -97,6 +162,8 @@ export const getSyntaxDiffTemplate = ({
   template += "</span>";
 
   diffLine.syntaxTemplate = template;
+
+  diffLine.syntaxTemplateMode = "relative";
 };
 
 export const getSyntaxLineTemplate = (line: SyntaxLine) => {

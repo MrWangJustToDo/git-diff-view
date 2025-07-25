@@ -123,8 +123,16 @@ export const getDiffRange = (
         deletion.changes = delRange;
       }
       if (!addition.plainTemplate || !deletion.plainTemplate) {
-        getPlainDiffTemplate({ diffLine: addition, rawLine: getAdditionRaw(addition.newLineNumber), operator: "add" });
-        getPlainDiffTemplate({ diffLine: deletion, rawLine: getDeletionRaw(deletion.oldLineNumber), operator: "del" });
+        getPlainDiffTemplate({
+          diffLine: addition,
+          rawLine: getAdditionRaw(addition.newLineNumber),
+          operator: "add",
+        });
+        getPlainDiffTemplate({
+          diffLine: deletion,
+          rawLine: getDeletionRaw(deletion.oldLineNumber),
+          operator: "del",
+        });
       }
       if (!addition.syntaxTemplate || !deletion.syntaxTemplate) {
         getSyntaxDiffTemplate({
@@ -138,11 +146,6 @@ export const getDiffRange = (
           operator: "del",
         });
       }
-
-      // TODO! support word diff
-      // const { addRange: _addRange, delRange: _delRange } = diffChanges(_addition, _deletion);
-      // addition.diffChanges = _addRange;
-      // deletion.diffChanges = _delRange;
     }
   }
 };
