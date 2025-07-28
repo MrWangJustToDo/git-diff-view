@@ -1,8 +1,8 @@
 import { getDiffViewHighlighter } from "@git-diff-view/shiki";
-import { createElement } from "@my-react/react";
-import { render } from "@my-react/react-terminal";
-// import { render } from "ink";
-// import { createElement } from "react";
+// import { createElement } from "@my-react/react";
+// import { render } from "@my-react/react-terminal";
+import { render } from "ink";
+import { createElement } from "react";
 
 import { DiffView, DiffModeEnum } from "@git-diff-view/cli";
 
@@ -61,13 +61,34 @@ index 5b301628..15aac42f 100644
 
 getDiffViewHighlighter().then((highlighter) => {
   render(
+    //     createElement(
+    //  Box,
+    //  { flexShrink: 0, flexGrow: 1 },
+    //  null,
+    // createElement(DiffView, {
+    //   data: { hunks: [hunks], newFile: { fileLang: "tsx" } },
+    //   diffViewTheme: "light",
+    //   diffViewHighlight: true,
+    //   diffViewMode: DiffModeEnum.SplitGitLab,
+    // }),
+    //  createElement(Box, { flexGrow: 1, flexShrink: 0 }, createElement(Text, null, "Diff View: Split Mode")),
+    //  createElement(DiffView, {
+    //    data: { hunks: [hunks], newFile: { fileLang: "tsx" } },
+    //    width: 60,
+    //    diffViewTheme: "light",
+    //    diffViewHighlight: true,
+    //    registerHighlighter: highlighter,
+    //    diffViewMode: DiffModeEnum.Split,
+    //  }),
     createElement(DiffView, {
-      data: { hunks: [hunks], newFile: { fileLang: 'tsx' } },
+      data: { hunks: [hunks], newFile: { fileLang: "tsx" } },
+      width: 80,
       diffViewTheme: "light",
       diffViewHighlight: true,
       registerHighlighter: highlighter,
       diffViewMode: DiffModeEnum.Split,
     })
+    //     )
   );
 });
 

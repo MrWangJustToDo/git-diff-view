@@ -113,6 +113,7 @@ const start = async () => {
   await buildUtils();
   await buildCore();
   await buildFile();
+  await buildCli();
   await buildReact();
   await buildSolid();
   await buildSvelte();

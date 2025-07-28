@@ -1,7 +1,9 @@
-import { createStore, ref } from "reactivity-store";
+import { createStore, markRaw, ref } from "reactivity-store";
 
 import type { DiffModeEnum, DiffViewProps } from "./DiffView";
 import type { DiffLine } from "@git-diff-view/core";
+import type { DOMElement } from "ink";
+import type { Ref, UseSelectorWithStore } from "reactivity-store";
 
 export const createDiffConfigStore = (props: DiffViewProps & { isMounted: boolean }, diffFileId: string) => {
   return createStore(() => {
@@ -12,6 +14,10 @@ export const createDiffConfigStore = (props: DiffViewProps & { isMounted: boolea
     const mode = ref(props.diffViewMode);
 
     const setMode = (_mode: DiffModeEnum) => (mode.value = _mode);
+
+    const wrapper = ref<{ current: DOMElement }>(markRaw({ current: null }));
+
+    const setWrapper = (_wrapper?: DOMElement) => (wrapper.value = markRaw({ current: _wrapper }));
 
     const mounted = ref(props.isMounted);
 
@@ -26,12 +32,26 @@ export const createDiffConfigStore = (props: DiffViewProps & { isMounted: boolea
       setId,
       mode,
       setMode,
+      wrapper,
+      setWrapper,
       mounted,
       setMounted,
       enableHighlight,
       setEnableHighlight,
     };
-  });
+    // fix rollup type error
+  }) as UseSelectorWithStore<{
+    id: Ref<string>;
+    setId: (id: string) => void;
+    mode: Ref<DiffModeEnum>;
+    setMode: (mode: DiffModeEnum) => void;
+    wrapper: Ref<{ current: DOMElement }>;
+    setWrapper: (wrapper?: DOMElement) => void;
+    mounted: Ref<boolean>;
+    setMounted: (mounted: boolean) => void;
+    enableHighlight: Ref<boolean>;
+    setEnableHighlight: (enableHighlight: boolean) => void;
+  }>;
 };
 
 export const getCurrentLineRow = ({ content, width }: { content: string; width: number }) => {

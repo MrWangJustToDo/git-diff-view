@@ -29,6 +29,8 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const lines = getUnifiedContentLine(diffFile);
 
+  if (!columns) return null;
+
   return (
     <>
       {lines.map((item) => (

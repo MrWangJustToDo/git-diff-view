@@ -26,6 +26,8 @@ export const DiffSplitView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const lines = getSplitContentLines(diffFile);
 
+  if (!columns) return null;
+
   return (
     <>
       {lines.map((line) => (

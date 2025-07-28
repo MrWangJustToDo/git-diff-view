@@ -12,6 +12,8 @@ import { DiffViewContext } from "./DiffViewContext";
 import { createDiffConfigStore } from "./tools";
 
 import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/core";
+import type { DOMElement } from "ink";
+import type { RefObject } from "react";
 
 _cacheMap.name = "@git-diff-view/cli";
 
@@ -23,6 +25,7 @@ export type DiffViewProps = {
     newFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
     hunks: string[];
   };
+  width?: number;
   diffFile?: DiffFile;
   diffViewMode?: DiffModeEnum;
   diffViewTheme?: "light" | "dark";
@@ -49,9 +52,10 @@ type DiffViewProps_2 = Omit<DiffViewProps, "data"> & {
 const InternalDiffView = (
   props: Omit<DiffViewProps, "data"> & {
     isMounted: boolean;
+    wrapperRef?: RefObject<DOMElement>;
   }
 ) => {
-  const { diffFile, diffViewMode, diffViewHighlight, isMounted } = props;
+  const { diffFile, diffViewMode, diffViewHighlight, isMounted, wrapperRef } = props;
 
   const diffFileId = useMemo(() => diffFile.getId(), [diffFile]);
 
@@ -79,6 +83,13 @@ const InternalDiffView = (
     }
   }, [useDiffContext, diffViewHighlight, diffViewMode, diffFileId, isMounted]);
 
+  useEffect(() => {
+    const { wrapper, setWrapper } = useDiffContext.getReadonlyState();
+    if (wrapperRef.current !== wrapper.current) {
+      setWrapper(wrapperRef.current);
+    }
+  });
+
   const value = useMemo(() => ({ useDiffContext }), [useDiffContext]);
 
   return (
@@ -102,8 +113,10 @@ const InternalDiffView = (
 
 const MemoedInternalDiffView = memo(InternalDiffView);
 
-const DiffViewWithRef = (props: DiffViewProps) => {
-  const { registerHighlighter, data, diffViewTheme, diffFile: _diffFile, ...restProps } = props;
+const DiffViewContainer = (props: DiffViewProps) => {
+  const { registerHighlighter, data, diffViewTheme, diffFile: _diffFile, width, ...restProps } = props;
+
+  const ref = useRef<DOMElement>(null);
 
   const diffFile = useMemo(() => {
     if (_diffFile) {
@@ -167,14 +180,22 @@ const DiffViewWithRef = (props: DiffViewProps) => {
   if (!diffFile) return null;
 
   return (
-    <MemoedInternalDiffView
-      key={diffFile.getId()}
-      {...restProps}
-      diffFile={diffFile}
-      isMounted={isMounted}
-      diffViewTheme={diffViewTheme}
-      diffViewMode={restProps.diffViewMode || DiffModeEnum.SplitGitHub}
-    />
+    <Box
+      ref={ref}
+      width={width}
+      flexGrow={typeof width === "number" ? undefined : 1}
+      flexShrink={typeof width === "number" ? 0 : undefined}
+    >
+      <MemoedInternalDiffView
+        key={diffFile.getId()}
+        {...restProps}
+        wrapperRef={ref}
+        diffFile={diffFile}
+        isMounted={isMounted}
+        diffViewTheme={diffViewTheme}
+        diffViewMode={restProps.diffViewMode || DiffModeEnum.SplitGitHub}
+      />
+    </Box>
   );
 };
 
@@ -182,7 +203,7 @@ const DiffViewWithRef = (props: DiffViewProps) => {
 function ReactDiffView(props: DiffViewProps_1): JSX.Element;
 function ReactDiffView(props: DiffViewProps_2): JSX.Element;
 function ReactDiffView(props: DiffViewProps) {
-  return <DiffViewWithRef {...props} />;
+  return <DiffViewContainer {...props} />;
 }
 
 export const DiffView = ReactDiffView;
