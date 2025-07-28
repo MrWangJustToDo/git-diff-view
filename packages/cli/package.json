@@ -59,11 +59,11 @@
   },
   "devDependencies": {
     "@my-react/react": "^0.3.16",
-    "@my-react/react-terminal": "^0.0.9",
+    "@my-react/react-terminal": "^0.0.10",
     "@types/react": "^19.1.8"
   },
   "peerDependencies": {
     "react": "^19.1.0",
-    "ink": "^6.0.1"
+    "ink": "^6.1.0"
   }
 }

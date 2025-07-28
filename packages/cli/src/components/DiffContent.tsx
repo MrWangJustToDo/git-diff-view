@@ -93,11 +93,10 @@ const DiffString = ({
           data-range-start={range.location}
           data-range-end={range.location + range.length}
           flexWrap="wrap"
+          backgroundColor={bg}
         >
           {str1.split("").map((char, index) => (
-            <Text key={index} backgroundColor={bg}>
-              {char}
-            </Text>
+            <Text key={index}>{char}</Text>
           ))}
           {str2.split("").map((char, index) => (
             <Text key={index} backgroundColor={highlightBG}>
@@ -105,24 +104,12 @@ const DiffString = ({
             </Text>
           ))}
           {str3.split("").map((char, index) => (
-            <Text key={index} backgroundColor={bg}>
-              {char}
-            </Text>
+            <Text key={index}>{char}</Text>
           ))}
-          {""
-            .padStart(height * width - rawLine.length)
-            .split("")
-            .map((char, index) => (
-              <Text key={char + "-" + index} backgroundColor={bg}>
-                {char}
-              </Text>
-            ))}
         </Box>
         {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
-          <Box width={width - 1}>
-            <Text backgroundColor={bg} wrap="truncate">
-              {"\\ No newline at end of file".padEnd(width)}
-            </Text>
+          <Box width={width - 1} backgroundColor={bg}>
+            <Text wrap="truncate">{"\\ No newline at end of file".padEnd(width)}</Text>
           </Box>
         )}
       </>
@@ -130,7 +117,7 @@ const DiffString = ({
   }
 
   return (
-    <Box width={width - 1} flexWrap="wrap">
+    <Box width={width - 1} flexWrap="wrap" backgroundColor={bg}>
       {rawLine
         .padEnd(width * height)
         .split("")
@@ -190,6 +177,7 @@ const DiffSyntax = ({
           data-range-start={range.location}
           data-range-end={range.location + range.length}
           flexWrap="wrap"
+          backgroundColor={bg}
         >
           {syntaxLine.nodeList?.map(({ node, wrapper }, index) => {
             const lowlightStyles = getStyleFromClassName(wrapper?.properties?.className?.join(" ") || "");
@@ -200,7 +188,7 @@ const DiffSyntax = ({
               return (
                 <React.Fragment key={index}>
                   {node.value.split("").map((char, index) => (
-                    <Text key={index} backgroundColor={bg} {...lowlightStyle} {...shikiStyle}>
+                    <Text key={index} {...lowlightStyle} {...shikiStyle}>
                       {char}
                     </Text>
                   ))}
@@ -223,7 +211,7 @@ const DiffSyntax = ({
               return (
                 <React.Fragment key={index}>
                   {str1.split("").map((char, index) => (
-                    <Text key={index} backgroundColor={bg} {...lowlightStyle} {...shikiStyle}>
+                    <Text key={index} {...lowlightStyle} {...shikiStyle}>
                       {char}
                     </Text>
                   ))}
@@ -233,7 +221,7 @@ const DiffSyntax = ({
                     </Text>
                   ))}
                   {str3.split("").map((char, index) => (
-                    <Text key={index} backgroundColor={bg} {...lowlightStyle} {...shikiStyle}>
+                    <Text key={index} {...lowlightStyle} {...shikiStyle}>
                       {char}
                     </Text>
                   ))}
@@ -241,20 +229,10 @@ const DiffSyntax = ({
               );
             }
           })}
-          {" "
-            .padEnd(height * width - rawLine.length)
-            .split("")
-            .map((char, index) => (
-              <Text key={char + "-" + index} backgroundColor={bg}>
-                {char}
-              </Text>
-            ))}
         </Box>
         {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
-          <Box width={width - 1}>
-            <Text backgroundColor={bg} wrap="truncate">
-              {"\\ No newline at end of file".padEnd(width)}
-            </Text>
+          <Box width={width - 1} backgroundColor={bg}>
+            <Text wrap="truncate">{"\\ No newline at end of file".padEnd(width)}</Text>
           </Box>
         )}
       </>
@@ -262,7 +240,7 @@ const DiffSyntax = ({
   }
 
   return (
-    <Box width={width - 1} flexWrap="wrap">
+    <Box width={width - 1} flexWrap="wrap" backgroundColor={bg}>
       {syntaxLine?.nodeList?.map(({ node, wrapper }, index) => {
         const lowlightStyles = getStyleFromClassName(wrapper?.properties?.className?.join(" ") || "");
         const lowlightStyle = theme === "dark" ? lowlightStyles.dark : lowlightStyles.light;
@@ -271,21 +249,13 @@ const DiffSyntax = ({
         return (
           <React.Fragment key={index}>
             {node.value.split("").map((char, index) => (
-              <Text key={index} backgroundColor={bg} {...lowlightStyle} {...shikiStyle}>
+              <Text key={index} {...lowlightStyle} {...shikiStyle}>
                 {char}
               </Text>
             ))}
           </React.Fragment>
         );
       })}
-      {" "
-        .padEnd(height * width - rawLine.length)
-        .split("")
-        .map((char, index) => (
-          <Text key={index} backgroundColor={bg}>
-            {char}
-          </Text>
-        ))}
     </Box>
   );
 };
