@@ -6,6 +6,7 @@ import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 import { useTerminalSize } from "../hooks/useTerminalSize";
 
 import { DiffSplitContentLine } from "./DiffSplitContentLine";
+import { DiffSplitExtendLine } from "./DiffSplitExtendLine";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLine";
 import { useDiffViewContext } from "./DiffViewContext";
 
@@ -48,6 +49,13 @@ export const DiffSplitView = memo(({ diffFile }: { diffFile: DiffFile }) => {
             diffFile={diffFile}
             lineNumber={line.lineNumber}
             enableHighlight={enableHighlight}
+          />
+          <DiffSplitExtendLine
+            theme={theme}
+            columns={columns}
+            index={line.index}
+            diffFile={diffFile}
+            lineNumber={line.lineNumber}
           />
         </Fragment>
       ))}

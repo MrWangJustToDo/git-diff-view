@@ -1,5 +1,5 @@
 import { measureElement } from "ink";
-import { useEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 
 import { useDiffViewContext } from "../components/DiffViewContext";
 
@@ -25,7 +25,7 @@ export function useTerminalSize(): { columns: number; rows: number } {
     rows: process.stdout.rows || 20,
   });
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     function updateSize() {
       const terminalWidth = getValidColumns((process.stdout.columns || 60) - TERMINAL_PADDING_X);
 

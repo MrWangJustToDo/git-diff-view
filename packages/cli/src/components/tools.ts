@@ -5,7 +5,10 @@ import type { DiffLine } from "@git-diff-view/core";
 import type { DOMElement } from "ink";
 import type { Ref, UseSelectorWithStore } from "reactivity-store";
 
-export const createDiffConfigStore = (props: DiffViewProps & { isMounted: boolean }, diffFileId: string) => {
+export const createDiffConfigStore = <T = any>(
+  props: DiffViewProps<T> & { isMounted: boolean },
+  diffFileId: string
+) => {
   return createStore(() => {
     const id = ref(diffFileId);
 
@@ -27,6 +30,39 @@ export const createDiffConfigStore = (props: DiffViewProps & { isMounted: boolea
 
     const setEnableHighlight = (_enableHighlight: boolean) => (enableHighlight.value = _enableHighlight);
 
+    const extendData = ref({
+      oldFile: { ...props.extendData?.oldFile },
+      newFile: { ...props.extendData?.newFile },
+    });
+
+    const setExtendData = (_extendData: DiffViewProps<any>["extendData"]) => {
+      const existOldKeys = Object.keys(extendData.value.oldFile || {});
+      const inComingOldKeys = Object.keys(_extendData.oldFile || {});
+      for (const key of existOldKeys) {
+        if (!inComingOldKeys.includes(key)) {
+          delete extendData.value.oldFile[key];
+        }
+      }
+      for (const key of inComingOldKeys) {
+        extendData.value.oldFile[key] = _extendData.oldFile[key];
+      }
+      const existNewKeys = Object.keys(extendData.value.newFile || {});
+      const inComingNewKeys = Object.keys(_extendData.newFile || {});
+      for (const key of existNewKeys) {
+        if (!inComingNewKeys.includes(key)) {
+          delete extendData.value.newFile[key];
+        }
+      }
+      for (const key of inComingNewKeys) {
+        extendData.value.newFile[key] = _extendData.newFile[key];
+      }
+    };
+
+    const renderExtendLine = ref(props.renderExtendLine);
+
+    const setRenderExtendLine = (_renderExtendLine: typeof renderExtendLine.value) =>
+      (renderExtendLine.value = _renderExtendLine);
+
     return {
       id,
       setId,
@@ -38,6 +74,10 @@ export const createDiffConfigStore = (props: DiffViewProps & { isMounted: boolea
       setMounted,
       enableHighlight,
       setEnableHighlight,
+      extendData,
+      setExtendData,
+      renderExtendLine,
+      setRenderExtendLine,
     };
     // fix rollup type error
   }) as UseSelectorWithStore<{
@@ -51,6 +91,13 @@ export const createDiffConfigStore = (props: DiffViewProps & { isMounted: boolea
     setMounted: (mounted: boolean) => void;
     enableHighlight: Ref<boolean>;
     setEnableHighlight: (enableHighlight: boolean) => void;
+    extendData: Ref<{
+      oldFile: Record<string, any>;
+      newFile: Record<string, any>;
+    }>;
+    setExtendData: (extendData: DiffViewProps<any>["extendData"]) => void;
+    renderExtendLine: Ref<typeof props.renderExtendLine>;
+    setRenderExtendLine: (renderExtendLine: typeof props.renderExtendLine) => void;
   }>;
 };
 

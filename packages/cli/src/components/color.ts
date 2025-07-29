@@ -11,6 +11,8 @@ const githubLightColors = {
   AccentGreen: "#008080",
   AccentYellow: "#990073",
   AccentRed: "#d14",
+  DiffAdded: "#C6EAD8",
+  DiffRemoved: "#FFCCCC",
   Comment: "#998",
   Gray: "#999",
   GradientColors: ["#458", "#008080"],
@@ -27,6 +29,8 @@ const githubDarkColors = {
   AccentGreen: "#85E89D",
   AccentYellow: "#FFAB70",
   AccentRed: "#F97583",
+  DiffAdded: "#3C4636",
+  DiffRemoved: "#502125",
   Comment: "#6A737D",
   Gray: "#6A737D",
   GradientColors: ["#79B8FF", "#85E89D"],
@@ -37,8 +41,63 @@ export const GitHubLight = {
     display: "block",
     overflowX: "auto",
     padding: "0.5em",
-    color: githubLightColors.Foreground,
     background: githubLightColors.Background,
+    color: githubLightColors.Foreground,
+  },
+  "hljs-keyword": {
+    color: githubLightColors.AccentBlue,
+  },
+  "hljs-literal": {
+    color: githubLightColors.AccentBlue,
+  },
+  "hljs-symbol": {
+    color: githubLightColors.AccentBlue,
+  },
+  "hljs-name": {
+    color: githubLightColors.AccentBlue,
+  },
+  "hljs-link": {
+    color: githubLightColors.AccentBlue,
+    textDecoration: "underline",
+  },
+  "hljs-built_in": {
+    color: githubLightColors.AccentCyan,
+  },
+  "hljs-type": {
+    color: githubLightColors.AccentCyan,
+  },
+  "hljs-number": {
+    color: githubLightColors.AccentGreen,
+  },
+  "hljs-class": {
+    color: githubLightColors.AccentGreen,
+  },
+  "hljs-string": {
+    color: githubLightColors.AccentYellow,
+  },
+  "hljs-meta-string": {
+    color: githubLightColors.AccentYellow,
+  },
+  "hljs-regexp": {
+    color: githubLightColors.AccentRed,
+  },
+  "hljs-template-tag": {
+    color: githubLightColors.AccentRed,
+  },
+  "hljs-subst": {
+    color: githubLightColors.Foreground,
+  },
+  "hljs-function": {
+    color: githubLightColors.Foreground,
+  },
+  "hljs-title": {
+    color: githubLightColors.Foreground,
+  },
+  "hljs-params": {
+    color: githubLightColors.Foreground,
+  },
+  "hljs-formula": {
+    color: githubLightColors.Foreground,
   },
   "hljs-comment": {
     color: githubLightColors.Comment,
@@ -48,104 +107,69 @@ export const GitHubLight = {
     color: githubLightColors.Comment,
     fontStyle: "italic",
   },
-  "hljs-keyword": {
-    color: githubLightColors.Foreground,
-    fontWeight: "bold",
-  },
-  "hljs-selector-tag": {
-    color: githubLightColors.Foreground,
-    fontWeight: "bold",
-  },
-  "hljs-subst": {
-    color: githubLightColors.Foreground,
-    fontWeight: "normal",
-  },
-  "hljs-number": {
-    color: githubLightColors.AccentGreen,
-  },
-  "hljs-literal": {
-    color: githubLightColors.AccentGreen,
-  },
-  "hljs-variable": {
-    color: githubLightColors.AccentGreen,
-  },
-  "hljs-template-variable": {
-    color: githubLightColors.AccentGreen,
-  },
-  "hljs-tag .hljs-attr": {
-    color: githubLightColors.AccentGreen,
-  },
-  "hljs-string": {
-    color: githubLightColors.AccentRed,
-  },
   "hljs-doctag": {
-    color: githubLightColors.AccentRed,
+    color: githubLightColors.Comment,
   },
-  "hljs-title": {
-    color: githubLightColors.AccentPurple,
-    fontWeight: "bold",
+  "hljs-meta": {
+    color: githubLightColors.Gray,
   },
-  "hljs-section": {
-    color: githubLightColors.AccentPurple,
-    fontWeight: "bold",
-  },
-  "hljs-selector-id": {
-    color: githubLightColors.AccentPurple,
-    fontWeight: "bold",
-  },
-  "hljs-type": {
-    color: githubLightColors.AccentBlue,
-    fontWeight: "bold",
-  },
-  "hljs-class .hljs-title": {
-    color: githubLightColors.AccentBlue,
-    fontWeight: "bold",
+  "hljs-meta-keyword": {
+    color: githubLightColors.Gray,
   },
   "hljs-tag": {
-    color: githubLightColors.AccentBlue,
-    fontWeight: "normal",
+    color: githubLightColors.Gray,
   },
-  "hljs-name": {
-    color: githubLightColors.AccentBlue,
-    fontWeight: "normal",
+  "hljs-variable": {
+    color: githubLightColors.AccentPurple,
+  },
+  "hljs-template-variable": {
+    color: githubLightColors.AccentPurple,
+  },
+  "hljs-attr": {
+    color: githubLightColors.LightBlue,
   },
   "hljs-attribute": {
-    color: githubLightColors.AccentBlue,
-    fontWeight: "normal",
-  },
-  "hljs-regexp": {
-    color: githubLightColors.AccentCyan,
-  },
-  "hljs-link": {
-    color: githubLightColors.AccentCyan,
-  },
-  "hljs-symbol": {
-    color: githubLightColors.AccentYellow,
-  },
-  "hljs-bullet": {
-    color: githubLightColors.AccentYellow,
-  },
-  "hljs-built_in": {
     color: githubLightColors.LightBlue,
   },
   "hljs-builtin-name": {
     color: githubLightColors.LightBlue,
   },
-  "hljs-meta": {
-    color: githubLightColors.Gray,
-    fontWeight: "bold",
-  },
-  "hljs-deletion": {
-    background: "#fdd",
-  },
-  "hljs-addition": {
-    background: "#dfd",
+  "hljs-section": {
+    color: githubLightColors.AccentYellow,
   },
   "hljs-emphasis": {
     fontStyle: "italic",
   },
   "hljs-strong": {
     fontWeight: "bold",
+  },
+  "hljs-bullet": {
+    color: githubLightColors.AccentYellow,
+  },
+  "hljs-selector-tag": {
+    color: githubLightColors.AccentYellow,
+  },
+  "hljs-selector-id": {
+    color: githubLightColors.AccentYellow,
+  },
+  "hljs-selector-class": {
+    color: githubLightColors.AccentYellow,
+  },
+  "hljs-selector-attr": {
+    color: githubLightColors.AccentYellow,
+  },
+  "hljs-selector-pseudo": {
+    color: githubLightColors.AccentYellow,
+  },
+  "hljs-addition": {
+    backgroundColor: githubLightColors.AccentGreen,
+    display: "inline-block",
+    width: "100%",
+  },
+  "hljs-deletion": {
+    backgroundColor: githubLightColors.AccentRed,
+    display: "inline-block",
+    width: "100%",
   },
 };
 
@@ -154,8 +178,63 @@ export const GitHubDark = {
     display: "block",
     overflowX: "auto",
     padding: "0.5em",
-    color: githubDarkColors.Foreground,
     background: githubDarkColors.Background,
+    color: githubDarkColors.Foreground,
+  },
+  "hljs-keyword": {
+    color: githubDarkColors.AccentBlue,
+  },
+  "hljs-literal": {
+    color: githubDarkColors.AccentBlue,
+  },
+  "hljs-symbol": {
+    color: githubDarkColors.AccentBlue,
+  },
+  "hljs-name": {
+    color: githubDarkColors.AccentBlue,
+  },
+  "hljs-link": {
+    color: githubDarkColors.AccentBlue,
+    textDecoration: "underline",
+  },
+  "hljs-built_in": {
+    color: githubDarkColors.AccentCyan,
+  },
+  "hljs-type": {
+    color: githubDarkColors.AccentCyan,
+  },
+  "hljs-number": {
+    color: githubDarkColors.AccentGreen,
+  },
+  "hljs-class": {
+    color: githubDarkColors.AccentGreen,
+  },
+  "hljs-string": {
+    color: githubDarkColors.AccentYellow,
+  },
+  "hljs-meta-string": {
+    color: githubDarkColors.AccentYellow,
+  },
+  "hljs-regexp": {
+    color: githubDarkColors.AccentRed,
+  },
+  "hljs-template-tag": {
+    color: githubDarkColors.AccentRed,
+  },
+  "hljs-subst": {
+    color: githubDarkColors.Foreground,
+  },
+  "hljs-function": {
+    color: githubDarkColors.Foreground,
+  },
+  "hljs-title": {
+    color: githubDarkColors.Foreground,
+  },
+  "hljs-params": {
+    color: githubDarkColors.Foreground,
+  },
+  "hljs-formula": {
+    color: githubDarkColors.Foreground,
   },
   "hljs-comment": {
     color: githubDarkColors.Comment,
@@ -165,102 +244,69 @@ export const GitHubDark = {
     color: githubDarkColors.Comment,
     fontStyle: "italic",
   },
-  "hljs-keyword": {
-    color: githubDarkColors.AccentRed,
-    fontWeight: "bold",
-  },
-  "hljs-selector-tag": {
-    color: githubDarkColors.AccentRed,
-    fontWeight: "bold",
-  },
-  "hljs-subst": {
-    color: githubDarkColors.Foreground,
-  },
-  "hljs-number": {
-    color: githubDarkColors.LightBlue,
-  },
-  "hljs-literal": {
-    color: githubDarkColors.LightBlue,
-  },
-  "hljs-variable": {
-    color: githubDarkColors.AccentYellow,
-  },
-  "hljs-template-variable": {
-    color: githubDarkColors.AccentYellow,
-  },
-  "hljs-tag .hljs-attr": {
-    color: githubDarkColors.AccentYellow,
-  },
-  "hljs-string": {
-    color: githubDarkColors.AccentCyan,
-  },
   "hljs-doctag": {
-    color: githubDarkColors.AccentCyan,
+    color: githubDarkColors.Comment,
   },
-  "hljs-title": {
-    color: githubDarkColors.AccentPurple,
-    fontWeight: "bold",
+  "hljs-meta": {
+    color: githubDarkColors.Gray,
   },
-  "hljs-section": {
-    color: githubDarkColors.AccentPurple,
-    fontWeight: "bold",
-  },
-  "hljs-selector-id": {
-    color: githubDarkColors.AccentPurple,
-    fontWeight: "bold",
-  },
-  "hljs-type": {
-    color: githubDarkColors.AccentGreen,
-    fontWeight: "bold",
-  },
-  "hljs-class .hljs-title": {
-    color: githubDarkColors.AccentGreen,
-    fontWeight: "bold",
+  "hljs-meta-keyword": {
+    color: githubDarkColors.Gray,
   },
   "hljs-tag": {
-    color: githubDarkColors.AccentGreen,
+    color: githubDarkColors.Gray,
   },
-  "hljs-name": {
-    color: githubDarkColors.AccentGreen,
+  "hljs-variable": {
+    color: githubDarkColors.AccentPurple,
   },
-  "hljs-attribute": {
+  "hljs-template-variable": {
+    color: githubDarkColors.AccentPurple,
+  },
+  "hljs-attr": {
     color: githubDarkColors.LightBlue,
   },
-  "hljs-regexp": {
-    color: githubDarkColors.AccentCyan,
-  },
-  "hljs-link": {
-    color: githubDarkColors.AccentCyan,
-  },
-  "hljs-symbol": {
-    color: githubDarkColors.AccentPurple,
-  },
-  "hljs-bullet": {
-    color: githubDarkColors.AccentPurple,
-  },
-  "hljs-built_in": {
+  "hljs-attribute": {
     color: githubDarkColors.LightBlue,
   },
   "hljs-builtin-name": {
     color: githubDarkColors.LightBlue,
   },
-  "hljs-meta": {
-    color: githubDarkColors.LightBlue,
-    fontWeight: "bold",
-  },
-  "hljs-deletion": {
-    background: "#86181D",
-    color: githubDarkColors.AccentRed,
-  },
-  "hljs-addition": {
-    background: "#144620",
-    color: githubDarkColors.AccentGreen,
+  "hljs-section": {
+    color: githubDarkColors.AccentYellow,
   },
   "hljs-emphasis": {
     fontStyle: "italic",
   },
   "hljs-strong": {
     fontWeight: "bold",
+  },
+  "hljs-bullet": {
+    color: githubDarkColors.AccentYellow,
+  },
+  "hljs-selector-tag": {
+    color: githubDarkColors.AccentYellow,
+  },
+  "hljs-selector-id": {
+    color: githubDarkColors.AccentYellow,
+  },
+  "hljs-selector-class": {
+    color: githubDarkColors.AccentYellow,
+  },
+  "hljs-selector-attr": {
+    color: githubDarkColors.AccentYellow,
+  },
+  "hljs-selector-pseudo": {
+    color: githubDarkColors.AccentYellow,
+  },
+  "hljs-addition": {
+    backgroundColor: githubDarkColors.AccentGreen,
+    display: "inline-block",
+    width: "100%",
+  },
+  "hljs-deletion": {
+    backgroundColor: githubDarkColors.AccentRed,
+    display: "inline-block",
+    width: "100%",
   },
 };
 
@@ -325,26 +371,26 @@ export const diffHunkContent = {
 };
 
 export const diffHunkLineNumber = {
-  light: '#c7ecff',
-  dark: '#204274',
-}
+  light: "#c7ecff",
+  dark: "#204274",
+};
 
 export const diffAddContentHighlight = {
-  light: '#abf2bc',
-  dark: '#1f572d'
-}
+  light: "#abf2bc",
+  dark: "#1f572d",
+};
 
 export const diffDelContentHighlight = {
-  light: '#ffb3ad',
-  dark: '#80312f'
-}
+  light: "#ffb3ad",
+  dark: "#80312f",
+};
 
 export const diffEmptyContent = {
   light: "#fafafa",
   dark: "#161b22",
-}
+};
 
 export const diffHunkContentColor = {
   light: "#777777",
   dark: "#9298a0",
-}
+};

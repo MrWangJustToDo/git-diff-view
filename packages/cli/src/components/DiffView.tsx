@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 import { DiffFile, _cacheMap, SplitSide } from "@git-diff-view/core";
 import { DiffModeEnum } from "@git-diff-view/utils";
 import { Box } from "ink";
@@ -13,27 +14,41 @@ import { createDiffConfigStore } from "./tools";
 
 import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/core";
 import type { DOMElement } from "ink";
-import type { RefObject } from "react";
+import type { ReactNode, RefObject } from "react";
 
 _cacheMap.name = "@git-diff-view/cli";
 
 export { SplitSide, DiffModeEnum };
 
-export type DiffViewProps = {
+export type DiffViewProps<T> = {
   data?: {
     oldFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
     newFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
     hunks: string[];
   };
+  extendData?: { oldFile?: Record<string, { data: T }>; newFile?: Record<string, { data: T }> };
   width?: number;
   diffFile?: DiffFile;
   diffViewMode?: DiffModeEnum;
   diffViewTheme?: "light" | "dark";
   registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
   diffViewHighlight?: boolean;
+  renderExtendLine?: ({
+    diffFile,
+    side,
+    data,
+    lineNumber,
+    onUpdate,
+  }: {
+    lineNumber: number;
+    side: SplitSide;
+    data: T;
+    diffFile: DiffFile;
+    onUpdate: () => void;
+  }) => ReactNode;
 };
 
-type DiffViewProps_1 = Omit<DiffViewProps, "data"> & {
+type DiffViewProps_1<T> = Omit<DiffViewProps<T>, "data"> & {
   data?: {
     oldFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | null; content?: string | null };
     newFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | null; content?: string | null };
@@ -41,7 +56,7 @@ type DiffViewProps_1 = Omit<DiffViewProps, "data"> & {
   };
 };
 
-type DiffViewProps_2 = Omit<DiffViewProps, "data"> & {
+type DiffViewProps_2<T> = Omit<DiffViewProps<T>, "data"> & {
   data?: {
     oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
     newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
@@ -49,13 +64,13 @@ type DiffViewProps_2 = Omit<DiffViewProps, "data"> & {
   };
 };
 
-const InternalDiffView = (
-  props: Omit<DiffViewProps, "data"> & {
+const InternalDiffView = <T extends unknown>(
+  props: Omit<DiffViewProps<T>, "data"> & {
     isMounted: boolean;
     wrapperRef?: RefObject<DOMElement>;
   }
 ) => {
-  const { diffFile, diffViewMode, diffViewHighlight, isMounted, wrapperRef } = props;
+  const { diffFile, diffViewMode, diffViewHighlight, isMounted, wrapperRef, extendData, renderExtendLine } = props;
 
   const diffFileId = useMemo(() => diffFile.getId(), [diffFile]);
 
@@ -63,8 +78,19 @@ const InternalDiffView = (
   const useDiffContext = useMemo(() => createDiffConfigStore(props, diffFileId), []);
 
   useEffect(() => {
-    const { id, setId, mode, setMode, mounted, setMounted, enableHighlight, setEnableHighlight } =
-      useDiffContext.getReadonlyState();
+    const {
+      id,
+      setId,
+      mode,
+      setMode,
+      mounted,
+      setMounted,
+      enableHighlight,
+      setEnableHighlight,
+      setExtendData,
+      renderExtendLine,
+      setRenderExtendLine,
+    } = useDiffContext.getReadonlyState();
 
     if (diffFileId && diffFileId !== id) {
       setId(diffFileId);
@@ -81,7 +107,15 @@ const InternalDiffView = (
     if (diffViewHighlight !== enableHighlight) {
       setEnableHighlight(diffViewHighlight);
     }
-  }, [useDiffContext, diffViewHighlight, diffViewMode, diffFileId, isMounted]);
+
+    if (props.extendData) {
+      setExtendData(props.extendData);
+    }
+
+    if (renderExtendLine !== props.renderExtendLine) {
+      setRenderExtendLine(props.renderExtendLine);
+    }
+  }, [useDiffContext, diffViewHighlight, diffViewMode, diffFileId, isMounted, extendData, renderExtendLine]);
 
   useEffect(() => {
     const { wrapper, setWrapper } = useDiffContext.getReadonlyState();
@@ -113,7 +147,7 @@ const InternalDiffView = (
 
 const MemoedInternalDiffView = memo(InternalDiffView);
 
-const DiffViewContainer = (props: DiffViewProps) => {
+const DiffViewContainer = <T extends unknown>(props: DiffViewProps<T>) => {
   const { registerHighlighter, data, diffViewTheme, diffFile: _diffFile, width, ...restProps } = props;
 
   const ref = useRef<DOMElement>(null);
@@ -200,9 +234,9 @@ const DiffViewContainer = (props: DiffViewProps) => {
 };
 
 // type helper function
-function ReactDiffView(props: DiffViewProps_1): JSX.Element;
-function ReactDiffView(props: DiffViewProps_2): JSX.Element;
-function ReactDiffView(props: DiffViewProps) {
+function ReactDiffView<T>(props: DiffViewProps_1<T>): JSX.Element;
+function ReactDiffView<T>(props: DiffViewProps_2<T>): JSX.Element;
+function ReactDiffView<T>(props: DiffViewProps<T>) {
   return <DiffViewContainer {...props} />;
 }
 

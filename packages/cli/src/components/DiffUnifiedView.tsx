@@ -7,6 +7,7 @@ import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 import { useTerminalSize } from "../hooks/useTerminalSize";
 
 import { DiffUnifiedContentLine } from "./DiffUnifiedContentLine";
+import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine";
 import { DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine";
 import { useDiffViewContext } from "./DiffViewContext";
 
@@ -51,6 +52,13 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
             diffFile={diffFile}
             lineNumber={item.lineNumber}
             enableHighlight={enableHighlight}
+          />
+          <DiffUnifiedExtendLine
+            index={item.index}
+            theme={theme}
+            columns={columns}
+            diffFile={diffFile}
+            lineNumber={item.lineNumber}
           />
         </Fragment>
       ))}

@@ -1,7 +1,7 @@
 import { getDiffViewHighlighter } from "@git-diff-view/shiki";
 // import { createElement } from "@my-react/react";
-// import { render } from "@my-react/react-terminal";
-import { render } from "ink";
+// import { Box, render, Text } from "@my-react/react-terminal";
+import { Box, render, Text } from "ink";
 import { createElement } from "react";
 
 import { DiffView, DiffModeEnum } from "@git-diff-view/cli";
@@ -82,8 +82,14 @@ getDiffViewHighlighter().then((highlighter) => {
     //  }),
     createElement(DiffView, {
       data: { hunks: [hunks], newFile: { fileLang: "tsx" } },
-      width: 80,
+      //  width: 80,
       diffViewTheme: "light",
+      extendData: {
+        newFile: { 107: { data: "test extend data" } },
+      },
+      renderExtendLine: ({ data }) => {
+        return createElement(Box, { backgroundColor: "red", width: '100%', padding: '1' }, createElement(Text, null, data));
+      },
       diffViewHighlight: true,
       registerHighlighter: highlighter,
       diffViewMode: DiffModeEnum.Split,
