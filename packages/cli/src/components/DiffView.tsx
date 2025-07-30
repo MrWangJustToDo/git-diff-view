@@ -31,6 +31,9 @@ export type DiffViewProps<T> = {
   diffFile?: DiffFile;
   diffViewMode?: DiffModeEnum;
   diffViewTheme?: "light" | "dark";
+  diffViewTabSpace?: boolean;
+  // tabWidth in the diff view, small: 1, medium: 2, large: 4, default: medium
+  diffViewTabWidth?: "small" | "medium" | "large";
   registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
   diffViewHighlight?: boolean;
   renderExtendLine?: ({
@@ -70,7 +73,17 @@ const InternalDiffView = <T extends unknown>(
     wrapperRef?: RefObject<DOMElement>;
   }
 ) => {
-  const { diffFile, diffViewMode, diffViewHighlight, isMounted, wrapperRef, extendData, renderExtendLine } = props;
+  const {
+    diffFile,
+    diffViewMode,
+    diffViewHighlight,
+    isMounted,
+    wrapperRef,
+    extendData,
+    renderExtendLine,
+    diffViewTabSpace,
+    diffViewTabWidth,
+  } = props;
 
   const diffFileId = useMemo(() => diffFile.getId(), [diffFile]);
 
@@ -90,6 +103,10 @@ const InternalDiffView = <T extends unknown>(
       setExtendData,
       renderExtendLine,
       setRenderExtendLine,
+      tabSpace,
+      setTabSpace,
+      tabWidth,
+      setTabWidth,
     } = useDiffContext.getReadonlyState();
 
     if (diffFileId && diffFileId !== id) {
@@ -115,7 +132,25 @@ const InternalDiffView = <T extends unknown>(
     if (renderExtendLine !== props.renderExtendLine) {
       setRenderExtendLine(props.renderExtendLine);
     }
-  }, [useDiffContext, diffViewHighlight, diffViewMode, diffFileId, isMounted, extendData, renderExtendLine]);
+
+    if (diffViewTabSpace !== tabSpace) {
+      setTabSpace(diffViewTabSpace);
+    }
+
+    if (diffViewTabWidth !== tabWidth) {
+      setTabWidth(diffViewTabWidth);
+    }
+  }, [
+    useDiffContext,
+    diffViewHighlight,
+    diffViewMode,
+    diffFileId,
+    isMounted,
+    extendData,
+    renderExtendLine,
+    diffViewTabSpace,
+    diffViewTabWidth,
+  ]);
 
   useEffect(() => {
     const { wrapper, setWrapper } = useDiffContext.getReadonlyState();
@@ -227,6 +262,7 @@ const DiffViewContainer = <T extends unknown>(props: DiffViewProps<T>) => {
         diffFile={diffFile}
         isMounted={isMounted}
         diffViewTheme={diffViewTheme}
+        diffViewTabWidth={props.diffViewTabWidth || "medium"}
         diffViewMode={restProps.diffViewMode || DiffModeEnum.SplitGitHub}
       />
     </Box>

@@ -14,6 +14,7 @@ import {
   GitHubDark,
   GitHubLight,
 } from "./color";
+import { useDiffViewContext } from "./DiffViewContext";
 
 import type { DiffFile, DiffLine, File } from "@git-diff-view/core";
 
@@ -53,7 +54,6 @@ const DiffString = ({
   bg,
   width,
   theme,
-  height,
   rawLine,
   diffLine,
   operator,
@@ -68,6 +68,10 @@ const DiffString = ({
   plainLine?: File["plainFile"][number];
 }) => {
   const changes = diffLine?.changes;
+
+  const { useDiffContext } = useDiffViewContext();
+
+  const { enableTabSpace, tabWidth } = useDiffContext((s) => ({ enableTabSpace: s.tabSpace, tabWidth: s.tabWidth }));
 
   if (changes?.hasLineChange) {
     const isNewLineSymbolChanged = changes.newLineSymbol;
@@ -95,17 +99,123 @@ const DiffString = ({
           flexWrap="wrap"
           backgroundColor={bg}
         >
-          {str1.split("").map((char, index) => (
-            <Text key={index}>{char}</Text>
-          ))}
-          {str2.split("").map((char, index) => (
-            <Text key={index} backgroundColor={highlightBG}>
-              {char}
-            </Text>
-          ))}
-          {str3.split("").map((char, index) => (
-            <Text key={index}>{char}</Text>
-          ))}
+          {str1.split("").map((char, index) => {
+            if (enableTabSpace && char === " ") {
+              return (
+                <Text key={index} dimColor>
+                  ·
+                </Text>
+              );
+            }
+            if (char === "\t") {
+              if (enableTabSpace) {
+                return (
+                  <React.Fragment key={index}>
+                    {"→"
+                      .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                      .split("")
+                      .map((spaceChar, spaceIndex) => (
+                        <Text key={spaceIndex} dimColor={spaceIndex === 0}>
+                          {spaceChar}
+                        </Text>
+                      ))}
+                  </React.Fragment>
+                );
+              } else {
+                return (
+                  <React.Fragment key={index}>
+                    {""
+                      .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                      .split("")
+                      .map((spaceChar, spaceIndex) => (
+                        <Text key={spaceIndex}>{spaceChar}</Text>
+                      ))}
+                  </React.Fragment>
+                );
+              }
+            }
+            return <Text key={index}>{char}</Text>;
+          })}
+          {str2.split("").map((char, index) => {
+            if (enableTabSpace && char === " ") {
+              return (
+                <Text key={index} backgroundColor={highlightBG} dimColor>
+                  ·
+                </Text>
+              );
+            }
+            if (char === "\t") {
+              if (enableTabSpace) {
+                return (
+                  <React.Fragment key={index}>
+                    {"→"
+                      .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                      .split("")
+                      .map((spaceChar, spaceIndex) => (
+                        <Text key={spaceIndex} backgroundColor={highlightBG} dimColor={spaceIndex === 0}>
+                          {spaceChar}
+                        </Text>
+                      ))}
+                  </React.Fragment>
+                );
+              } else {
+                return (
+                  <React.Fragment key={index}>
+                    {""
+                      .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                      .split("")
+                      .map((spaceChar, spaceIndex) => (
+                        <Text key={spaceIndex} backgroundColor={highlightBG}>
+                          {spaceChar}
+                        </Text>
+                      ))}
+                  </React.Fragment>
+                );
+              }
+            }
+            return (
+              <Text key={index} backgroundColor={highlightBG}>
+                {char}
+              </Text>
+            );
+          })}
+          {str3.split("").map((char, index) => {
+            if (enableTabSpace && char === " ") {
+              return (
+                <Text key={index} dimColor>
+                  ·
+                </Text>
+              );
+            }
+            if (char === "\t") {
+              if (enableTabSpace) {
+                return (
+                  <React.Fragment key={index}>
+                    {"→"
+                      .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                      .split("")
+                      .map((spaceChar, spaceIndex) => (
+                        <Text key={spaceIndex} dimColor={spaceIndex === 0}>
+                          {spaceChar}
+                        </Text>
+                      ))}
+                  </React.Fragment>
+                );
+              } else {
+                return (
+                  <React.Fragment key={index}>
+                    {""
+                      .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                      .split("")
+                      .map((spaceChar, spaceIndex) => (
+                        <Text key={spaceIndex}>{spaceChar}</Text>
+                      ))}
+                  </React.Fragment>
+                );
+              }
+            }
+            return <Text key={index}>{char}</Text>;
+          })}
         </Box>
         {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
           <Box width={width - 1} backgroundColor={bg}>
@@ -118,14 +228,43 @@ const DiffString = ({
 
   return (
     <Box width={width - 1} flexWrap="wrap" backgroundColor={bg}>
-      {rawLine
-        .padEnd(width * height)
-        .split("")
-        .map((char, index) => (
-          <Text key={index} backgroundColor={bg}>
-            {char}
-          </Text>
-        ))}
+      {rawLine.split("").map((char, index) => {
+        if (enableTabSpace && char === " ") {
+          return (
+            <Text key={index} dimColor>
+              ·
+            </Text>
+          );
+        }
+        if (char === "\t") {
+          if (enableTabSpace) {
+            return (
+              <React.Fragment key={index}>
+                {"→"
+                  .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                  .split("")
+                  .map((spaceChar, spaceIndex) => (
+                    <Text key={spaceIndex} dimColor={spaceIndex === 0}>
+                      {spaceChar}
+                    </Text>
+                  ))}
+              </React.Fragment>
+            );
+          } else {
+            return (
+              <React.Fragment key={index}>
+                {""
+                  .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                  .split("")
+                  .map((spaceChar, spaceIndex) => (
+                    <Text key={spaceIndex}>{spaceChar}</Text>
+                  ))}
+              </React.Fragment>
+            );
+          }
+        }
+        return <Text key={index}>{char}</Text>;
+      })}
     </Box>
   );
 };
@@ -165,6 +304,10 @@ const DiffSyntax = ({
 
   const changes = diffLine?.changes;
 
+  const { useDiffContext } = useDiffViewContext();
+
+  const { enableTabSpace, tabWidth } = useDiffContext((s) => ({ enableTabSpace: s.tabSpace, tabWidth: s.tabWidth }));
+
   if (changes?.hasLineChange) {
     const isNewLineSymbolChanged = changes.newLineSymbol;
 
@@ -187,11 +330,49 @@ const DiffSyntax = ({
             if (node.endIndex < range.location || range.location + range.length < node.startIndex) {
               return (
                 <React.Fragment key={index}>
-                  {node.value.split("").map((char, index) => (
-                    <Text key={index} {...lowlightStyle} {...shikiStyle}>
-                      {char}
-                    </Text>
-                  ))}
+                  {node.value.split("").map((char, index) => {
+                    if (enableTabSpace && char === " ") {
+                      return (
+                        <Text key={index} dimColor {...lowlightStyle} {...shikiStyle}>
+                          ·
+                        </Text>
+                      );
+                    }
+                    if (char === "\t") {
+                      if (enableTabSpace) {
+                        return (
+                          <React.Fragment key={index}>
+                            {"→"
+                              .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                              .split("")
+                              .map((spaceChar, spaceIndex) => (
+                                <Text key={spaceIndex} dimColor={spaceIndex === 0} {...lowlightStyle} {...shikiStyle}>
+                                  {spaceChar}
+                                </Text>
+                              ))}
+                          </React.Fragment>
+                        );
+                      } else {
+                        return (
+                          <React.Fragment key={index}>
+                            {""
+                              .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                              .split("")
+                              .map((spaceChar, spaceIndex) => (
+                                <Text key={spaceIndex} {...lowlightStyle} {...shikiStyle}>
+                                  {spaceChar}
+                                </Text>
+                              ))}
+                          </React.Fragment>
+                        );
+                      }
+                    }
+                    return (
+                      <Text key={index} {...lowlightStyle} {...shikiStyle}>
+                        {char}
+                      </Text>
+                    );
+                  })}
                 </React.Fragment>
               );
             } else {
@@ -210,21 +391,141 @@ const DiffSyntax = ({
                     : diffDelContentHighlight.dark;
               return (
                 <React.Fragment key={index}>
-                  {str1.split("").map((char, index) => (
-                    <Text key={index} {...lowlightStyle} {...shikiStyle}>
-                      {char}
-                    </Text>
-                  ))}
-                  {str2.split("").map((char, index) => (
-                    <Text key={index} backgroundColor={highlightBG} {...lowlightStyle} {...shikiStyle}>
-                      {char}
-                    </Text>
-                  ))}
-                  {str3.split("").map((char, index) => (
-                    <Text key={index} {...lowlightStyle} {...shikiStyle}>
-                      {char}
-                    </Text>
-                  ))}
+                  {str1.split("").map((char, index) => {
+                    if (enableTabSpace && char === " ") {
+                      return (
+                        <Text key={index} dimColor {...lowlightStyle} {...shikiStyle}>
+                          ·
+                        </Text>
+                      );
+                    }
+                    if (char === "\t") {
+                      if (enableTabSpace) {
+                        return (
+                          <React.Fragment key={index}>
+                            {"→"
+                              .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                              .split("")
+                              .map((spaceChar, spaceIndex) => (
+                                <Text key={spaceIndex} dimColor={spaceIndex === 0} {...lowlightStyle} {...shikiStyle}>
+                                  {spaceChar}
+                                </Text>
+                              ))}
+                          </React.Fragment>
+                        );
+                      } else {
+                        return (
+                          <React.Fragment key={index}>
+                            {""
+                              .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                              .split("")
+                              .map((spaceChar, spaceIndex) => (
+                                <Text key={spaceIndex} {...lowlightStyle} {...shikiStyle}>
+                                  {spaceChar}
+                                </Text>
+                              ))}
+                          </React.Fragment>
+                        );
+                      }
+                    }
+                    return (
+                      <Text key={index} {...lowlightStyle} {...shikiStyle}>
+                        {char}
+                      </Text>
+                    );
+                  })}
+                  {str2.split("").map((char, index) => {
+                    if (enableTabSpace && char === " ") {
+                      return (
+                        <Text key={index} backgroundColor={highlightBG} dimColor {...lowlightStyle} {...shikiStyle}>
+                          ·
+                        </Text>
+                      );
+                    }
+                    if (char === "\t") {
+                      if (enableTabSpace) {
+                        return (
+                          <React.Fragment key={index}>
+                            {"→"
+                              .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                              .split("")
+                              .map((spaceChar, spaceIndex) => (
+                                <Text
+                                  key={spaceIndex}
+                                  backgroundColor={highlightBG}
+                                  dimColor={spaceIndex === 0}
+                                  {...lowlightStyle}
+                                  {...shikiStyle}
+                                >
+                                  {spaceChar}
+                                </Text>
+                              ))}
+                          </React.Fragment>
+                        );
+                      } else {
+                        return (
+                          <React.Fragment key={index}>
+                            {""
+                              .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                              .split("")
+                              .map((spaceChar, spaceIndex) => (
+                                <Text key={spaceIndex} backgroundColor={highlightBG} {...lowlightStyle} {...shikiStyle}>
+                                  {spaceChar}
+                                </Text>
+                              ))}
+                          </React.Fragment>
+                        );
+                      }
+                    }
+                    return (
+                      <Text key={index} backgroundColor={highlightBG} {...lowlightStyle} {...shikiStyle}>
+                        {char}
+                      </Text>
+                    );
+                  })}
+                  {str3.split("").map((char, index) => {
+                    if (enableTabSpace && char === " ") {
+                      return (
+                        <Text key={index} dimColor {...lowlightStyle} {...shikiStyle}>
+                          ·
+                        </Text>
+                      );
+                    }
+                    if (char === "\t") {
+                      if (enableTabSpace) {
+                        return (
+                          <React.Fragment key={index}>
+                            {"→"
+                              .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                              .split("")
+                              .map((spaceChar, spaceIndex) => (
+                                <Text key={spaceIndex} dimColor={spaceIndex === 0} {...lowlightStyle} {...shikiStyle}>
+                                  {spaceChar}
+                                </Text>
+                              ))}
+                          </React.Fragment>
+                        );
+                      } else {
+                        return (
+                          <React.Fragment key={index}>
+                            {""
+                              .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                              .split("")
+                              .map((spaceChar, spaceIndex) => (
+                                <Text key={spaceIndex} {...lowlightStyle} {...shikiStyle}>
+                                  {spaceChar}
+                                </Text>
+                              ))}
+                          </React.Fragment>
+                        );
+                      }
+                    }
+                    return (
+                      <Text key={index} {...lowlightStyle} {...shikiStyle}>
+                        {char}
+                      </Text>
+                    );
+                  })}
                 </React.Fragment>
               );
             }
@@ -248,11 +549,49 @@ const DiffSyntax = ({
         const shikiStyle = theme === "dark" ? shikiStyles.dark : shikiStyles.light;
         return (
           <React.Fragment key={index}>
-            {node.value.split("").map((char, index) => (
-              <Text key={index} {...lowlightStyle} {...shikiStyle}>
-                {char}
-              </Text>
-            ))}
+            {node.value.split("").map((char, index) => {
+              if (enableTabSpace && char === " ") {
+                return (
+                  <Text key={index} dimColor {...lowlightStyle} {...shikiStyle}>
+                    ·
+                  </Text>
+                );
+              }
+              if (char === "\t") {
+                if (enableTabSpace) {
+                  return (
+                    <React.Fragment key={index}>
+                      {"→"
+                        .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                        .split("")
+                        .map((spaceChar, spaceIndex) => (
+                          <Text key={spaceIndex} dimColor={spaceIndex === 0} {...lowlightStyle} {...shikiStyle}>
+                            {spaceChar}
+                          </Text>
+                        ))}
+                    </React.Fragment>
+                  );
+                } else {
+                  return (
+                    <React.Fragment key={index}>
+                      {""
+                        .padEnd(tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4, " ")
+                        .split("")
+                        .map((spaceChar, spaceIndex) => (
+                          <Text key={spaceIndex} {...lowlightStyle} {...shikiStyle}>
+                            {spaceChar}
+                          </Text>
+                        ))}
+                    </React.Fragment>
+                  );
+                }
+              }
+              return (
+                <Text key={index} {...lowlightStyle} {...shikiStyle}>
+                  {char}
+                </Text>
+              );
+            })}
           </React.Fragment>
         );
       })}

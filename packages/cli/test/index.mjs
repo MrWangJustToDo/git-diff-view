@@ -6,7 +6,7 @@ import { createElement } from "react";
 
 import { DiffView, DiffModeEnum } from "@git-diff-view/cli";
 
-const hunks = `diff --git a/packages/myreact-reactivity/src/reactive/feature.ts b/packages/myreact-reactivity/src/reactive/feature.ts
+const hunk = `diff --git a/packages/myreact-reactivity/src/reactive/feature.ts b/packages/myreact-reactivity/src/reactive/feature.ts
 index 5b301628..15aac42f 100644
 --- a/packages/myreact-reactivity/src/reactive/feature.ts
 +++ b/packages/myreact-reactivity/src/reactive/feature.ts
@@ -81,9 +81,11 @@ getDiffViewHighlighter().then((highlighter) => {
     //    diffViewMode: DiffModeEnum.Split,
     //  }),
     createElement(DiffView, {
-      data: { hunks: [hunks], newFile: { fileLang: "tsx" } },
-      //  width: 80,
+      data: { hunks: [hunk], newFile: { fileLang: "tsx" } },
+      // width: 80,
       diffViewTheme: "light",
+      // diffViewTabWidth: 'small',
+      // diffViewTabSpace: true,
       extendData: {
         newFile: { 107: { data: "test extend data" } },
       },

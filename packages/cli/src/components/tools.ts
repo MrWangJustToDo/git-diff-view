@@ -18,6 +18,14 @@ export const createDiffConfigStore = <T = any>(
 
     const setMode = (_mode: DiffModeEnum) => (mode.value = _mode);
 
+    const tabSpace = ref(props.diffViewTabSpace);
+
+    const setTabSpace = (_tabSpace: boolean) => (tabSpace.value = _tabSpace);
+
+    const tabWidth = ref(props.diffViewTabWidth || 'medium');
+
+    const setTabWidth = (_tabWidth: 'small' | 'medium' | 'large') => (tabWidth.value = _tabWidth);
+
     const wrapper = ref<{ current: DOMElement }>(markRaw({ current: null }));
 
     const setWrapper = (_wrapper?: DOMElement) => (wrapper.value = markRaw({ current: _wrapper }));
@@ -72,6 +80,10 @@ export const createDiffConfigStore = <T = any>(
       setWrapper,
       mounted,
       setMounted,
+      tabSpace,
+      setTabSpace,
+      tabWidth,
+      setTabWidth,
       enableHighlight,
       setEnableHighlight,
       extendData,
@@ -89,6 +101,10 @@ export const createDiffConfigStore = <T = any>(
     setWrapper: (wrapper?: DOMElement) => void;
     mounted: Ref<boolean>;
     setMounted: (mounted: boolean) => void;
+    tabSpace: Ref<boolean>;
+    setTabSpace: (tabSpace: boolean) => void;
+    tabWidth: Ref<'small' | 'medium' | 'large'>;
+    setTabWidth: (tabWidth: 'small' | 'medium' | 'large') => void;
     enableHighlight: Ref<boolean>;
     setEnableHighlight: (enableHighlight: boolean) => void;
     extendData: Ref<{
