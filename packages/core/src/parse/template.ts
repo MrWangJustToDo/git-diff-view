@@ -241,6 +241,8 @@ export const getSyntaxDiffTemplateByFastDiff = ({
             template += `</span>`;
           } else if (range.startIndex === range.endIndex) {
             template += `</span>`;
+          }
+          if (range.endIndex === index) {
             rangeIndex++;
             range = allRange[rangeIndex];
           }
@@ -255,8 +257,8 @@ export const getSyntaxDiffTemplateByFastDiff = ({
               ? `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-radius: 0.2em;">`
               : isEndInSameNode
                 ? `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-top-right-radius: 0.2em;border-bottom-right-radius: 0.2em;">`
-                // current range crosses the node boundary
-                : `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});">`;
+                : // current range crosses the node boundary
+                  `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});">`;
           }
           template += transform(value);
           if (isEndStr && changes.newLineSymbol) {
