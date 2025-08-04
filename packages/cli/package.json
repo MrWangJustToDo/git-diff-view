@@ -20,6 +20,7 @@
   },
   "scripts": {
     "dev": "DEV=true node ./test/index.mjs",
+    "gen:color": "node ./gen.mjs",
     "gen:type": "dts-bundle-generator -o index.d.ts dist/types/index.d.ts"
   },
   "homepage": "https://mrwangjusttodo.github.io/git-diff-view",
