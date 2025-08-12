@@ -71,6 +71,10 @@ td {
 	text-align: left;
 }
 
+td {
+  padding: 0;
+}
+
 .diff-line-old-num,
 .diff-line-new-num,
 .diff-line-num {

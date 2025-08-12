@@ -119,7 +119,7 @@ export const DiffSplitViewWrap = (props: { diffFile: DiffFile }) => {
               <th scope="col">new line content</th>
             </tr>
           </thead>
-          <tbody class="diff-table-body leading-[1.4]" onMouseDown={onMouseDown}>
+          <tbody class="diff-table-body leading-[1.6]" onMouseDown={onMouseDown}>
             <For each={lines()}>
               {(item) => (
                 <>

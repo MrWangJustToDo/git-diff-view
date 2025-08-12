@@ -108,6 +108,8 @@ pnpm add @git-diff-view/vue
 ```tsx
 import { DiffView, DiffModeEnum } from "@git-diff-view/react";
 import "@git-diff-view/react/styles/diff-view.css";
+// if you have your own tailwindcss config, you can use the `diff-view-pure.css` to avoid CSS conflicts
+import "@git-diff-view/react/styles/diff-view-pure.css";
 
 <DiffView<string>
   // use data

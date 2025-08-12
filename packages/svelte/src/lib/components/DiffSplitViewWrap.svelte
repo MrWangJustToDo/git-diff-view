@@ -133,7 +133,7 @@
 				</tr>
 			</thead>
 			<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
-			<tbody class="diff-table-body leading-[1.4]" onmousedown={onMouseDown}>
+			<tbody class="diff-table-body leading-[1.6]" onmousedown={onMouseDown}>
 				{#each lines as item}
 					<DiffSplitHunkLine
 						index={item.index}

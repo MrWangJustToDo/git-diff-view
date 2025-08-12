@@ -247,7 +247,7 @@
 	{:else}
 		<tr
 			data-line={props.lineNumber}
-			data-state={unifiedItem.diff ? 'diff' : 'plain'}
+			data-state={unifiedItem?.diff ? 'diff' : 'plain'}
 			class="diff-line group"
 		>
 			<td

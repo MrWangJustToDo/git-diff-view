@@ -81,7 +81,7 @@ const DiffSplitViewTable = defineComponent(
               <th scope="col">{SplitSide[props.side]} line content</th>
             </tr>
           </thead>
-          <tbody class="diff-table-body leading-[1.4]" onMousedown={onMouseDown}>
+          <tbody class="diff-table-body leading-[1.6]" onMousedown={onMouseDown}>
             {lines.value.map((item) => (
               <Fragment key={item.index}>
                 <DiffSplitHunkLine

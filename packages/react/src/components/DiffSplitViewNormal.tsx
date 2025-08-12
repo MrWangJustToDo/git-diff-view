@@ -51,7 +51,7 @@ const DiffSplitViewTable = ({
           <th scope="col">{SplitSide[side]} line content</th>
         </tr>
       </thead>
-      <tbody className="diff-table-body leading-[1.4]" onMouseDownCapture={onMouseDown}>
+      <tbody className="diff-table-body leading-[1.6]" onMouseDownCapture={onMouseDown}>
         {lines.map((line) => (
           <Fragment key={line.index}>
             <DiffSplitHunkLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />

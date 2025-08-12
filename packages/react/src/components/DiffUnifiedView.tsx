@@ -135,7 +135,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
                 <th scope="col">line content</th>
               </tr>
             </thead>
-            <tbody className="diff-table-body leading-[1.4]" onMouseDownCapture={onMouseDown}>
+            <tbody className="diff-table-body leading-[1.6]" onMouseDownCapture={onMouseDown}>
               {lines.map((item) => (
                 <Fragment key={item.index}>
                   <DiffUnifiedHunkLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />

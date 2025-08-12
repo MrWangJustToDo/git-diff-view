@@ -83,7 +83,7 @@ const DiffSplitViewTable = (props: {
           <th scope="col">{SplitSide[props.side]} line content</th>
         </tr>
       </thead>
-      <tbody class="diff-table-body leading-[1.4]" onMouseDown={onMouseDown}>
+      <tbody class="diff-table-body leading-[1.6]" onMouseDown={onMouseDown}>
         <For each={lines()}>
           {(item) => (
             <>

@@ -149,7 +149,7 @@
 					color: var(${hunkContentColorName});
 				`}
 			>
-				{currentHunk?.unifiedInfo?.plainText || currentHunk.text}
+				{currentHunk?.unifiedInfo?.plainText || currentHunk?.text}
 			</div>
 		</td>
 	</tr>

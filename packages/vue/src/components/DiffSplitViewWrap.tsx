@@ -112,7 +112,7 @@ export const DiffSplitViewWrap = defineComponent(
                   <th scope="col">new line content</th>
                 </tr>
               </thead>
-              <tbody class="diff-table-body leading-[1.4]" onMousedown={onMouseDown}>
+              <tbody class="diff-table-body leading-[1.6]" onMousedown={onMouseDown}>
                 {lines.value.map((item) => (
                   <Fragment key={item.index}>
                     <DiffSplitHunkLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />

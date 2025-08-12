@@ -109,7 +109,7 @@ export const DiffUnifiedView = defineComponent(
                   <th scope="col">line content</th>
                 </tr>
               </thead>
-              <tbody class="diff-table-body leading-[1.4]" onMousedown={onMouseDown}>
+              <tbody class="diff-table-body leading-[1.6]" onMousedown={onMouseDown}>
                 {lines.value.map((item) => (
                   <Fragment key={item.index}>
                     <DiffUnifiedHunkLine index={item.index} lineNumber={item.lineNumber} diffFile={props.diffFile} />
