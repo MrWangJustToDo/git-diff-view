@@ -121,8 +121,8 @@ const start = async () => {
   process.exit(0);
 };
 
-// start();
+start();
 
 // buildCli();
 
-buildSvelte();
+// buildSvelte();
