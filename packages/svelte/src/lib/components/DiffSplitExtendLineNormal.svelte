@@ -15,6 +15,8 @@
 
 	let props: Props = $props();
 
+	let lineDom = $state<HTMLElement | null>(null);
+
 	const extendData = $derived.by(getExtend());
 
 	const renderExtend = $derived.by(getRenderExtend());
@@ -67,13 +69,13 @@
 		selector: () => lineSelector,
 		wrapper: () => lineWrapperSelector,
 		side: () => extendSide,
-		enable: () => currentIsShow
+		enable: () => Boolean(currentIsShow && lineDom)
 	});
 
 	const width = $derived.by(
 		useDomWidth({
 			selector: () => wrapperSelector,
-			enable: () => currentEnable
+			enable: () => Boolean(currentEnable && lineDom)
 		})
 	);
 </script>
@@ -84,6 +86,7 @@
 		data-state="extend"
 		data-side={SplitSide[props.side]}
 		class="diff-line diff-line-extend"
+		{@attach (l) => (lineDom = l)}
 	>
 		{#if !!renderExtend && currentExtend}
 			<td class={`diff-line-extend-${SplitSide[props.side]}-content p-0`} colspan={2}>

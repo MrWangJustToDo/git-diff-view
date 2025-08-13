@@ -1,5 +1,5 @@
 import { diffChanges, relativeChanges } from "./change-range";
-import { DiffLineType } from "./diff-line";
+import { DiffLineType, DiffLine } from "./diff-line";
 import { DiffHunkExpansionType } from "./raw-diff";
 import {
   getEnableFastDiffTemplate,
@@ -10,7 +10,6 @@ import {
 } from "./template";
 
 import type { SyntaxLineWithTemplate } from "../file";
-import type { DiffLine } from "./diff-line";
 import type { DiffHunk, DiffHunkHeader } from "./raw-diff";
 
 /** How many new lines will be added to a diff hunk by default. */
@@ -122,8 +121,14 @@ export const getDiffRange = (
       if (!addition.changes || !deletion.changes) {
         // use the original text content to computed diff range
         // fix: get diff with ignoreWhiteSpace config
-        const _addition = addition.clone(getAdditionRaw(addition.newLineNumber) || addition.text || "");
-        const _deletion = deletion.clone(getDeletionRaw(deletion.oldLineNumber) || deletion.text || "");
+        const _addition = DiffLine.prototype.clone.call(
+          addition,
+          getAdditionRaw(addition.newLineNumber) || addition.text || ""
+        );
+        const _deletion = DiffLine.prototype.clone.call(
+          deletion,
+          getDeletionRaw(deletion.oldLineNumber) || deletion.text || ""
+        );
         const { addRange, delRange } = relativeChanges(_addition, _deletion);
         addition.changes = addRange;
         deletion.changes = delRange;
@@ -154,8 +159,14 @@ export const getDiffRange = (
           });
         }
       } else {
-        const _addition = addition.clone(getAdditionRaw(addition.newLineNumber) || addition.text || "");
-        const _deletion = deletion.clone(getDeletionRaw(deletion.oldLineNumber) || deletion.text || "");
+        const _addition = DiffLine.prototype.clone.call(
+          addition,
+          getAdditionRaw(addition.newLineNumber) || addition.text || ""
+        );
+        const _deletion = DiffLine.prototype.clone.call(
+          deletion,
+          getDeletionRaw(deletion.oldLineNumber) || deletion.text || ""
+        );
         const { addRange, delRange } = diffChanges(_addition, _deletion);
         addition.diffChanges = addRange;
         deletion.diffChanges = delRange;

@@ -15,6 +15,8 @@
 
 	let props: Props = $props();
 
+	let lineDom = $state<HTMLElement | null>(null);
+
 	const renderWidget = $derived.by(getRenderWidget());
 
 	const widget = $derived.by(getWidget());
@@ -75,13 +77,13 @@
 		selector: () => lineSelector,
 		wrapper: () => lineWrapperSelector,
 		side: () => observeSide,
-		enable: () => currentIsShow
+		enable: () => Boolean(currentIsShow && lineDom)
 	});
 
 	const width = $derived.by(
 		useDomWidth({
 			selector: () => wrapperSelector,
-			enable: () => currentEnable
+			enable: () => Boolean(currentEnable && lineDom)
 		})
 	);
 </script>
@@ -92,6 +94,7 @@
 		data-state="widget"
 		data-side={SplitSide[props.side]}
 		class="diff-line diff-line-widget"
+		{@attach (l) => (lineDom = l)}
 	>
 		{#if currentWidget}
 			<td class={`diff-line-widget-${SplitSide[props.side]}-content p-0`} colspan={2}>

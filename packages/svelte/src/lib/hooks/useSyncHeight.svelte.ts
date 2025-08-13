@@ -22,8 +22,6 @@ export const useSyncHeight = ({
 	const unSubscribe = { current: () => {} };
 
 	const observeHeight = () => {
-		unSubscribe.current();
-
 		if (!isMounted) return;
 
 		if (enable()) {
@@ -100,5 +98,9 @@ export const useSyncHeight = ({
 		}
 	};
 
-	$effect(observeHeight);
+	$effect(() => {
+		observeHeight();
+
+		return () => unSubscribe.current?.();
+	});
 };

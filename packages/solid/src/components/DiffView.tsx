@@ -181,6 +181,8 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
       currentDiffFile.initRaw();
       currentDiffFile.buildSplitDiffLines();
       currentDiffFile.buildUnifiedDiffLines();
+      // 看起来solid的 effect 调用无法保证顺序？
+      currentDiffFile.notifyAll();
     }
   };
 

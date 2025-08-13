@@ -25,8 +25,6 @@ export const useDomWidth = ({
 	const observeWidth = () => {
 		if (!isMounted) return;
 
-		cancel.current?.();
-
 		if (enable()) {
 			const container = document.querySelector(`#diff-root${id}`);
 
@@ -79,7 +77,11 @@ export const useDomWidth = ({
 		}
 	};
 
-	$effect(observeWidth);
+	$effect(() => {
+		observeWidth();
+
+		return () => cancel.current?.();
+	});
 
 	return () => width;
 };

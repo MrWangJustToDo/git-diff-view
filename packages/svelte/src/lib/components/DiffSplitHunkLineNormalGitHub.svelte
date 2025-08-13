@@ -22,6 +22,8 @@
 
 	let props: Props = $props();
 
+	let lineDom = $state<HTMLElement | null>(null);
+
 	const currentHunk = $derived.by(() => props.diffFile.getSplitHunkLine(props.index));
 
 	const enableExpand = $derived.by(() => props.diffFile.getExpandEnabled());
@@ -94,7 +96,7 @@
 		selector: () => lineSelector,
 		wrapper: () => lineSelector,
 		side: () => currentSyncHeightSide,
-		enable: () => currentEnableSyncHeight
+		enable: () => Boolean(currentEnableSyncHeight && lineDom)
 	});
 </script>
 
@@ -105,6 +107,7 @@
 		data-side={SplitSide[props.side]}
 		style={`background-color: var(${hunkContentBGName})`}
 		class="diff-line diff-line-hunk"
+		{@attach (l) => (lineDom = l)}
 	>
 		{#if currentShowExpand}
 			<td
