@@ -2,7 +2,7 @@ import { DiffModeEnum } from "@git-diff-view/react";
 import { Button, Group, Tooltip } from "@mantine/core";
 import { useEffect, useState } from "react";
 
-import { useDiffConfig } from "../hooks/useDiffConfig";
+import { useDiffConfig } from "../../hooks/useDiffConfig";
 
 import type { DiffFile } from "@git-diff-view/react";
 

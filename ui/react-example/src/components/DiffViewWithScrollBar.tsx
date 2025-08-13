@@ -87,7 +87,7 @@ export const DiffViewWithScrollBar = (props: Omit<DiffViewProps<string[]>, "data
 
   return (
     <div ref={ref}>
-      <DiffView {...props} />
+      <DiffView {...props} diffViewTheme={colorScheme === "dark" ? "dark" : "light"} />
       <div data-scroll-target className="sticky bottom-0 mt-[-6px] flex h-[6px] w-full">
         {diffViewMode & DiffModeEnum.Split ? (
           <>

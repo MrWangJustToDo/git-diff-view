@@ -1,5 +1,5 @@
-import { DiffFile, highlighter as buildInHighlighter } from "@git-diff-view/core";
-import { highlighterReady } from "@git-diff-view/shiki";
+import { DiffFile, highlighter as buildInHighlighter, setEnableFastDiffTemplate } from "@git-diff-view/core";
+import { getDiffViewHighlighter } from "@git-diff-view/shiki";
 
 import type { DiffViewProps } from "@git-diff-view/react";
 
@@ -8,8 +8,11 @@ export type MessageData = {
   data: DiffViewProps<any>["data"];
   highlight?: boolean;
   theme?: "light" | "dark";
-  bundle: ReturnType<DiffFile["getBundle"]>;
+  bundle?: ReturnType<DiffFile["getBundle"]>;
+  error?: string;
 };
+
+setEnableFastDiffTemplate(true);
 
 const post = (d: MessageData) => postMessage(d);
 
@@ -17,44 +20,32 @@ buildInHighlighter.setMaxLineToIgnoreSyntax(60000);
 
 // highlighter.setIgnoreSyntaxHighlightList([/.vue$/])
 
-onmessage = (event: MessageEvent<MessageData>) => {
+onmessage = async (event: MessageEvent<MessageData>) => {
   const _data = event.data;
 
   const data = _data.data;
 
-  const file = new DiffFile(
-    data?.oldFile?.fileName || "",
-    data?.oldFile?.content || "",
-    data?.newFile?.fileName || "",
-    data?.newFile?.content || "",
-    data?.hunks || [],
-    data?.oldFile?.fileLang || "",
-    data?.newFile?.fileLang || ""
-  );
+  try {
+    const file = new DiffFile(
+      data?.oldFile?.fileName || "",
+      data?.oldFile?.content || "",
+      data?.newFile?.fileName || "",
+      data?.newFile?.content || "",
+      data?.hunks || [],
+      data?.oldFile?.fileLang || "",
+      data?.newFile?.fileLang || ""
+    );
 
-  file.initTheme(_data.theme);
+    file.initTheme(_data.theme);
 
-  file.initRaw();
+    file.initRaw();
 
-  highlighterReady.then((highlighter) => {
+    const highlighter = await getDiffViewHighlighter();
+
     if (_data.highlight) {
-      // check current lang has registered
-      let hasRegister = true;
-      if (hasRegister && file._oldFileLang) {
-        try {
-          hasRegister = highlighter.hasRegisteredCurrentLang(file._oldFileLang);
-        } catch {
-          hasRegister = false;
-        }
-      }
-      if (hasRegister && file._newFileLang) {
-        try {
-          hasRegister = highlighter.hasRegisteredCurrentLang(file._newFileLang);
-        } catch {
-          hasRegister = false;
-        }
-      }
-      file.initSyntax({ registerHighlighter: hasRegister ? highlighter : undefined });
+      highlighter.setMaxLineToIgnoreSyntax(60000);
+
+      file.initSyntax({ registerHighlighter: highlighter });
     }
 
     file.buildSplitDiffLines();
@@ -70,5 +61,12 @@ onmessage = (event: MessageEvent<MessageData>) => {
     file.clear();
 
     post(res);
-  });
+  } catch (error) {
+    const res: MessageData = {
+      id: _data.id,
+      data: _data.data,
+      error: error instanceof Error ? error.message : String(error),
+    };
+    post(res);
+  }
 };

@@ -4,7 +4,7 @@ import { useDisclosure, useMounted } from "@mantine/hooks";
 import { IconCode, IconPlayerPlay, IconRefresh, IconBrandReact, IconBrandVue } from "@tabler/icons-react";
 import { useState, startTransition, useCallback, forwardRef, useMemo, useEffect } from "react";
 
-import { useDiffHighlighter } from "../hooks/useDiffHighlighter";
+import { useDiffHighlighter } from "../../hooks/useDiffHighlighter";
 
 import { MainContentDiffExampleCode } from "./MainContentDiffExampleCode";
 import { temp1, temp2 } from "./MainContentDiffExampleData";

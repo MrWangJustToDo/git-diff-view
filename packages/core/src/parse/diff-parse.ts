@@ -180,12 +180,26 @@ export class DiffParser {
   private parseDiffHeader(): IDiffHeaderInfo | null {
     // TODO: There's information in here that we might want to
     // capture, such as mode changes
+    // check valid header
+    let hasMinus = false;
     while (this.nextLine()) {
       if (this.lineStartsWith("Binary files ") && this.lineEndsWith("differ")) {
+        if (__DEV__) {
+          console.warn(
+            "Found binary file marker in diff header, @git-diff-view/core currently does not support rendering binary diffs"
+          );
+        }
         return { isBinary: true };
       }
 
+      if (this.lineStartsWith("---")) {
+        hasMinus = true;
+      }
+
       if (this.lineStartsWith("+++")) {
+        if (__DEV__ && !hasMinus) {
+          console.error("Invalid diff header, found +++ line before --- line");
+        }
         return { isBinary: false };
       }
     }

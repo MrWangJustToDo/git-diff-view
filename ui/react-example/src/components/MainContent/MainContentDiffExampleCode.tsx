@@ -3,7 +3,7 @@ import { DiffModeEnum } from "@git-diff-view/react";
 import { useMantineColorScheme } from "@mantine/core";
 import { memo } from "react";
 
-import { useDiffConfig } from "../hooks/useDiffConfig";
+import { useDiffConfig } from "../../hooks/useDiffConfig";
 
 const getCode = ({ theme, type }: { theme: "light" | "dark"; type: "react" | "vue" }) => {
   return type === "react"

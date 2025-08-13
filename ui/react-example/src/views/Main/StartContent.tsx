@@ -1,7 +1,7 @@
 import { Container, Space, Title } from "@mantine/core";
 
-import { ReactPlayGround } from "./ReactPlayGround";
-import { VuePlayGround } from "./VuePlayGround";
+import { ReactPlayGround, VuePlayGround } from "../../components/PlayGround";
+
 
 export const StartContent = () => {
   return (

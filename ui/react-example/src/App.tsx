@@ -11,26 +11,28 @@ import {
   Anchor,
   Tooltip,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { IconBrandGithub, IconMoon, IconSun } from "@tabler/icons-react";
 import { version } from "react";
 
 import { DevTool } from "./components/DevTool";
-import { ExampleContent } from "./components/ExampleContent";
 import { Github } from "./components/icons";
-import { MainContent } from "./components/MainContent";
-import { PlayGround } from "./components/PlayGroundContent";
-import { StartContent } from "./components/StartContent";
 import { usePreviewTypeWithRouter } from "./hooks/usePreviewType";
+import { Example } from "./views/Example";
+import { Main } from "./views/Main";
+import { PlayGround } from "./views/PlayGround";
+import { WorkerExample } from "./views/Worker";
 
 function App() {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
+
+  const { width } = useViewportSize();
 
   const type = usePreviewTypeWithRouter();
 
   const [opened, { toggle, close }] = useDisclosure();
 
-  const goto = (type: "main" | "example" | "try") => {
+  const goto = (type: "main" | "example" | "try" | "worker") => {
     const url = new URL(window.location.href);
     url.searchParams.set("type", type);
     url.searchParams.delete("tab");
@@ -51,12 +53,16 @@ function App() {
             <Title order={1} className="text-xl">
               Git Diff View
             </Title>
-            <small className="ml-4 mr-1">power by</small>
-            <Tooltip label={<span>Go to @my-react project, version: {version}</span>} withArrow position="top">
-              <Anchor href="https://github.com/MrWangJustToDo/MyReact" target="_blank">
-                <small>@my-react</small>
-              </Anchor>
-            </Tooltip>
+            {width > 900 && (
+              <>
+                <small className="ml-4 mr-1">power by</small>
+                <Tooltip label={<span>Go to @my-react project, version: {version}</span>} withArrow position="top">
+                  <Anchor href="https://github.com/MrWangJustToDo/MyReact" target="_blank">
+                    <small>@my-react</small>
+                  </Anchor>
+                </Tooltip>
+              </>
+            )}
           </Flex>
           <Flex columnGap="16" visibleFrom="sm">
             <Button variant="light" color={type === "main" ? "blue" : "gray"} onClick={() => goto("main")}>
@@ -67,6 +73,9 @@ function App() {
             </Button>
             <Button variant="light" color={type === "try" ? "blue" : "gray"} onClick={() => goto("try")}>
               Playground
+            </Button>
+            <Button variant="light" color={type === "worker" ? "blue" : "gray"} onClick={() => goto("worker")}>
+              Worker
             </Button>
             <Button
               variant="default"
@@ -135,25 +144,13 @@ function App() {
         </Button>
       </AppShell.Navbar>
       <AppShell.Main>
-        {type === "main" && (
-          <>
-            <MainContent />
-            <StartContent />
-            <DevTool />
-          </>
-        )}
+        {type === "main" && <Main />}
         {type === "example" && (
-          <>
-            <ExampleContent className="border-color h-[calc(100vh-60px-32px)] w-full overflow-hidden rounded-md border" />
-            <DevTool />
-          </>
+          <Example className="border-color h-[calc(100vh-60px-32px)] w-full overflow-hidden rounded-md border" />
         )}
-        {type === "try" && (
-          <>
-            <PlayGround />
-            <DevTool />
-          </>
-        )}
+        {type === "try" && <PlayGround />}
+        {type === "worker" && <WorkerExample />}
+        <DevTool />
       </AppShell.Main>
     </AppShell>
   );

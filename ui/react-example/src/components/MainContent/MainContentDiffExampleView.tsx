@@ -3,10 +3,9 @@ import { Box, Button, Card, CloseButton, Group, Stack, useMantineColorScheme, Te
 import { usePrevious } from "@mantine/hooks";
 import { memo, useEffect, useState } from "react";
 
-import { useDiffConfig } from "../hooks/useDiffConfig";
-
-import { DiffViewWithScrollBar } from "./DiffViewWithScrollBar";
-import { Textarea } from "./TextArea";
+import { useDiffConfig } from "../../hooks/useDiffConfig";
+import { DiffViewWithScrollBar } from "../DiffViewWithScrollBar";
+import { Textarea } from "../TextArea";
 
 import type { DiffFile, DiffViewProps } from "@git-diff-view/react";
 

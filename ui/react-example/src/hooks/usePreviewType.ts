@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 import { createState } from "reactivity-store";
 
-export const usePreviewType = createState(() => ({ type: "main" as "main" | "example" | "try" }), {
-  withActions: (s) => ({ set: (type: "main" | "example" | "try") => (s.type = type) }),
+export const usePreviewType = createState(() => ({ type: "main" as "main" | "example" | "try" | "worker" }), {
+  withActions: (s) => ({ set: (type: "main" | "example" | "try" | "worker") => (s.type = type) }),
   withNamespace: "usePreviewType",
-  // withPersist: "usePreviewType",
 });
 
 const { set: setType } = usePreviewType.getActions();
@@ -20,6 +19,8 @@ export const usePreviewTypeWithRouter = () => {
       setType("example");
     } else if (type === "try") {
       setType("try");
+    } else if (type === "worker") {
+      setType("worker");
     } else {
       setType("main");
     }
@@ -36,6 +37,8 @@ export const usePreviewTypeWithRouter = () => {
           setType("example");
         } else if (query.get("type") === "try") {
           setType("try");
+        } else if (query.get("type") === "worker") {
+          setType("worker");
         } else {
           setType("main");
         }

@@ -7,7 +7,7 @@ const link = "https://mrwangjusttodo.github.io/MrWangJustToDo.io/compare";
 const origin = "https://mrwangjusttodo.github.io";
 // const origin = 'http://localhost:3000';
 
-export const ExampleContent = ({ className }: { className?: string }) => {
+export const Example = ({ className }: { className?: string }) => {
   const ref = useRef<HTMLIFrameElement>(null);
 
   const { colorScheme } = useMantineColorScheme();

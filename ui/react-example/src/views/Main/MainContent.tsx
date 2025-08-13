@@ -16,8 +16,8 @@ import {
 } from "@mantine/core";
 import { useMemo, useState } from "react";
 
-import { MainContentDiffConfig } from "./MainContentDiffConfig";
-import { MainContentDiffExample } from "./MainContentDiffExample";
+
+import { MainContentDiffConfig, MainContentDiffExample } from "../../components/MainContent";
 
 import type { DiffFile } from "@git-diff-view/react";
 
