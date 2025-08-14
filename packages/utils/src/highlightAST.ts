@@ -1,4 +1,6 @@
-import type { DiffAST } from ".";
+import type { Root } from "hast";
+
+export type DiffAST = Root;
 
 export type SyntaxNode = {
   type: string;

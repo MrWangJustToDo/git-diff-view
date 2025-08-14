@@ -9,10 +9,15 @@ const buildLowlight = async () => {
     external: {
       generateExternal: (type) => {
         if (type === "singleOther") {
-          return (id: string) => id.includes("node_modules") && !id.includes("tslib");
+          return (id: string) =>
+            (id.includes("node_modules") || (id.includes("@git-diff-view/") && !id.endsWith("@git-diff-view/utils"))) &&
+            !id.includes("tslib");
         } else {
           return (id: string) =>
-            id.includes("node_modules") && !id.includes("lowlight") && !id.includes("devlop") && !id.includes("tslib");
+            (id.includes("node_modules") || (id.includes("@git-diff-view/") && !id.endsWith("@git-diff-view/utils"))) &&
+            !id.includes("lowlight") &&
+            !id.includes("devlop") &&
+            !id.includes("tslib");
         }
       },
     },
@@ -108,9 +113,9 @@ const buildVue = async () => {
 };
 
 const start = async () => {
+  await buildUtils();
   await buildLowlight();
   await buildShiki();
-  await buildUtils();
   await buildCore();
   await buildFile();
   await buildCli();
@@ -122,6 +127,8 @@ const start = async () => {
 };
 
 start();
+
+// buildUtils();
 
 // buildShiki();
 

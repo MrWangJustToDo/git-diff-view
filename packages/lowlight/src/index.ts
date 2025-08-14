@@ -1,8 +1,8 @@
+import { processAST } from "@git-diff-view/utils";
 import { createLowlight, all } from "lowlight";
 
-import { processAST, type SyntaxLine } from "./processAST";
-
 import type { _getAST } from "./lang";
+import type { DiffAST, SyntaxLine } from "@git-diff-view/utils";
 
 const lowlight = createLowlight(all);
 
@@ -53,8 +53,6 @@ lowlight.register("vue", function hljsDefineVue(hljs) {
     ],
   };
 });
-
-export type DiffAST = ReturnType<typeof lowlight.highlight>;
 
 export type DiffHighlighter = {
   name: string;
@@ -147,7 +145,7 @@ Object.defineProperty(instance, "getHighlighterEngine", {
 
 Object.defineProperty(instance, "type", { value: "class" });
 
-export { processAST } from "./processAST";
+export { processAST } from "@git-diff-view/utils";
 
 export const versions = __VERSION__;
 

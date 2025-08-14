@@ -1,4 +1,4 @@
-import type { DiffAST } from ".";
+import type { DiffAST } from "@git-diff-view/utils";
 
 export type DiffHighlighterLang =
   | "cpp"

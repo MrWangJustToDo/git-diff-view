@@ -1,14 +1,12 @@
+import { processAST } from "@git-diff-view/utils";
 import { createHighlighter } from "shiki";
 import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
 
-import { processAST, type SyntaxLine } from "./processAST";
-
 import type { _getAST } from "./lang";
-import type { BundledLanguage, codeToHast } from "shiki";
+import type { DiffAST, SyntaxLine } from "@git-diff-view/utils";
+import type { BundledLanguage } from "shiki";
 
 type DePromise<T> = T extends Promise<infer U> ? DePromise<U> : T;
-
-export type DiffAST = DePromise<ReturnType<typeof codeToHast>>;
 
 export type DiffHighlighter = {
   name: string;
@@ -265,7 +263,7 @@ export const getDiffViewHighlighter = async (langs?: BundledLanguage[]) => {
   }
 };
 
-export { processAST } from "./processAST";
+export { processAST } from "@git-diff-view/utils";
 
 export const versions = __VERSION__;
 
