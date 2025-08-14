@@ -60,8 +60,7 @@
 		<span class="diff-line-syntax-raw">
 			<span data-template>
 				{@html props.diffLine.syntaxTemplate}
-			</span>
-			{#if props.diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE}
+			</span>{#if props.diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE}
 				<span
 					data-no-newline-at-end-of-file-symbol
 					class={props.enableWrap
@@ -109,8 +108,9 @@
 							class={wrapper?.properties?.className?.join(' ')}
 							style={wrapper?.properties?.style}
 						>
-							{str1}
-							<span
+							<span>
+								{str1}
+							</span><span
 								data-diff-highlight
 								style={`
                         background-color:
@@ -122,18 +122,21 @@
                       `}
 							>
 								{#if isLast}
-									{_str2}
-									<span data-newline-symbol>{getSymbol(props.diffLine.changes.newLineSymbol)}</span>
+									<span>
+										{_str2}
+									</span><span data-newline-symbol
+										>{getSymbol(props.diffLine.changes.newLineSymbol)}</span
+									>
 								{:else}
 									{str2}
 								{/if}
+							</span><span>
+								{str3.replaceAll('\n', '').replaceAll('\r', '')}
 							</span>
-							{str3}
 						</span>
 					{/if}
 				{/each}
-			</span>
-			{#if props.diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE}
+			</span>{#if props.diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE}
 				<span
 					data-no-newline-at-end-of-file-symbol
 					class={props.enableWrap

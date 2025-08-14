@@ -50,8 +50,7 @@
 		<span class="diff-line-content-raw">
 			<span data-template>
 				{@html props.diffLine.plainTemplate}
-			</span>
-			{#if props.diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE}
+			</span>{#if props.diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE}
 				<span
 					data-no-newline-at-end-of-file-symbol
 					class={props.enableWrap
@@ -75,25 +74,28 @@
 		{@const _str2 = isLast ? str2.replace('\n', '').replace('\r', '') : str2}
 		<span class="diff-line-content-raw">
 			<span data-range-start={range.location} data-range-end={range.location + range.length}>
-				{str1}
-				<span
+				<span>
+					{str1}
+				</span><span
 					data-diff-highlight
 					class="rounded-[0.2em]"
 					style={`
                 background-color:
-                  ${props.operator === 'add' ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`},
+                  ${props.operator === 'add' ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`}
               `}
 				>
 					{#if isLast}
-						{_str2}
-						<span data-newline-symbol>{getSymbol(props.diffLine.changes.newLineSymbol)}</span>
+						<span>
+							{_str2}
+						</span><span data-newline-symbol>{getSymbol(props.diffLine.changes.newLineSymbol)}</span
+						>
 					{:else}
 						{str2}
 					{/if}
+				</span><span>
+					{str3.replace('\n', '').replace('\r', '')}
 				</span>
-				{str3}
-			</span>
-			{#if props.diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE}
+			</span>{#if props.diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE}
 				<span
 					data-no-newline-at-end-of-file-symbol
 					class={props.enableWrap

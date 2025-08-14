@@ -40,6 +40,7 @@
 	worker?.addEventListener('message', (e: MessageEvent<MessageData>) => {
 		const { data, bundle } = e.data;
 		const instance = DiffFile.createInstance(data || {}, bundle);
+		// instance.disableTemplate();
 		diffFile = instance;
 	});
 
