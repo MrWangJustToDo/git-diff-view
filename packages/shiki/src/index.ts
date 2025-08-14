@@ -1,9 +1,10 @@
 import { createHighlighter } from "shiki";
+import { createJavaScriptRegexEngine } from "shiki/engine/javascript";
 
 import { processAST, type SyntaxLine } from "./processAST";
 
 import type { _getAST } from "./lang";
-import type { codeToHast } from "shiki";
+import type { BundledLanguage, codeToHast } from "shiki";
 
 type DePromise<T> = T extends Promise<infer U> ? DePromise<U> : T;
 
@@ -22,49 +23,107 @@ export type DiffHighlighter = {
   getHighlighterEngine: () => DePromise<ReturnType<typeof createHighlighter>> | null;
 };
 
-let internal: DePromise<ReturnType<typeof createHighlighter>> | null = null;
+const jsEngine = createJavaScriptRegexEngine({ forgiving: true });
 
-const getDefaultHighlighter = async () =>
-  await createHighlighter({
-    themes: ["github-light", "github-dark"],
-    langs: [
-      "cpp",
-      "java",
-      "javascript",
-      "css",
-      "c#",
-      "c",
-      "c++",
-      "vue",
-      "vue-html",
-      "astro",
-      "bash",
-      "make",
-      "markdown",
-      "makefile",
-      "bat",
-      "cmake",
-      "cmd",
-      "csv",
-      "docker",
-      "dockerfile",
-      "go",
-      "python",
-      "html",
-      "jsx",
-      "tsx",
-      "typescript",
-      "sql",
-      "xml",
-      "sass",
-      "ssh-config",
-      "kotlin",
-      "json",
-      "swift",
-      "txt",
-      "diff",
-    ],
-  });
+let provider: DePromise<ReturnType<typeof createHighlighter>> | null = null;
+
+let defaultInternal: DePromise<ReturnType<typeof createHighlighter>> | null = null;
+
+let customInternal: DePromise<ReturnType<typeof createHighlighter>> | null = null;
+
+let customInternalLangs: BundledLanguage[] | null = null;
+
+const getDefaultHighlighter = async () => {
+  let i = defaultInternal;
+
+  if (!i) {
+    i = await createHighlighter({
+      themes: ["github-light", "github-dark"],
+      langs: [
+        "cpp",
+        "java",
+        "javascript",
+        "css",
+        "c#",
+        "c",
+        "c++",
+        "vue",
+        "vue-html",
+        "astro",
+        "bash",
+        "make",
+        "markdown",
+        "makefile",
+        "bat",
+        "cmake",
+        "cmd",
+        "csv",
+        "docker",
+        "dockerfile",
+        "go",
+        "python",
+        "html",
+        "jsx",
+        "tsx",
+        "typescript",
+        "sql",
+        "xml",
+        "sass",
+        "ssh-config",
+        "kotlin",
+        "json",
+        "swift",
+        "txt",
+        "diff",
+      ],
+      engine: jsEngine,
+    });
+
+    defaultInternal = i;
+  }
+
+  provider = i;
+
+  return i;
+};
+
+const getHighlighter = async (langs?: BundledLanguage[]) => {
+  if (Array.isArray(langs) && langs.length > 0) {
+    let i = customInternal;
+
+    if (!i) {
+      i = await createHighlighter({
+        themes: ["github-light", "github-dark"],
+        langs,
+        engine: jsEngine,
+      });
+
+      customInternal = i;
+
+      customInternalLangs = langs;
+    } else {
+      if (__DEV__) {
+        if (customInternalLangs) {
+          if (customInternalLangs.length < langs.length) {
+            console.warn(
+              "@git-diff-view/shiki: custom langs has been set, but the new langs is different from the old one, please check your code"
+            );
+          } else if (!customInternalLangs.sort().join(",").startsWith(langs.sort().join(","))) {
+            console.warn(
+              "@git-diff-view/shiki: custom langs has been set, but the new langs is not a subset of the old one, please check your code"
+            );
+          }
+        }
+      }
+    }
+
+    provider = i;
+
+    return i;
+  } else {
+    return await getDefaultHighlighter();
+  }
+};
 
 const instance = { name: "shiki" };
 
@@ -110,7 +169,7 @@ Object.defineProperty(instance, "getAST", {
     }
 
     try {
-      return internal?.codeToHast(raw, {
+      return (provider || customInternal || defaultInternal)?.codeToHast(raw, {
         lang: lang,
         themes: {
           dark: "github-dark",
@@ -139,13 +198,13 @@ Object.defineProperty(instance, "processAST", {
 
 Object.defineProperty(instance, "hasRegisteredCurrentLang", {
   value: (lang: string) => {
-    return internal?.getLanguage(lang) !== undefined;
+    return (provider || customInternal || defaultInternal)?.getLanguage(lang) !== undefined;
   },
 });
 
 Object.defineProperty(instance, "getHighlighterEngine", {
   value: () => {
-    return internal;
+    return provider || customInternal || defaultInternal;
   },
 });
 
@@ -168,15 +227,17 @@ const highlighter: DiffHighlighter = instance as DiffHighlighter;
  * ```
  */
 export const highlighterReady = new Promise<DiffHighlighter>((r) => {
-  if (internal) {
-    r(highlighter);
-  } else {
-    getDefaultHighlighter()
-      .then((i) => {
-        internal = i;
-      })
-      .then(() => r(highlighter));
-  }
+  getDefaultHighlighter().then(() => r(highlighter));
+}).then((r) => {
+  const proxy = new Proxy(r, {
+    get(target, prop, receiver) {
+      if (typeof prop === "string" && prop !== "then") {
+        console.warn("@git-diff-view/shiki: highlighterReady is deprecated, please use getDiffViewHighlighter instead");
+      }
+      return Reflect.get(target, prop, receiver);
+    },
+  });
+  return proxy;
 });
 
 /**
@@ -192,7 +253,17 @@ export const highlighterReady = new Promise<DiffHighlighter>((r) => {
  * }
  * ```
  */
-export const getDiffViewHighlighter = () => highlighterReady;
+export const getDiffViewHighlighter = async (langs?: BundledLanguage[]) => {
+  if (Array.isArray(langs) && langs.length > 0) {
+    await getHighlighter(langs);
+
+    return highlighter;
+  } else {
+    await getDefaultHighlighter();
+
+    return highlighter;
+  }
+};
 
 export { processAST } from "./processAST";
 

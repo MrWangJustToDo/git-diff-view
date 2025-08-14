@@ -46,6 +46,6 @@
     "virtual dom highlight"
   ],
   "dependencies": {
-    "shiki": "^1.29.2"
+    "shiki": "^3.9.2"
   }
 }

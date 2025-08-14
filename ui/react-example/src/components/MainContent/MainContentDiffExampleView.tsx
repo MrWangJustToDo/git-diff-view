@@ -117,7 +117,7 @@ export const MainContentDiffExampleView = memo(
             );
           }}
           registerHighlighter={engine === "lowlight" ? undefined : highlighter}
-          diffViewFontSize={12}
+          diffViewFontSize={13}
         />
       </Box>
     );

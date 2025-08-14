@@ -123,6 +123,8 @@ const start = async () => {
 
 start();
 
+// buildShiki();
+
 // buildCli();
 
 // buildSvelte();

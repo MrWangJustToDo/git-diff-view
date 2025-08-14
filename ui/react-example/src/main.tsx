@@ -7,7 +7,7 @@ import { theme } from "./theme.ts";
 
 import "@mantine/core/styles.css";
 import "overlayscrollbars/overlayscrollbars.css";
-import "@git-diff-view/react/styles/diff-view.css";
+import "@git-diff-view/react/styles/diff-view-pure.css";
 import "./index.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
