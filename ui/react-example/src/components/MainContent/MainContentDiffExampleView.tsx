@@ -28,18 +28,22 @@ export const MainContentDiffExampleView = memo(
       newFile: {},
     });
 
-    const { highlight, mode, wrap, engine } = useDiffConfig();
+    const { highlight, mode, wrap, engine, tabSpace, fastDiff } = useDiffConfig();
 
     const prevEngine = usePrevious(engine);
+
+    const prevTabSpace = usePrevious(tabSpace);
+
+    const prevFastDiff = usePrevious(fastDiff);
 
     // because of the cache, switch the highlighter engine will not work, need a new diffFile instance to avoid this
     // see packages/core/src/file.ts:172 getFile
     // TODO fix this in the future
     useEffect(() => {
-      if (prevEngine !== engine) {
+      if (prevEngine !== engine || tabSpace !== prevTabSpace || fastDiff !== prevFastDiff) {
         refreshDiffFile();
       }
-    }, [engine, prevEngine]);
+    }, [engine, prevEngine, tabSpace, prevTabSpace, fastDiff, prevFastDiff, refreshDiffFile]);
 
     return (
       <Box className="h-full overflow-auto">

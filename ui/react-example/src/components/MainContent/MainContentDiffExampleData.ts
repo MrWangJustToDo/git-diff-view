@@ -1,546 +1,401 @@
 /* eslint-disable max-lines */
-export const temp1 = `/* eslint-disable @typescript-eslint/ban-types */
-import { readonly, toRaw } from "@vue/reactivity";
-import { isPromise } from "@vue/shared";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-// SEE https://github.com/facebook/react/pull/25231
-import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
+export const temp1 = `import { processAST, DiffHighlighter } from '@git-diff-view/core';
+import githubLight from 'shiki/themes/github-light.mjs';
+import githubDark from 'shiki/themes/github-dark.mjs';
+import getWasm from 'shiki/wasm';
+// import a from 'shiki/langs/angular-ts.mjs';
+// import b from 'shiki/langs/astro.mjs';
+import c from 'shiki/langs/bat.mjs';
+import d from 'shiki/langs/c.mjs';
+import e from 'shiki/langs/cmake.mjs';
+import f from 'shiki/langs/cpp.mjs';
+import g from 'shiki/langs/vue.mjs';
+import h from 'shiki/langs/css.mjs';
+// import i from 'shiki/langs/csv.mjs';
+// import j from 'shiki/langs/dart.mjs';
+    /*
+  import k from 'shiki/langs/diff.mjs';
+  import l from 'shiki/langs/docker.mjs';
+    */
+import m from 'shiki/langs/go.mjs';
+import n from 'shiki/langs/python.mjs';
+import o from 'shiki/langs/java.mjs';
+import p from 'shiki/langs/javascript.mjs';
+import q from 'shiki/langs/typescript.mjs';
+import r from 'shiki/langs/html.mjs';
+import s from 'shiki/langs/xml.mjs';
+// import t from 'shiki/langs/yaml.mjs';
+import u from 'shiki/langs/json.mjs';
+import v from 'shiki/langs/jsx.mjs';
+import w from 'shiki/langs/tsx.mjs';
+import x from 'shiki/langs/less.mjs';
+import y from 'shiki/langs/sass.mjs';
+import z from 'shiki/langs/scss.mjs';
+import z1 from 'shiki/langs/sql.mjs';
+// import z2 from '@shikijs/langs/swift';
+// import z3 from '@shikijs/langs/svelte';
+// import z4 from '@shikijs/langs/postcss';
+// import z5 from '@shikijs/langs/kotlin';
+// import z6 from '@shikijs/langs/make';
+import z7 from 'shiki/langs/markdown.mjs';
+// import z8 from 'shiki/langs/mdx.mjs';
+// import z9 from 'shiki/langs/php.mjs';
+// import za from 'shiki/langs/ruby.mjs';
+// import zb from 'shiki/langs/rust.mjs';
+// import zc from 'shiki/langs/nginx.mjs';
+// import zd from 'shiki/langs/objective-c.mjs';
+// import ze from 'shiki/langs/objective-cpp.mjs';
+import { createHighlighterCore, createJavaScriptRegexEngine } from 'shiki';
+import type { codeToHast } from 'shiki';
 
-import { Controller } from "./controller";
-import { delDevController, setDevController, setNamespaceMap } from "./dev";
-import { InternalNameSpace, isServer } from "./env";
-import { traverse, traverseShallow } from "./tools";
+// 更高质量的语法高亮引擎
+// SEE https://shiki.style/
+// SEE https://github.com/MrWangJustToDo/git-diff-view/tree/main/packages/shiki
 
-import type { LifeCycle } from "./lifeCycle";
-import type { DeepReadonly, UnwrapNestedRefs } from "@vue/reactivity";
+// 为了兼容现有的微应用架构，将所有需要的资源统一打包而不是按需加载
+const shikiHighlighter = createHighlighterCore({
+  themes: [githubLight, githubDark],
+  langs: [
+    // a,
+    // b,
+    c,
+    d,
+    e,
+    f,
+    g,
+    h,
+    // i,
+    // j,
+    // k,
+    // l,
+    m,
+    n,
+    o,
+    p,
+    q,
+    r,
+    s,
+    // t,
+    u,
+    v,
+    w,
+    x,
+    y,
+    z,
+    z1,
+    // z2,
+    // z3,
+    // z4,
+    // z5,
+    // z6,
+    z7,
+    // z8,
+    // z9,
+    // za,
+    // zb,
+    // zc,
+    // zd,
+    // ze,
+  ],
+  loadWasm: getWasm,
+});
 
-const temp = new Set<Controller>();
+type DePromise<T> = T extends Promise<infer U> ? DePromise<U> : T;
 
-/**
- * @internal
- */
-export const useCallbackRef = <T extends Function>(callback: T) => {
-  const callbackRef = useRef(callback);
+export type DiffAST = DePromise<ReturnType<typeof codeToHast>>;
 
-  callbackRef.current = callback;
+let internal: DePromise<ReturnType<typeof createHighlighterCore>> | null = null;
 
-  const memoCallback = useCallback((...args: any) => {
-    return callbackRef.current?.call(null, ...args);
-  }, []) as unknown as T;
+const instance = { name: 'shiki' };
 
-  return memoCallback;
-};
+let _maxLineToIgnoreSyntax = 2000;
 
-/**
- * @internal
- */
-export const useSubscribeCallbackRef = <T, K>(callback?: (arg?: T) => K, deepSelector?: boolean) => {
-  const callbackRef = useRef<Function>();
+const _ignoreSyntaxHighlightList: (string | RegExp)[] = [];
 
-  callbackRef.current = typeof callback === "function" ? callback : null;
+Object.defineProperty(instance, 'maxLineToIgnoreSyntax', {
+  get: () => _maxLineToIgnoreSyntax,
+});
 
-  const memoCallback = useCallbackRef((arg: T) => {
-    if (callbackRef.current) {
-      const re = callbackRef.current(arg);
-      if (deepSelector) {
-        traverse(re);
-      } else {
-        // fix useState(s => s) not subscribe reactive state update
-        traverseShallow(re);
-      }
-      return re;
-    } else {
-      // !BREAKING CHANGE, will change the default behavior when the deepSelector is true
-      if (deepSelector) {
-        traverse(arg);
-      } else {
-        traverseShallow(arg);
-      }
-      return arg;
+Object.defineProperty(instance, 'setMaxLineToIgnoreSyntax', {
+  value: (v: number) => {
+    _maxLineToIgnoreSyntax = v;
+  },
+});
+
+Object.defineProperty(instance, 'ignoreSyntaxHighlightList', {
+  get: () => _ignoreSyntaxHighlightList,
+});
+
+Object.defineProperty(instance, 'setIgnoreSyntaxHighlightList', {
+  value: (v: (string | RegExp)[]) => {
+    _ignoreSyntaxHighlightList.length = 0;
+    _ignoreSyntaxHighlightList.push(...v);
+  },
+});
+
+Object.defineProperty(instance, 'getAST', {
+  value: (raw: string, fileName?: string, lang?: string) => {
+    if (
+      fileName &&
+      highlighter.ignoreSyntaxHighlightList.some((item) => (item instanceof RegExp ? item.test(fileName) : fileName === item))
+    ) {
+      return;
     }
-  });
 
-  return memoCallback;
-};
-
-/**
- * @internal
- */
-export const usePrevValue = <T>(v: T) => {
-  const vRef = useRef(v);
-
-  useEffect(() => {
-    vRef.current = v;
-  }, [v]);
-
-  return vRef.current;
-};
-
-export const createHook = <T extends Record<string, unknown>, C extends Record<string, Function>>(
-  reactiveState: UnwrapNestedRefs<T>,
-  initialState: T,
-  lifeCycle: LifeCycle,
-  deepSelector = true,
-  stableSelector = false,
-  namespace?: string,
-  actions: C = undefined
-) => {
-  const controllerList = new Set<Controller>();
-
-  // TODO
-  __DEV__ && !isServer && namespace && setNamespaceMap(namespace, initialState);
-
-  let active = true;
-
-  const readonlyState = __DEV__ ? readonly(initialState) : (reactiveState as DeepReadonly<UnwrapNestedRefs<T>>);
-
-  namespace = namespace || InternalNameSpace.$$__ignore__$$;
-
-  // tool function to generate \`useSelector\` hook
-  const generateUseHook = <P>(type: "default" | "deep" | "deep-stable" | "shallow" | "shallow-stable") => {
-    const currentIsDeep = type === "default" ? deepSelector : type === "deep" || type === "deep-stable";
-
-    const currentIsStable = type === "default" ? stableSelector : type === "deep-stable" || type === "shallow-stable";
-
-    return (selector?: (state: DeepReadonly<UnwrapNestedRefs<T>> & C) => P) => {
-      const ref = useRef<P | DeepReadonly<UnwrapNestedRefs<T>>>();
-
-      const selectorRef = useSubscribeCallbackRef(selector, currentIsDeep);
-
-      const getSelected = useCallbackRef(() => {
-        // 0.1.9
-        // make the returned value as a readonly value, so the only way to change the state is in the \`actions\` middleware
-        if (selector) {
-          ref.current = selector({ ...readonlyState, ...actions });
-        } else {
-          ref.current = { ...readonlyState, ...actions };
-        }
+    try {
+      // @ts-ignore
+      return internal?.codeToHast(raw, {
+        lang: lang!,
+        themes: {
+          dark: githubDark,
+          light: githubLight,
+        },
+        defaultColor: false,
+        cssVariablePrefix: '--diff-view-',
+        mergeWhitespaces: false,
+        // TODO 提供额外的配置来控制加载插件
+        // transformers: [shikiColorizedBrackets()],
       });
+    } catch (e) {
+      console.log((e as Error).message);
+      return;
+    }
+  },
+});
 
-      // may not work will with hmr
-      const prevSelector = currentIsStable ? selector : usePrevValue(selector);
+Object.defineProperty(instance, 'processAST', {
+  value: (ast: DiffAST) => {
+    return processAST(ast);
+  },
+});
 
-      const ControllerInstance = useMemo(() => new Controller(() => selectorRef(reactiveState as any), lifeCycle, controllerList, namespace, getSelected), []);
+Object.defineProperty(instance, 'hasRegisteredCurrentLang', {
+  value: (lang: string) => {
+    return internal?.getLanguage(lang) !== undefined;
+  },
+});
 
-      useSyncExternalStore(ControllerInstance.subscribe, ControllerInstance.getState, ControllerInstance.getState);
+Object.defineProperty(instance, 'getHighlighterEngine', {
+  value: () => {
+    return internal;
+  },
+});
 
-      // initial
-      useMemo(() => {
-        if (!active) return;
-        ControllerInstance.run();
-        getSelected();
-      }, [ControllerInstance, getSelected]);
+Object.defineProperty(instance, 'type', {
+  value: 'class',
+});
 
-      // !TODO try to improve the performance
-      // rerun when the 'selector' change
-      useMemo(() => {
-        if (active && prevSelector !== selector) {
-          ControllerInstance.run();
-          getSelected();
-        }
-      }, [ControllerInstance, prevSelector, selector]);
+const highlighter: DiffHighlighter = instance as DiffHighlighter;
 
-      if (__DEV__) {
-        ControllerInstance._devSelector = selector;
-
-        ControllerInstance._devActions = actions;
-
-        ControllerInstance._devWithDeep = currentIsDeep;
-
-        ControllerInstance._devWithStable = currentIsStable;
-
-        ControllerInstance._devType = type;
-
-        ControllerInstance._devState = initialState;
-
-        ControllerInstance._devResult = ref.current;
-
-        if (!active) {
-          console.error("current \`useSelector\` have been inactivated, check your code first");
-        }
-
-        useEffect(() => {
-          setDevController(ControllerInstance, initialState);
-          return () => {
-            delDevController(ControllerInstance, initialState);
-          };
-        }, []);
-      }
-
-      useEffect(() => () => ControllerInstance.stop(), [ControllerInstance]);
-
-      return ref.current;
-    };
-  };
-
-  const defaultHook = generateUseHook("default");
-
-  const deepHook = generateUseHook("deep");
-
-  const deepStableHook = generateUseHook("deep-stable");
-
-  const shallowHook = generateUseHook("shallow");
-
-  const shallowStableHook = generateUseHook("shallow-stable");
-
-  function useSelector(): DeepReadonly<UnwrapNestedRefs<T>> & C;
-  function useSelector<P>(selector: (state: DeepReadonly<UnwrapNestedRefs<T>> & C) => P): P;
-  function useSelector<P>(selector?: (state: DeepReadonly<UnwrapNestedRefs<T>> & C) => P) {
-    return defaultHook(selector);
+export const highlighterReady = new Promise<DiffHighlighter>((r) => {
+  if (internal) {
+    r(highlighter);
+  } else {
+    shikiHighlighter
+      .then((i) => {
+        internal = i;
+      })
+      .then(() => r(highlighter));
   }
+});
+`;
 
-  const typedUseSelector = useSelector as typeof useSelector & {
-    /**
-     * @deprecated
-     * use \`getReactiveState\` / \`getReadonlyState\` instead
-     */
-    getState: () => T;
-    getActions: () => C;
-    getIsActive: () => boolean;
-    subscribe: <P>(selector: (state: DeepReadonly<UnwrapNestedRefs<T>>) => P, cb?: () => void) => () => void;
-    getLifeCycle: () => LifeCycle;
-    getReactiveState: () => UnwrapNestedRefs<T>;
-    getReadonlyState: () => DeepReadonly<UnwrapNestedRefs<T>>;
-    useStableSelector: typeof useSelector;
-    useDeepSelector: typeof useSelector;
-    useDeepStableSelector: typeof useSelector;
-    useShallowSelector: typeof useSelector;
-    useShallowStableSelector: typeof useSelector;
-    cleanReactiveHooks: () => void;
-  };
+export const temp2 = `import { processAST, DiffHighlighter } from '@git-diff-view/core';
+import githubLight from 'shiki/themes/github-light.mjs';
+import githubDark from 'shiki/themes/github-dark.mjs';
+import getWasm from 'shiki/wasm';
+// import a from 'shiki/langs/angular-ts.mjs';
+// import b from 'shiki/langs/astro.mjs';
+import c from 'shiki/langs/bat.mjs';
+import d from 'shiki/langs/c.mjs';
+import e from 'shiki/langs/cmake.mjs';
+import f from 'shiki/langs/cpp.mjs';
+import g from 'shiki/langs/vue.mjs';
+import h from 'shiki/langs/css.mjs';
+// import i from 'shiki/langs/csv.mjs';
+import j from 'shiki/langs/dart.mjs';
+	//
+// import k from 'shiki/langs/diff.mjs';
+// import l from 'shiki/langs/docker.mjs';
+	//
+import m from 'shiki/langs/go.mjs';
+import n from 'shiki/langs/python.mjs';
+import o from 'shiki/langs/java.mjs';
+import p from 'shiki/langs/javascript.mjs';
+import q from 'shiki/langs/typescript.mjs';
+import r from 'shiki/langs/html.mjs';
+import s from 'shiki/langs/xml.mjs';
+// import t from 'shiki/langs/yaml.mjs';
+import u from 'shiki/langs/json.mjs';
+import v from 'shiki/langs/jsx.mjs';
+import w from 'shiki/langs/tsx.mjs';
+import x from 'shiki/langs/less.mjs';
+import y from 'shiki/langs/sass.mjs';
+import z from 'shiki/langs/scss.mjs';
+import z1 from 'shiki/langs/sql.mjs';
+import z2 from 'shiki/langs/swift.mjs';
+import z3 from 'shiki/langs/svelte.mjs';
+// import z4 from 'shiki/langs/postcss.mjs';
+import z5 from 'shiki/langs/kotlin.mjs';
+// import z6 from 'shiki/langs/make.mjs';
+import z7 from 'shiki/langs/markdown.mjs';
+// import z8 from 'shiki/langs/mdx.mjs';
+// import z9 from 'shiki/langs/php.mjs';
+// import za from 'shiki/langs/ruby.mjs';
+// import zb from 'shiki/langs/rust.mjs';
+// import zc from 'shiki/langs/nginx.mjs';
+import zd from 'shiki/langs/objective-c.mjs';
+import ze from 'shiki/langs/objective-cpp.mjs';
+import { createHighlighterCore, createJavaScriptRegexEngine } from 'shiki';
+import type { codeToHast } from 'shiki';
 
-  typedUseSelector.getState = () => toRaw(initialState);
+// 更高质量的语法高亮引擎
+// SEE https://shiki.style/
+// SEE https://github.com/MrWangJustToDo/git-diff-view/tree/main/packages/shiki
 
-  typedUseSelector.getLifeCycle = () => lifeCycle;
+// 为了兼容现有的微应用架构，将所有需要的资源统一打包而不是按需加载
+const shikiHighlighter = createHighlighterCore({
+  themes: [githubLight, githubDark],
+  langs: [
+    // a,
+    // b,
+    c,
+    d,
+    e,
+    f,
+    g,
+    h,
+    // i,
+    j,
+    // k,
+    // l,
+    m,
+    n,
+    o,
+    p,
+    q,
+    r,
+    s,
+    // t,
+    u,
+    v,
+    w,
+    x,
+    y,
+    z,
+    z1,
+    z2,
+    z3,
+    // z4,
+    z5,
+    // z6,
+    z7,
+    // z8,
+    // z9,
+    // za,
+    // zb,
+    // zc,
+    zd,
+    ze,
+  ],
+  loadWasm: getWasm,
+});
 
-  typedUseSelector.getActions = () => actions;
+type DePromise<T> = T extends Promise<infer U> ? DePromise<U> : T;
 
-  typedUseSelector.getReactiveState = () => reactiveState;
+export type DiffAST = DePromise<ReturnType<typeof codeToHast>>;
 
-  typedUseSelector.getReadonlyState = () => readonlyState;
+let internal: DePromise<ReturnType<typeof createHighlighterCore>> | null = null;
 
-  typedUseSelector.useDeepSelector = deepHook as typeof useSelector;
+const instance = { name: 'shiki' };
 
-  typedUseSelector.useDeepStableSelector = deepStableHook as typeof useSelector;
+let _maxLineToIgnoreSyntax = 2000;
 
-  typedUseSelector.useShallowSelector = shallowHook as typeof useSelector;
+const _ignoreSyntaxHighlightList: (string | RegExp)[] = [];
 
-  typedUseSelector.useShallowStableSelector = shallowStableHook as typeof useSelector;
+Object.defineProperty(instance, 'maxLineToIgnoreSyntax', {
+  get: () => _maxLineToIgnoreSyntax,
+});
 
-  typedUseSelector.subscribe = (selector, cb, shallow?: boolean) => {
-    const subscribeSelector = () => {
-      const re = selector(reactiveState as DeepReadonly<UnwrapNestedRefs<T>>);
-      if (__DEV__ && isPromise(re)) {
-        console.error(\`[reactivity-store/subscribe] selector should return a plain object, but current is a promise\`);
-      }
-      if (shallow) {
-        traverseShallow(re);
-      } else {
-        traverse(re);
-      }
-    };
+Object.defineProperty(instance, 'setMaxLineToIgnoreSyntax', {
+  value: (v: number) => {
+    _maxLineToIgnoreSyntax = v;
+  },
+});
 
-    const controller = new Controller(subscribeSelector, lifeCycle, temp, InternalNameSpace.$$__subscribe__$$, () => cb());
+Object.defineProperty(instance, 'ignoreSyntaxHighlightList', {
+  get: () => _ignoreSyntaxHighlightList,
+});
 
-    if (active) {
-      controller.run();
+Object.defineProperty(instance, 'setIgnoreSyntaxHighlightList', {
+  value: (v: (string | RegExp)[]) => {
+    _ignoreSyntaxHighlightList.length = 0;
+    _ignoreSyntaxHighlightList.push(...v);
+  },
+});
+
+Object.defineProperty(instance, 'getAST', {
+  value: (raw: string, fileName?: string, lang?: string) => {
+    if (
+      fileName &&
+      highlighter.ignoreSyntaxHighlightList.some((item) => (item instanceof RegExp ? item.test(fileName) : fileName === item))
+    ) {
+      return;
     }
 
-    if (__DEV__) {
-      if (!active) {
-        console.error("can not subscribe an inactivated hook, check your code first");
-      }
-
-      setDevController(controller, initialState);
-    }
-
-    return () => {
-      if (__DEV__) {
-        delDevController(controller, initialState);
-      }
-      controller.stop();
-    };
-  };
-
-  typedUseSelector.cleanReactiveHooks = () => {
-    controllerList.forEach((i) => i.stop());
-
-    active = false;
-  };
-
-  typedUseSelector.getIsActive = () => active;
-
-  return typedUseSelector;
-};`;
-
-export const temp2 = `/* eslint-disable @typescript-eslint/ban-types */
-import { readonly, toRaw } from "@vue/reactivity";
-import { isPromise } from "@vue/shared";
-import { useCallback, useEffect, useMemo, useRef } from "react";
-// SEE https://github.com/facebook/react/pull/25231
-import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
-
-import { Controller } from "./controller";
-import { delDevController, setDevController, setNamespaceMap } from "./dev";
-import { InternalNameSpace, isServer } from "./env";
-import { traverse, traverseShallow } from "./tools";
-
-import type { LifeCycle } from "./lifeCycle";
-import type { DeepReadonly, UnwrapNestedRefs } from "@vue/reactivity";
-
-/**
- * @internal
- */
-export const useCallbackRef = <T extends Function>(callback: T) => {
-  const callbackRef = useRef(callback);
-
-  callbackRef.current = callback;
-
-  const memoCallback = useCallback((...args: any) => {
-    return callbackRef.current?.call(null, ...args);
-  }, []) as unknown as T;
-
-  return memoCallback;
-};
-
-/**
- * @internal
- */
-export const useSubscribeCallbackRef = <T, K>(callback?: (arg?: T) => K, deepSelector?: boolean) => {
-  const callbackRef = useRef<Function>();
-
-  callbackRef.current = typeof callback === "function" ? callback : null;
-
-  const memoCallback = useCallbackRef((arg: T) => {
-    if (callbackRef.current) {
-      const re = callbackRef.current(arg);
-      if (deepSelector) {
-        traverse(re);
-      } else {
-        // fix useState(s => s) not subscribe reactive state update
-        traverseShallow(re);
-      }
-      return re;
-    } else {
-      // !BREAKING CHANGE, will change the default behavior when the deepSelector is true
-      if (deepSelector) {
-        traverse(arg);
-      } else {
-        traverseShallow(arg);
-      }
-      return arg;
-    }
-  });
-
-  return memoCallback;
-};
-
-/**
- * @internal
- */
-export const usePrevValue = <T>(v: T) => {
-  const vRef = useRef(v);
-
-  useEffect(() => {
-    vRef.current = v;
-  }, [v]);
-
-  return vRef.current;
-};
-
-export const createHook = <T extends Record<string, unknown>, C extends Record<string, Function>>(
-  reactiveState: UnwrapNestedRefs<T>,
-  initialState: T,
-  lifeCycle: LifeCycle,
-  deepSelector = true,
-  stableSelector = false,
-  namespace?: string,
-  actions: C = undefined
-) => {
-  const controllerList = new Set<Controller>();
-
-  // TODO
-  __DEV__ && !isServer && namespace && setNamespaceMap(namespace, initialState);
-
-  let active = true;
-
-  const readonlyState = __DEV__ ? readonly(initialState) : (reactiveState as DeepReadonly<UnwrapNestedRefs<T>>);
-
-  namespace = namespace || InternalNameSpace.$$__ignore__$$;
-
-  // tool function to generate \`useSelector\` hook
-  const generateUseHook = <P>(type: "default" | "deep" | "deep-stable" | "shallow" | "shallow-stable") => {
-    const currentIsDeep = type === "default" ? deepSelector : type === "deep" || type === "deep-stable";
-
-    const currentIsStable = type === "default" ? stableSelector : type === "deep-stable" || type === "shallow-stable";
-
-    return (selector?: (state: DeepReadonly<UnwrapNestedRefs<T>> & C) => P) => {
-      const ref = useRef<P | DeepReadonly<UnwrapNestedRefs<T>>>();
-
-      const selectorRef = useSubscribeCallbackRef(selector, currentIsDeep);
-
-      const getSelected = useCallbackRef(() => {
-        // 0.1.9
-        // make the returned value as a readonly value, so the only way to change the state is in the \`actions\` middleware
-        if (selector) {
-          ref.current = selector({ ...readonlyState, ...actions });
-        } else {
-          ref.current = { ...readonlyState, ...actions };
-        }
+    try {
+      // @ts-ignore
+      return internal?.codeToHast(raw, {
+        lang: lang!,
+        themes: {
+          dark: githubDark,
+          light: githubLight,
+        },
+        defaultColor: false,
+        cssVariablePrefix: '--diff-view-',
+        mergeWhitespaces: false,
+        // TODO 提供额外的配置来控制加载插件
+        // transformers: [shikiColorizedBrackets()],
       });
-
-      // may not work will with hmr
-      const prevSelector = currentIsStable ? selector : usePrevValue(selector);
-
-      const ControllerInstance = useMemo(() => new Controller(() => selectorRef(reactiveState as any), lifeCycle, controllerList, namespace, getSelected), []);
-
-      useSyncExternalStore(ControllerInstance.subscribe, ControllerInstance.getState, ControllerInstance.getState);
-
-      // initial
-      useMemo(() => {
-        ControllerInstance.run();
-        getSelected();
-      }, [ControllerInstance, getSelected]);
-
-      // !TODO try to improve the performance
-      // rerun when the 'selector' change
-      useMemo(() => {
-        if (prevSelector !== selector) {
-          ControllerInstance.run();
-          getSelected();
-        }
-      }, [ControllerInstance, prevSelector, selector]);
-
-      if (__DEV__) {
-        ControllerInstance._devSelector = selector;
-
-        ControllerInstance._devActions = actions;
-
-        ControllerInstance._devWithDeep = currentIsDeep;
-
-        ControllerInstance._devWithStable = currentIsStable;
-
-        ControllerInstance._devType = type;
-
-        ControllerInstance._devState = initialState;
-
-        ControllerInstance._devResult = ref.current;
-
-        useEffect(() => {
-          setDevController(ControllerInstance, initialState);
-
-          return () => {
-            delDevController(ControllerInstance, initialState);
-          };
-        }, [ControllerInstance]);
-      }
-
-      useEffect(() => {
-        ControllerInstance.active();
-        return () => {
-          // fix React strictMode issue
-          if (__DEV__) {
-            ControllerInstance.inactive();
-          } else {
-            ControllerInstance.stop();
-          }
-        };
-      }, [ControllerInstance]);
-
-      return ref.current;
-    };
-  };
-
-  const defaultHook = generateUseHook("default");
-
-  const deepHook = generateUseHook("deep");
-
-  const deepStableHook = generateUseHook("deep-stable");
-
-  const shallowHook = generateUseHook("shallow");
-
-  const shallowStableHook = generateUseHook("shallow-stable");
-
-  function useSelector(): DeepReadonly<UnwrapNestedRefs<T>> & C;
-  function useSelector<P>(selector: (state: DeepReadonly<UnwrapNestedRefs<T>> & C) => P): P;
-  function useSelector<P>(selector?: (state: DeepReadonly<UnwrapNestedRefs<T>> & C) => P) {
-    return defaultHook(selector);
-  }
-
-  const typedUseSelector = useSelector as typeof useSelector & {
-    /**
-     * @deprecated
-     * use \`getReactiveState\` / \`getReadonlyState\` instead
-     */
-    getState: () => T;
-    getActions: () => C;
-    getIsActive: () => boolean;
-    subscribe: <P>(selector: (state: DeepReadonly<UnwrapNestedRefs<T>>) => P, cb?: () => void) => () => void;
-    getLifeCycle: () => LifeCycle;
-    getReactiveState: () => UnwrapNestedRefs<T>;
-    getReadonlyState: () => DeepReadonly<UnwrapNestedRefs<T>>;
-    useStableSelector: typeof useSelector;
-    useDeepSelector: typeof useSelector;
-    useDeepStableSelector: typeof useSelector;
-    useShallowSelector: typeof useSelector;
-    useShallowStableSelector: typeof useSelector;
-    cleanReactiveHooks: () => void;
-  };
-
-  typedUseSelector.getState = () => toRaw(initialState);
-
-  typedUseSelector.getLifeCycle = () => lifeCycle;
-
-  typedUseSelector.getActions = () => actions;
-
-  typedUseSelector.getReactiveState = () => reactiveState;
-
-  typedUseSelector.getReadonlyState = () => readonlyState;
-
-  typedUseSelector.useDeepSelector = deepHook as typeof useSelector;
-
-  typedUseSelector.useDeepStableSelector = deepStableHook as typeof useSelector;
-
-  typedUseSelector.useShallowSelector = shallowHook as typeof useSelector;
-
-  typedUseSelector.useShallowStableSelector = shallowStableHook as typeof useSelector;
-
-  typedUseSelector.subscribe = (selector, cb, shallow?: boolean) => {
-    const subscribeSelector = () => {
-      const re = selector(reactiveState as DeepReadonly<UnwrapNestedRefs<T>>);
-      if (__DEV__ && isPromise(re)) {
-        console.error(\`[reactivity-store/subscribe] selector should return a plain object, but current is a promise\`);
-      }
-      if (shallow) {
-        traverseShallow(re);
-      } else {
-        traverse(re);
-      }
-    };
-
-    const controller = new Controller(subscribeSelector, lifeCycle, controllerList, InternalNameSpace.$$__subscribe__$$, () => cb());
-
-    controller.run();
-
-    if (__DEV__) {
-      setDevController(controller, initialState);
+    } catch (e) {
+      console.log((e as Error).message);
+      return;
     }
+  },
+});
 
-    return () => {
-      if (__DEV__) {
-        delDevController(controller, initialState);
-      }
-      controller.stop();
-    };
-  };
+Object.defineProperty(instance, 'processAST', {
+  value: (ast: DiffAST) => {
+    return processAST(ast);
+  },
+});
 
-  typedUseSelector.cleanReactiveHooks = () => {
-    controllerList.forEach((i) => i.stop());
+Object.defineProperty(instance, 'hasRegisteredCurrentLang', {
+  value: (lang: string) => {
+    return internal?.getLanguage(lang) !== undefined;
+  },
+});
 
-    active = false;
-  };
+Object.defineProperty(instance, 'getHighlighterEngine', {
+  value: () => {
+    return internal;
+  },
+});
 
-  typedUseSelector.getIsActive = () => active;
+Object.defineProperty(instance, 'type', {
+  value: 'class',
+});
 
-  return typedUseSelector;
-};`;
+const highlighter: DiffHighlighter = instance as DiffHighlighter;
+
+export const highlighterReady = new Promise<DiffHighlighter>((r) => {
+  if (internal) {
+    r(highlighter);
+  } else {
+    shikiHighlighter
+      .then((i) => {
+        internal = i;
+      })
+      .then(() => r(highlighter));
+  }
+});`;

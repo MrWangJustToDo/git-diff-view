@@ -7,6 +7,8 @@ type DiffConfig = {
   fontsize: number;
   mode: DiffModeEnum;
   engine: "lowlight" | "shiki";
+  tabSpace: boolean;
+  fastDiff: boolean;
 };
 
 export const useDiffConfig = createState(
@@ -17,6 +19,8 @@ export const useDiffConfig = createState(
       fontsize: 12,
       mode: DiffModeEnum.Split,
       engine: "lowlight",
+      tabSpace: false,
+      fastDiff: false,
     }) as DiffConfig,
   {
     withActions(state) {
@@ -46,6 +50,16 @@ export const useDiffConfig = createState(
             state.engine = v;
           }
         },
+        setTabSpace: (v: boolean) => {
+          if (v !== state.tabSpace) {
+            state.tabSpace = v;
+          }
+        },
+        setFastDiff: (v: boolean) => {
+          if (v !== state.fastDiff) {
+            state.fastDiff = v;
+          }
+        }
       };
     },
     withNamespace: "diffConfig",
