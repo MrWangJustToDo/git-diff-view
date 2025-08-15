@@ -126,12 +126,12 @@ const start = async () => {
   process.exit(0);
 };
 
-// start();
+start();
 
 // buildUtils();
 
 // buildShiki();
 
-buildCli();
+// buildCli();
 
 // buildSvelte();
