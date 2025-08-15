@@ -70,6 +70,13 @@ Using the `template mode`, the `DiffView` component can utilize the `fast-diff` 
 #### FastDiff diffLine
 ![Screenshot](https://github.com/MrWangJustToDo/git-diff-view/blob/main/enableFastDiffTemplate.png)
 
+#### How to enable FastDiff template
+```ts
+import { setEnableFastDiffTemplate } from '@git-diff-view/core' // or react/vue runtime package
+
+setEnableFastDiffTemplate(true);
+```
+
 ## Features
 
 + [x] Show the `git diff` result 
