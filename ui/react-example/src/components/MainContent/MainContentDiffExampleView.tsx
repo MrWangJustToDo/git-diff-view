@@ -1,4 +1,4 @@
-import { SplitSide } from "@git-diff-view/react";
+import { SplitSide, disableCache } from "@git-diff-view/react";
 import { Box, Button, Card, CloseButton, Group, Stack, useMantineColorScheme, Text } from "@mantine/core";
 import { usePrevious } from "@mantine/hooks";
 import { memo, useEffect, useState } from "react";
@@ -8,6 +8,9 @@ import { DiffViewWithScrollBar } from "../DiffViewWithScrollBar";
 import { Textarea } from "../TextArea";
 
 import type { DiffFile, DiffViewProps } from "@git-diff-view/react";
+
+// disable diffFile Cache
+disableCache();
 
 export const MainContentDiffExampleView = memo(
   ({

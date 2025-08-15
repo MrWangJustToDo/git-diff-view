@@ -74,6 +74,7 @@ Using the `template mode`, the `DiffView` component can utilize the `fast-diff` 
 ```ts
 import { setEnableFastDiffTemplate } from '@git-diff-view/core' // or react/vue runtime package
 
+// experimental feature, use with caution
 setEnableFastDiffTemplate(true);
 ```
 
