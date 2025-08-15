@@ -40,6 +40,7 @@ See example project [Example](https://github.com/MrWangJustToDo/git-diff-view/tr
 | [`@git-diff-view/vue`](packages/vue)     | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/vue)](https://www.npmjs.com/package/@git-diff-view/vue)     |
 | [`@git-diff-view/solid`](packages/solid) | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/solid)](https://www.npmjs.com/package/@git-diff-view/solid) |
 | [`@git-diff-view/svelte`](packages/svelte)|[![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/svelte)](https://www.npmjs.com/package/@git-diff-view/svelte)|
+| [`@git-diff-view/cli`](packages/cli)     | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/cli)](https://www.npmjs.com/package/@git-diff-view/cli)     |
 
 ### syntax highlighter
 
@@ -93,6 +94,7 @@ setEnableFastDiffTemplate(true);
 + [x] Support `Diff Match Patch` to improve line diff (experimental)
 + [x] Support `SSR` for `React` and `Vue` component (since v0.0.21)
 + [x] Support `RSC` for `React` component (since v0.0.21)
++ [x] More Render Platform: `Solid` / `Svelte` / `Cli`
 + [ ] Support `Virtual Scroll` to improve performance
 
 
