@@ -216,12 +216,10 @@ const DiffString = ({
             }
             return <Text key={index}>{char}</Text>;
           })}
+          {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
+            <Text wrap="truncate">{"\\ No newline at end of file".padEnd(width - 1)}</Text>
+          )}
         </Box>
-        {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
-          <Box width={width - 1} backgroundColor={bg}>
-            <Text wrap="truncate">{"\\ No newline at end of file".padEnd(width)}</Text>
-          </Box>
-        )}
       </>
     );
   }
@@ -530,12 +528,10 @@ const DiffSyntax = ({
               );
             }
           })}
+          {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
+            <Text wrap="truncate">{"\\ No newline at end of file".padEnd(width - 1)}</Text>
+          )}
         </Box>
-        {isNewLineSymbolChanged === NewLineSymbol.NEWLINE && (
-          <Box width={width - 1} backgroundColor={bg}>
-            <Text wrap="truncate">{"\\ No newline at end of file".padEnd(width)}</Text>
-          </Box>
-        )}
       </>
     );
   }

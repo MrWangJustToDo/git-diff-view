@@ -14,6 +14,9 @@ importers:
       '@git-diff-view/core':
         specifier: workspace:*
         version: link:packages/core
+      '@git-diff-view/file':
+        specifier: workspace:*
+        version: link:packages/file
       '@git-diff-view/react':
         specifier: workspace:*
         version: link:packages/react
