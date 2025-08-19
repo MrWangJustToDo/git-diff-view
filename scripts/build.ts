@@ -128,6 +128,8 @@ const start = async () => {
 
 start();
 
+// buildCore();
+
 // buildUtils();
 
 // buildShiki();

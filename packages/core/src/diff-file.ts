@@ -693,6 +693,13 @@ export class DiffFile {
     this.#composeDiff();
     this.#composeFile();
     this.#hasInitRaw = true;
+    if (__DEV__) {
+      if (this._diffList.some((l) => l) && !this.#diffLines.length) {
+        console.warn(
+          "the hunks from the diff string is empty, maybe the diff string is not a valid diff string, please check the diff string format or the diff string itself"
+        );
+      }
+    }
   }
 
   initSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> } = {}) {
