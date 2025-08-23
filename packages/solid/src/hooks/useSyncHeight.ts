@@ -1,5 +1,7 @@
+import { getElementRoot } from "@git-diff-view/utils";
 import { createEffect, onCleanup, type Accessor } from "solid-js";
 
+import { useDom } from "./useDom";
 import { useId } from "./useId";
 import { useIsMounted } from "./useIsMounted";
 
@@ -18,6 +20,8 @@ export const useSyncHeight = ({
 }) => {
   const id = useId();
 
+  const dom = useDom();
+
   const isMounted = useIsMounted();
 
   const observeHeight = () => {
@@ -26,7 +30,9 @@ export const useSyncHeight = ({
     if (enable()) {
       let clean = () => {};
 
-      const container = document.querySelector(`#diff-root${id()}`);
+      const rootDocument = getElementRoot(dom());
+
+      const container = rootDocument.querySelector(`#diff-root${id()}`);
 
       const elements = Array.from(container?.querySelectorAll(selector()) || []);
 
