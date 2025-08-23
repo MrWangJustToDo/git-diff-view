@@ -27,7 +27,7 @@
 		class="diff-add-widget z-[1] flex h-full w-full origin-center cursor-pointer items-center justify-center rounded-md text-[1.2em]"
 		style={`
 			color: var(${addWidgetColorName});
-			backgroundColor: var(${addWidgetBGName});
+			background-color: var(${addWidgetBGName});
 		`}
 		onclick={() => {
 			props.onOpenAddWidget(props.lineNumber, props.side);

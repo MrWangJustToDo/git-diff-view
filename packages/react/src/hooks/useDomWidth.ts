@@ -1,3 +1,4 @@
+import { getElementRoot } from "@git-diff-view/utils";
 import { useEffect, useState } from "react";
 
 import { useDiffViewContext } from "../components/DiffViewContext";
@@ -12,11 +13,13 @@ export const useDomWidth = ({ selector, enable }: { selector: string; enable: bo
 
   const { useDiffContext } = useDiffViewContext();
 
-  const { id, mounted } = useDiffContext.useShallowStableSelector((s) => ({ id: s.id, mounted: s.mounted }));
+  const { id, mounted, dom } = useDiffContext.useShallowStableSelector((s) => ({ id: s.id, mounted: s.mounted, dom: s.dom }));
 
   useEffect(() => {
     if (enable) {
-      const container = document.querySelector(`#diff-root${id}`);
+      const rootDocument = getElementRoot(dom as HTMLDivElement);
+
+      const container = rootDocument.querySelector(`#diff-root${id}`);
 
       const wrapper = container?.querySelector(selector);
 
@@ -61,7 +64,7 @@ export const useDomWidth = ({ selector, enable }: { selector: string; enable: bo
 
       return () => cleanCb();
     }
-  }, [selector, enable, id, mounted]);
+  }, [selector, enable, id, mounted, dom]);
 
   return width;
 };

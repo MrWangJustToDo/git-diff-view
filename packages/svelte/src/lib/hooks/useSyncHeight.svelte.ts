@@ -1,4 +1,6 @@
+import { getDom } from '$lib/context/dom.js';
 import { getId } from '$lib/context/id.js';
+import { getElementRoot } from '$lib/utils/dom.js';
 
 import { useIsMounted } from './useIsMounted.svelte.js';
 
@@ -17,6 +19,8 @@ export const useSyncHeight = ({
 }) => {
 	const id = $derived.by(getId());
 
+	const dom = $derived.by(getDom());
+
 	const isMounted = $derived.by(useIsMounted());
 
 	const unSubscribe = { current: () => {} };
@@ -27,7 +31,9 @@ export const useSyncHeight = ({
 		if (enable()) {
 			let clean = () => {};
 
-			const container = document.querySelector(`#diff-root${id}`);
+			const rootDocument = getElementRoot(dom);
+
+			const container = rootDocument.querySelector(`#diff-root${id}`);
 
 			const elements = Array.from(container?.querySelectorAll(selector()) || []);
 

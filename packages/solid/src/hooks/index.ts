@@ -4,6 +4,7 @@ export * from "./useIsMounted";
 export * from "./useTextWidth";
 export * from "./useMode";
 export * from "./useId";
+export * from "./useDom";
 export * from "./useDomWidth";
 export * from "./useSyncHeight";
 export * from "./useExtendData";

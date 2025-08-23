@@ -28,3 +28,6 @@ export const syncScroll = (left: HTMLElement, right: HTMLElement) => {
     right.onscroll = null;
   };
 };
+
+export const getElementRoot = (element?: HTMLElement) =>
+  (element?.getRootNode?.() instanceof ShadowRoot ? element.getRootNode() : document) as ShadowRoot | Document;

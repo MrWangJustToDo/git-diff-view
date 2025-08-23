@@ -35,6 +35,7 @@ export declare const getContentBG: (isAdded: boolean, isDelete: boolean, hasDiff
 export declare const getLineNumberBG: (isAdded: boolean, isDelete: boolean, hasDiff: boolean) => "var(--diff-add-lineNumber--)" | "var(--diff-del-lineNumber--)" | "var(--diff-plain-lineNumber--)" | "var(--diff-expand-lineNumber--)";
 export declare const removeAllSelection: () => void;
 export declare const syncScroll: (left: HTMLElement, right: HTMLElement) => () => void;
+export declare const getElementRoot: (element?: HTMLElement) => Document | ShadowRoot;
 export declare const diffFontSizeName = "--diff-font-size--";
 export declare const diffAsideWidthName = "--diff-aside-width--";
 export declare const memoFunc: <T extends Function>(func: T) => T;

@@ -5,6 +5,10 @@ import type { RefObject } from "react";
 
 export const createDiffConfigStore = (props: DiffViewProps<any> & { isMounted: boolean }, diffFileId: string) => {
   return createStore(() => {
+    const dom = ref<HTMLElement>();
+
+    const setDom = (_dom: HTMLElement) => (dom.value = _dom);
+
     const id = ref(diffFileId);
 
     const setId = (_id: string) => (id.value = _id);
@@ -85,6 +89,8 @@ export const createDiffConfigStore = (props: DiffViewProps<any> & { isMounted: b
     return {
       id,
       setId,
+      dom,
+      setDom,
       mode,
       setMode,
       mounted,

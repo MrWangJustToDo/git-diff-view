@@ -9,6 +9,7 @@
 	import { setEnableWrap } from '$lib/context/enableWrap.js';
 	import { setRenderWidget } from '$lib/context/renderWidget.js';
 	import { setId } from '$lib/context/id.js';
+	import { setDom } from '$lib/context/dom.js';
 	import { setExtend } from '$lib/context/extend.js';
 	import { setWidget as setWidgetContext } from '$lib/context/widget.js';
 	import { setRenderExtend } from '$lib/context/renderExtend.js';
@@ -213,6 +214,8 @@
 	setExtend<T>(props);
 
 	setId(() => diffFile?.getId() || '');
+
+	setDom(() => wrapperRef as HTMLElement);
 </script>
 
 {#if diffFile}

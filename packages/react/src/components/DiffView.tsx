@@ -210,6 +210,10 @@ const InternalDiffView = <T extends unknown>(
     onCreateUseWidgetHook,
   ]);
 
+  useEffect(() => {
+    useDiffContext.getReadonlyState().setDom(wrapperRef?.current);
+  }, [useDiffContext, wrapperRef]);
+
   const value = useMemo(() => ({ useDiffContext }), [useDiffContext]);
 
   return (

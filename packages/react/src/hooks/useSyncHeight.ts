@@ -1,3 +1,4 @@
+import { getElementRoot } from "@git-diff-view/utils";
 import { useEffect } from "react";
 
 import { useDiffViewContext } from "../components/DiffViewContext";
@@ -17,11 +18,13 @@ export const useSyncHeight = ({
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
-  const { id, mounted } = useDiffContext.useShallowStableSelector((s) => ({ id: s.id, mounted: s.mounted }));
+  const { id, mounted, dom } = useDiffContext.useShallowStableSelector((s) => ({ id: s.id, mounted: s.mounted, dom: s.dom }));
 
   useEffect(() => {
     if (enable) {
-      const container = document.querySelector(`#diff-root${id}`);
+      const rootDocument = getElementRoot(dom as HTMLDivElement);
+
+      const container = rootDocument.querySelector(`#diff-root${id}`);
 
       const elements = Array.from(container?.querySelectorAll(selector) || []);
 
@@ -83,5 +86,5 @@ export const useSyncHeight = ({
         return () => cleanCb();
       }
     }
-  }, [selector, enable, side, id, wrapper, mounted]);
+  }, [selector, enable, side, id, wrapper, mounted, dom]);
 };

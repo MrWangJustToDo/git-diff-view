@@ -1,6 +1,7 @@
+import { getElementRoot } from "@git-diff-view/utils";
 import { ref, watchPostEffect } from "vue";
 
-import { useId, useIsMounted } from "../context";
+import { useDom, useId, useIsMounted } from "../context";
 
 import type { Ref } from "vue";
 
@@ -12,6 +13,8 @@ export type ObserveElement = HTMLElement & {
 export const useDomWidth = ({ selector, enable }: { selector: Ref<string>; enable: Ref<boolean> }) => {
   const id = useId();
 
+  const dom = useDom();
+
   const mounted = useIsMounted();
 
   const width = ref(0);
@@ -20,7 +23,9 @@ export const useDomWidth = ({ selector, enable }: { selector: Ref<string>; enabl
     if (!mounted.value) return;
 
     if (enable.value) {
-      const container = document.querySelector(`#diff-root${id.value}`);
+      const rootDocument = getElementRoot(dom.value);
+
+      const container = rootDocument.querySelector(`#diff-root${id.value}`);
 
       const wrapper = container?.querySelector(selector.value);
 

@@ -1,6 +1,7 @@
 import { inject } from "vue";
 
 import {
+  domSymbol,
   enableAddWidgetSymbol,
   enableHighlightSymbol,
   enableWrapSymbol,
@@ -16,6 +17,8 @@ import {
 } from "./provider";
 
 export const useId = () => inject(idSymbol);
+
+export const useDom = () => inject(domSymbol);
 
 export const useMode = () => inject(modeSymbol);
 
