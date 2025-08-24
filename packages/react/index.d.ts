@@ -821,6 +821,8 @@ declare const createDiffConfigStore: (props: DiffViewProps<any> & {
 }, diffFileId: string) => import("reactivity-store").UseSelectorWithStore<{
 	id: import("reactivity-store").Ref<string, string>;
 	setId: (_id: string) => string;
+	dom: import("reactivity-store").Ref<HTMLElement, HTMLElement>;
+	setDom: (_dom: HTMLElement) => HTMLElement;
 	mode: import("reactivity-store").Ref<DiffModeEnum, DiffModeEnum>;
 	setMode: (_mode: DiffModeEnum) => DiffModeEnum;
 	mounted: import("reactivity-store").Ref<boolean, boolean>;

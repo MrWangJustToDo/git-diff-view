@@ -119,6 +119,7 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
   createEffect(() => {
     const {
       setId,
+      setDom,
       setEnableAddWidget,
       setEnableHighlight,
       setEnableWrap,
@@ -145,6 +146,8 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
     setIsIsMounted(isMounted());
 
     setMode(props.diffViewMode || DiffModeEnum.Split);
+
+    setDom(wrapperRef() as HTMLElement);
 
     setOnAddWidgetClick({ current: props.onAddWidgetClick });
 

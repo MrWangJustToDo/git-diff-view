@@ -1,6 +1,7 @@
+import { getElementRoot } from "@git-diff-view/utils";
 import { type Ref, watchPostEffect } from "vue";
 
-import { useId, useIsMounted } from "../context";
+import { useDom, useId, useIsMounted } from "../context";
 
 import type { ObserveElement } from "./useDomWidth";
 
@@ -18,6 +19,8 @@ export const useSyncHeight = ({
 }) => {
   const id = useId();
 
+  const dom = useDom();
+
   const isMounted = useIsMounted();
 
   const observeHeight = (onCancel: (cb: () => void) => void) => {
@@ -26,7 +29,9 @@ export const useSyncHeight = ({
     if (enable.value) {
       let clean = () => {};
 
-      const container = document.querySelector(`#diff-root${id.value}`);
+      const rootDocument = getElementRoot(dom.value);
+
+      const container = rootDocument.querySelector(`#diff-root${id.value}`);
 
       const elements = Array.from(container?.querySelectorAll(selector.value) || []);
 

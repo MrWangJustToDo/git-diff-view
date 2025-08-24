@@ -28,3 +28,16 @@ export const syncScroll = (left: HTMLElement, right: HTMLElement) => {
     right.onscroll = null;
   };
 };
+
+export const getElementRoot = (element?: HTMLElement) => {
+  if (element) {
+    const root = element.getRootNode();
+    
+    if (root instanceof ShadowRoot) {
+      return root;
+    }
+
+    return element.ownerDocument;
+  }
+  return document;
+};

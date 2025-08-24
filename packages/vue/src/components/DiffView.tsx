@@ -15,6 +15,7 @@ import {
   widgetStateSymbol,
   setWidgetStateSymbol,
   mountedSymbol,
+  domSymbol,
 } from "../context";
 import { useIsMounted } from "../hooks/useIsMounted";
 import { useProvide } from "../hooks/useProvide";
@@ -204,6 +205,8 @@ export const DiffView = defineComponent<
     watchEffect((onClean) => initAttribute(onClean));
 
     provide(idSymbol, id);
+
+    provide(domSymbol, wrapperRef);
 
     provide(mountedSymbol, isMounted);
 

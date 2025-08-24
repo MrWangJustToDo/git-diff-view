@@ -1,4 +1,6 @@
+import { getDom } from '$lib/context/dom.js';
 import { getId } from '$lib/context/id.js';
+import { getElementRoot } from '$lib/utils/dom.js';
 
 import { useIsMounted } from './useIsMounted.svelte.js';
 
@@ -16,6 +18,8 @@ export const useDomWidth = ({
 }) => {
 	const id = $derived.by(getId());
 
+	const dom = $derived.by(getDom());
+
 	const isMounted = $derived.by(useIsMounted());
 
 	let width = $state(0);
@@ -26,7 +30,9 @@ export const useDomWidth = ({
 		if (!isMounted) return;
 
 		if (enable()) {
-			const container = document.querySelector(`#diff-root${id}`);
+			const rootDocument = getElementRoot(dom);
+
+			const container = rootDocument.querySelector(`#diff-root${id}`);
 
 			const wrapper = container?.querySelector(selector());
 

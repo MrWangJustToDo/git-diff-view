@@ -1,5 +1,7 @@
+import { getElementRoot } from "@git-diff-view/utils";
 import { createEffect, createSignal, onCleanup, type Accessor } from "solid-js";
 
+import { useDom } from "./useDom";
 import { useId } from "./useId";
 import { useIsMounted } from "./useIsMounted";
 
@@ -11,6 +13,8 @@ export type ObserveElement = HTMLElement & {
 export const useDomWidth = ({ selector, enable }: { selector: Accessor<string>; enable: Accessor<boolean> }) => {
   const id = useId();
 
+  const dom = useDom();
+
   const mounted = useIsMounted();
 
   const [width, setWidth] = createSignal(0);
@@ -19,7 +23,9 @@ export const useDomWidth = ({ selector, enable }: { selector: Accessor<string>; 
     if (!mounted()) return;
 
     if (enable()) {
-      const container = document.querySelector(`#diff-root${id()}`);
+      const rootDocument = getElementRoot(dom());
+
+      const container = rootDocument.querySelector(`#diff-root${id()}`);
 
       const wrapper = container?.querySelector(selector());
 

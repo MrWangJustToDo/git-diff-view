@@ -9,6 +9,7 @@ type DiffConfig = {
   engine: "lowlight" | "shiki";
   tabSpace: boolean;
   fastDiff: boolean;
+  shadowDOM: boolean;
 };
 
 export const useDiffConfig = createState(
@@ -21,6 +22,7 @@ export const useDiffConfig = createState(
       engine: "lowlight",
       tabSpace: false,
       fastDiff: false,
+      shadowDOM: false,
     }) as DiffConfig,
   {
     withActions(state) {
@@ -59,7 +61,12 @@ export const useDiffConfig = createState(
           if (v !== state.fastDiff) {
             state.fastDiff = v;
           }
-        }
+        },
+        setShadowDOM: (v: boolean) => {
+          if (v !== state.shadowDOM) {
+            state.shadowDOM = v;
+          }
+        },
       };
     },
     withNamespace: "diffConfig",

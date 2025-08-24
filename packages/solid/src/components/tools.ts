@@ -8,6 +8,10 @@ export const createDiffConfigStore = (props: DiffViewProps<any>, diffFileId: str
 
     const setId = (_id: string) => (id.value = _id);
 
+    const dom = ref<HTMLElement>();
+
+    const setDom = (_dom: HTMLElement) => (dom.value = _dom);
+
     const mode = ref(props.diffViewMode);
 
     const setMode = (_mode: DiffModeEnum) => (mode.value = _mode);
@@ -60,6 +64,8 @@ export const createDiffConfigStore = (props: DiffViewProps<any>, diffFileId: str
     return {
       id,
       setId,
+      dom,
+      setDom,
       mode,
       setMode,
       isMounted,
