@@ -16,11 +16,13 @@ const transform = (str: string) =>
     .replace(/\t/g, '<span class="diff-symbol diff-symbol-tab">\t</span>');
 
 export const MainContentDiffAdvance = () => {
-  const { tabSpace, setFastDiff, setTabSpace, fastDiff } = useDiffConfig((s) => ({
+  const { tabSpace, setFastDiff, setTabSpace, fastDiff, shadowDOM, setShadowDOM } = useDiffConfig((s) => ({
     tabSpace: s.tabSpace,
     setTabSpace: s.setTabSpace,
     fastDiff: s.fastDiff,
     setFastDiff: s.setFastDiff,
+    shadowDOM: s.shadowDOM,
+    setShadowDOM: s.setShadowDOM,
   }));
 
   useEffect(() => {
@@ -53,6 +55,9 @@ export const MainContentDiffAdvance = () => {
       </Button>
       <Button onClick={() => setFastDiff(!fastDiff)}>
         {fastDiff ? "disable fast diff template" : "enable fast diff template"}
+      </Button>
+      <Button onClick={() => setShadowDOM(!shadowDOM)}>
+        {shadowDOM ? "disable shadow DOM" : "enable shadow DOM"}
       </Button>
     </Group>
   );

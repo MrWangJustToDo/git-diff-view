@@ -1,6 +1,6 @@
 import { generateDiffFile, DiffFile } from "@git-diff-view/file";
 import { Button, ButtonGroup, Card, FloatingIndicator, Group, LoadingOverlay, Popover, Tooltip } from "@mantine/core";
-import { useDisclosure, useMounted } from "@mantine/hooks";
+import { useCallbackRef, useDisclosure, useMounted } from "@mantine/hooks";
 import { IconCode, IconPlayerPlay, IconRefresh, IconBrandReact, IconBrandVue } from "@tabler/icons-react";
 import { useState, startTransition, useCallback, forwardRef, useMemo, useEffect } from "react";
 
@@ -8,7 +8,7 @@ import { useDiffHighlighter } from "../../hooks/useDiffHighlighter";
 
 import { MainContentDiffExampleCode } from "./MainContentDiffExampleCode";
 import { temp1, temp2 } from "./MainContentDiffExampleData";
-import { MainContentDiffExampleView } from "./MainContentDiffExampleView";
+import { MainContentDiffExampleViewWrapper } from "./MainContentDiffExampleViewWrapper";
 
 const _diffFile = generateDiffFile("temp1.tsx", temp1, "temp2.tsx", temp2, "tsx", "tsx");
 
@@ -39,14 +39,14 @@ export const MainContentDiffExample = ({ onUpdate }: { onUpdate?: (diffFile: Dif
 
   const [loading, setLoading] = useState(false);
 
-  const refreshFile = () => {
+  const refreshFile = useCallbackRef(() => {
     setLoading(true);
     setDiffFile(getNewDiffFile());
     // simulate loading
     setTimeout(() => {
       startTransition(() => setLoading(false));
     }, 800);
-  };
+  });
 
   const [diffFile, setDiffFile] = useState(() => getNewDiffFile());
 
@@ -174,7 +174,8 @@ export const MainContentDiffExample = ({ onUpdate }: { onUpdate?: (diffFile: Dif
       {code ? (
         <MainContentDiffExampleCode type={platform} />
       ) : (
-        <MainContentDiffExampleView diffFile={diffFile} highlighter={highlighter} refreshDiffFile={refreshFile} />
+        <MainContentDiffExampleViewWrapper diffFile={diffFile} highlighter={highlighter} refreshDiffFile={refreshFile}  />
+        // <MainContentDiffExampleView diffFile={diffFile} highlighter={highlighter} refreshDiffFile={refreshFile} />
       )}
     </>
   );
