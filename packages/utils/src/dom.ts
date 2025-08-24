@@ -29,5 +29,15 @@ export const syncScroll = (left: HTMLElement, right: HTMLElement) => {
   };
 };
 
-export const getElementRoot = (element?: HTMLElement) =>
-  (element?.getRootNode?.() instanceof ShadowRoot ? element.getRootNode() : document) as ShadowRoot | Document;
+export const getElementRoot = (element?: HTMLElement) => {
+  if (element) {
+    const root = element.getRootNode();
+    
+    if (root instanceof ShadowRoot) {
+      return root;
+    }
+
+    return element.ownerDocument;
+  }
+  return document;
+};
