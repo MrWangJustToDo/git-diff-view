@@ -1,6 +1,6 @@
 {
 	"name": "@git-diff-view/svelte",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "npm run prepack",
@@ -37,7 +37,7 @@
 		"./package.json": "./package.json"
 	},
 	"dependencies": {
-		"@git-diff-view/core": "^0.0.31",
+		"@git-diff-view/core": "^0.0.32",
     "@types/hast": "^3.0.0",
     "highlight.js": "^11.11.0",
     "lowlight": "^3.3.0",

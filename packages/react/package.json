@@ -3,7 +3,7 @@
   "description": "@git-diff-view/react",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.31",
+  "version": "0.0.32",
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
@@ -67,7 +67,7 @@
     "react diff component"
   ],
   "dependencies": {
-    "@git-diff-view/core": "^0.0.31",
+    "@git-diff-view/core": "^0.0.32",
     "@types/hast": "^3.0.0",
     "fast-diff": "^1.3.0",
     "highlight.js": "^11.11.0",
