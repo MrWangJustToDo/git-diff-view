@@ -2,7 +2,6 @@ import { Container, Space, Title } from "@mantine/core";
 
 import { ReactPlayGround, VuePlayGround } from "../../components/PlayGround";
 
-
 export const StartContent = () => {
   return (
     <Container className="mt-8" size="xl">

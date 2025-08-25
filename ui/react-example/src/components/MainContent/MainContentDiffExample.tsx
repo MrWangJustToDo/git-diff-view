@@ -174,7 +174,11 @@ export const MainContentDiffExample = ({ onUpdate }: { onUpdate?: (diffFile: Dif
       {code ? (
         <MainContentDiffExampleCode type={platform} />
       ) : (
-        <MainContentDiffExampleViewWrapper diffFile={diffFile} highlighter={highlighter} refreshDiffFile={refreshFile}  />
+        <MainContentDiffExampleViewWrapper
+          diffFile={diffFile}
+          highlighter={highlighter}
+          refreshDiffFile={refreshFile}
+        />
         // <MainContentDiffExampleView diffFile={diffFile} highlighter={highlighter} refreshDiffFile={refreshFile} />
       )}
     </>

@@ -90,7 +90,11 @@ getDiffViewHighlighter().then((highlighter) => {
         newFile: { 107: { data: "test extend data" } },
       },
       renderExtendLine: ({ data }) => {
-        return createElement(Box, { backgroundColor: "red", width: '100%', padding: '1' }, createElement(Text, null, data));
+        return createElement(
+          Box,
+          { backgroundColor: "red", width: "100%", padding: "1" },
+          createElement(Text, null, data)
+        );
       },
       diffViewHighlight: true,
       registerHighlighter: highlighter,

@@ -13,7 +13,11 @@ export const useDomWidth = ({ selector, enable }: { selector: string; enable: bo
 
   const { useDiffContext } = useDiffViewContext();
 
-  const { id, mounted, dom } = useDiffContext.useShallowStableSelector((s) => ({ id: s.id, mounted: s.mounted, dom: s.dom }));
+  const { id, mounted, dom } = useDiffContext.useShallowStableSelector((s) => ({
+    id: s.id,
+    mounted: s.mounted,
+    dom: s.dom,
+  }));
 
   useEffect(() => {
     if (enable) {

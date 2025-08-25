@@ -5,7 +5,7 @@ import { useCallbackRef } from "@mantine/hooks";
 import { debounce } from "lodash";
 import { useState, useCallback, useEffect } from "react";
 
-import type { DiffFile} from "@git-diff-view/react";
+import type { DiffFile } from "@git-diff-view/react";
 
 export const PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
   const [lang1, setLang1] = useState("ts");

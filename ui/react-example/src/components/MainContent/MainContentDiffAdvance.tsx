@@ -45,7 +45,7 @@ export const MainContentDiffAdvance = () => {
     return () => {
       resetTransform();
       resetEnableFastDiffTemplate();
-    }
+    };
   }, []);
 
   return (
@@ -56,9 +56,7 @@ export const MainContentDiffAdvance = () => {
       <Button onClick={() => setFastDiff(!fastDiff)}>
         {fastDiff ? "disable fast diff template" : "enable fast diff template"}
       </Button>
-      <Button onClick={() => setShadowDOM(!shadowDOM)}>
-        {shadowDOM ? "disable shadow DOM" : "enable shadow DOM"}
-      </Button>
+      <Button onClick={() => setShadowDOM(!shadowDOM)}>{shadowDOM ? "disable shadow DOM" : "enable shadow DOM"}</Button>
     </Group>
   );
 };

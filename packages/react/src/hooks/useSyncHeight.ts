@@ -18,7 +18,11 @@ export const useSyncHeight = ({
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
-  const { id, mounted, dom } = useDiffContext.useShallowStableSelector((s) => ({ id: s.id, mounted: s.mounted, dom: s.dom }));
+  const { id, mounted, dom } = useDiffContext.useShallowStableSelector((s) => ({
+    id: s.id,
+    mounted: s.mounted,
+    dom: s.dom,
+  }));
 
   useEffect(() => {
     if (enable) {

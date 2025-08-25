@@ -35,7 +35,6 @@ export const WorkerExample = () => {
     diffFileWorker.addEventListener("message", cb);
   }, []);
 
-
   const startLoading = () => {
     idRef.current += 1;
     setLoading(true);
