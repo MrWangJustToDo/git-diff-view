@@ -36,6 +36,7 @@ export const MainContentDiffExampleViewWrapper = ({
         const reactRoot = createRoot(shadowRoot);
         setRoot(reactRoot);
       }
+      return () => setRoot(undefined);
     }
   }, [shadow]);
 
