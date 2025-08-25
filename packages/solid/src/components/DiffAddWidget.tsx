@@ -21,6 +21,7 @@ export const DiffSplitAddWidget = (props: {
       style={{
         width: `calc(var(${diffFontSizeName}) * 1.4)`,
         height: `calc(var(${diffFontSizeName}) * 1.4)`,
+        top: `calc(var(${diffFontSizeName}) * 0.1)`
       }}
     >
       <button
@@ -50,10 +51,11 @@ export const DiffUnifiedAddWidget = (props: {
 }) => {
   return (
     <div
-      class="diff-add-widget-wrapper invisible absolute left-[100%] top-[1px] translate-x-[-50%] select-none transition-transform hover:scale-110 group-hover:visible"
+      class="diff-add-widget-wrapper invisible absolute left-[100%] translate-x-[-50%] select-none transition-transform hover:scale-110 group-hover:visible"
       style={{
         width: `calc(var(${diffFontSizeName}) * 1.4)`,
         height: `calc(var(${diffFontSizeName}) * 1.4)`,
+        top: `calc(var(${diffFontSizeName}) * 0.1)`
       }}
     >
       <button

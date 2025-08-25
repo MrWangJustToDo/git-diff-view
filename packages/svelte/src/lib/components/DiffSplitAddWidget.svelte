@@ -22,6 +22,7 @@
 	style={`
 		width: calc(var(${diffFontSizeName}) * 1.4);
 		height: calc(var(${diffFontSizeName}) * 1.4);
+		top: calc(var(${diffFontSizeName}) * 0.1);
 	`}
 >
 	<button
