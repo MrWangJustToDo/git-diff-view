@@ -12,12 +12,14 @@ const InternalDiffUnifiedExtendLine = ({
   index,
   diffFile,
   lineNumber,
+  enableWrap,
   oldLineExtend,
   newLineExtend,
 }: {
   index: number;
   diffFile: DiffFile;
   lineNumber: number;
+  enableWrap: boolean;
   oldLineExtend: { data: any };
   newLineExtend: { data: any };
 }) => {
@@ -27,9 +29,10 @@ const InternalDiffUnifiedExtendLine = ({
 
   const unifiedItem = diffFile.getUnifiedLine(index);
 
+  // TODO use css variable to get width
   const width = useDomWidth({
     selector: ".unified-diff-table-wrapper",
-    enable: typeof renderExtendLine === "function",
+    enable: typeof renderExtendLine === "function" && !enableWrap,
   });
 
   if (!renderExtendLine) return null;
@@ -38,7 +41,7 @@ const InternalDiffUnifiedExtendLine = ({
     <tr data-line={`${lineNumber}-extend`} data-state="extend" className="diff-line diff-line-extend">
       <td className="diff-line-extend-content p-0 align-top" colSpan={2}>
         <div className="diff-line-extend-wrapper sticky left-0 z-[1]" style={{ width }}>
-          {width > 0 &&
+          {(enableWrap ? true : width > 0) &&
             oldLineExtend?.data !== undefined &&
             oldLineExtend?.data !== null &&
             renderExtendLine?.({
@@ -48,7 +51,7 @@ const InternalDiffUnifiedExtendLine = ({
               data: oldLineExtend.data,
               onUpdate: diffFile.notifyAll,
             })}
-          {width > 0 &&
+          {(enableWrap ? true : width > 0) &&
             newLineExtend?.data !== undefined &&
             newLineExtend?.data !== null &&
             renderExtendLine?.({
@@ -68,10 +71,12 @@ export const DiffUnifiedExtendLine = ({
   index,
   diffFile,
   lineNumber,
+  enableWrap,
 }: {
   index: number;
   diffFile: DiffFile;
   lineNumber: number;
+  enableWrap: boolean;
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
@@ -96,6 +101,7 @@ export const DiffUnifiedExtendLine = ({
       index={index}
       diffFile={diffFile}
       lineNumber={lineNumber}
+      enableWrap={enableWrap}
       oldLineExtend={oldLineExtend}
       newLineExtend={newLineExtend}
     />

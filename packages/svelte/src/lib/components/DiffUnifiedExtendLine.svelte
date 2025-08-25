@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getEnableWrap } from '$lib/context/enableWrap.js';
 	import { getExtend } from '$lib/context/extend.js';
 	import { getRenderExtend } from '$lib/context/renderExtend.js';
 	import { useDomWidth } from '$lib/hooks/useDomWidth.svelte.js';
@@ -13,6 +14,8 @@
 	let props: Props = $props();
 
 	const extendData = $derived.by(getExtend());
+
+	const enableWrap = $derived.by(getEnableWrap());
 
 	const renderExtend = $derived.by(getRenderExtend());
 
@@ -31,7 +34,7 @@
 	const width = $derived.by(
 		useDomWidth({
 			selector: () => '.unified-diff-table-wrapper',
-			enable: () => currentIsShow
+			enable: () => currentIsShow && !enableWrap
 		})
 	);
 </script>
@@ -44,7 +47,7 @@
 	>
 		<td class="diff-line-extend-content p-0 align-top" colspan={2}>
 			<div class="diff-line-extend-wrapper sticky left-0 z-[1]" style={`width: ${width}px `}>
-				{#if width && oldExtend && !!renderExtend}
+				{#if (enableWrap || width > 0) && oldExtend && !!renderExtend}
 					{@render renderExtend({
 						diffFile: props.diffFile,
 						side: SplitSide.old,
@@ -53,7 +56,7 @@
 						onUpdate: () => props.diffFile.notifyAll()
 					})}
 				{/if}
-				{#if width && newExtend && !!renderExtend}
+				{#if (enableWrap || width > 0) && newExtend && !!renderExtend}
 					{@render renderExtend({
 						diffFile: props.diffFile,
 						side: SplitSide.new,

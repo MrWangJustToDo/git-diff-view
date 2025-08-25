@@ -1,7 +1,7 @@
 import { computed, defineComponent, ref } from "vue";
 
 import { SplitSide } from "..";
-import { useSetWidget, useSlots, useWidget } from "../context";
+import { useEnableWrap, useSetWidget, useSlots, useWidget } from "../context";
 import { useDomWidth } from "../hooks/useDomWidth";
 
 import type { DiffFile } from "@git-diff-view/core";
@@ -13,6 +13,8 @@ export const DiffUnifiedWidgetLine = defineComponent(
     const widget = useWidget();
 
     const setWidget = useSetWidget();
+
+    const enableWrap = useEnableWrap();
 
     const unifiedItem = computed(() => props.diffFile.getUnifiedLine(props.index));
 
@@ -50,7 +52,7 @@ export const DiffUnifiedWidgetLine = defineComponent(
         <tr data-line={`${props.lineNumber}-widget`} data-state="widget" class="diff-line diff-line-widget">
           <td class="diff-line-widget-content p-0" colspan={2}>
             <div class="diff-line-widget-wrapper sticky left-0 z-[1]" style={{ width: width.value + "px" }}>
-              {width.value > 0 &&
+              {(enableWrap.value ? true : width.value > 0) &&
                 oldWidget.value &&
                 slots.widget?.({
                   diffFile: props.diffFile,
@@ -58,7 +60,7 @@ export const DiffUnifiedWidgetLine = defineComponent(
                   lineNumber: unifiedItem.value.oldLineNumber,
                   onClose: onCloseWidget,
                 })}
-              {width.value > 0 &&
+              {(enableWrap.value ? true : width.value > 0) &&
                 newWidget.value &&
                 slots.widget?.({
                   diffFile: props.diffFile,

@@ -1,10 +1,12 @@
 import { SplitSide, type DiffFile } from "@git-diff-view/core";
 import { createMemo, Show } from "solid-js";
 
-import { useDomWidth, useExtendData, useRenderExtend } from "../hooks";
+import { useDomWidth, useEnableWrap, useExtendData, useRenderExtend } from "../hooks";
 
 export const DiffUnifiedExtendLine = (props: { index: number; diffFile: DiffFile; lineNumber: number }) => {
   const extendData = useExtendData();
+
+  const enableWrap = useEnableWrap();
 
   const renderExtend = useRenderExtend();
 
@@ -22,7 +24,7 @@ export const DiffUnifiedExtendLine = (props: { index: number; diffFile: DiffFile
 
   const width = useDomWidth({
     selector: lineSelector,
-    enable: currentIsShow,
+    enable: () => currentIsShow() && !enableWrap(),
   });
 
   return (
@@ -30,7 +32,7 @@ export const DiffUnifiedExtendLine = (props: { index: number; diffFile: DiffFile
       <tr data-line={`${props.lineNumber}-extend`} data-state="extend" class="diff-line diff-line-extend">
         <td class="diff-line-extend-content p-0 align-top" colspan={2}>
           <div class="diff-line-extend-wrapper sticky left-0 z-[1]" style={{ width: width() + "px" }}>
-            {width() > 0 &&
+            {(enableWrap() ? true : width() > 0) &&
               oldExtend() &&
               renderExtend()?.({
                 diffFile: props.diffFile,
@@ -39,7 +41,7 @@ export const DiffUnifiedExtendLine = (props: { index: number; diffFile: DiffFile
                 data: oldExtend()?.data,
                 onUpdate: props.diffFile.notifyAll,
               })}
-            {width() > 0 &&
+            {(enableWrap() ? true : width() > 0) &&
               newExtend() &&
               renderExtend()?.({
                 diffFile: props.diffFile,

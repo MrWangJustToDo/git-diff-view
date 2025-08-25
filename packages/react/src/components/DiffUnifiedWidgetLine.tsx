@@ -12,10 +12,12 @@ const InternalDiffUnifiedWidgetLine = ({
   index,
   diffFile,
   lineNumber,
+  enableWrap,
 }: {
   index: number;
   diffFile: DiffFile;
   lineNumber: number;
+  enableWrap: boolean;
 }) => {
   const { useWidget } = useDiffWidgetContext();
 
@@ -42,7 +44,7 @@ const InternalDiffUnifiedWidgetLine = ({
 
   const width = useDomWidth({
     selector: ".unified-diff-table-wrapper",
-    enable: typeof renderWidgetLine === "function",
+    enable: typeof renderWidgetLine === "function" && !enableWrap,
   });
 
   if (!renderWidgetLine) return null;
@@ -51,10 +53,10 @@ const InternalDiffUnifiedWidgetLine = ({
     <tr data-line={`${lineNumber}-widget`} data-state="widget" className="diff-line diff-line-widget">
       <td className="diff-line-widget-content p-0" colSpan={2}>
         <div className="diff-line-widget-wrapper sticky left-0 z-[1]" style={{ width }}>
-          {width > 0 &&
+          {(enableWrap ? true : width > 0) &&
             oldWidget &&
             renderWidgetLine?.({ diffFile, side: SplitSide.old, lineNumber: unifiedItem.oldLineNumber, onClose })}
-          {width > 0 &&
+          {(enableWrap ? true : width > 0) &&
             newWidget &&
             renderWidgetLine?.({ diffFile, side: SplitSide.new, lineNumber: unifiedItem.newLineNumber, onClose })}
         </div>
@@ -67,10 +69,12 @@ export const DiffUnifiedWidgetLine = ({
   index,
   diffFile,
   lineNumber,
+  enableWrap,
 }: {
   index: number;
   diffFile: DiffFile;
   lineNumber: number;
+  enableWrap: boolean;
 }) => {
   const { useWidget } = useDiffWidgetContext();
 
@@ -100,5 +104,7 @@ export const DiffUnifiedWidgetLine = ({
 
   if (!currentIsShow) return null;
 
-  return <InternalDiffUnifiedWidgetLine index={index} diffFile={diffFile} lineNumber={lineNumber} />;
+  return (
+    <InternalDiffUnifiedWidgetLine index={index} diffFile={diffFile} lineNumber={lineNumber} enableWrap={enableWrap} />
+  );
 };

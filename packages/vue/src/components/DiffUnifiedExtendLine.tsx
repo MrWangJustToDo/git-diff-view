@@ -1,7 +1,7 @@
 import { computed, defineComponent, ref } from "vue";
 
 import { SplitSide } from "..";
-import { useExtendData, useSlots } from "../context";
+import { useEnableWrap, useExtendData, useSlots } from "../context";
 import { useDomWidth } from "../hooks/useDomWidth";
 
 import type { DiffFile } from "@git-diff-view/core";
@@ -11,6 +11,8 @@ export const DiffUnifiedExtendLine = defineComponent(
     const extendData = useExtendData();
 
     const slots = useSlots();
+
+    const enableWrap = useEnableWrap();
 
     const unifiedItem = computed(() => props.diffFile.getUnifiedLine(props.index));
 
@@ -36,7 +38,7 @@ export const DiffUnifiedExtendLine = defineComponent(
         <tr data-line={`${props.lineNumber}-extend`} data-state="extend" class="diff-line diff-line-extend">
           <td class="diff-line-extend-content p-0 align-top" colspan={2}>
             <div class="diff-line-extend-wrapper sticky left-0 z-[1]" style={{ width: width.value + "px" }}>
-              {width.value > 0 &&
+              {(enableWrap.value ? true : width.value > 0) &&
                 oldExtend.value &&
                 slots.extend({
                   diffFile: props.diffFile,
@@ -45,7 +47,7 @@ export const DiffUnifiedExtendLine = defineComponent(
                   data: oldExtend.value.data,
                   onUpdate: props.diffFile.notifyAll,
                 })}
-              {width.value > 0 &&
+              {(enableWrap.value ? true : width.value > 0) &&
                 newExtend.value &&
                 slots.extend({
                   diffFile: props.diffFile,

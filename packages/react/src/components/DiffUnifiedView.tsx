@@ -147,8 +147,18 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
                     enableHighlight={enableHighlight}
                     enableAddWidget={enableAddWidget}
                   />
-                  <DiffUnifiedWidgetLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
-                  <DiffUnifiedExtendLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
+                  <DiffUnifiedWidgetLine
+                    index={item.index}
+                    lineNumber={item.lineNumber}
+                    diffFile={diffFile}
+                    enableWrap={enableWrap}
+                  />
+                  <DiffUnifiedExtendLine
+                    index={item.index}
+                    lineNumber={item.lineNumber}
+                    diffFile={diffFile}
+                    enableWrap={enableWrap}
+                  />
                 </Fragment>
               ))}
               <DiffUnifiedHunkLine

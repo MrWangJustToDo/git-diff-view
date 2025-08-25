@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { getEnableWrap } from '$lib/context/enableWrap.js';
 	import { getRenderWidget } from '$lib/context/renderWidget.js';
 	import { getWidget } from '$lib/context/widget.js';
 	import { useDomWidth } from '$lib/hooks/useDomWidth.svelte.js';
@@ -13,6 +14,8 @@
 	let props: Props = $props();
 
 	const widget = $derived.by(getWidget());
+
+	const enableWrap = $derived.by(getEnableWrap());
 
 	const renderWidget = $derived.by(getRenderWidget());
 
@@ -46,7 +49,7 @@
 	const width = $derived.by(
 		useDomWidth({
 			selector: () => `.unified-diff-table-wrapper`,
-			enable: () => currentIsShow
+			enable: () => currentIsShow && !enableWrap
 		})
 	);
 </script>
@@ -59,7 +62,7 @@
 	>
 		<td class="diff-line-widget-content p-0" colspan={2}>
 			<div class="diff-line-widget-wrapper sticky left-0 z-[1]" style={`width: ${width}px`}>
-				{#if width > 0 && oldWidget}
+				{#if (enableWrap || width > 0) && oldWidget}
 					{@render renderWidget({
 						diffFile: props.diffFile,
 						side: SplitSide.old,
@@ -67,7 +70,7 @@
 						onClose: onCloseWidget
 					})}
 				{/if}
-				{#if width > 0 && newWidget}
+				{#if (enableWrap || width > 0) && newWidget}
 					{@render renderWidget?.({
 						diffFile: props.diffFile,
 						side: SplitSide.new,

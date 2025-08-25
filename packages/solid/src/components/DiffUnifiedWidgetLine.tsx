@@ -1,12 +1,14 @@
 import { SplitSide, type DiffFile } from "@git-diff-view/core";
 import { createMemo, Show } from "solid-js";
 
-import { useDomWidth, useRenderWidget } from "../hooks";
+import { useDomWidth, useEnableWrap, useRenderWidget } from "../hooks";
 
 import { useDiffWidgetContext } from "./DiffWidgetContext";
 
 export const DiffUnifiedWidgetLine = (props: { index: number; diffFile: DiffFile; lineNumber: number }) => {
   const renderWidget = useRenderWidget();
+
+  const enableWrap = useEnableWrap();
 
   const [widget, setWidget] = useDiffWidgetContext() || [];
 
@@ -36,7 +38,7 @@ export const DiffUnifiedWidgetLine = (props: { index: number; diffFile: DiffFile
 
   const width = useDomWidth({
     selector: lineSelector,
-    enable: currenIsShow,
+    enable: () => currenIsShow() && !enableWrap(),
   });
 
   return (
@@ -44,7 +46,7 @@ export const DiffUnifiedWidgetLine = (props: { index: number; diffFile: DiffFile
       <tr data-line={`${props.lineNumber}-widget`} data-state="widget" class="diff-line diff-line-widget">
         <td class="diff-line-widget-content p-0" colspan={2}>
           <div class="diff-line-widget-wrapper sticky left-0 z-[1]" style={{ width: width() + "px" }}>
-            {width() > 0 &&
+            {(enableWrap() ? true : width() > 0) &&
               oldWidget() &&
               renderWidget()?.({
                 diffFile: props.diffFile,
@@ -52,7 +54,7 @@ export const DiffUnifiedWidgetLine = (props: { index: number; diffFile: DiffFile
                 lineNumber: unifiedItem()?.oldLineNumber || 0,
                 onClose: onCloseWidget,
               })}
-            {width() > 0 &&
+            {(enableWrap() ? true : width() > 0) &&
               newWidget() &&
               renderWidget()?.({
                 diffFile: props.diffFile,
