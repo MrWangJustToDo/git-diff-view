@@ -78,8 +78,32 @@ export declare class DiffFile {
 	additionLength: number;
 	deletionLength: number;
 	hasSomeLineCollapsed: boolean;
-	static createInstance(data: FileData_1, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>): DiffFile;
-	static createInstance(data: FileData_2, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>): DiffFile;
+	static createInstance(data: {
+		oldFile?: {
+			fileName?: string | null;
+			fileLang?: DiffHighlighterLang | null;
+			content?: string | null;
+		};
+		newFile?: {
+			fileName?: string | null;
+			fileLang?: DiffHighlighterLang | null;
+			content?: string | null;
+		};
+		hunks?: string[];
+	}, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>): DiffFile;
+	static createInstance(data: {
+		oldFile?: {
+			fileName?: string | null;
+			fileLang?: string | null;
+			content?: string | null;
+		};
+		newFile?: {
+			fileName?: string | null;
+			fileLang?: string | null;
+			content?: string | null;
+		};
+		hunks?: string[];
+	}, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>): DiffFile;
 	constructor(_oldFileName: string, _oldFileContent: string, _newFileName: string, _newFileContent: string, _diffList: string[], _oldFileLang?: DiffHighlighterLang, _newFileLang?: DiffHighlighterLang, uuid?: string);
 	constructor(_oldFileName: string, _oldFileContent: string, _newFileName: string, _newFileContent: string, _diffList: string[], _oldFileLang?: string, _newFileLang?: string, uuid?: string);
 	initId(): void;
@@ -117,12 +141,16 @@ export declare class DiffFile {
 		value: string;
 		template?: string;
 	};
-	getOldSyntaxLine: (lineNumber: number) => SyntaxLineWithTemplate;
+	getOldSyntaxLine: (lineNumber: number) => SyntaxLine & {
+		template?: string;
+	};
 	getNewPlainLine: (lineNumber: number) => {
 		value: string;
 		template?: string;
 	};
-	getNewSyntaxLine: (lineNumber: number) => SyntaxLineWithTemplate;
+	getNewSyntaxLine: (lineNumber: number) => SyntaxLine & {
+		template?: string;
+	};
 	subscribe: (listener: (() => void) & {
 		isSyncExternal?: boolean;
 	}) => () => void;
@@ -140,7 +168,9 @@ export declare class DiffFile {
 			value: string;
 			template?: string;
 		}>;
-		oldFileSyntaxLines: Record<number, SyntaxLineWithTemplate>;
+		oldFileSyntaxLines: Record<number, SyntaxLine & {
+			template?: string;
+		}>;
 		oldFilePlaceholderLines: Record<string, boolean>;
 		newFileLines: Record<number, string>;
 		newFileDiffLines: Record<string, DiffLineItem>;
@@ -148,7 +178,9 @@ export declare class DiffFile {
 			value: string;
 			template?: string;
 		}>;
-		newFileSyntaxLines: Record<number, SyntaxLineWithTemplate>;
+		newFileSyntaxLines: Record<number, SyntaxLine & {
+			template?: string;
+		}>;
 		newFilePlaceholderLines: Record<string, boolean>;
 		splitLineLength: number;
 		unifiedLineLength: number;
@@ -198,7 +230,9 @@ export declare class DiffFile {
 			value: string;
 			template?: string;
 		}>;
-		oldFileSyntaxLines: Record<number, SyntaxLineWithTemplate>;
+		oldFileSyntaxLines: Record<number, SyntaxLine & {
+			template?: string;
+		}>;
 		oldFilePlaceholderLines: Record<string, boolean>;
 		newFileLines: Record<number, string>;
 		newFileDiffLines: Record<string, DiffLineItem>;
@@ -206,7 +240,9 @@ export declare class DiffFile {
 			value: string;
 			template?: string;
 		}>;
-		newFileSyntaxLines: Record<number, SyntaxLineWithTemplate>;
+		newFileSyntaxLines: Record<number, SyntaxLine & {
+			template?: string;
+		}>;
 		newFilePlaceholderLines: Record<string, boolean>;
 		splitLineLength: number;
 		unifiedLineLength: number;
@@ -418,12 +454,6 @@ export declare class DiffParser {
 }
 /** How many new lines will be added to a diff hunk by default. */
 export declare const DefaultDiffExpansionStep = 40;
-/**
- * Regular expression matching invisible bidirectional Unicode characters that
- * may be interpreted or compiled differently than what it appears. More info:
- * https://github.co/hiddenchars
- */
-export declare const HiddenBidiCharsRegex: RegExp;
 export declare const _cacheMap: Cache$1<string, File$1>;
 export declare const changeDefaultComposeLength: (compose: number) => void;
 export declare const checkCurrentLineIsHidden: (diffFile: DiffFile, lineNumber: number, side: SplitSide) => {
@@ -434,12 +464,6 @@ export declare const checkDiffLineIncludeChange: (diffLine?: DiffLine) => boolea
 export declare const defaultTransform: (content: string) => string;
 export declare const disableCache: () => void;
 export declare const getCurrentComposeLength: () => number;
-export declare const getDiffRange: (additions: DiffLine[], deletions: DiffLine[], { getAdditionRaw, getDeletionRaw, getAdditionSyntax, getDeletionSyntax, }: {
-	getAdditionRaw: (lineNumber: number) => string;
-	getDeletionRaw: (lineNumber: number) => string;
-	getAdditionSyntax: (lineNumber: number) => SyntaxLineWithTemplate;
-	getDeletionSyntax: (lineNumber: number) => SyntaxLineWithTemplate;
-}) => void;
 export declare const getEnableFastDiffTemplate: () => boolean;
 export declare const getLang: (fileName: string) => string;
 export declare const getPlainDiffTemplate: ({ diffLine, rawLine, operator, }: {
@@ -457,12 +481,12 @@ export declare const getSplitContentLines: (diffFile: DiffFile) => DiffSplitCont
 export declare const getSplitLines: (diffFile: DiffFile) => DiffSplitLineItem[];
 export declare const getSyntaxDiffTemplate: ({ diffLine, syntaxLine, operator, }: {
 	diffLine: DiffLine;
-	syntaxLine: SyntaxLineWithTemplate;
+	syntaxLine: SyntaxLine;
 	operator: "add" | "del";
 }) => void;
 export declare const getSyntaxDiffTemplateByFastDiff: ({ diffLine, syntaxLine, operator, }: {
 	diffLine: DiffLine;
-	syntaxLine: SyntaxLineWithTemplate;
+	syntaxLine: SyntaxLine;
 	operator: "add" | "del";
 }) => void;
 export declare const getSyntaxLineTemplate: (line: SyntaxLine) => string;
@@ -482,7 +506,6 @@ export declare const highlighter: DiffHighlighter;
  * ```
  */
 export declare const isTransformEnabled: () => boolean;
-export declare const numIterator: <T>(num: number, cb: (index: number) => T) => T[];
 export declare const parseInstance: DiffParser;
 export declare const processAST: (ast: DiffAST) => {
 	syntaxFileObject: Record<number, SyntaxLine>;
@@ -594,27 +617,11 @@ export declare enum SplitSide {
 }
 export declare function _getAST(raw: string, fileName?: string, lang?: DiffHighlighterLang, theme?: "light" | "dark"): DiffAST;
 export declare function _getAST(raw: string, fileName?: string, lang?: string, theme?: "light" | "dark"): DiffAST;
-export declare function assertNever(_: never, message: string): never;
 export declare function diffChanges(addition: DiffLine, deletion: DiffLine): {
 	addRange: DiffRange;
 	delRange: DiffRange;
 };
 export declare function escapeHtml(string: unknown): string;
-export declare function getFile(raw: string, lang: DiffHighlighterLang, theme: "light" | "dark", fileName?: string, uuid?: string): File$1;
-export declare function getFile(raw: string, lang: string, theme: "light" | "dark", fileName?: string, uuid?: string): File$1;
-/**
- * Calculates whether or not a hunk header can be expanded up, down, both, or if
- * the space represented by the hunk header is short and expansion there would
- * mean merging with the hunk above.
- *
- * @param hunkIndex     Index of the hunk to evaluate within the whole diff.
- * @param hunkHeader    Header of the hunk to evaluate.
- * @param previousHunk  Hunk previous to the one to evaluate. Null if the
- *                      evaluated hunk is the first one.
- */
-export declare function getHunkHeaderExpansionType(hunkIndex: number, hunkHeader: DiffHunkHeader, previousHunk: DiffHunk | null): DiffHunkExpansionType;
-/** Utility function for getting the digit count of the largest line number in an array of diff hunks */
-export declare function getLargestLineNumber(hunks: DiffHunk[]): number;
 /** Get the changed ranges in the strings, relative to each other. */
 export declare function relativeChanges(addition: DiffLine, deletion: DiffLine): {
 	addRange: IRange;
@@ -743,32 +750,6 @@ export type DiffUnifiedLineItem = {
 	type: DiffFileLineType;
 	index: number;
 	lineNumber: number;
-};
-export type FileData_1 = {
-	oldFile?: {
-		fileName?: string | null;
-		fileLang?: DiffHighlighterLang | null;
-		content?: string | null;
-	};
-	newFile?: {
-		fileName?: string | null;
-		fileLang?: DiffHighlighterLang | null;
-		content?: string | null;
-	};
-	hunks?: string[];
-};
-export type FileData_2 = {
-	oldFile?: {
-		fileName?: string | null;
-		fileLang?: string | null;
-		content?: string | null;
-	};
-	newFile?: {
-		fileName?: string | null;
-		fileLang?: string | null;
-		content?: string | null;
-	};
-	hunks?: string[];
 };
 export type HunkInfo = {
 	oldStartIndex: number;

@@ -72,24 +72,6 @@ export interface DiffHunkItem extends DiffLineItem {
   unifiedInfo?: HunkLineInfo & HunkInfo;
 }
 
-type FileData_1 = {
-  oldFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | null; content?: string | null };
-  newFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | null; content?: string | null };
-  hunks?: string[];
-};
-
-type FileData_2 = {
-  oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
-  newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
-  hunks?: string[];
-};
-
-type FileData_3 = {
-  oldFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
-  newFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
-  hunks?: string[];
-};
-
 export class DiffFile {
   #oldFileResult?: File;
 
@@ -196,14 +178,29 @@ export class DiffFile {
   #clonedInstance = new Map<DiffFile, () => void>();
 
   static createInstance(
-    data: FileData_1,
+    data: {
+      oldFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | null; content?: string | null };
+      newFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | null; content?: string | null };
+      hunks?: string[];
+    },
     bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>
   ): DiffFile;
   static createInstance(
-    data: FileData_2,
+    data: {
+      oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+      newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
+      hunks?: string[];
+    },
     bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>
   ): DiffFile;
-  static createInstance(data: FileData_3, bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>) {
+  static createInstance(
+    data: {
+      oldFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
+      newFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
+      hunks?: string[];
+    },
+    bundle?: ReturnType<DiffFile["getBundle"] | DiffFile["_getFullBundle"]>
+  ) {
     const instance = new DiffFile(
       data?.oldFile?.fileName || "",
       data?.oldFile?.content || "",

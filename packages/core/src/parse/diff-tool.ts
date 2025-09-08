@@ -1,3 +1,4 @@
+
 import { diffChanges, relativeChanges } from "./change-range";
 import { DiffLineType, DiffLine } from "./diff-line";
 import { DiffHunkExpansionType } from "./raw-diff";
@@ -9,17 +10,23 @@ import {
   getSyntaxDiffTemplateByFastDiff,
 } from "./template";
 
-import type { SyntaxLineWithTemplate } from "../file";
 import type { DiffHunk, DiffHunkHeader } from "./raw-diff";
+import type { SyntaxLine } from "@git-diff-view/lowlight";
 
 /** How many new lines will be added to a diff hunk by default. */
 export const DefaultDiffExpansionStep = 40;
 
+/**
+ * @internal
+ */
 export function assertNever(_: never, message: string): never {
   throw new Error(message);
 }
 
 /** Utility function for getting the digit count of the largest line number in an array of diff hunks */
+/**
+ * @internal
+ */
 export function getLargestLineNumber(hunks: DiffHunk[]): number {
   if (hunks.length === 0) {
     return 0;
@@ -48,7 +55,7 @@ export function getLargestLineNumber(hunks: DiffHunk[]): number {
  * Calculates whether or not a hunk header can be expanded up, down, both, or if
  * the space represented by the hunk header is short and expansion there would
  * mean merging with the hunk above.
- *
+ * @internal
  * @param hunkIndex     Index of the hunk to evaluate within the whole diff.
  * @param hunkHeader    Header of the hunk to evaluate.
  * @param previousHunk  Hunk previous to the one to evaluate. Null if the
@@ -84,6 +91,9 @@ export function getHunkHeaderExpansionType(
   }
 }
 
+/**
+ * @internal
+ */
 export const numIterator = <T>(num: number, cb: (index: number) => T): T[] => {
   const re = [];
   for (let i = 0; i < num; i++) {
@@ -98,6 +108,9 @@ export const getLang = (fileName: string) => {
   return extension;
 };
 
+/**
+ * @internal
+ */
 export const getDiffRange = (
   additions: DiffLine[],
   deletions: DiffLine[],
@@ -109,8 +122,8 @@ export const getDiffRange = (
   }: {
     getAdditionRaw: (lineNumber: number) => string;
     getDeletionRaw: (lineNumber: number) => string;
-    getAdditionSyntax: (lineNumber: number) => SyntaxLineWithTemplate;
-    getDeletionSyntax: (lineNumber: number) => SyntaxLineWithTemplate;
+    getAdditionSyntax: (lineNumber: number) => SyntaxLine;
+    getDeletionSyntax: (lineNumber: number) => SyntaxLine;
   }
 ) => {
   if (additions.length === deletions.length) {

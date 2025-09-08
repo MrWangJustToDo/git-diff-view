@@ -4,7 +4,6 @@ import { escapeHtml } from "../escape-html";
 
 import { processTransformTemplateContent, isTransformEnabled } from "./transform";
 
-import type { SyntaxLineWithTemplate } from "../file";
 import type { DiffLine } from "./diff-line";
 import type { SyntaxLine } from "@git-diff-view/lowlight";
 
@@ -120,7 +119,7 @@ export const getSyntaxDiffTemplate = ({
   operator,
 }: {
   diffLine: DiffLine;
-  syntaxLine: SyntaxLineWithTemplate;
+  syntaxLine: SyntaxLine;
   operator: "add" | "del";
 }) => {
   if (!syntaxLine) return;
@@ -184,7 +183,7 @@ export const getSyntaxDiffTemplateByFastDiff = ({
   operator,
 }: {
   diffLine: DiffLine;
-  syntaxLine: SyntaxLineWithTemplate;
+  syntaxLine: SyntaxLine;
   operator: "add" | "del";
 }) => {
   if (!syntaxLine) return;
