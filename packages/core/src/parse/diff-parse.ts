@@ -37,17 +37,22 @@ const DiffPrefixAdd = "+" as const;
 const DiffPrefixDelete = "-" as const;
 const DiffPrefixContext = " " as const;
 const DiffPrefixNoNewline = "\\" as const;
+// https://github.com/MrWangJustToDo/git-diff-view/issues/41
+// some line only have a new line symbol without any other character
+const DIffPrefixNewLine = "\n" as const;
 
 type DiffLinePrefix =
   | typeof DiffPrefixAdd
   | typeof DiffPrefixDelete
   | typeof DiffPrefixContext
-  | typeof DiffPrefixNoNewline;
+  | typeof DiffPrefixNoNewline
+  | typeof DIffPrefixNewLine;
 const DiffLinePrefixChars: Set<DiffLinePrefix> = new Set([
   DiffPrefixAdd,
   DiffPrefixDelete,
   DiffPrefixContext,
   DiffPrefixNoNewline,
+  DIffPrefixNewLine,
 ]);
 
 interface IDiffHeaderInfo {
@@ -127,6 +132,19 @@ export class DiffParser {
 
     // We've succeeded if there's anything to read in between the
     // start and the end
+    /**
+     * https://github.com/MrWangJustToDo/git-diff-view/issues/41
+     * some file content may have multiple line without any character
+     * such as
+     * ```
+     * 
+     * 
+     * 
+     * +
+     * +
+     * ```
+     * this will cause ls === le, but we not in the end of file
+     */
     return this.ls !== this.le;
   }
 
@@ -139,7 +157,7 @@ export class DiffParser {
     if (header) {
       return this.nextLine() ? this.text.substring(this.ls, this.le) : null;
     } else {
-      return this.nextLine() ? this.text.substring(this.ls + 1, this.le + 1) : null;
+      return this.nextLine() ? this.text.substring(this.ls + 1, this.le + 1) : this.text.length > this.ls ? "\n" : null;
     }
   }
 
@@ -353,7 +371,7 @@ export class DiffParser {
         diffLine = new DiffLine(line, DiffLineType.Add, diffLineNumber, null, rollingDiffAfterCounter++);
       } else if (c === DiffPrefixDelete) {
         diffLine = new DiffLine(line, DiffLineType.Delete, diffLineNumber, rollingDiffBeforeCounter++, null);
-      } else if (c === DiffPrefixContext) {
+      } else if (c === DiffPrefixContext || c === DIffPrefixNewLine) {
         diffLine = new DiffLine(
           line,
           DiffLineType.Context,
