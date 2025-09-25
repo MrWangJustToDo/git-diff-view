@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getSplitContentLines, SplitSide, type DiffFile } from '@git-diff-view/core';
-	import { removeAllSelection } from '$lib/utils/dom.js';
+	import { getDiffIdFromElement, removeAllSelection } from '$lib/utils/dom.js';
 
 	import DiffSplitContentLine from './DiffSplitContentLineNormal.svelte';
 	import DiffSplitExtendLine from './DiffSplitExtendLineNormal.svelte';
@@ -46,6 +46,12 @@
 
 		if (ele && ele?.nodeName === 'BUTTON') {
 			removeAllSelection();
+			return;
+		}
+
+		const id = getDiffIdFromElement(ele as HTMLElement);
+
+		if (id && id !== `diff-root${props.diffFile.getId()}`) {
 			return;
 		}
 

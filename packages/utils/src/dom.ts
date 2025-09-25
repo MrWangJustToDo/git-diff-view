@@ -41,3 +41,22 @@ export const getElementRoot = (element?: HTMLElement) => {
   }
   return document;
 };
+
+export const getDiffIdFromElement = (element?: HTMLElement) => {
+  if (element) {
+    if (typeof element.closest === "function") {
+      const diffRoot = element.closest('[data-component="git-diff-view"]');
+      const ele = diffRoot.querySelector(".diff-view-wrapper");
+      return ele.getAttribute("id");
+    } else {
+      let el: HTMLElement | null = element;
+      while (el) {
+        if (el.getAttribute && el.getAttribute("data-component") === "git-diff-view") {
+          const ele = el.querySelector(".diff-view-wrapper");
+          return ele.getAttribute("id");
+        }
+        el = el.parentElement;
+      }
+    }
+  }
+};

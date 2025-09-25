@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { type DiffFile, getSplitContentLines } from "@git-diff-view/core";
-import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from "@git-diff-view/utils";
+import { diffAsideWidthName, diffFontSizeName, getDiffIdFromElement, removeAllSelection } from "@git-diff-view/utils";
 import { Fragment, memo, useMemo, useRef } from "react";
 import * as React from "react";
 // SEE https://github.com/facebook/react/pull/25231
@@ -62,6 +62,12 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
     // need remove all the selection
     if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
       removeAllSelection();
+      return;
+    }
+
+    const id = getDiffIdFromElement(ele as HTMLElement);
+
+    if (id && id !== `diff-root${diffFile.getId()}`) {
       return;
     }
 

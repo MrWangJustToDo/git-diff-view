@@ -3,6 +3,7 @@ import {
   borderColorName,
   diffAsideWidthName,
   diffFontSizeName,
+  getDiffIdFromElement,
   removeAllSelection,
   syncScroll,
 } from "@git-diff-view/utils";
@@ -46,6 +47,12 @@ const DiffSplitViewTable = (props: {
 
     if (ele && ele?.nodeName === "BUTTON") {
       removeAllSelection();
+      return;
+    }
+
+    const id = getDiffIdFromElement(ele as HTMLElement);
+
+    if (id && id !== `diff-root${props.diffFile.getId()}`) {
       return;
     }
 

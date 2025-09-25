@@ -3,7 +3,7 @@
 	import { useTextWidth } from '$lib/hooks/useTextWidth.svelte.js';
 	import { getSplitContentLines, SplitSide, type DiffFile } from '@git-diff-view/core';
 	import { diffAsideWidthName, diffFontSizeName } from '$lib/utils/size.js';
-	import { removeAllSelection } from '$lib/utils/dom.js';
+	import { getDiffIdFromElement, removeAllSelection } from '$lib/utils/dom.js';
 
 	import DiffSplitContentLine from './DiffSplitContentLineWrap.svelte';
 	import DiffSplitExtendLine from './DiffSplitExtendLineWrap.svelte';
@@ -69,6 +69,12 @@
 		// need remove all the selection
 		if (ele && ele instanceof HTMLElement && ele.nodeName === 'BUTTON') {
 			removeAllSelection();
+			return;
+		}
+
+		const id = getDiffIdFromElement(ele as HTMLElement);
+
+		if (id && id !== `diff-root${props.diffFile.getId()}`) {
 			return;
 		}
 

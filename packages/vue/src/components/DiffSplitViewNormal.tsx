@@ -5,6 +5,7 @@ import {
   removeAllSelection,
   syncScroll,
   borderColorName,
+  getDiffIdFromElement,
 } from "@git-diff-view/utils";
 import { Fragment, computed, defineComponent, ref, watchPostEffect } from "vue";
 
@@ -43,6 +44,12 @@ const DiffSplitViewTable = defineComponent(
 
       if (ele && ele?.nodeName === "BUTTON") {
         removeAllSelection();
+        return;
+      }
+
+      const id = getDiffIdFromElement(ele as HTMLElement);
+
+      if (id && id !== `diff-root${props.diffFile.getId()}`) {
         return;
       }
 

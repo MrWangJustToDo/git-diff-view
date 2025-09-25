@@ -4,7 +4,7 @@
 	import { useTextWidth } from '$lib/hooks/useTextWidth.svelte.js';
 	import { getUnifiedContentLine, type DiffFile } from '@git-diff-view/core';
 	import { diffAsideWidthName, diffFontSizeName } from '$lib/utils/size.js';
-	import { removeAllSelection } from '$lib/utils/dom.js';
+	import { getDiffIdFromElement, removeAllSelection } from '$lib/utils/dom.js';
 
 	import DiffUnifiedContentLine from './DiffUnifiedContentLine.svelte';
 	import DiffUnifiedExtendLine from './DiffUnifiedExtendLine.svelte';
@@ -55,6 +55,12 @@
 
 		if (ele && ele?.nodeName === 'BUTTON') {
 			removeAllSelection();
+			return;
+		}
+
+		const id = getDiffIdFromElement(ele as HTMLElement);
+
+		if (id && id !== `diff-root${props.diffFile.getId()}`) {
 			return;
 		}
 

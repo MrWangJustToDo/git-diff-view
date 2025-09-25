@@ -1,5 +1,5 @@
 import { getUnifiedContentLine, type DiffFile } from "@git-diff-view/core";
-import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from "@git-diff-view/utils";
+import { diffAsideWidthName, diffFontSizeName, getDiffIdFromElement, removeAllSelection } from "@git-diff-view/utils";
 import { createEffect, createMemo, createSignal, onCleanup, For } from "solid-js";
 
 import { useEnableWrap, useFontSize, useTextWidth } from "../hooks";
@@ -53,6 +53,12 @@ export const DiffUnifiedView = (props: { diffFile: DiffFile }) => {
 
     if (ele && ele?.nodeName === "BUTTON") {
       removeAllSelection();
+      return;
+    }
+
+    const id = getDiffIdFromElement(ele as HTMLElement);
+
+    if (id && id !== `diff-root${props.diffFile.getId()}`) {
       return;
     }
 
