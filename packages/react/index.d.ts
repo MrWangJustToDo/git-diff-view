@@ -38,16 +38,16 @@ declare class File$1 {
 	doRaw(): void;
 }
 declare const lowlight: {
-	highlight: (language: string, value: string, options?: Readonly<import("lowlight").Options>) => import("hast").Root;
-	highlightAuto: (value: string, options?: Readonly<import("lowlight").AutoOptions>) => import("hast").Root;
-	listLanguages: () => string[];
+	highlight: (language: string, value: string, options?: Readonly<import("lowlight").Options> | null | undefined) => import("hast").Root;
+	highlightAuto: (value: string, options?: Readonly<import("lowlight").AutoOptions> | null | undefined) => import("hast").Root;
+	listLanguages: () => Array<string>;
 	register: {
 		(grammars: Readonly<Record<string, import("highlight.js").LanguageFn>>): undefined;
 		(name: string, grammar: import("highlight.js").LanguageFn): undefined;
 	};
 	registerAlias: {
-		(aliases: Readonly<Record<string, string | readonly string[]>>): undefined;
-		(language: string, alias: string | readonly string[]): undefined;
+		(aliases: Readonly<Record<string, ReadonlyArray<string> | string>>): undefined;
+		(language: string, alias: ReadonlyArray<string> | string): undefined;
 	};
 	registered: (aliasOrName: string) => boolean;
 };
@@ -905,36 +905,8 @@ declare const createDiffConfigStore: (props: DiffViewProps<any> & {
 	setOnAddWidgetClick: (_onAddWidgetClick: {
 		current: (lineNumber: number, side: SplitSide) => void;
 	}) => (lineNumber: number, side: SplitSide) => void;
-	onCreateUseWidgetHook: import("reactivity-store").Ref<(hook: import("reactivity-store").UseSelectorWithStore<{
-		widgetSide: import("reactivity-store").Ref<SplitSide, SplitSide>;
-		widgetLineNumber: import("reactivity-store").Ref<number, number>;
-		setWidget: ({ side, lineNumber }: {
-			side?: SplitSide;
-			lineNumber?: number;
-		}) => void;
-	}>) => void, (hook: import("reactivity-store").UseSelectorWithStore<{
-		widgetSide: import("reactivity-store").Ref<SplitSide, SplitSide>;
-		widgetLineNumber: import("reactivity-store").Ref<number, number>;
-		setWidget: ({ side, lineNumber }: {
-			side?: SplitSide;
-			lineNumber?: number;
-		}) => void;
-	}>) => void>;
-	setOnCreateUseWidgetHook: (_onCreateUseWidgetHook: (hook: import("reactivity-store").UseSelectorWithStore<{
-		widgetSide: import("reactivity-store").Ref<SplitSide, SplitSide>;
-		widgetLineNumber: import("reactivity-store").Ref<number, number>;
-		setWidget: ({ side, lineNumber }: {
-			side?: SplitSide;
-			lineNumber?: number;
-		}) => void;
-	}>) => void) => (hook: import("reactivity-store").UseSelectorWithStore<{
-		widgetSide: import("reactivity-store").Ref<SplitSide, SplitSide>;
-		widgetLineNumber: import("reactivity-store").Ref<number, number>;
-		setWidget: ({ side, lineNumber }: {
-			side?: SplitSide;
-			lineNumber?: number;
-		}) => void;
-	}>) => void;
+	onCreateUseWidgetHook: import("reactivity-store").Ref<(hook: ReturnType<typeof createDiffWidgetStore>) => void, (hook: ReturnType<typeof createDiffWidgetStore>) => void>;
+	setOnCreateUseWidgetHook: (_onCreateUseWidgetHook: (hook: ReturnType<typeof createDiffWidgetStore>) => void) => (hook: ReturnType<typeof createDiffWidgetStore>) => void;
 }>;
 declare const createDiffWidgetStore: (useDiffContextRef: RefObject<ReturnType<typeof createDiffConfigStore>>) => import("reactivity-store").UseSelectorWithStore<{
 	widgetSide: import("reactivity-store").Ref<SplitSide, SplitSide>;

@@ -10,18 +10,17 @@
   },
   "dependencies": {
     "@git-diff-view/react": "workspace:*",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
-    "next": "^15.4.6"
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
+    "next": "^15.5.5"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "postcss": "^8",
-    "tailwindcss": "^3.4.17",
+    "tailwindcss": "^3.4.18",
     "eslint": "^8",
-    "eslint-config-next": "^15.4.6"
+    "eslint-config-next": "^15.5.5"
   }
 }
