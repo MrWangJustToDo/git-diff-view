@@ -6,6 +6,7 @@ import {
   diffFontSizeName,
   borderColorName,
   diffAsideWidthName,
+  getDiffIdFromElement,
 } from "@git-diff-view/utils";
 import { Fragment, memo, useEffect, useRef } from "react";
 import * as React from "react";
@@ -134,6 +135,12 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
     // need remove all the selection
     if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
       removeAllSelection();
+      return;
+    }
+
+    const id = getDiffIdFromElement(ele as HTMLElement);
+
+    if (id && id !== `diff-root${diffFile.getId()}`) {
       return;
     }
 

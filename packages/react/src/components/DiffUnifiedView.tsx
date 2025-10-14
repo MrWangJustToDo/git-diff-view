@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { getUnifiedContentLine, SplitSide } from "@git-diff-view/core";
-import { diffFontSizeName, removeAllSelection, diffAsideWidthName } from "@git-diff-view/utils";
+import { diffFontSizeName, removeAllSelection, diffAsideWidthName, getDiffIdFromElement } from "@git-diff-view/utils";
 import * as React from "react";
 import { Fragment, memo, useEffect, useMemo, useRef } from "react";
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
@@ -82,6 +82,12 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
     // need remove all the selection
     if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
       removeAllSelection();
+      return;
+    }
+
+    const id = getDiffIdFromElement(ele as HTMLElement);
+
+    if (id && id !== `diff-root${diffFile.getId()}`) {
       return;
     }
 

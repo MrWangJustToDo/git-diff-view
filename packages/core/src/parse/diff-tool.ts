@@ -1,4 +1,3 @@
-
 import { diffChanges, relativeChanges } from "./change-range";
 import { DiffLineType, DiffLine } from "./diff-line";
 import { DiffHunkExpansionType } from "./raw-diff";

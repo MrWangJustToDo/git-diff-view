@@ -1,5 +1,12 @@
-import { DiffFile, getEnableFastDiffTemplate, setEnableFastDiffTemplate, DiffView } from "@git-diff-view/react";
-import { useMantineColorScheme, Code, Button, Switch } from "@mantine/core";
+import {
+  DiffFile,
+  getEnableFastDiffTemplate,
+  setEnableFastDiffTemplate,
+  DiffView,
+  getMaxLengthToIgnoreLineDiff,
+  changeMaxLengthToIgnoreLineDiff,
+} from "@git-diff-view/react";
+import { useMantineColorScheme, Code, Button, Switch, NumberInput, Tooltip } from "@mantine/core";
 import { useCallbackRef } from "@mantine/hooks";
 import { debounce } from "lodash";
 import { useState, useCallback, useEffect } from "react";
@@ -66,12 +73,23 @@ export const PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
         <div className="inline-block text-[14px]">
           <Button onClick={onClick}>Go to `File diff` mode</Button>
         </div>
-        <div className="inline-flex gap-x-4">
+        <div className="inline-flex items-center gap-x-4">
           <Switch
             checked={fastDiffTemplate}
             onChange={(e) => setFastDiffTemplate(e.target.checked)}
             label="Fast Diff Template (better line diff)"
           />
+          <Tooltip label="Ignore line diff when line length over this value">
+            <NumberInput
+              value={getMaxLengthToIgnoreLineDiff()}
+              min={100}
+              max={6000}
+              onChange={(n) => {
+                changeMaxLengthToIgnoreLineDiff(Number(n));
+                reloadDiffInstance();
+              }}
+            />
+          </Tooltip>
         </div>
       </h2>
       <div className="mt-[10px] flex flex-col gap-y-[10px]">

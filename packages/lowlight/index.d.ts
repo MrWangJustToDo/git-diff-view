@@ -32,16 +32,16 @@ export type DiffHighlighterLang = "arduino" | "bash" | "c" | "cpp" | "csharp" | 
 export declare function _getAST(raw: string, fileName?: string, lang?: DiffHighlighterLang, theme?: "light" | "dark"): DiffAST;
 export declare function _getAST(raw: string, fileName?: string, lang?: string, theme?: "light" | "dark"): DiffAST;
 declare const lowlight: {
-	highlight: (language: string, value: string, options?: Readonly<import("lowlight").Options>) => import("hast").Root;
-	highlightAuto: (value: string, options?: Readonly<import("lowlight").AutoOptions>) => import("hast").Root;
-	listLanguages: () => string[];
+	highlight: (language: string, value: string, options?: Readonly<import("lowlight").Options> | null | undefined) => import("hast").Root;
+	highlightAuto: (value: string, options?: Readonly<import("lowlight").AutoOptions> | null | undefined) => import("hast").Root;
+	listLanguages: () => Array<string>;
 	register: {
 		(grammars: Readonly<Record<string, import("highlight.js").LanguageFn>>): undefined;
 		(name: string, grammar: import("highlight.js").LanguageFn): undefined;
 	};
 	registerAlias: {
-		(aliases: Readonly<Record<string, string | readonly string[]>>): undefined;
-		(language: string, alias: string | readonly string[]): undefined;
+		(aliases: Readonly<Record<string, ReadonlyArray<string> | string>>): undefined;
+		(language: string, alias: ReadonlyArray<string> | string): undefined;
 	};
 	registered: (aliasOrName: string) => boolean;
 };

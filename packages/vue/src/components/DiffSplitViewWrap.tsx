@@ -1,5 +1,5 @@
 import { getSplitContentLines } from "@git-diff-view/core";
-import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from "@git-diff-view/utils";
+import { diffAsideWidthName, diffFontSizeName, getDiffIdFromElement, removeAllSelection } from "@git-diff-view/utils";
 import { Fragment, computed, defineComponent, ref } from "vue";
 
 import { SplitSide } from "..";
@@ -43,6 +43,12 @@ export const DiffSplitViewWrap = defineComponent(
       // need remove all the selection
       if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
         removeAllSelection();
+        return;
+      }
+
+      const id = getDiffIdFromElement(ele as HTMLElement);
+
+      if (id && id !== `diff-root${props.diffFile.getId()}`) {
         return;
       }
 

@@ -1,3 +1,4 @@
+// eslint-disable import/no-unresolved
 import diffStyle from "@git-diff-view/react/styles/diff-view-pure.css?inline";
 import { MantineProvider } from "@mantine/core";
 import mantineStyle from "@mantine/core/styles.css?inline";

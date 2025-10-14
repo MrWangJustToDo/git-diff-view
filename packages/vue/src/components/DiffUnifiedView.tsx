@@ -1,5 +1,5 @@
 import { getUnifiedContentLine } from "@git-diff-view/core";
-import { diffAsideWidthName, diffFontSizeName, removeAllSelection } from "@git-diff-view/utils";
+import { diffAsideWidthName, diffFontSizeName, getDiffIdFromElement, removeAllSelection } from "@git-diff-view/utils";
 import { Fragment, computed, defineComponent, ref } from "vue";
 
 import { useEnableWrap, useFontSize } from "../context";
@@ -51,6 +51,12 @@ export const DiffUnifiedView = defineComponent(
 
       if (ele && ele?.nodeName === "BUTTON") {
         removeAllSelection();
+        return;
+      }
+
+      const id = getDiffIdFromElement(ele as HTMLElement);
+
+      if (id && id !== `diff-root${props.diffFile.getId()}`) {
         return;
       }
 
