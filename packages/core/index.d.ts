@@ -456,6 +456,10 @@ export declare class DiffParser {
 export declare const DefaultDiffExpansionStep = 40;
 export declare const _cacheMap: Cache$1<string, File$1>;
 export declare const changeDefaultComposeLength: (compose: number) => void;
+/**
+ * Change the maximum length of a line to ignore line diff.
+ */
+export declare const changeMaxLengthToIgnoreLineDiff: (length: number) => void;
 export declare const checkCurrentLineIsHidden: (diffFile: DiffFile, lineNumber: number, side: SplitSide) => {
 	split: boolean;
 	unified: boolean;
@@ -466,6 +470,7 @@ export declare const disableCache: () => void;
 export declare const getCurrentComposeLength: () => number;
 export declare const getEnableFastDiffTemplate: () => boolean;
 export declare const getLang: (fileName: string) => string;
+export declare const getMaxLengthToIgnoreLineDiff: () => number;
 export declare const getPlainDiffTemplate: ({ diffLine, rawLine, operator, }: {
 	diffLine: DiffLine;
 	rawLine: string;
@@ -537,6 +542,7 @@ export declare const processTransformForFile: (content: string) => string;
 export declare const processTransformTemplateContent: (content: string) => string;
 export declare const resetDefaultComposeLength: () => void;
 export declare const resetEnableFastDiffTemplate: () => void;
+export declare const resetMaxLengthToIgnoreLineDiff: () => void;
 /**
  * Resets all transformation functions to their default state and disables transformation.
  *

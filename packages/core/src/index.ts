@@ -1,3 +1,4 @@
+/* eslint-disable import/export */
 export * from "./parse";
 export * from "./file";
 export * from "./diff-file";

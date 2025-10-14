@@ -137,9 +137,9 @@ export class DiffParser {
      * some file content may have multiple line without any character
      * such as
      * ```
-     * 
-     * 
-     * 
+     *
+     *
+     *
      * +
      * +
      * ```

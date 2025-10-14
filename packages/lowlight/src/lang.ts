@@ -209,7 +209,7 @@ export function _getAST(
   _theme?: "light" | "dark"
 ) {
   if (__DEV__) {
-    console.warn('This is a type helper function, do not call it directly.');
+    console.warn("This is a type helper function, do not call it directly.");
   }
   return {} as DiffAST;
 }

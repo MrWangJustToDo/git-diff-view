@@ -25,7 +25,20 @@ export interface DiffRange {
   readonly newLineSymbol?: NewLineSymbol;
 }
 
-const maxLength = 1000;
+let maxLengthToIgnoreLineDiff = 1000;
+
+/**
+ * Change the maximum length of a line to ignore line diff.
+ */
+export const changeMaxLengthToIgnoreLineDiff = (length: number) => {
+  maxLengthToIgnoreLineDiff = length;
+};
+
+export const resetMaxLengthToIgnoreLineDiff = () => {
+  maxLengthToIgnoreLineDiff = 1000;
+};
+
+export const getMaxLengthToIgnoreLineDiff = () => maxLengthToIgnoreLineDiff;
 
 /** Get the maximum position in the range. */
 function rangeMax(range: IRange["range"]): number {
@@ -58,7 +71,7 @@ function commonLength(
 }
 
 function isInValidString(s: string) {
-  return s.trim().length === 0 || s.length >= maxLength;
+  return s.trim().length === 0 || s.length >= maxLengthToIgnoreLineDiff;
 }
 
 function checkNewLineSymbolChange(
