@@ -3,7 +3,7 @@ const { resolve } = require("path");
 module.exports = {
   plugins: {
     "postcss-import": {},
-    tailwindcss: { config: resolve(__dirname) + "/tailwind.config.js" },
+    "@tailwindcss/postcss": {},
     "postcss-prefix-selector": {
       prefix: ".diff-tailwindcss-wrapper",
       transform: function (prefix, selector, prefixedSelector, _filePath, rule) {
@@ -35,6 +35,5 @@ module.exports = {
         }
       },
     },
-    autoprefixer: {},
   },
 };
