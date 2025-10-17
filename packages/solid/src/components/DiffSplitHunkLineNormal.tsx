@@ -68,7 +68,9 @@ const DiffSplitHunkLineGitHub = (props: { index: number; side: SplitSide; diffFi
 
   const currentSyncHeightSide = createMemo(() => SplitSide[SplitSide.old]);
 
-  const currentEnableSyncHeight = createMemo(() => props.side === SplitSide.new && !!currentIsShow());
+  const currentEnableSyncHeight = createMemo(
+    () => props.side === SplitSide.new && (!!currentIsShow() || currentIsPureHunk())
+  );
 
   useSyncHeight({
     selector: lineSelector,
@@ -218,7 +220,9 @@ const DiffSplitHunkLineGitLab = (props: { index: number; side: SplitSide; diffFi
 
   const currentSyncHeightSide = createMemo(() => SplitSide[SplitSide.old]);
 
-  const currentEnableSyncHeight = createMemo(() => props.side === SplitSide.new && !!currentIsShow());
+  const currentEnableSyncHeight = createMemo(
+    () => props.side === SplitSide.new && (!!currentIsShow() || currentIsPureHunk())
+  );
 
   createEffect(() => {
     const init = () => {

@@ -12,13 +12,13 @@
 
 	type Key = 'a' | 'b' | 'c' | 'd' | 'e';
 
-	let key = $state<Key>('a');
+	let key = $state<Key>('b');
 
 	let diffFile = $state<DiffFile | null>(null);
 
 	let highlight = $state<boolean>(true);
 
-	let wrap = $state<boolean>(true);
+	let wrap = $state<boolean>(false);
 
 	let dark = $state<boolean>(false);
 

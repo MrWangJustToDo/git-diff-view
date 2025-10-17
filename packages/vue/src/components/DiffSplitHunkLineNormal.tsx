@@ -61,7 +61,9 @@ const DiffSplitHunkLineGitHub = defineComponent(
         currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex;
     });
 
-    const currentEnableSyncHeight = computed(() => props.side === SplitSide.new && currentIsShow.value);
+    const currentEnableSyncHeight = computed(
+      () => props.side === SplitSide.new && (currentIsShow.value || currentIsPureHunk.value)
+    );
 
     useSyncHeight({
       selector: lineSelector,
@@ -205,9 +207,11 @@ const DiffSplitHunkLineGitLab = defineComponent(
         currentHunk.value.splitInfo.startHiddenIndex < currentHunk.value.splitInfo.endHiddenIndex
     );
 
-    const currentSyncHeightSide = computed(() => SplitSide[props.side]);
+    const currentSyncHeightSide = computed(() => SplitSide[SplitSide.old]);
 
-    const currentEnableSyncHeight = computed(() => currentIsShow.value);
+    const currentEnableSyncHeight = computed(
+      () => props.side === SplitSide.new && (currentIsShow.value || currentIsPureHunk.value)
+    );
 
     useSyncHeight({
       selector: lineSelector,

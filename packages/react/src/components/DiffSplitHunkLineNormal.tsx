@@ -163,8 +163,8 @@ const InternalDiffSplitHunkLineGitLab = ({
 
   useSyncHeight({
     selector: `tr[data-line="${lineNumber}-hunk"]`,
-    side: SplitSide[side],
-    enable: true,
+    side: SplitSide[SplitSide.old],
+    enable: side === SplitSide.new,
   });
 
   const couldExpand = expandEnabled && currentHunk && currentHunk.splitInfo;

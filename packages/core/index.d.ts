@@ -18,8 +18,8 @@ declare class File$1 {
 	rawFile: Record<number, string>;
 	hasDoRaw: boolean;
 	rawLength?: number;
-	syntaxFile: Record<number, SyntaxLineWithTemplate>;
-	plainFile: Record<number, {
+	syntaxFile: Record<number | string, SyntaxLineWithTemplate>;
+	plainFile: Record<number | string, {
 		value: string;
 		template?: string;
 	}>;
@@ -164,21 +164,21 @@ export declare class DiffFile {
 		hasBuildUnified: boolean;
 		oldFileLines: Record<number, string>;
 		oldFileDiffLines: Record<string, DiffLineItem>;
-		oldFilePlainLines: Record<number, {
+		oldFilePlainLines: Record<string | number, {
 			value: string;
 			template?: string;
 		}>;
-		oldFileSyntaxLines: Record<number, SyntaxLine & {
+		oldFileSyntaxLines: Record<string | number, SyntaxLine & {
 			template?: string;
 		}>;
 		oldFilePlaceholderLines: Record<string, boolean>;
 		newFileLines: Record<number, string>;
 		newFileDiffLines: Record<string, DiffLineItem>;
-		newFilePlainLines: Record<number, {
+		newFilePlainLines: Record<string | number, {
 			value: string;
 			template?: string;
 		}>;
-		newFileSyntaxLines: Record<number, SyntaxLine & {
+		newFileSyntaxLines: Record<string | number, SyntaxLine & {
 			template?: string;
 		}>;
 		newFilePlaceholderLines: Record<string, boolean>;
@@ -226,21 +226,21 @@ export declare class DiffFile {
 		hasBuildUnified: boolean;
 		oldFileLines: Record<number, string>;
 		oldFileDiffLines: Record<string, DiffLineItem>;
-		oldFilePlainLines: Record<number, {
+		oldFilePlainLines: Record<string | number, {
 			value: string;
 			template?: string;
 		}>;
-		oldFileSyntaxLines: Record<number, SyntaxLine & {
+		oldFileSyntaxLines: Record<string | number, SyntaxLine & {
 			template?: string;
 		}>;
 		oldFilePlaceholderLines: Record<string, boolean>;
 		newFileLines: Record<number, string>;
 		newFileDiffLines: Record<string, DiffLineItem>;
-		newFilePlainLines: Record<number, {
+		newFilePlainLines: Record<string | number, {
 			value: string;
 			template?: string;
 		}>;
-		newFileSyntaxLines: Record<number, SyntaxLine & {
+		newFileSyntaxLines: Record<string | number, SyntaxLine & {
 			template?: string;
 		}>;
 		newFilePlaceholderLines: Record<string, boolean>;

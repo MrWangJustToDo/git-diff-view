@@ -40,9 +40,9 @@ export class File {
 
   rawLength?: number;
 
-  syntaxFile: Record<number, SyntaxLineWithTemplate> = {};
+  syntaxFile: Record<number | string, SyntaxLineWithTemplate> = {};
 
-  plainFile: Record<number, { value: string; template?: string }> = {};
+  plainFile: Record<number | string, { value: string; template?: string }> = {};
 
   hasDoSyntax: boolean = false;
 

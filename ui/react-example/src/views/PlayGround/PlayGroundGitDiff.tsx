@@ -45,6 +45,7 @@ export const PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
         data?.buildSplitDiffLines();
         setDiffInstance(data);
       } catch (e) {
+        console.log(e);
         alert((e as Error).message);
       }
     }, 1000),

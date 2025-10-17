@@ -89,7 +89,7 @@
 	const currentSyncHeightSide = $derived.by(() => SplitSide[SplitSide.old]);
 
 	const currentEnableSyncHeight = $derived.by(
-		() => props.side === SplitSide.new && !!currentIsShow
+		() => props.side === SplitSide.new && (!!currentIsShow || currentIsPureHunk)
 	);
 
 	useSyncHeight({
