@@ -44,7 +44,7 @@ const InternalDiffUnifiedWidgetLine = ({
 
   const width = useDomWidth({
     selector: ".unified-diff-table-wrapper",
-    enable: typeof renderWidgetLine === "function" && !enableWrap,
+    enable: typeof renderWidgetLine === "function",
   });
 
   if (!renderWidgetLine) return null;

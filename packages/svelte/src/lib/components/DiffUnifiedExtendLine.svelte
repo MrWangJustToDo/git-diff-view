@@ -34,7 +34,7 @@
 	const width = $derived.by(
 		useDomWidth({
 			selector: () => '.unified-diff-table-wrapper',
-			enable: () => currentIsShow && !enableWrap
+			enable: () => currentIsShow
 		})
 	);
 </script>

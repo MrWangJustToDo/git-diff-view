@@ -24,7 +24,7 @@ export const DiffUnifiedExtendLine = (props: { index: number; diffFile: DiffFile
 
   const width = useDomWidth({
     selector: lineSelector,
-    enable: () => currentIsShow() && !enableWrap(),
+    enable: () => currentIsShow(),
   });
 
   return (

@@ -30,7 +30,7 @@ export const DiffUnifiedWidgetLine = (props: { index: number; diffFile: DiffFile
 
   const currentIsHidden = createMemo(() => unifiedItem()?.isHidden);
 
-  const currenIsShow = createMemo(() => !!(oldWidget() || newWidget()) && !currentIsHidden() && !!renderWidget());
+  const currentIsShow = createMemo(() => !!(oldWidget() || newWidget()) && !currentIsHidden() && !!renderWidget());
 
   const onCloseWidget = () => setWidget?.({});
 
@@ -38,11 +38,11 @@ export const DiffUnifiedWidgetLine = (props: { index: number; diffFile: DiffFile
 
   const width = useDomWidth({
     selector: lineSelector,
-    enable: () => currenIsShow() && !enableWrap(),
+    enable: () => currentIsShow(),
   });
 
   return (
-    <Show when={currenIsShow()}>
+    <Show when={currentIsShow()}>
       <tr data-line={`${props.lineNumber}-widget`} data-state="widget" class="diff-line diff-line-widget">
         <td class="diff-line-widget-content p-0" colspan={2}>
           <div class="diff-line-widget-wrapper sticky left-0 z-[1]" style={{ width: width() + "px" }}>

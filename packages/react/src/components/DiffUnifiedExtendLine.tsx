@@ -32,7 +32,7 @@ const InternalDiffUnifiedExtendLine = ({
   // TODO use css variable to get width
   const width = useDomWidth({
     selector: ".unified-diff-table-wrapper",
-    enable: typeof renderExtendLine === "function" && !enableWrap,
+    enable: typeof renderExtendLine === "function",
   });
 
   if (!renderExtendLine) return null;
