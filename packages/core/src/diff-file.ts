@@ -457,12 +457,12 @@ export class DiffFile {
 
   // check the fileContent is match the diff result or not
   #checkFile() {
-    for (const line in this.#oldFileDiffLines) {
+    for (const line in this.#oldFileDiffLines || {}) {
       const diffLine = this.#oldFileDiffLines[line];
       const fileLine = this.#oldFilePlainLines[line];
       if (
         (this.#oldFilePlaceholderLines ? !this.#oldFilePlaceholderLines[line] : true) &&
-        diffLine.text !== fileLine.value
+        diffLine?.text !== fileLine?.value
       ) {
         console.warn(
           `there are some mismatch from the 'oldFileContent' and 'diff' at line: ${line}, please make sure the 'oldFileContent' is correct`
@@ -470,12 +470,12 @@ export class DiffFile {
         break;
       }
     }
-    for (const line in this.#newFileDiffLines) {
+    for (const line in this.#newFileDiffLines || {}) {
       const diffLine = this.#newFileDiffLines[line];
       const fileLine = this.#newFilePlainLines[line];
       if (
         (this.#newFilePlaceholderLines ? !this.#newFilePlaceholderLines[line] : true) &&
-        diffLine.text !== fileLine.value
+        diffLine?.text !== fileLine?.value
       ) {
         console.warn(
           `there are some mismatch from the 'newFileContent' and 'diff' at line: ${line}, please make sure the 'newFileContent' is correct`
