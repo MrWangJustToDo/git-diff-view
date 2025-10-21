@@ -40,7 +40,7 @@ export const ReactPlayGround = () => {
   return (
     <Card className="p-0" withBorder>
       <Box className="flex items-center px-2 py-2 font-sans text-[14px]">
-        <IconBrandReact size="16" color="rgb(8,126,164)" className="mr-2" /> React
+        <IconBrandReact size="16" color="#75c3d9" className="mr-2" /> React
       </Box>
       <SandpackProvider
         template="vite-react-ts"

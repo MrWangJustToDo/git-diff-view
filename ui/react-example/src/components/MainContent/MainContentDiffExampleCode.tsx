@@ -10,6 +10,8 @@ const getCode = ({ theme, type }: { theme: "light" | "dark"; type: "react" | "vu
     ? `import { DiffView, DiffFile, DiffModeEnum } from "@git-diff-view/react";
 import { generateDiffFile } from "@git-diff-view/file";
 import "@git-diff-view/react/styles/diff-view.css";
+// or if you have your own tailwindcss setup
+import "@git-diff-view/react/styles/diff-view-pure.css";
 
 // git mode, use \`git diff\` output to render
 const getDiffFile = () => {
@@ -35,6 +37,8 @@ const App = () => {
   import { DiffView, DiffFile, DiffModeEnum } from "@git-diff-view/vue";
   import { generateDiffFile } from "@git-diff-view/file";
   import "@git-diff-view/vue/styles/diff-view.css";
+  // or if you have your own tailwindcss setup
+  import "@git-diff-view/react/styles/diff-view-pure.css";
 
   // git mode, use \`git diff\` output to render
   const getDiffFile = () => {

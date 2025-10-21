@@ -14,6 +14,7 @@ import {
   getThemeColor,
   Container,
 } from "@mantine/core";
+import { IconBrandReact, IconBrandSolidjs, IconBrandSvelte, IconBrandVue } from "@tabler/icons-react";
 import { useMemo, useState } from "react";
 
 import { MainContentDiffAdvance, MainContentDiffConfig, MainContentDiffExample } from "../../components/MainContent";
@@ -37,7 +38,11 @@ export const MainContent = () => {
           <Title>Git Diff View</Title>
           <Space h="12" />
           <Text size="lg" component="div">
-            A <Code>Diff</Code> view component for React / Vue / Solid / Svelte,
+            A <Code>Diff</Code> view component for{" "}
+            <IconBrandReact className="inline text-[1.1em]" color="#75c3d9" size="1em" /> React /{" "}
+            <IconBrandVue className="inline text-[1.1em]" color="#42b883" size="1em" /> Vue /{" "}
+            <IconBrandSolidjs className="inline text-[1.1em]" color="#5176b7" size="1em" /> Solid /{" "}
+            <IconBrandSvelte className="inline text-[1.1em]" color="#eb5027" size="1em" /> Svelte,
             <Highlight highlight={["easy to use", "feature complete"]} color={color}>
               The most one component what easy to use and feature complete.
             </Highlight>
