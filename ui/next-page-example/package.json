@@ -15,12 +15,13 @@
     "next": "^15.5.5"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.18",
     "eslint": "^8",
-    "eslint-config-next": "^15.5.5"
+    "eslint-config-next": "^15.5.5",
+    "postcss": "^8",
+    "tailwindcss": "^4.0.0"
   }
 }
