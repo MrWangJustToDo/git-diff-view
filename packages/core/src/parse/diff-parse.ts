@@ -442,12 +442,12 @@ export class DiffParser {
       let linesConsumed = 0;
       let previousHunk: DiffHunk | null = null;
 
-      do {
+      while (this.peek()) {
         const hunk = this.parseHunk(linesConsumed, hunks.length, previousHunk);
         hunks.push(hunk);
         previousHunk = hunk;
         linesConsumed += hunk.lines.length;
-      } while (this.peek());
+      }
 
       const contents = this.text
         .substring(headerEnd + 1, this.le)
