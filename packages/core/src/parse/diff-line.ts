@@ -21,6 +21,7 @@ export class DiffLine {
     public readonly noTrailingNewLine: boolean = false,
     public changes?: IRange,
     public diffChanges?: DiffRange,
+    public _diffChanges?: DiffRange,
     public plainTemplate?: string,
     public plainTemplateMode?: "fast-diff" | "relative",
     public syntaxTemplate?: string,

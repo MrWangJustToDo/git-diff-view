@@ -314,11 +314,12 @@ export declare class DiffLine {
 	readonly noTrailingNewLine: boolean;
 	changes?: IRange;
 	diffChanges?: DiffRange;
+	_diffChanges?: DiffRange;
 	plainTemplate?: string;
 	plainTemplateMode?: "fast-diff" | "relative";
 	syntaxTemplate?: string;
 	syntaxTemplateMode?: "fast-diff" | "relative";
-	constructor(text: string, type: DiffLineType, originalLineNumber: number | null, oldLineNumber: number | null, newLineNumber: number | null, noTrailingNewLine?: boolean, changes?: IRange, diffChanges?: DiffRange, plainTemplate?: string, plainTemplateMode?: "fast-diff" | "relative", syntaxTemplate?: string, syntaxTemplateMode?: "fast-diff" | "relative");
+	constructor(text: string, type: DiffLineType, originalLineNumber: number | null, oldLineNumber: number | null, newLineNumber: number | null, noTrailingNewLine?: boolean, changes?: IRange, diffChanges?: DiffRange, _diffChanges?: DiffRange, plainTemplate?: string, plainTemplateMode?: "fast-diff" | "relative", syntaxTemplate?: string, syntaxTemplateMode?: "fast-diff" | "relative");
 	withNoTrailingNewLine(noTrailingNewLine: boolean): DiffLine;
 	isIncludeableLine(): boolean;
 	equals(other: DiffLine): boolean;

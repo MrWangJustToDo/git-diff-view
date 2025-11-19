@@ -192,13 +192,17 @@ export const getSyntaxDiffTemplateByFastDiff = ({
 
   const changes = diffLine.diffChanges;
 
+  const _changes = diffLine._diffChanges;
+
   if (!changes || !changes.hasLineChange) return;
 
   const transform = isTransformEnabled() ? processTransformTemplateContent : defaultTransform;
 
   let template = "";
 
-  const allRange = changes.range.filter((item) => item.type !== 0);
+  const allRange = changes?.range?.filter((item) => item.type !== 0) || [];
+
+  const _allRange = _changes?.range?.filter((item) => item.type !== 0) || [];
 
   let rangeIndex = 0;
 
@@ -208,6 +212,8 @@ export const getSyntaxDiffTemplateByFastDiff = ({
     )?.join(" ")}" style="${wrapper?.properties?.style || ""}">`;
 
     let range = allRange[rangeIndex];
+
+    const noDiff = allRange.length === 0 && _allRange.length === 0;
 
     const isLastNode = index === array.length - 1;
 
@@ -220,9 +226,6 @@ export const getSyntaxDiffTemplateByFastDiff = ({
         // before start
         if (index < range.startIndex) {
           template += transform(value);
-          if (isEndStr && changes.newLineSymbol) {
-            template += `<span data-newline-symbol data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-radius: 0.2em;">${getSymbol(changes.newLineSymbol)}</span>`;
-          }
           // start of range
         } else if (index === range.startIndex) {
           // current range all in the same node
@@ -233,9 +236,6 @@ export const getSyntaxDiffTemplateByFastDiff = ({
             template += `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-top-left-radius: 0.2em;border-bottom-left-radius: 0.2em;">`;
           }
           template += transform(value);
-          if (isEndStr && changes.newLineSymbol) {
-            template += `<span data-newline-symbol>${getSymbol(changes.newLineSymbol)}</span>`;
-          }
           if (isLastStr) {
             template += `</span>`;
           } else if (range.startIndex === range.endIndex) {
@@ -260,9 +260,6 @@ export const getSyntaxDiffTemplateByFastDiff = ({
                   `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});">`;
           }
           template += transform(value);
-          if (isEndStr && changes.newLineSymbol) {
-            template += `<span data-newline-symbol>${getSymbol(changes.newLineSymbol)}</span>`;
-          }
           if (isLastStr) {
             template += `</span>`;
           }
@@ -278,9 +275,6 @@ export const getSyntaxDiffTemplateByFastDiff = ({
             }
             template += transform(value);
           }
-          if (isEndStr && changes.newLineSymbol) {
-            template += `<span data-newline-symbol>${getSymbol(changes.newLineSymbol)}</span>`;
-          }
           template += `</span>`;
           rangeIndex++;
           range = allRange[rangeIndex];
@@ -288,6 +282,10 @@ export const getSyntaxDiffTemplateByFastDiff = ({
         }
       } else {
         template += transform(value);
+        if (noDiff && isEndStr && changes.newLineSymbol) {
+          template += `<span data-diff-highlight style="background-color: var(${operator === "add" ? addContentHighlightBGName : delContentHighlightBGName});border-radius: 0.2em;">`;
+          template += `<span data-newline-symbol>${getSymbol(changes.newLineSymbol)}</span></span>`;
+        }
       }
     }
     template += `</span>`;

@@ -182,6 +182,8 @@ export const getDiffRange = (
         const { addRange, delRange } = diffChanges(_addition, _deletion);
         addition.diffChanges = addRange;
         deletion.diffChanges = delRange;
+        addition._diffChanges = delRange;
+        deletion._diffChanges = addRange;
         getPlainDiffTemplateByFastDiff({
           diffLine: addition,
           rawLine: getAdditionRaw(addition.newLineNumber),

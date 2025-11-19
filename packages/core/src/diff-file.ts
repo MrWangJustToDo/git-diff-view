@@ -361,7 +361,14 @@ export class DiffFile {
           hasSymbolChanged = hasSymbolChanged || oldDiffLine.noTrailingNewLine !== newDiffLine.noTrailingNewLine;
         }
       }
-      if (!hasSymbolChanged && oldFileContent === newFileContent) return;
+      if (!hasSymbolChanged && oldFileContent === newFileContent) {
+        if (__DEV__) {
+          console.warn(
+            'the composed "oldFileContent" and "newFileContent" are the same, maybe the "diff" string is not valid'
+          );
+        }
+        return;
+      }
       this._oldFileContent = oldFileContent;
       this._newFileContent = newFileContent;
       this.#oldFileResult = getFile(
@@ -769,7 +776,7 @@ export class DiffFile {
     const maxOldFileLineNumber = this.#oldFileResult?.maxLineNumber || 0;
     const maxNewFileLineNumber = this.#newFileResult?.maxLineNumber || 0;
 
-    if (__DEV__ && !this.#oldFileResult && !this.#newFileResult && this.#composeByMerge) {
+    if (__DEV__ && !this.#oldFileResult && !this.#newFileResult && this.#composeByMerge && !this.#composeByFullMerge) {
       console.error(
         "this instance can not `buildSplitDiffLines` because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'"
       );
@@ -955,7 +962,7 @@ export class DiffFile {
     const maxOldFileLineNumber = this.#oldFileResult?.maxLineNumber || 0;
     const maxNewFileLineNumber = this.#newFileResult?.maxLineNumber || 0;
 
-    if (__DEV__ && !this.#oldFileResult && !this.#newFileResult && this.#composeByMerge) {
+    if (__DEV__ && !this.#oldFileResult && !this.#newFileResult && this.#composeByMerge && !this.#composeByFullMerge) {
       console.error(
         "this instance can not `buildUnifiedDiffLines` because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'"
       );
