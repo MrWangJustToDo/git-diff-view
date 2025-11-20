@@ -1,7 +1,7 @@
 export default {
 	plugins: {
 		'postcss-import': {},
-		tailwindcss: { config: './tailwind.config.js' },
+		'@tailwindcss/postcss': {},
 		'postcss-prefix-selector': {
 			prefix: '.diff-tailwindcss-wrapper',
 			transform: function (prefix, selector, prefixedSelector, _filePath, rule) {
@@ -35,7 +35,6 @@ export default {
 					return prefixedSelector;
 				}
 			}
-		},
-		autoprefixer: {}
+		}
 	}
 };
