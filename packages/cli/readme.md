@@ -1,69 +1,162 @@
-## A Cli DiffView Component like GitHub, Easy to use and feature complete. 
+# @git-diff-view/cli
 
-### Usage
+> Terminal-based diff viewer with GitHub-style UI for CLI environments
 
-#### There are two ways to use this component:
+[![npm version](https://img.shields.io/npm/v/@git-diff-view/cli)](https://www.npmjs.com/package/@git-diff-view/cli)
+[![npm downloads](https://img.shields.io/npm/dm/@git-diff-view/cli)](https://www.npmjs.com/package/@git-diff-view/cli)
 
-1. Use the `DiffView` component directly.
+## Features
 
-```tsx
+- ✅ Terminal-friendly diff rendering
+- ✅ Split & Unified views in terminal
+- ✅ Syntax highlighting in CLI
+- ✅ Light & Dark themes
+- ✅ Configurable width and display options
+- ✅ Works with @git-diff-view/core and @git-diff-view/file
+
+## Installation
+
+```bash
+npm install @git-diff-view/cli
+# or
+pnpm add @git-diff-view/cli
+# or
+yarn add @git-diff-view/cli
+```
+
+## Quick Start
+
+### Basic Usage
+
+```typescript
 import { DiffView, DiffModeEnum } from "@git-diff-view/cli";
 
-<DiffView<string>
-  // use data
-  data={{
-    oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
-    newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
-    hunks: string[];
-  }}
-  width={number}
-  extendData={{oldFile: {10: {data: 'foo'}}, newFile: {20: {data: 'bar'}}}}
-  renderExtendLine={({ data }) => ReactNode}
-  diffViewHighlight={boolean}
-  diffViewTabSpace={boolean}
-  diffViewTabWidth={"small" | "medium" | "large"}
-  diffViewMode={DiffModeEnum.Split | DiffModeEnum.Unified}
-  diffViewTheme={'light' | 'dark'}
-/>
-
+DiffView({
+  data: {
+    oldFile: { fileName: "old.ts", content: "...", fileLang: "typescript" },
+    newFile: { fileName: "new.ts", content: "...", fileLang: "typescript" },
+    hunks: ["..."]
+  },
+  diffViewMode: DiffModeEnum.Split,
+  diffViewTheme: "dark",
+  diffViewHighlight: true,
+  width: 120  // Terminal width
+});
 ```
 
-2. Use the `DiffView` component with `@git-diff-view/core` or `@git-diff-view/file`
+### With DiffFile
 
-```tsx
-// with @git-diff-view/file
-import { DiffFile, generateDiffFile } from "@git-diff-view/file";
+**File Comparison Mode**
+
+```typescript
+import { DiffView } from "@git-diff-view/cli";
+import { generateDiffFile } from "@git-diff-view/file";
+
 const file = generateDiffFile(
-  data?.oldFile?.fileName || "",
-  data?.oldFile?.content || "",
-  data?.newFile?.fileName || "",
-  data?.newFile?.content || "",
-  data?.oldFile?.fileLang || "",
-  data?.newFile?.fileLang || ""
+  "old.ts", oldContent,
+  "new.ts", newContent,
+  "typescript", "typescript"
 );
 file.init();
 file.buildSplitDiffLines();
-file.buildUnifiedDiffLines();
 
-// with @git-diff-view/core
-import { DiffFile } from "@git-diff-view/core";
-const file = new DiffFile(
-  data?.oldFile?.fileName || "",
-  data?.oldFile?.content || "",
-  data?.newFile?.fileName || "",
-  data?.newFile?.content || "",
-  data?.hunks || [],
-  data?.oldFile?.fileLang || "",
-  data?.newFile?.fileLang || ""
-);
-file.init();
-file.buildSplitDiffLines();
-file.buildUnifiedDiffLines();
-
-// use current data to render
-<DiffView diffFile={file} {...props} />;
-// or use the bundle data to render, eg: postMessage/httpRequest
-const bundle = file.getBundle();
-const diffFile = DiffFile.createInstance(data || {}, bundle);
-<DiffView diffFile={diffFile} {...props} />;
+DiffView({ diffFile: file, width: 120 });
 ```
+
+**Git Diff Mode**
+
+```typescript
+import { DiffView } from "@git-diff-view/cli";
+import { DiffFile } from "@git-diff-view/core";
+
+const file = new DiffFile(
+  oldFileName, oldContent,
+  newFileName, newContent,
+  hunks,
+  oldFileLang, newFileLang
+);
+file.init();
+file.buildSplitDiffLines();
+
+DiffView({ diffFile: file });
+```
+
+## API Reference
+
+### DiffView Options
+
+| Option | Type | Description |
+|--------|------|-------------|
+| `data` | `DiffData` | Diff data with `oldFile`, `newFile`, and `hunks` |
+| `diffFile` | `DiffFile` | Pre-processed diff file instance |
+| `diffViewMode` | `Split \| Unified` | View mode (default: `Split`) |
+| `diffViewTheme` | `light \| dark` | Theme (default: `light`) |
+| `diffViewHighlight` | `boolean` | Enable syntax highlighting |
+| `diffViewTabSpace` | `boolean` | Show tab characters |
+| `diffViewTabWidth` | `small \| medium \| large` | Tab display width |
+| `width` | `number` | Terminal width for rendering |
+| `extendData` | `ExtendData` | Additional data per line |
+| `renderExtendLine` | `Function` | Custom extend line renderer |
+
+### DiffData Type
+
+```typescript
+type DiffData = {
+  oldFile?: {
+    fileName?: string | null;
+    fileLang?: string | null;
+    content?: string | null;
+  };
+  newFile?: {
+    fileName?: string | null;
+    fileLang?: string | null;
+    content?: string | null;
+  };
+  hunks: string[];
+};
+```
+
+## Use Cases
+
+- CLI diff tools
+- Terminal-based code review
+- Git hooks with visual diff
+- CI/CD pipeline diff display
+- SSH remote diff viewing
+- Terminal-based editors
+
+## Examples
+
+```typescript
+// Simple diff with custom width
+DiffView({
+  data: diffData,
+  width: 160,
+  diffViewHighlight: true
+});
+
+// Unified view in dark theme
+DiffView({
+  diffFile: file,
+  diffViewMode: DiffModeEnum.Unified,
+  diffViewTheme: "dark"
+});
+
+// With tab configuration
+DiffView({
+  data: diffData,
+  diffViewTabSpace: true,
+  diffViewTabWidth: "medium"
+});
+```
+
+## Related Packages
+
+- [@git-diff-view/core](https://www.npmjs.com/package/@git-diff-view/core) - Core diff engine
+- [@git-diff-view/file](https://www.npmjs.com/package/@git-diff-view/file) - File comparison
+- [@git-diff-view/react](https://www.npmjs.com/package/@git-diff-view/react) - React UI components
+- [@git-diff-view/vue](https://www.npmjs.com/package/@git-diff-view/vue) - Vue UI components
+
+## License
+
+MIT © [MrWangJustToDo](https://github.com/MrWangJustToDo)

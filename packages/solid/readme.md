@@ -1,101 +1,152 @@
-## A Solid DiffView Component like GitHub, Easy to use and feature complete. 
+# @git-diff-view/solid
 
-### Usage
+> A high-performance Solid diff view component with GitHub-style UI
 
-#### There are two ways to use this component:
+[![npm version](https://img.shields.io/npm/v/@git-diff-view/solid)](https://www.npmjs.com/package/@git-diff-view/solid)
+[![npm downloads](https://img.shields.io/npm/dm/@git-diff-view/solid)](https://www.npmjs.com/package/@git-diff-view/solid)
 
-1. Use the `DiffView` component directly.
+## Features
+
+- ✅ Split & Unified views
+- ✅ Syntax highlighting with full context
+- ✅ Light & Dark themes
+- ✅ Solid's fine-grained reactivity
+- ✅ Widget & extend data system
+- ✅ High performance with Web Worker support
+
+## Installation
+
+```bash
+npm install @git-diff-view/solid
+# or
+pnpm add @git-diff-view/solid
+# or
+yarn add @git-diff-view/solid
+```
+
+## Quick Start
+
+### Basic Usage
 
 ```tsx
 import { DiffView, DiffModeEnum } from "@git-diff-view/solid";
 import "@git-diff-view/solid/styles/diff-view.css";
 
-<DiffView<string>
-  // use data
-  data={{
-    oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
-    newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
-    hunks: string[];
-  }}
-  extendData={{oldFile: {10: {data: 'foo'}}, newFile: {20: {data: 'bar'}}}}
-  renderExtendLine={({ data }) => JSXElement}
-  diffViewFontSize={number}
-  diffViewHighlight={boolean}
-  diffViewMode={DiffModeEnum.Split | DiffModeEnum.Unified}
-  diffViewWrap={boolean}
-  diffViewTheme={'light' | 'dark'}
-  diffViewAddWidget
-  onAddWidgetClick={({ side, lineNumber }) => void}
-  renderWidgetLine={({ onClose, side, lineNumber }) => JSXElement}
-/>
-
+function MyDiffView() {
+  return (
+    <DiffView
+      data={{
+        oldFile: { fileName: "old.ts", content: "..." },
+        newFile: { fileName: "new.ts", content: "..." },
+        hunks: ["..."]
+      }}
+      diffViewMode={DiffModeEnum.Split}
+      diffViewTheme="dark"
+      diffViewHighlight
+    />
+  );
+}
 ```
 
-2. Use the `DiffView` component with `@git-diff-view/core` or `@git-diff-view/file`
+### Advanced Usage with DiffFile
+
+**File Comparison Mode**
 
 ```tsx
-// with @git-diff-view/file
+import { DiffView } from "@git-diff-view/solid";
 import { DiffFile, generateDiffFile } from "@git-diff-view/file";
+import "@git-diff-view/solid/styles/diff-view.css";
+
 const file = generateDiffFile(
-  data?.oldFile?.fileName || "",
-  data?.oldFile?.content || "",
-  data?.newFile?.fileName || "",
-  data?.newFile?.content || "",
-  data?.oldFile?.fileLang || "",
-  data?.newFile?.fileLang || ""
+  "old.ts", oldContent,
+  "new.ts", newContent,
+  "typescript", "typescript"
 );
-file.initTheme('light' / 'dark');
+file.initTheme('dark');
 file.init();
 file.buildSplitDiffLines();
-file.buildUnifiedDiffLines();
 
-// with @git-diff-view/core
-import { DiffFile } from "@git-diff-view/core";
-const file = new DiffFile(
-  data?.oldFile?.fileName || "",
-  data?.oldFile?.content || "",
-  data?.newFile?.fileName || "",
-  data?.newFile?.content || "",
-  data?.hunks || [],
-  data?.oldFile?.fileLang || "",
-  data?.newFile?.fileLang || ""
-);
-file.initTheme('light' / 'dark');
-file.init();
-file.buildSplitDiffLines();
-file.buildUnifiedDiffLines();
-
-// use current data to render
-<DiffView diffFile={file} {...props} />;
-// or use the bundle data to render, eg: postMessage/httpRequest
-const bundle = file.getBundle();
-const diffFile = DiffFile.createInstance(data || {}, bundle);
-<DiffView diffFile={diffFile} {...props} />;
+<DiffView diffFile={file} />
 ```
-### example
 
-#### [solid-example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/solid-example)
+**Git Diff Mode**
 
-### Screen Shot
+```tsx
+import { DiffView } from "@git-diff-view/solid";
+import { DiffFile } from "@git-diff-view/core";
+import "@git-diff-view/solid/styles/diff-view.css";
 
-![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/1.png)
-![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/69c801e5eb5fcabc9c9655825eb1228f18dc1e0c/5.png)
-![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/theme.png)
+const file = new DiffFile(
+  oldFileName,
+  oldContent,
+  newFileName,
+  newContent,
+  hunks,
+  oldFileLang,
+  newFileLang
+);
+file.initTheme('dark');
+file.init();
+file.buildSplitDiffLines();
+
+<DiffView diffFile={file} />
+```
+
+## Styling
+
+```tsx
+// Default styles with Tailwind (next release will be pure CSS)
+import "@git-diff-view/solid/styles/diff-view.css";
+
+// Pure CSS (no Tailwind conflicts)
+import "@git-diff-view/solid/styles/diff-view-pure.css";
+```
+
+## API Reference
 
 ### Props
 
-| Props  | Description  |
-| :--------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| data             | The diff data need to show, type: `{ oldFile: {fileName?: string, content?: string}, newFile: {fileName?: string, content?: string}, hunks: string[] }`, you can only pass hunks data, and the component will generate the oldFile and newFile data automatically |
-| diffFile         | the target data to render |
-| renderWidgetLine | return a valid `solid` element to show the widget, this element will render when you click the `addWidget` button in the diff view  |
-| renderExtendLine | return a valid `solid` element to show the extend data |
-| extendData       | a list to store the extend data to show in the `Diff View`, type: {oldFile: {lineNumber: {data: any}}, newFile: {lineNumber: {data: any}}}   |
-| diffViewFontSize | the fontSize for the DiffView component, type: number |
-| diffViewHighlight | enable syntax highlight, type: boolean |
-| diffViewMode     | the mode for the DiffView component, type: `DiffModeEnum.Split` / `DiffModeEnum.Unified` |
-| diffViewWrap     | enable code line auto wrap, type: boolean |
-| diffViewTheme    | the theme for the DiffView component, type: `light` / `dark` |
-| diffViewAddWidget| enable `addWidget` button, type: boolean |
-| onAddWidgetClick | when the `addWidget` button clicked, type: `({ side: "old" / "new", lineNumber: number }) => void` |
+| Prop | Type | Description |
+|------|------|-------------|
+| `data` | `DiffData` | Diff data with `oldFile`, `newFile`, and `hunks` |
+| `diffFile` | `DiffFile` | Pre-processed diff file instance |
+| `diffViewMode` | `Split \| Unified` | View mode (default: `Split`) |
+| `diffViewTheme` | `light \| dark` | Theme (default: `light`) |
+| `diffViewHighlight` | `boolean` | Enable syntax highlighting |
+| `diffViewWrap` | `boolean` | Enable line wrapping |
+| `diffViewFontSize` | `number` | Font size in pixels |
+| `diffViewAddWidget` | `boolean` | Enable widget button |
+| `renderWidgetLine` | `(props) => JSXElement` | Custom widget renderer |
+| `renderExtendLine` | `(props) => JSXElement` | Custom extend data renderer |
+| `extendData` | `ExtendData` | Additional data per line |
+| `onAddWidgetClick` | `(props) => void` | Widget button click handler |
 
+### DiffData Type
+
+```typescript
+type DiffData = {
+  oldFile?: {
+    fileName?: string | null;
+    fileLang?: string | null;
+    content?: string | null;
+  };
+  newFile?: {
+    fileName?: string | null;
+    fileLang?: string | null;
+    content?: string | null;
+  };
+  hunks: string[];
+};
+```
+
+## Examples
+
+- [Solid Example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/solid-example)
+
+## Live Demo
+
+Try it online: [https://mrwangjusttodo.github.io/git-diff-view](https://mrwangjusttodo.github.io/git-diff-view)
+
+## License
+
+MIT © [MrWangJustToDo](https://github.com/MrWangJustToDo)

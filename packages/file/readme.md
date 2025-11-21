@@ -1,48 +1,137 @@
-## `file content diff` for @git-diff-view component
+# @git-diff-view/file
 
-This package is a wrapper for [`diff`](https://github.com/kpdecker/jsdiff) and [`@git-diff-view/core`](https://github.com/MrWangJustToDo/git-diff-view) to support pure file content diff.
+> File content comparison engine built on top of @git-diff-view/core
+
+[![npm version](https://img.shields.io/npm/v/@git-diff-view/file)](https://www.npmjs.com/package/@git-diff-view/file)
+[![npm downloads](https://img.shields.io/npm/dm/@git-diff-view/file)](https://www.npmjs.com/package/@git-diff-view/file)
+
+Compare two file contents directly without git diff hunks. This package wraps [`diff`](https://github.com/kpdecker/jsdiff) and `@git-diff-view/core` to provide easy file-to-file comparison.
+
+## Features
+
+- ✅ Direct file content comparison (no git required)
+- ✅ Automatic diff generation using `diff` library
+- ✅ Same API as @git-diff-view/core
+- ✅ Syntax highlighting with HAST AST
+- ✅ Split & Unified view support
+- ✅ Theme support (light/dark)
+
+## Installation
+
+```bash
+npm install @git-diff-view/file
+# or
+pnpm add @git-diff-view/file
+# or
+yarn add @git-diff-view/file
+```
 
 ## Usage
 
-```tsx
-// ==== step1: generate diff view data, same as the `@git-diff-view/core` ==== //
-import { DiffFile, generateDiffFile } from "@git-diff-view/file";
+### Basic Usage
+
+```typescript
+import { generateDiffFile } from "@git-diff-view/file";
+
+// Generate diff from file contents
 const file = generateDiffFile(
-    data?.oldFile?.fileName || "",
-    data?.oldFile?.content || "",
-    data?.newFile?.fileName || "",
-    data?.newFile?.content || "",
-    data?.oldFile?.fileLang || "",
-    data?.newFile?.fileLang || ""
-  );
+  "old.ts",      // old file name
+  oldContent,    // old file content
+  "new.ts",      // new file name
+  newContent,    // new file content
+  "typescript",  // old file language
+  "typescript"   // new file language
+);
 
-file.initTheme('light' / 'dark');
+// Initialize theme
+file.initTheme('dark');
 
+// Initialize diff
 file.init();
 
+// Build views
 file.buildSplitDiffLines();
-
 file.buildUnifiedDiffLines();
-
-// get All the bundle
-const bundle = file.getBundle();
-
-// ==== step2: render the @git-diff-view component ==== //
-
-// merge bundle
-const mergeFile = DiffFile.createInstance(data || {}, bundle);
-
-// used for @git-diff-view/react and @git-diff-view/vue
-<DiffView diffFile={mergeFile} />
-
-<DiffView :diffFile="mergeFile" />
-
 ```
 
-## Screen Shot
+### Worker/Server Pattern
 
-![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/1.png)
-![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/69c801e5eb5fcabc9c9655825eb1228f18dc1e0c/5.png)
-![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/theme.png)
-![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/2.png)
-![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/3.png)
+```typescript
+// Worker/Server side
+import { generateDiffFile, DiffFile } from "@git-diff-view/file";
+
+const file = generateDiffFile(
+  oldFileName, oldContent,
+  newFileName, newContent,
+  oldLang, newLang
+);
+
+file.initTheme('dark');
+file.init();
+file.buildSplitDiffLines();
+file.buildUnifiedDiffLines();
+
+const bundle = file.getBundle();
+// Send bundle to main thread/client
+
+// Main thread/Client side
+const mergedFile = DiffFile.createInstance(data, bundle);
+
+// Use with UI components
+<DiffView diffFile={mergedFile} />
+```
+
+## API Reference
+
+### generateDiffFile()
+
+Generate a DiffFile instance from file contents.
+
+```typescript
+function generateDiffFile(
+  oldFileName: string,
+  oldContent: string,
+  newFileName: string,
+  newContent: string,
+  oldFileLang?: string,
+  newFileLang?: string
+): DiffFile
+```
+
+### DiffFile Methods
+
+Same as [@git-diff-view/core](../core#api-reference):
+
+| Method | Description |
+|--------|-------------|
+| `initTheme(theme)` | Set theme ('light' or 'dark') |
+| `init()` | Initialize diff data |
+| `buildSplitDiffLines()` | Generate split view data |
+| `buildUnifiedDiffLines()` | Generate unified view data |
+| `getBundle()` | Export data for transfer |
+
+## Difference from @git-diff-view/core
+
+| Package | Use Case | Input |
+|---------|----------|-------|
+| `@git-diff-view/core` | Git diff visualization | Git diff hunks |
+| `@git-diff-view/file` | File comparison | Raw file contents |
+
+## Use Cases
+
+- Compare file versions without git
+- Diff editor integration
+- Online code comparison tools
+- File upload comparison
+- Live code diff
+
+## Related Packages
+
+- [@git-diff-view/core](https://www.npmjs.com/package/@git-diff-view/core) - Git diff mode
+- [@git-diff-view/react](https://www.npmjs.com/package/@git-diff-view/react) - React components
+- [@git-diff-view/vue](https://www.npmjs.com/package/@git-diff-view/vue) - Vue components
+- [diff](https://github.com/kpdecker/jsdiff) - Underlying diff library
+
+## License
+
+MIT © [MrWangJustToDo](https://github.com/MrWangJustToDo)

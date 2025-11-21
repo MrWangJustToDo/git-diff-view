@@ -4,212 +4,198 @@
   </a>
 </p>
 
-# Git Diff Component
+# Git Diff View
 
-A Diff view component for React / Vue / Solid / Svelte,
-The most one component what easy to use and feature complete.
+**A high-performance, feature-rich diff view component for React / Vue / Solid / Svelte**
 
 [![Deploy](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml/badge.svg)](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml)
 ![NPM Downloads](https://img.shields.io/npm/dm/%40git-diff-view%2Fcore)
 ![NPM License](https://img.shields.io/npm/l/%40git-diff-view%2Fcore)
 
-## Demo ---- git-diff / file-diff
-[git-mode](https://mrwangjusttodo.github.io/git-diff-view/?type=try&tab=git)
+## ✨ Highlights
+
+- 🎨 **Full Syntax Highlighting** - Complete syntax context based on HAST AST
+- ⚡ **High Performance** - Web Worker & Node Server support, template mode optimization
+- 🎯 **Framework Agnostic** - React, Vue, Solid, Svelte, and CLI support
+- 🔧 **Highly Customizable** - Widgets, extend data, themes, and flexible rendering
+- 📦 **Multiple Modes** - Git diff or file comparison with Split/Unified views
+- 🌗 **SSR/RSC Ready** - Full server-side rendering and React Server Components support
+
+## 🎮 Live Demo
+
+Try it online: [Git Mode](https://mrwangjusttodo.github.io/git-diff-view/?type=try&tab=git) · [File Mode](https://mrwangjusttodo.github.io/git-diff-view/?type=try&tab=file) · [GitHub Style](https://mrwangjusttodo.github.io/MrWangJustToDo.io?overlay=open&playGround=GitHub)
 
 ![git mode](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/gitMode.png)
 
-[file-mode](https://mrwangjusttodo.github.io/git-diff-view/?type=try&tab=file)
+<details>
+<summary>📸 More Screenshots</summary>
 
 ![file mode](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/fileMode.png)
+![theme support](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/theme.png)
+![unified view](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/69c801e5eb5fcabc9c9655825eb1228f18dc1e0c/5.png)
 
-[GitHub compare](https://mrwangjusttodo.github.io/MrWangJustToDo.io?overlay=open&playGround=GitHub)
+</details>
 
-![GitHub compare](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/4.png)
+## 📦 Installation
 
-## How to use （React / Vue / Solid / Svelte）
-
-See example project [Example](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui)
-
-## Packages
-
-| Package                                  | Version                                                                                                                    |
-| :--------------------------------------- | :------------------------------------------------------------------------------------------------------------------------- |
-| [`@git-diff-view/core`](packages/core)   | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/core)](https://www.npmjs.com/package/@git-diff-view/core)   |
-| [`@git-diff-view/file`](packages/file)   | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/file)](https://www.npmjs.com/package/@git-diff-view/file)   |
-| [`@git-diff-view/react`](packages/react) | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/react)](https://www.npmjs.com/package/@git-diff-view/react) |
-| [`@git-diff-view/vue`](packages/vue)     | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/vue)](https://www.npmjs.com/package/@git-diff-view/vue)     |
-| [`@git-diff-view/solid`](packages/solid) | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/solid)](https://www.npmjs.com/package/@git-diff-view/solid) |
-| [`@git-diff-view/svelte`](packages/svelte)|[![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/svelte)](https://www.npmjs.com/package/@git-diff-view/svelte)|
-| [`@git-diff-view/cli`](packages/cli)     | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/cli)](https://www.npmjs.com/package/@git-diff-view/cli)     |
-
-### syntax highlighter
-
-| Package                                                   | Version                                                                                                                          |
-| :-------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------- |
-| [`@git-diff-view/lowlight`](packages/lowlight) `build in` | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/lowlight)](https://www.npmjs.com/package/@git-diff-view/lowlight) |
-| [`@git-diff-view/shiki`](packages/shiki)                  | [![npm (scoped)](https://img.shields.io/npm/v/%40git-diff-view/shiki)](https://www.npmjs.com/package/@git-diff-view/shiki)       |
-
-## Screen Shot
-
-![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/1.png)
-![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/69c801e5eb5fcabc9c9655825eb1228f18dc1e0c/5.png)
-![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/theme.png)
-![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/2.png)
-![Screenshot](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/3.png)
-
-### Template mode
-
-For better performance and customization, now the `DiffView` component support `template mode`, and it's the default setting. SEE [Template Mode](https://github.com/MrWangJustToDo/git-diff-view/blob/main/packages/core/src/parse/template.ts)
-
-### FastDiff template
-
-Using the `template mode`, the `DiffView` component can utilize the `fast-diff` package to generate diffLine templates for better readability of differences. SEE [FastDiffTemplate](https://github.com/MrWangJustToDo/git-diff-view/blob/main/packages/core/src/parse/template.ts)
-
-#### Default diffLine
-![Screenshot](https://github.com/MrWangJustToDo/git-diff-view/blob/main/default.png)
-
-#### FastDiff diffLine
-![Screenshot](https://github.com/MrWangJustToDo/git-diff-view/blob/main/enableFastDiffTemplate.png)
-
-#### How to enable FastDiff template
-```ts
-import { setEnableFastDiffTemplate } from '@git-diff-view/core' // or react/vue runtime package
-
-// experimental feature, use with caution
-setEnableFastDiffTemplate(true);
-```
-
-## Features
-
-+ [x] Show the `git diff` result 
-+ [x] Support `Split View` and `Unified View`
-+ [x] Support `Warp` / `UnWarp` the code line
-+ [x] Support `light` / `dark` theme by default (since v0.0.17)
-+ [x] Support `Syntax Highlight` with <b>`full syntax context`</b> (base on `hast` AST)
-+ [x] Support `Extend Data` component in the `Diff View`
-+ [x] Support `Widget` component in the `Diff View`
-+ [x] Support `Web Worker` / `Node Server` to improve performance
-+ [x] Support `React` and `Vue` component
-+ [x] Support compare by `@git-diff-view/core`(git diff) or `@git-diff-view/file`(file content)
-+ [x] Support `Diff Match Patch` to improve line diff (experimental)
-+ [x] Support `SSR` for `React` and `Vue` component (since v0.0.21)
-+ [x] Support `RSC` for `React` component (since v0.0.21)
-+ [x] More Render Platform: `Solid` / `Svelte` / `Cli`
-+ [ ] Support `Virtual Scroll` to improve performance
-
-
-## Install
-
-```shell
-# In React Project
+```bash
+# React
 pnpm add @git-diff-view/react
 
-# In Vue Project
+# Vue
 pnpm add @git-diff-view/vue
 
+# Solid / Svelte
+pnpm add @git-diff-view/solid
+pnpm add @git-diff-view/svelte
 ```
 
-## Use in React
+**[View Examples](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui)** for React / Vue / Solid / Svelte
 
-#### There are two ways to use this component:
+## 🚀 Quick Start
 
-#### 1. Use the `DiffView` component directly.
+### React
 
 ```tsx
 import { DiffView, DiffModeEnum } from "@git-diff-view/react";
 import "@git-diff-view/react/styles/diff-view.css";
-// if you have your own tailwindcss config, you can use the `diff-view-pure.css` to avoid CSS conflicts
-import "@git-diff-view/react/styles/diff-view-pure.css";
 
-<DiffView<string>
-  // use data
+<DiffView
   data={{
-    oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
-    newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
-    hunks: string[];
+    oldFile: { fileName: "old.ts", content: "..." },
+    newFile: { fileName: "new.ts", content: "..." },
+    hunks: ["..."]
   }}
-  extendData={{oldFile: {10: {data: 'foo'}}, newFile: {20: {data: 'bar'}}}}
-  renderExtendLine={({ data }) => ReactNode}
-  diffViewFontSize={number}
-  diffViewHighlight={boolean}
-  diffViewMode={DiffModeEnum.Split | DiffModeEnum.Unified}
-  diffViewWrap={boolean}
-  diffViewTheme={'light' | 'dark'}
-  diffViewAddWidget
-  onAddWidgetClick={({ side, lineNumber }) => void}
-  renderWidgetLine={({ onClose, side, lineNumber }) => ReactNode}
+  diffViewMode={DiffModeEnum.Split}
+  diffViewTheme="dark"
+  diffViewHighlight
 />
-
 ```
 
-#### 2. Use the `DiffView` component with `@git-diff-view/core` or `@git-diff-view/file`
+### Advanced Usage
 
 ```tsx
-// with @git-diff-view/file
 import { DiffFile, generateDiffFile } from "@git-diff-view/file";
+
+// File comparison mode
 const file = generateDiffFile(
-  data?.oldFile?.fileName || "",
-  data?.oldFile?.content || "",
-  data?.newFile?.fileName || "",
-  data?.newFile?.content || "",
-  data?.oldFile?.fileLang || "",
-  data?.newFile?.fileLang || ""
+  "old.ts", oldContent,
+  "new.ts", newContent,
+  "typescript", "typescript"
 );
-file.initTheme('light' / 'dark');
+file.initTheme('dark');
 file.init();
 file.buildSplitDiffLines();
-file.buildUnifiedDiffLines();
 
-// with @git-diff-view/core
-import { DiffFile } from "@git-diff-view/core";
-const file = new DiffFile(
-  data?.oldFile?.fileName || "",
-  data?.oldFile?.content || "",
-  data?.newFile?.fileName || "",
-  data?.newFile?.content || "",
-  data?.hunks || [],
-  data?.oldFile?.fileLang || "",
-  data?.newFile?.fileLang || ""
-);
-file.initTheme('light' / 'dark');
-file.init();
-file.buildSplitDiffLines();
-file.buildUnifiedDiffLines();
-
-// use current data to render
-<DiffView diffFile={file} {...props} />;
-// or use the bundle data to render, eg: postMessage/httpRequest
-const bundle = file.getBundle();
-const diffFile = DiffFile.createInstance(data || {}, bundle);
-<DiffView diffFile={diffFile} {...props} />;
+<DiffView diffFile={file} />
 ```
 
-#### Props
+**More examples:** [React](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/react-example) · [Vue](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/vue-example) · [Solid](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/solid-example)
 
-| Props  | Description  |
-| :--------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| data             | The diff data need to show, type: `{ oldFile: {fileName?: string, content?: string}, newFile: {fileName?: string, content?: string}, hunks: string[] }`, you can only pass hunks data, and the component will generate the oldFile and newFile data automatically |
-| diffFile         | the target data to render |
-| renderWidgetLine | return a valid `react` element to show the widget, this element will render when you click the `addWidget` button in the diff view  |
-| renderExtendLine | return a valid `react` element to show the extend data |
-| extendData       | a list to store the extend data to show in the `Diff View`, type: {oldFile: {lineNumber: {data: any}}, newFile: {lineNumber: {data: any}}}   |
-| diffViewFontSize | the fontSize for the DiffView component, type: number |
-| diffViewHighlight | enable syntax highlight, type: boolean |
-| diffViewMode     | the mode for the DiffView component, type: `DiffModeEnum.Split` / `DiffModeEnum.Unified` |
-| diffViewWrap     | enable code line auto wrap, type: boolean |
-| diffViewTheme    | the theme for the DiffView component, type: `light` / `dark` |
-| diffViewAddWidget| enable `addWidget` button, type: boolean |
-| onAddWidgetClick | when the `addWidget` button clicked, type: `({ side: "old" / "new", lineNumber: number }) => void` |
+## 📚 Packages
 
-## Development
+**UI Frameworks**
+- [`@git-diff-view/react`](https://www.npmjs.com/package/@git-diff-view/react) - React component
+- [`@git-diff-view/vue`](https://www.npmjs.com/package/@git-diff-view/vue) - Vue component
+- [`@git-diff-view/solid`](https://www.npmjs.com/package/@git-diff-view/solid) - Solid component
+- [`@git-diff-view/svelte`](https://www.npmjs.com/package/@git-diff-view/svelte) - Svelte component
+- [`@git-diff-view/cli`](https://www.npmjs.com/package/@git-diff-view/cli) - CLI tool
+
+**Core Libraries**
+- [`@git-diff-view/core`](https://www.npmjs.com/package/@git-diff-view/core) - Core diff engine (git diff)
+- [`@git-diff-view/file`](https://www.npmjs.com/package/@git-diff-view/file) - File comparison engine
+
+**Syntax Highlighters**
+- [`@git-diff-view/lowlight`](https://www.npmjs.com/package/@git-diff-view/lowlight) - Built-in highlighter
+- [`@git-diff-view/shiki`](https://www.npmjs.com/package/@git-diff-view/shiki) - Shiki integration
+
+## 🎯 Key Features
+
+- ✅ **Split & Unified Views** - Switch between side-by-side and unified diff modes
+- ✅ **Full Syntax Highlighting** - Complete context-aware syntax highlighting with HAST AST
+- ✅ **Light & Dark Themes** - Built-in theme support with customization
+- ✅ **Line Wrapping** - Toggle line wrapping for long code lines
+- ✅ **Widget System** - Add custom interactive widgets to diff lines
+- ✅ **Extend Data** - Attach and render custom data per line
+- ✅ **Web Worker Support** - Offload processing for better performance
+- ✅ **SSR & RSC** - Full server-side rendering support for React and Vue
+- ✅ **Diff Match Patch** - Enhanced line-level diff with FastDiff template (experimental)
+- ✅ **Multiple Platforms** - React, Vue, Solid, Svelte, and CLI
+
+## ⚡ Advanced Features
+
+### FastDiff Template (Experimental)
+
+Enhanced line-by-line diff visualization for better readability.
+
+```ts
+import { setEnableFastDiffTemplate } from '@git-diff-view/core';
+
+setEnableFastDiffTemplate(true);
+```
+
+| Default | FastDiff |
+|---------|----------|
+| ![default](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/main/default.png) | ![fastdiff](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/main/enableFastDiffTemplate.png) |
+
+### Template Mode
+
+Optimized rendering mode enabled by default for better performance. [Learn more](https://github.com/MrWangJustToDo/git-diff-view/blob/main/packages/core/src/parse/template.ts)
+
+## 📖 API Reference
+
+### Component Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `data` | `DiffData` | Diff data with `oldFile`, `newFile`, and `hunks` |
+| `diffFile` | `DiffFile` | Pre-processed diff file instance |
+| `diffViewMode` | `Split \| Unified` | View mode (default: `Split`) |
+| `diffViewTheme` | `light \| dark` | Theme (default: `light`) |
+| `diffViewHighlight` | `boolean` | Enable syntax highlighting |
+| `diffViewWrap` | `boolean` | Enable line wrapping |
+| `diffViewFontSize` | `number` | Font size in pixels |
+| `diffViewAddWidget` | `boolean` | Enable widget button |
+| `renderWidgetLine` | `Function` | Custom widget renderer |
+| `renderExtendLine` | `Function` | Custom extend data renderer |
+| `extendData` | `ExtendData` | Additional data per line |
+| `onAddWidgetClick` | `Function` | Widget button click handler |
+
+### Styling
+
+```tsx
+// Default styles with Tailwind
+import "@git-diff-view/react/styles/diff-view.css";
+
+// Pure CSS (no Tailwind conflicts)
+import "@git-diff-view/react/styles/diff-view-pure.css";
+```
+
+### Two Usage Modes
+
+**1. Direct Data Mode** - Pass raw diff data
+```tsx
+<DiffView data={{ oldFile, newFile, hunks }} />
+```
+
+**2. DiffFile Instance Mode** - Pre-process for better control
+```tsx
+const file = new DiffFile(/* ... */);
+file.init();
+file.buildSplitDiffLines();
+<DiffView diffFile={file} />
+```
+
+## 🛠️ Development
 
 ```bash
-# clone this project
-
-# pnpm install
-
-# pnpm run build:packages
-
-# pnpm run dev:react / pnpm run dev:vue
-
+git clone https://github.com/MrWangJustToDo/git-diff-view.git
+cd git-diff-view
+pnpm install
+pnpm run build:packages
+pnpm run dev:react  # or dev:vue, dev:solid, dev:svelte
 ```
+
+## 📄 License
+
+MIT © [MrWangJustToDo](https://github.com/MrWangJustToDo)
