@@ -17,21 +17,67 @@ import {
   Group,
   Grid,
 } from "@mantine/core";
-import { IconBrandReact, IconBrandSolidjs, IconBrandSvelte, IconBrandVue, IconSparkles } from "@tabler/icons-react";
-import { useMemo, useState } from "react";
+import {
+  IconBrandReact,
+  IconBrandSolidjs,
+  IconBrandSvelte,
+  IconBrandVue,
+  IconSparkles,
+  IconStar,
+  IconDownload,
+} from "@tabler/icons-react";
+import { useMemo, useState, useEffect } from "react";
 
 import { MainContentDiffAdvance, MainContentDiffConfig, MainContentDiffExample } from "../../components/MainContent";
 
 import type { DiffFile } from "@git-diff-view/react";
 
+interface StatsData {
+  stars: number;
+  downloads: number;
+  loading: boolean;
+}
+
+const formatNumber = (num: number): string => {
+  if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
+  if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+  return num.toString();
+};
+
 export const MainContent = () => {
   const theme = useMantineTheme();
 
   const [d, setD] = useState<DiffFile>();
+  const [stats, setStats] = useState<StatsData>({ stars: 0, downloads: 0, loading: true });
 
   const { colorScheme } = useMantineColorScheme();
 
   const color = useMemo(() => alpha(getThemeColor("yellow", theme), 0.5), [theme]);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        // Fetch GitHub stars
+        const githubRes = await fetch("https://api.github.com/repos/MrWangJustToDo/git-diff-view");
+        const githubData = await githubRes.json();
+
+        // Fetch NPM downloads (last month)
+        const npmRes = await fetch("https://api.npmjs.org/downloads/point/last-month/@git-diff-view/core");
+        const npmData = await npmRes.json();
+
+        setStats({
+          stars: githubData.stargazers_count || 0,
+          downloads: npmData.downloads || 0,
+          loading: false,
+        });
+      } catch (error) {
+        console.error("Failed to fetch stats:", error);
+        setStats({ stars: 0, downloads: 0, loading: false });
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   return (
     <Box className="min-h-screen">
@@ -43,15 +89,27 @@ export const MainContent = () => {
               <div className="absolute -inset-8 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 blur-3xl" />
             )}
             <div className="relative">
-              <Badge
-                size="lg"
-                variant="gradient"
-                gradient={{ from: "blue", to: "cyan", deg: 90 }}
-                leftSection={<IconSparkles size={16} />}
-                className="mb-4"
-              >
-                Open Source
-              </Badge>
+              <Group justify="center" gap="xs" className="mb-4">
+                <Badge
+                  size="lg"
+                  variant="gradient"
+                  gradient={{ from: "blue", to: "cyan", deg: 90 }}
+                  leftSection={<IconSparkles size={16} />}
+                >
+                  Open Source
+                </Badge>
+                <Badge
+                  size="lg"
+                  variant="light"
+                  color="yellow"
+                  leftSection={<IconStar size={16} fill="currentColor" />}
+                >
+                  {stats.loading ? "..." : formatNumber(stats.stars)}
+                </Badge>
+                <Badge size="lg" variant="light" color="blue" leftSection={<IconDownload size={16} />}>
+                  {stats.loading ? "..." : formatNumber(stats.downloads)}
+                </Badge>
+              </Group>
 
               <Title
                 order={1}
@@ -114,6 +172,8 @@ export const MainContent = () => {
               Feature-rich diff viewer with GitHub-style UI, easy to integrate and highly customizable.
             </Highlight>
           </Box>
+
+          <Space h="xl" />
         </Box>
 
         <Divider my="xl" className="opacity-30" />
@@ -169,7 +229,7 @@ export const MainContent = () => {
           {/* Right Side - Diff Preview */}
           <Grid.Col span={{ base: 12, md: 8 }}>
             <Box
-              className="sticky top-4 h-[calc(100vh-120px)] transform-gpu overflow-hidden rounded-xl border-2 border-solid shadow-2xl transition-all"
+              className="sticky top-4 h-[calc(100vh-120px)] transform-gpu overflow-hidden rounded-xl border-2 border-solid transition-all"
               style={{
                 borderColor: colorScheme === "light" ? "var(--mantine-color-gray-2)" : "var(--mantine-color-dark-4)",
                 backgroundColor: colorScheme === "light" ? "white" : "var(--mantine-color-dark-7)",
