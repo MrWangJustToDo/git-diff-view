@@ -22,7 +22,7 @@
   "scripts": {
     "build": "vue-tsc --noEmit && vite build",
     "gen:css1": "postcss src/tailwind.css -o dist/css/diff-view.css",
-    "gen:css2": "postcss src/tailwind_pure.css -o dist/css/diff-view-pure.css",
+    "gen:css2": "postcss src/tailwind.css -o dist/css/diff-view-pure.css",
     "gen:css": "npm run gen:css1 && npm run gen:css2",
     "gen:type": "dts-bundle-generator -o index.d.ts dist/types/index.d.ts"
   },

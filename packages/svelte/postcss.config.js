@@ -7,13 +7,6 @@ export default {
 			transform: function (prefix, selector, prefixedSelector, _filePath, rule) {
 				const filePath = rule.source?.input?.file;
 				if (filePath.includes('_base.css')) {
-					if (rule.source?.start?.line === 1) {
-						return selector;
-					} else {
-						return prefixedSelector;
-					}
-				}
-				if (filePath.includes('_base_pure.css')) {
 					return prefixedSelector;
 				}
 				if (
