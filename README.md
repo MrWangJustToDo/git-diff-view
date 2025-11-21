@@ -165,6 +165,7 @@ Optimized rendering mode enabled by default for better performance. [Learn more]
 
 ```tsx
 // Default styles with Tailwind
+// next release will remove Tailwind dependency, then the diff-view.css will be pure CSS
 import "@git-diff-view/react/styles/diff-view.css";
 
 // Pure CSS (no Tailwind conflicts)
