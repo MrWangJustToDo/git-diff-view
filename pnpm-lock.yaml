@@ -135,11 +135,11 @@ importers:
         version: 1.6.0(react@19.2.0)
     devDependencies:
       '@my-react/react':
-        specifier: ^0.3.20
-        version: 0.3.20
+        specifier: ^0.3.21
+        version: 0.3.21(react@19.2.0)
       '@my-react/react-terminal':
-        specifier: ^0.0.14
-        version: 0.0.14(@my-react/react@0.3.20)
+        specifier: ^0.0.15
+        version: 0.0.15(@my-react/react@0.3.21(react@19.2.0))
       '@types/react':
         specifier: ^19.2.2
         version: 19.2.2
@@ -535,11 +535,11 @@ importers:
         specifier: ^8.3.4
         version: 8.3.4(react@19.2.0)
       '@my-react/react':
-        specifier: ^0.3.20
-        version: 0.3.20
+        specifier: ^0.3.21
+        version: 0.3.21(react@19.2.0)
       '@my-react/react-dom':
-        specifier: ^0.3.20
-        version: 0.3.20(@my-react/react@0.3.20)
+        specifier: ^0.3.21
+        version: 0.3.21(@my-react/react@0.3.21(react@19.2.0))
       '@tabler/icons-react':
         specifier: ^3.35.0
         version: 3.35.0(react@19.2.0)
@@ -560,11 +560,11 @@ importers:
         version: 0.3.12(react@19.2.0)
     devDependencies:
       '@my-react/react-refresh':
-        specifier: ^0.3.20
-        version: 0.3.20(@my-react/react@0.3.20)
+        specifier: ^0.3.21
+        version: 0.3.21(@my-react/react@0.3.21(react@19.2.0))
       '@my-react/react-vite':
-        specifier: ^0.0.24
-        version: 0.0.24(@my-react/react-refresh@0.3.20(@my-react/react@0.3.20))(vite@5.4.20(@types/node@22.18.10)(sugarss@5.0.1(postcss@8.5.6))(terser@5.44.0))
+        specifier: ^0.0.25
+        version: 0.0.25(@my-react/react-refresh@0.3.21(@my-react/react@0.3.21(react@19.2.0)))(vite@5.4.20(@types/node@22.18.10)(sugarss@5.0.1(postcss@8.5.6))(terser@5.44.0))
       '@types/react':
         specifier: ^19.2.2
         version: 19.2.2
@@ -1525,34 +1525,36 @@ packages:
   '@microsoft/tsdoc@0.15.1':
     resolution: {integrity: sha512-4aErSrCR/On/e5G2hDP0wjooqDdauzEbIq8hIkIe5pXV0rtWJZvdCEKL0ykZxex+IxIwBp0eGeV48hQN07dXtw==}
 
-  '@my-react/react-dom@0.3.20':
-    resolution: {integrity: sha512-jBhR/968HFB/2CytA38nH0HKpzxHbJR1HLl/LVbpbA+2wqX1lHoehuaoqezzcsymWRV8u4jaI0HrQamnetwh2w==}
+  '@my-react/react-dom@0.3.21':
+    resolution: {integrity: sha512-YwR819WkaohhnkkYhpeX+1PrumvACY6ehLDGW0s5VTM142DPSrpQR50zZw1McDv1/XQ45R1MvT4Dj0TpzZU/CA==}
     peerDependencies:
-      '@my-react/react': '>=0.3.20'
+      '@my-react/react': '>=0.3.21'
 
-  '@my-react/react-jsx@0.3.20':
-    resolution: {integrity: sha512-T0EkrCSyVQqKxABoU5LfdGCQFqi9xue8RVHVVvHaSw3dQSkTEIgAkSuK5O6ejELDBPbQmhH3BlXyMh1DpdJnQw==}
+  '@my-react/react-jsx@0.3.21':
+    resolution: {integrity: sha512-PZ/38mmA2Q0X+tnYRGuX8/bW4nZQwBfdYJ1+m37jeuA63SMJqI3MMPWdcoFtPLVJfZU9KiNMwhQ4+UtTKUJqGA==}
     peerDependencies:
-      '@my-react/react': '>=0.3.20'
+      '@my-react/react': '>=0.3.21'
 
-  '@my-react/react-refresh@0.3.20':
-    resolution: {integrity: sha512-YeHMzzkdKKk8T0lD4LsGy/dG/A3dqLRuY2eSHsIvfHQqx7J6eb4wvtIRyTlvSxJRDCeVmVmUeU9Xmm0kZGj4WA==}
+  '@my-react/react-refresh@0.3.21':
+    resolution: {integrity: sha512-kYMWrCiRCHRvpg7zmMv+xkIK17bDr5LLOaZUOt2NEcWAaSLLocqMWMgGGTcByhqj5tg2Bt/di7VNADvRIqTN+Q==}
     peerDependencies:
-      '@my-react/react': '>=0.3.20'
+      '@my-react/react': '>=0.3.21'
 
-  '@my-react/react-terminal@0.0.14':
-    resolution: {integrity: sha512-VE7VOlobl3Bqttl+xevGlqFLqePfDp6nM2Nabnkzz2xQerV+LS0tJjeiDBmjfS/dQjKv6iH6IG87ajKP+YCQ9w==}
+  '@my-react/react-terminal@0.0.15':
+    resolution: {integrity: sha512-JwZFYy8CDbclfTYrtWGNnkA8v+9FlvcBsn5GA5Yn77soer78bVPNsRj52/lL1LLVmmsCjkTdYJFnF9QITRO5eg==}
     peerDependencies:
-      '@my-react/react': '>=0.3.20'
+      '@my-react/react': '>=0.3.21'
 
-  '@my-react/react-vite@0.0.24':
-    resolution: {integrity: sha512-7qOLtB/P9VG89c6KqblrHE/StrtFRH8h8hFqOfmyvGTzduhTWsti+D6EwtwbuWnjq/26xRvmHNOnww7SrsjuIg==}
+  '@my-react/react-vite@0.0.25':
+    resolution: {integrity: sha512-lUJBTJ1Hm0/MnDCzBi0uKYNfnNu9041zl6Mg9huuVmTugYJNgf8sAxzmbmQLWZx0EGTV2ADS2+icaKpbJxRHOA==}
     peerDependencies:
       '@my-react/react-refresh': '>=0.3.20'
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
 
-  '@my-react/react@0.3.20':
-    resolution: {integrity: sha512-R63jOLKj5S6UWvFCb8rUwhs/XHuO3kCy7AUtRvdMmh6TqM7Kx8JW5QixJWSala/imx+fpCBIG6HEC0iL9sQbEA==}
+  '@my-react/react@0.3.21':
+    resolution: {integrity: sha512-SIeFRPNoaC4m/GrvZSVr7FsOd83mPHtWJrdyWASXCWzF1jLP9OWP+twCPYi95cdYTuyBqIypagYQDB2KMKmX7w==}
+    peerDependencies:
+      react: ^17 || ^18 || ^19
 
   '@napi-rs/wasm-runtime@0.2.12':
     resolution: {integrity: sha512-ZVWUcfwY4E/yPitQJl481FjFo3K22D6qF0DuFH6Y/nbnE11GY5uguDxZMGXPQ8WQ0128MXQD7TnfHyK4oWoIJQ==}
@@ -4220,6 +4222,9 @@ packages:
   mlly@1.8.0:
     resolution: {integrity: sha512-l8D9ODSRWLe2KHJSifWGwBqpTZXIXTeo8mlKjY+E2HAakaTeNpqAyBZ8GSqLzHgw4XmHmC8whvpjJNMbFZN7/g==}
 
+  mnemonist@0.40.3:
+    resolution: {integrity: sha512-Vjyr90sJ23CKKH/qPAgUKicw/v6pRoamxIEDFOF8uSgFME7DqPRpHgRTejWVjkdGg5dXj0/NyxZHZ9bcjH+2uQ==}
+
   mri@1.2.0:
     resolution: {integrity: sha512-tzzskb3bG8LvYGFF/mDTpq3jpI6Q9wc3LEmBaghu+DdCssd1FakN7Bc0hVNmEyGq1bq3RgfkCb3cmQLpNPOroA==}
     engines: {node: '>=4'}
@@ -4338,6 +4343,9 @@ packages:
   object.values@1.2.1:
     resolution: {integrity: sha512-gXah6aZrcUxjWg2zR2MwouP2eHlCBzdV4pygudehaKXSGW4v2AsRQUK+lwwXhii6KFZcunEnmSUoYp5CXibxtA==}
     engines: {node: '>= 0.4'}
+
+  obliterator@2.0.5:
+    resolution: {integrity: sha512-42CPE9AhahZRsMNslczq0ctAEtqk8Eka26QofnqC346BZdHDySk3LWka23LI7ULIw11NmltpiLagIq8gBozxTw==}
 
   on-exit-leak-free@2.1.2:
     resolution: {integrity: sha512-0eJJY6hXLGf1udHwfNftBqH+g73EU4B504nZeKpz1sYRKafAghwxEJunB2O7rDZkL4PGfsMVnTXZ2EjibbqcsA==}
@@ -6982,22 +6990,22 @@ snapshots:
 
   '@microsoft/tsdoc@0.15.1': {}
 
-  '@my-react/react-dom@0.3.20(@my-react/react@0.3.20)':
+  '@my-react/react-dom@0.3.21(@my-react/react@0.3.21(react@19.2.0))':
     dependencies:
-      '@my-react/react': 0.3.20
+      '@my-react/react': 0.3.21(react@19.2.0)
 
-  '@my-react/react-jsx@0.3.20(@my-react/react@0.3.20)':
+  '@my-react/react-jsx@0.3.21(@my-react/react@0.3.21(react@19.2.0))':
     dependencies:
-      '@my-react/react': 0.3.20
+      '@my-react/react': 0.3.21(react@19.2.0)
 
-  '@my-react/react-refresh@0.3.20(@my-react/react@0.3.20)':
+  '@my-react/react-refresh@0.3.21(@my-react/react@0.3.21(react@19.2.0))':
     dependencies:
-      '@my-react/react': 0.3.20
+      '@my-react/react': 0.3.21(react@19.2.0)
 
-  '@my-react/react-terminal@0.0.14(@my-react/react@0.3.20)':
+  '@my-react/react-terminal@0.0.15(@my-react/react@0.3.21(react@19.2.0))':
     dependencies:
       '@alcalzone/ansi-tokenize': 0.2.0
-      '@my-react/react': 0.3.20
+      '@my-react/react': 0.3.21(react@19.2.0)
       ansi-escapes: 7.1.1
       ansi-styles: 6.2.3
       auto-bind: 5.0.1
@@ -7009,6 +7017,7 @@ snapshots:
       es-toolkit: 1.40.0
       indent-string: 5.0.0
       is-in-ci: 2.0.0
+      mnemonist: 0.40.3
       patch-console: 2.0.0
       signal-exit: 4.1.0
       slice-ansi: 7.1.2
@@ -7024,20 +7033,21 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  '@my-react/react-vite@0.0.24(@my-react/react-refresh@0.3.20(@my-react/react@0.3.20))(vite@5.4.20(@types/node@22.18.10)(sugarss@5.0.1(postcss@8.5.6))(terser@5.44.0))':
+  '@my-react/react-vite@0.0.25(@my-react/react-refresh@0.3.21(@my-react/react@0.3.21(react@19.2.0)))(vite@5.4.20(@types/node@22.18.10)(sugarss@5.0.1(postcss@8.5.6))(terser@5.44.0))':
     dependencies:
       '@babel/core': 7.28.4
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.28.4)
       '@babel/plugin-transform-react-jsx-source': 7.27.1(@babel/core@7.28.4)
-      '@my-react/react-refresh': 0.3.20(@my-react/react@0.3.20)
+      '@my-react/react-refresh': 0.3.21(@my-react/react@0.3.21(react@19.2.0))
       '@rolldown/pluginutils': 1.0.0-beta.38
       vite: 5.4.20(@types/node@22.18.10)(sugarss@5.0.1(postcss@8.5.6))(terser@5.44.0)
     transitivePeerDependencies:
       - supports-color
 
-  '@my-react/react@0.3.20':
+  '@my-react/react@0.3.21(react@19.2.0)':
     dependencies:
-      '@my-react/react-jsx': 0.3.20(@my-react/react@0.3.20)
+      '@my-react/react-jsx': 0.3.21(@my-react/react@0.3.21(react@19.2.0))
+      react: 19.2.0
 
   '@napi-rs/wasm-runtime@0.2.12':
     dependencies:
@@ -10016,6 +10026,10 @@ snapshots:
       pkg-types: 1.3.1
       ufo: 1.6.1
 
+  mnemonist@0.40.3:
+    dependencies:
+      obliterator: 2.0.5
+
   mri@1.2.0: {}
 
   mrmime@2.0.1: {}
@@ -10122,6 +10136,8 @@ snapshots:
       call-bound: 1.0.4
       define-properties: 1.2.1
       es-object-atoms: 1.1.1
+
+  obliterator@2.0.5: {}
 
   on-exit-leak-free@2.1.2: {}
 

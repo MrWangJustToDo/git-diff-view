@@ -59,8 +59,8 @@
     "use-sync-external-store": "^1.6.0"
   },
   "devDependencies": {
-    "@my-react/react": "^0.3.20",
-    "@my-react/react-terminal": "^0.0.14",
+    "@my-react/react": "^0.3.21",
+    "@my-react/react-terminal": "^0.0.15",
     "@types/react": "^19.2.2"
   },
   "peerDependencies": {
