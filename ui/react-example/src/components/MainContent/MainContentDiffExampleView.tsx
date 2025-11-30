@@ -7,6 +7,8 @@ import { useDiffConfig } from "../../hooks/useDiffConfig";
 import { DiffViewWithScrollBar } from "../DiffViewWithScrollBar";
 import { Textarea } from "../TextArea";
 
+import { defaultComment } from "./MainContentDiffExample";
+
 import type { DiffFile, DiffViewProps } from "@git-diff-view/react";
 
 // disable diffFile Cache
@@ -27,17 +29,19 @@ export const MainContentDiffExampleView = memo(
     const [str, setStr] = useState("");
 
     const [extend, setExtend] = useState<DiffViewProps<string[]>["extendData"]>({
-      oldFile: {},
+      oldFile: { 2: { data: ['console.log("hello world");'] } },
       newFile: {},
     });
 
-    const { highlight, mode, wrap, engine, tabSpace, fastDiff } = useDiffConfig();
+    const { highlight, mode, wrap, engine, tabSpace, fastDiff, autoExpandCommentLine } = useDiffConfig();
 
     const prevEngine = usePrevious(engine);
 
     const prevTabSpace = usePrevious(tabSpace);
 
     const prevFastDiff = usePrevious(fastDiff);
+
+    const prevAutoExpandCommentLine = usePrevious(autoExpandCommentLine);
 
     // because of the cache, switch the highlighter engine will not work, need a new diffFile instance to avoid this
     // see packages/core/src/file.ts:172 getFile
@@ -47,6 +51,17 @@ export const MainContentDiffExampleView = memo(
         refreshDiffFile();
       }
     }, [engine, prevEngine, tabSpace, prevTabSpace, fastDiff, prevFastDiff, refreshDiffFile]);
+
+    useEffect(() => {
+      if (autoExpandCommentLine !== prevAutoExpandCommentLine) {
+        if (autoExpandCommentLine) {
+          setExtend(defaultComment);
+          refreshDiffFile();
+        } else {
+          refreshDiffFile();
+        }
+      }
+    }, [autoExpandCommentLine, prevAutoExpandCommentLine]);
 
     return (
       <Box className="h-full overflow-auto">

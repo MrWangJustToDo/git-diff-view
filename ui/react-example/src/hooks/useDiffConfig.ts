@@ -10,6 +10,7 @@ type DiffConfig = {
   tabSpace: boolean;
   fastDiff: boolean;
   shadowDOM: boolean;
+  autoExpandCommentLine: boolean;
 };
 
 export const useDiffConfig = createState(
@@ -23,6 +24,7 @@ export const useDiffConfig = createState(
       tabSpace: false,
       fastDiff: false,
       shadowDOM: false,
+      autoExpandCommentLine: false,
     }) as DiffConfig,
   {
     withActions(state) {
@@ -65,6 +67,11 @@ export const useDiffConfig = createState(
         setShadowDOM: (v: boolean) => {
           if (v !== state.shadowDOM) {
             state.shadowDOM = v;
+          }
+        },
+        setAutoExpandCommentLine: (v: boolean) => {
+          if (v !== state.autoExpandCommentLine) {
+            state.autoExpandCommentLine = v;
           }
         },
       };

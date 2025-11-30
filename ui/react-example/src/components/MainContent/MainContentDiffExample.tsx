@@ -4,19 +4,39 @@ import { useCallbackRef, useDisclosure, useMounted } from "@mantine/hooks";
 import { IconCode, IconPlayerPlay, IconRefresh, IconBrandReact, IconBrandVue } from "@tabler/icons-react";
 import { useState, startTransition, useCallback, forwardRef, useMemo, useEffect } from "react";
 
+import { useDiffConfig } from "../../hooks/useDiffConfig";
 import { useDiffHighlighter } from "../../hooks/useDiffHighlighter";
+import { generateDynamicHunks, parseHunk } from "../../utils/hunk";
 
 import { MainContentDiffExampleCode } from "./MainContentDiffExampleCode";
 import { temp1, temp2 } from "./MainContentDiffExampleData";
 import { MainContentDiffExampleViewWrapper } from "./MainContentDiffExampleViewWrapper";
 
+import type { DiffViewProps } from "@git-diff-view/react";
+
 const _diffFile = generateDiffFile("temp1.tsx", temp1, "temp2.tsx", temp2, "tsx", "tsx");
 
+export const defaultComment: DiffViewProps<string[]>["extendData"] = {
+  oldFile: {
+    2: { data: ['console.log("hello world");'] },
+  },
+  newFile: {},
+};
+
 const getNewDiffFile = () => {
+  const isEnableAutoExpandCommentLine = useDiffConfig.getReadonlyState().autoExpandCommentLine;
+
   const instance = DiffFile.createInstance({
     oldFile: { content: temp1, fileName: "temp1.tsx" },
     newFile: { content: temp2, fileName: "temp2.tsx" },
-    hunks: _diffFile._diffList,
+    hunks: isEnableAutoExpandCommentLine
+      ? generateDynamicHunks({
+          hunks: parseHunk(_diffFile._diffList[0]),
+          comments: defaultComment,
+          oldFile: temp1,
+          newFile: temp2,
+        }).map((i) => i.patchContent)
+      : _diffFile._diffList,
   });
   instance.initRaw();
   return instance;
