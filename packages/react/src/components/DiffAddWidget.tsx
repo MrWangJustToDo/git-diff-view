@@ -1,7 +1,8 @@
 import { addWidgetBGName, addWidgetColorName, diffFontSizeName } from "@git-diff-view/utils";
 import * as React from "react";
 
-import type { SplitSide } from "./DiffView";
+import { SplitSide } from "./DiffView";
+
 import type { DiffFile } from "@git-diff-view/core";
 
 export const DiffSplitAddWidget = ({
@@ -21,6 +22,7 @@ export const DiffSplitAddWidget = ({
 }) => {
   return (
     <div
+      data-add-widget={SplitSide[side]}
       className={
         "diff-add-widget-wrapper invisible select-none transition-transform hover:scale-110 group-hover:visible" +
         (className ? " " + className : "")
@@ -63,6 +65,7 @@ export const DiffUnifiedAddWidget = ({
 }) => {
   return (
     <div
+      data-add-widget={SplitSide[side]}
       className="diff-add-widget-wrapper invisible absolute left-[100%] translate-x-[-50%] select-none transition-transform hover:scale-110 group-hover:visible"
       style={{
         width: `calc(var(${diffFontSizeName}) * 1.4)`,

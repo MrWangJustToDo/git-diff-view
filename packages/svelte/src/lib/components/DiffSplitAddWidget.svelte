@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { DiffFile, SplitSide } from '@git-diff-view/core';
+	import { SplitSide, type DiffFile } from '@git-diff-view/core';
 	import { addWidgetBGName, addWidgetColorName } from '$lib/utils/color.js';
 	import { diffFontSizeName } from '$lib/utils/size.js';
 
@@ -17,6 +17,7 @@
 </script>
 
 <div
+	data-add-widget={SplitSide[props.side]}
 	class={'diff-add-widget-wrapper invisible select-none transition-transform hover:scale-110 group-hover:visible' +
 		(props.className ? ' ' + props.className : '')}
 	style={`

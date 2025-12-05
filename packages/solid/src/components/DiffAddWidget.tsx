@@ -1,6 +1,7 @@
+import { SplitSide } from "@git-diff-view/core";
 import { diffFontSizeName, addWidgetColorName, addWidgetBGName } from "@git-diff-view/utils";
 
-import type { DiffFile, SplitSide } from "@git-diff-view/core";
+import type { DiffFile } from "@git-diff-view/core";
 import type { Accessor } from "solid-js";
 
 export const DiffSplitAddWidget = (props: {
@@ -14,6 +15,7 @@ export const DiffSplitAddWidget = (props: {
 }) => {
   return (
     <div
+      data-add-widget={SplitSide[props.side]}
       class={
         "diff-add-widget-wrapper invisible select-none transition-transform hover:scale-110 group-hover:visible" +
         (props.class ? " " + props.class : "")
@@ -51,6 +53,7 @@ export const DiffUnifiedAddWidget = (props: {
 }) => {
   return (
     <div
+      data-add-widget={SplitSide[props.side]}
       class="diff-add-widget-wrapper invisible absolute left-[100%] translate-x-[-50%] select-none transition-transform hover:scale-110 group-hover:visible"
       style={{
         width: `calc(var(${diffFontSizeName}) * 1.4)`,
