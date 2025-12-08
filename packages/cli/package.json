@@ -3,7 +3,7 @@
   "description": "@git-diff-view/cli",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "main": "index.mjs",
   "type": "module",
   "types": "index.d.ts",

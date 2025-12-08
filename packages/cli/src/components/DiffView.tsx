@@ -2,7 +2,7 @@
 import { DiffFile, _cacheMap, SplitSide } from "@git-diff-view/core";
 import { DiffModeEnum } from "@git-diff-view/utils";
 import { Box } from "ink";
-import React, { memo, useEffect, useMemo, useRef } from "react";
+import React, { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 
 import { useIsMounted } from "../hooks/useIsMounted";
 import { useUnmount } from "../hooks/useUnmount";
@@ -14,7 +14,7 @@ import { createDiffConfigStore } from "./tools";
 
 import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/core";
 import type { DOMElement } from "ink";
-import type { ReactNode, RefObject } from "react";
+import type { ForwardedRef, ReactNode, RefObject } from "react";
 
 _cacheMap.name = "@git-diff-view/cli";
 
@@ -182,10 +182,13 @@ const InternalDiffView = <T extends unknown>(
 
 const MemoedInternalDiffView = memo(InternalDiffView);
 
-const DiffViewContainer = <T extends unknown>(props: DiffViewProps<T>) => {
+const DiffViewContainerWithRef = <T extends unknown>(
+  props: DiffViewProps<T>,
+  ref: ForwardedRef<{ getDiffFileInstance: () => DiffFile }>
+) => {
   const { registerHighlighter, data, diffViewTheme, diffFile: _diffFile, width, ...restProps } = props;
 
-  const ref = useRef<DOMElement>(null);
+  const domRef = useRef<DOMElement>(null);
 
   const diffFile = useMemo(() => {
     if (_diffFile) {
@@ -246,11 +249,13 @@ const DiffViewContainer = <T extends unknown>(props: DiffViewProps<T>) => {
   // fix react strict mode error
   useUnmount(() => (__DEV__ ? diffFile?._destroy?.() : diffFile?.clear?.()), [diffFile]);
 
+  useImperativeHandle(ref, () => ({ getDiffFileInstance: () => diffFile }), [diffFile]);
+
   if (!diffFile) return null;
 
   return (
     <Box
-      ref={ref}
+      ref={domRef}
       width={width}
       flexGrow={typeof width === "number" ? undefined : 1}
       flexShrink={typeof width === "number" ? 0 : undefined}
@@ -258,7 +263,7 @@ const DiffViewContainer = <T extends unknown>(props: DiffViewProps<T>) => {
       <MemoedInternalDiffView
         key={diffFile.getId()}
         {...restProps}
-        wrapperRef={ref}
+        wrapperRef={domRef}
         diffFile={diffFile}
         isMounted={isMounted}
         diffViewTheme={diffViewTheme}
@@ -270,12 +275,21 @@ const DiffViewContainer = <T extends unknown>(props: DiffViewProps<T>) => {
 };
 
 // type helper function
-function ReactDiffView<T>(props: DiffViewProps_1<T>): JSX.Element;
-function ReactDiffView<T>(props: DiffViewProps_2<T>): JSX.Element;
-function ReactDiffView<T>(props: DiffViewProps<T>) {
-  return <DiffViewContainer {...props} />;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function ReactDiffView<T>(
+  props: DiffViewProps_1<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
+): JSX.Element;
+function ReactDiffView<T>(
+  props: DiffViewProps_2<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
+): JSX.Element;
+function ReactDiffView<T>(_props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }) {
+  return <></>;
 }
 
-export const DiffView = ReactDiffView;
+const InnerDiffView = forwardRef(DiffViewContainerWithRef);
+
+InnerDiffView.displayName = "DiffView";
+
+export const DiffView = InnerDiffView as typeof ReactDiffView;
 
 export const version = __VERSION__;

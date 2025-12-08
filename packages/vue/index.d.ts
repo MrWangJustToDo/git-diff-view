@@ -14,6 +14,7 @@ declare class File$1 {
 	readonly lang: DiffHighlighterLang | string;
 	readonly fileName?: string;
 	ast?: DiffAST;
+	theme?: "light" | "dark";
 	rawFile: Record<number, string>;
 	hasDoRaw: boolean;
 	rawLength?: number;

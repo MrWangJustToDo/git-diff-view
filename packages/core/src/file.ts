@@ -34,6 +34,8 @@ type SyntaxLineWithTemplate = SyntaxLine & {
 export class File {
   ast?: DiffAST;
 
+  theme?: "light" | "dark";
+
   rawFile: Record<number, string> = {};
 
   hasDoRaw: boolean = false;
@@ -60,6 +62,8 @@ export class File {
     const file = new File(data?.raw, data?.lang, data?.fileName);
 
     file.ast = data?.ast;
+
+    file.theme = data?.theme;
 
     file.rawFile = data?.rawFile || {};
 
@@ -105,7 +109,7 @@ export class File {
     registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
     theme?: "light" | "dark";
   }) {
-    if (!this.raw || this.hasDoSyntax) return;
+    if (!this.raw || (this.hasDoSyntax && this.theme === theme)) return;
 
     const finalHighlighter = registerHighlighter || highlighter;
 
@@ -136,6 +140,8 @@ export class File {
     }
 
     this.ast = supportEngin.getAST(this.raw, this.fileName, this.lang, theme);
+
+    this.theme = theme;
 
     if (!this.ast) return;
 
