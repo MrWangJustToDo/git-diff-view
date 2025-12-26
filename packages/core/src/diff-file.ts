@@ -1206,6 +1206,7 @@ export class DiffFile {
       }
       current.splitInfo = {
         ...current.splitInfo,
+        plainText: "",
         startHiddenIndex: current.splitInfo.endHiddenIndex,
       };
     } else if (dir === "up") {
@@ -1253,6 +1254,7 @@ export class DiffFile {
       }
       current.splitInfo = {
         ...current.splitInfo,
+        plainText: "",
         endHiddenIndex: current.splitInfo.startHiddenIndex,
       };
 
@@ -1335,6 +1337,7 @@ export class DiffFile {
       }
       current.unifiedInfo = {
         ...current.unifiedInfo,
+        plainText: "",
         startHiddenIndex: current.unifiedInfo.endHiddenIndex,
       };
     } else if (dir === "up") {
@@ -1378,6 +1381,7 @@ export class DiffFile {
       }
       current.unifiedInfo = {
         ...current.unifiedInfo,
+        plainText: "",
         endHiddenIndex: current.unifiedInfo.startHiddenIndex,
       };
 
