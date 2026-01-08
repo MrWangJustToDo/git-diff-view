@@ -8,16 +8,16 @@ export const StartContent = () => {
   const { colorScheme } = useMantineColorScheme();
 
   return (
-    <Container className="mt-16 mb-12" size="xl">
+    <Container className="mb-12 mt-16" size="xl">
       {/* Section Header */}
-      <Box className="text-center mb-12">
+      <Box className="mb-12 text-center">
         <Badge size="lg" variant="light" color="blue" mb="md">
           Quick Start
         </Badge>
-        <Title order={2} className="text-3xl font-bold mb-4">
+        <Title order={2} className="mb-4 text-3xl font-bold">
           Get Started in Seconds
         </Title>
-        <Text size="lg" c="dimmed" className="max-w-2xl mx-auto">
+        <Text size="lg" c="dimmed" className="mx-auto max-w-2xl">
           Install the package and start using Git Diff View in your project right away
         </Text>
       </Box>
@@ -26,25 +26,17 @@ export const StartContent = () => {
       <Box
         className="rounded-xl border border-solid shadow-sm"
         style={{
-          borderColor: colorScheme === 'light' ? '#e9ecef' : 'var(--mantine-color-dark-4)',
-          backgroundColor: colorScheme === 'light' ? '#ffffff' : 'var(--mantine-color-dark-7)',
+          borderColor: colorScheme === "light" ? "#e9ecef" : "var(--mantine-color-dark-4)",
+          backgroundColor: colorScheme === "light" ? "#ffffff" : "var(--mantine-color-dark-7)",
         }}
       >
         <Box className="p-6">
           <Tabs defaultValue="react" variant="pills">
             <Tabs.List className="mb-6">
-              <Tabs.Tab
-                value="react"
-                leftSection={<IconBrandReact style={iconStyle} />}
-                className="text-base"
-              >
+              <Tabs.Tab value="react" leftSection={<IconBrandReact style={iconStyle} />} className="text-base">
                 React
               </Tabs.Tab>
-              <Tabs.Tab
-                value="vue"
-                leftSection={<IconBrandVue style={iconStyle} />}
-                className="text-base"
-              >
+              <Tabs.Tab value="vue" leftSection={<IconBrandVue style={iconStyle} />} className="text-base">
                 Vue
               </Tabs.Tab>
             </Tabs.List>
@@ -53,11 +45,11 @@ export const StartContent = () => {
               <Box
                 className="rounded-xl border border-solid p-6"
                 style={{
-                  borderColor: colorScheme === 'light' ? '#f1f3f5' : 'var(--mantine-color-dark-5)',
-                  backgroundColor: colorScheme === 'light' ? '#f8f9fa' : 'var(--mantine-color-dark-6)',
+                  borderColor: colorScheme === "light" ? "#f1f3f5" : "var(--mantine-color-dark-5)",
+                  backgroundColor: colorScheme === "light" ? "#f8f9fa" : "var(--mantine-color-dark-6)",
                 }}
               >
-                <Box className="flex items-center gap-3 mb-4">
+                <Box className="mb-4 flex items-center gap-3">
                   <IconCode size={24} className="text-blue-500" />
                   <Title order={3} size="h4">
                     React Example
@@ -74,11 +66,11 @@ export const StartContent = () => {
               <Box
                 className="rounded-xl border border-solid p-6"
                 style={{
-                  borderColor: colorScheme === 'light' ? '#f1f3f5' : 'var(--mantine-color-dark-5)',
-                  backgroundColor: colorScheme === 'light' ? '#f8f9fa' : 'var(--mantine-color-dark-6)',
+                  borderColor: colorScheme === "light" ? "#f1f3f5" : "var(--mantine-color-dark-5)",
+                  backgroundColor: colorScheme === "light" ? "#f8f9fa" : "var(--mantine-color-dark-6)",
                 }}
               >
-                <Box className="flex items-center gap-3 mb-4">
+                <Box className="mb-4 flex items-center gap-3">
                   <IconCode size={24} className="text-green-500" />
                   <Title order={3} size="h4">
                     Vue Example
