@@ -336,7 +336,7 @@ export class DiffParser {
     while ((c = this.parseLinePrefix(this.peek()))) {
       const line = this.readLine(false);
 
-      if (!line) {
+      if (line === null) {
         throw new Error("Expected unified diff line but reached end of diff");
       }
 

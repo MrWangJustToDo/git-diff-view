@@ -41,7 +41,7 @@
     "vue diff component"
   ],
   "dependencies": {
-    "@git-diff-view/core": "^0.0.35",
+    "@git-diff-view/core": "^0.0.36",
     "@types/hast": "^3.0.0",
     "highlight.js": "^11.11.0",
     "lowlight": "^3.3.0",

@@ -1159,7 +1159,7 @@ export class DiffFile {
     return this.#splitHunksLines?.[index];
   };
 
-  onSplitHunkExpand = (dir: "up" | "down" | "all", index: number, needTrigger = true) => {
+  onSplitHunkExpand = (dir: "up" | "down" | "all" | "up-all" | "down-all", index: number, needTrigger = true) => {
     const current = this.#splitHunksLines?.[index];
     if (!current || !current.splitInfo) return;
 
@@ -1197,7 +1197,19 @@ export class DiffFile {
           plainText: `@@ -${current.splitInfo.oldStartIndex},${current.splitInfo.oldLength} +${current.splitInfo.newStartIndex},${current.splitInfo.newLength}`,
         };
       }
-    } else {
+    } else if (dir === "down-all") {
+      for (let i = current.splitInfo.startHiddenIndex; i < current.splitInfo.endHiddenIndex; i++) {
+        const leftLine = this.#splitLeftLines[i];
+        const rightLine = this.#splitRightLines[i];
+        if (leftLine?.isHidden) leftLine.isHidden = false;
+        if (rightLine?.isHidden) rightLine.isHidden = false;
+      }
+      current.splitInfo = {
+        ...current.splitInfo,
+        plainText: "",
+        startHiddenIndex: current.splitInfo.endHiddenIndex,
+      };
+    } else if (dir === "up") {
       if (current.isLast) {
         if (__DEV__) {
           console.error("the last hunk can not expand up!");
@@ -1222,6 +1234,28 @@ export class DiffFile {
         newStartIndex,
         newLength,
         plainText: `@@ -${oldStartIndex},${oldLength} +${newStartIndex},${newLength}`,
+      };
+
+      delete this.#splitHunksLines?.[index];
+
+      this.#splitHunksLines![current.splitInfo.endHiddenIndex] = current;
+    } else if (dir === "up-all") {
+      if (current.isLast) {
+        if (__DEV__) {
+          console.error("the last hunk can not expand up!");
+        }
+        return;
+      }
+      for (let i = current.splitInfo.startHiddenIndex; i < current.splitInfo.endHiddenIndex; i++) {
+        const leftLine = this.#splitLeftLines[i];
+        const rightLine = this.#splitRightLines[i];
+        if (leftLine?.isHidden) leftLine.isHidden = false;
+        if (rightLine?.isHidden) rightLine.isHidden = false;
+      }
+      current.splitInfo = {
+        ...current.splitInfo,
+        plainText: "",
+        endHiddenIndex: current.splitInfo.startHiddenIndex,
       };
 
       delete this.#splitHunksLines?.[index];
@@ -1259,7 +1293,7 @@ export class DiffFile {
   };
 
   // TODO! support rollback?
-  onUnifiedHunkExpand = (dir: "up" | "down" | "all", index: number, needTrigger = true) => {
+  onUnifiedHunkExpand = (dir: "up" | "down" | "all" | "up-all" | "down-all", index: number, needTrigger = true) => {
     if (this.#composeByDiff) return;
 
     const current = this.#unifiedHunksLines?.[index];
@@ -1296,7 +1330,17 @@ export class DiffFile {
           plainText: `@@ -${current.unifiedInfo.oldStartIndex},${current.unifiedInfo.oldLength} +${current.unifiedInfo.newStartIndex},${current.unifiedInfo.newLength}`,
         };
       }
-    } else {
+    } else if (dir === "down-all") {
+      for (let i = current.unifiedInfo.startHiddenIndex; i < current.unifiedInfo.endHiddenIndex; i++) {
+        const unifiedLine = this.#unifiedLines[i];
+        if (unifiedLine?.isHidden) unifiedLine.isHidden = false;
+      }
+      current.unifiedInfo = {
+        ...current.unifiedInfo,
+        plainText: "",
+        startHiddenIndex: current.unifiedInfo.endHiddenIndex,
+      };
+    } else if (dir === "up") {
       if (current.isLast) {
         if (__DEV__) {
           console.error("the last hunk can not expand up!");
@@ -1319,6 +1363,26 @@ export class DiffFile {
         newStartIndex,
         newLength,
         plainText: `@@ -${oldStartIndex},${oldLength} +${newStartIndex},${newLength}`,
+      };
+
+      delete this.#unifiedHunksLines?.[index];
+
+      this.#unifiedHunksLines![current.unifiedInfo.endHiddenIndex] = current;
+    } else if (dir === "up-all") {
+      if (current.isLast) {
+        if (__DEV__) {
+          console.error("the last hunk can not expand up!");
+        }
+        return;
+      }
+      for (let i = current.unifiedInfo.startHiddenIndex; i < current.unifiedInfo.endHiddenIndex; i++) {
+        const unifiedLine = this.#unifiedLines[i];
+        if (unifiedLine?.isHidden) unifiedLine.isHidden = false;
+      }
+      current.unifiedInfo = {
+        ...current.unifiedInfo,
+        plainText: "",
+        endHiddenIndex: current.unifiedInfo.startHiddenIndex,
       };
 
       delete this.#unifiedHunksLines?.[index];

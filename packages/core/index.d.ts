@@ -126,12 +126,12 @@ export declare class DiffFile {
 	getSplitLineIndexByLineNumber: (lineNumber: number, side: SplitSide) => number;
 	getSplitRightLine: (index: number) => SplitLineItem;
 	getSplitHunkLine: (index: number) => DiffHunkItem;
-	onSplitHunkExpand: (dir: "up" | "down" | "all", index: number, needTrigger?: boolean) => void;
+	onSplitHunkExpand: (dir: "up" | "down" | "all" | "up-all" | "down-all", index: number, needTrigger?: boolean) => void;
 	getUnifiedLine: (index: number) => UnifiedLineItem;
 	getUnifiedLineByLineNumber: (lienNumber: number, side: SplitSide) => UnifiedLineItem;
 	getUnifiedLineIndexByLineNumber: (lineNumber: number, side: SplitSide) => number;
 	getUnifiedHunkLine: (index: number) => DiffHunkItem;
-	onUnifiedHunkExpand: (dir: "up" | "down" | "all", index: number, needTrigger?: boolean) => void;
+	onUnifiedHunkExpand: (dir: "up" | "down" | "all" | "up-all" | "down-all", index: number, needTrigger?: boolean) => void;
 	onAllExpand: (mode: "split" | "unified") => void;
 	get hasExpandSplitAll(): boolean;
 	get hasExpandUnifiedAll(): boolean;
