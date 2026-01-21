@@ -59,7 +59,7 @@ export const WorkerExample = () => {
           Start loading
         </Button>
         <span className="ml-4">
-          Large diff load with <Code>worker</Code>, it's very useful to avoid blocking the UI thread.
+          Large diff load with <Code>worker</Code> / <Code>node server</Code>, it's very useful to avoid blocking the UI thread.
         </span>
       </Box>
       <Box className="border-color relative min-h-40 overflow-hidden rounded-md border">
