@@ -22,8 +22,6 @@
 	const isMaxLineLengthToIgnoreSyntax = $derived.by(() => {
 		return props.syntaxLine && props.syntaxLine?.nodeList?.length > 150;
 	});
-
-	const isEnableTemplate = $derived.by(() => props.diffFile.getIsEnableTemplate());
 </script>
 
 <div
@@ -46,7 +44,6 @@
 			diffLine={props.diffLine}
 			syntaxLine={props.syntaxLine}
 			enableWrap={props.enableWrap}
-			enableTemplate={isEnableTemplate}
 		/>
 	{:else}
 		<DiffString
@@ -55,7 +52,6 @@
 			diffLine={props.diffLine}
 			plainLine={props.plainLine}
 			enableWrap={props.enableWrap}
-			enableTemplate={isEnableTemplate}
 		/>
 	{/if}
 </div>

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { DiffFile, _cacheMap, SplitSide } from "@git-diff-view/core";
+import { DiffFile, _cacheMap, SplitSide, highlighter as buildInHighlighter } from "@git-diff-view/core";
 import { diffFontSizeName, DiffModeEnum } from "@git-diff-view/utils";
 import { memo, useEffect, useMemo, forwardRef, useImperativeHandle, useRef } from "react";
 import * as React from "react";
@@ -315,10 +315,19 @@ const DiffViewWithRef = <T extends unknown>(
     if (!diffFile) return;
 
     if (props.diffViewHighlight) {
-      diffFile.initSyntax({ registerHighlighter });
-    }
+      const finalHighlighter = registerHighlighter || buildInHighlighter;
 
-    diffFile.notifyAll();
+      if (
+        finalHighlighter.name !== diffFile._getHighlighterName() ||
+        finalHighlighter.type !== diffFile._getHighlighterType()
+      ) {
+        diffFile.initSyntax({ registerHighlighter: finalHighlighter });
+        diffFile.notifyAll();
+      } else {
+        diffFile.initSyntax({ registerHighlighter: finalHighlighter });
+        if (finalHighlighter.type !== "class") diffFile.notifyAll();
+      }
+    }
   }, [diffFile, props.diffViewHighlight, registerHighlighter, diffViewTheme]);
 
   useEffect(() => {
@@ -334,7 +343,7 @@ const DiffViewWithRef = <T extends unknown>(
     const cb = diffFile.subscribe(init);
 
     return cb;
-  }, [diffFile]);
+  }, [diffFile, diffViewTheme]);
 
   // fix react strict mode error
   useUnmount(() => (__DEV__ ? diffFile?._destroy?.() : diffFile?.clear?.()), [diffFile]);
