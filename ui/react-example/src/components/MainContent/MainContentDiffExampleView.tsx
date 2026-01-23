@@ -46,6 +46,7 @@ export const MainContentDiffExampleView = memo(
     // because of the cache, switch the highlighter engine will not work, need a new diffFile instance to avoid this
     // see packages/core/src/file.ts:172 getFile
     // TODO fix this in the future
+    // fixed 
     useEffect(() => {
       if (tabSpace !== prevTabSpace || fastDiff !== prevFastDiff) {
         refreshDiffFile();

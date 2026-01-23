@@ -2,7 +2,6 @@ import { type DiffFile, type DiffLine, checkDiffLineIncludeChange, type File } f
 import { NewLineSymbol } from "@git-diff-view/utils";
 import { Box, Text } from "ink";
 import * as React from "react";
-import { memo } from "react";
 
 import {
   diffAddLineNumber,
@@ -161,171 +160,155 @@ const DiffUnifiedNewLine = ({
   );
 };
 
-const _DiffUnifiedLine = memo(
-  ({
-    index,
-    width,
-    theme,
-    columns,
-    diffFile,
-    lineNumber,
-    enableHighlight,
-  }: {
-    index: number;
-    width: number;
-    theme: "light" | "dark";
-    columns: number;
-    diffFile: DiffFile;
-    lineNumber: number;
-    enableHighlight: boolean;
-  }) => {
-    const unifiedLine = diffFile.getUnifiedLine(index);
+const InternalDiffUnifiedLine = ({
+  index,
+  width,
+  theme,
+  columns,
+  diffFile,
+  lineNumber,
+  enableHighlight,
+}: {
+  index: number;
+  width: number;
+  theme: "light" | "dark";
+  columns: number;
+  diffFile: DiffFile;
+  lineNumber: number;
+  enableHighlight: boolean;
+}) => {
+  const unifiedLine = diffFile.getUnifiedLine(index);
 
-    const hasDiff = unifiedLine.diff;
+  const hasDiff = unifiedLine.diff;
 
-    const hasChange = checkDiffLineIncludeChange(unifiedLine.diff);
+  const hasChange = checkDiffLineIncludeChange(unifiedLine.diff);
 
-    const rawLine = unifiedLine.value || "";
+  const rawLine = unifiedLine.value || "";
 
-    const diffLine = unifiedLine.diff;
+  const diffLine = unifiedLine.diff;
 
-    const newLineNumber = unifiedLine.newLineNumber;
+  const newLineNumber = unifiedLine.newLineNumber;
 
-    const oldLinenumber = unifiedLine.oldLineNumber;
+  const oldLinenumber = unifiedLine.oldLineNumber;
 
-    const syntaxLine = newLineNumber
-      ? diffFile.getNewSyntaxLine(newLineNumber)
-      : oldLinenumber
-        ? diffFile.getOldSyntaxLine(oldLinenumber)
-        : undefined;
+  const syntaxLine = newLineNumber
+    ? diffFile.getNewSyntaxLine(newLineNumber)
+    : oldLinenumber
+      ? diffFile.getOldSyntaxLine(oldLinenumber)
+      : undefined;
 
-    const plainLine = newLineNumber
-      ? diffFile.getNewPlainLine(newLineNumber)
-      : oldLinenumber
-        ? diffFile.getOldPlainLine(oldLinenumber)
-        : undefined;
+  const plainLine = newLineNumber
+    ? diffFile.getNewPlainLine(newLineNumber)
+    : oldLinenumber
+      ? diffFile.getOldPlainLine(oldLinenumber)
+      : undefined;
 
-    const contentWidth = columns - (width + 1) * 2;
+  const contentWidth = columns - (width + 1) * 2;
 
-    let row = getCurrentLineRow({ content: rawLine, width: contentWidth });
+  let row = getCurrentLineRow({ content: rawLine, width: contentWidth });
 
-    row = diffLine?.changes?.hasLineChange && diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE ? row + 1 : row;
+  row = diffLine?.changes?.hasLineChange && diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE ? row + 1 : row;
 
-    const color = hasDiff
-      ? theme === "light"
-        ? diffPlainLineNumberColor.light
-        : diffPlainLineNumberColor.dark
-      : theme === "light"
-        ? diffExpandLineNumberColor.light
-        : diffExpandLineNumberColor.dark;
+  const color = hasDiff
+    ? theme === "light"
+      ? diffPlainLineNumberColor.light
+      : diffPlainLineNumberColor.dark
+    : theme === "light"
+      ? diffExpandLineNumberColor.light
+      : diffExpandLineNumberColor.dark;
 
-    const bg = hasDiff
-      ? theme === "light"
-        ? diffPlainLineNumber.light
-        : diffPlainLineNumber.dark
-      : theme === "light"
-        ? diffExpandLineNumber.light
-        : diffExpandLineNumber.dark;
+  const bg = hasDiff
+    ? theme === "light"
+      ? diffPlainLineNumber.light
+      : diffPlainLineNumber.dark
+    : theme === "light"
+      ? diffExpandLineNumber.light
+      : diffExpandLineNumber.dark;
 
-    if (hasChange) {
-      if (unifiedLine.oldLineNumber) {
-        return (
-          <DiffUnifiedOldLine
-            theme={theme}
-            width={width}
-            height={row}
-            columns={columns}
-            rawLine={rawLine}
-            diffFile={diffFile}
-            index={lineNumber}
-            diffLine={diffLine}
-            plainLine={plainLine}
-            syntaxLine={syntaxLine}
-            contentWidth={contentWidth}
-            enableHighlight={enableHighlight}
-            lineNumber={unifiedLine.oldLineNumber}
-          />
-        );
-      } else {
-        return (
-          <DiffUnifiedNewLine
-            theme={theme}
-            width={width}
-            height={row}
-            columns={columns}
-            rawLine={rawLine}
-            index={lineNumber}
-            diffLine={diffLine}
-            diffFile={diffFile}
-            plainLine={plainLine}
-            syntaxLine={syntaxLine}
-            contentWidth={contentWidth}
-            enableHighlight={enableHighlight}
-            lineNumber={unifiedLine.newLineNumber!}
-          />
-        );
-      }
+  if (hasChange) {
+    if (unifiedLine.oldLineNumber) {
+      return (
+        <DiffUnifiedOldLine
+          theme={theme}
+          width={width}
+          height={row}
+          columns={columns}
+          rawLine={rawLine}
+          diffFile={diffFile}
+          index={lineNumber}
+          diffLine={diffLine}
+          plainLine={plainLine}
+          syntaxLine={syntaxLine}
+          contentWidth={contentWidth}
+          enableHighlight={enableHighlight}
+          lineNumber={unifiedLine.oldLineNumber}
+        />
+      );
     } else {
       return (
-        <Box data-line={lineNumber} data-state={unifiedLine.diff ? "diff" : "plain"} height={row} width={columns}>
-          <Box width={width * 2 + 2} flexShrink={0}>
-            <Box width={width} justifyContent="flex-end">
-              <Text
-                dimColor
-                wrap="wrap"
-                color={color}
-                backgroundColor={bg}
-                data-line-old-num={unifiedLine.oldLineNumber}
-              >
-                {unifiedLine.oldLineNumber
-                  .toString()
-                  .padStart(width)
-                  .padEnd(width * row)}
-              </Text>
-            </Box>
-            <Box width={1}>
-              <Text backgroundColor={bg} wrap="wrap">
-                {" ".padEnd(row)}
-              </Text>
-            </Box>
-            <Box width={width} justifyContent="flex-end">
-              <Text
-                dimColor
-                wrap="wrap"
-                color={color}
-                backgroundColor={bg}
-                data-line-new-num={unifiedLine.newLineNumber}
-              >
-                {unifiedLine.newLineNumber
-                  .toString()
-                  .padStart(width)
-                  .padEnd(width * row)}
-              </Text>
-            </Box>
-            <Box width={1}>
-              <Text backgroundColor={bg} wrap="wrap">
-                {" ".padEnd(row)}
-              </Text>
-            </Box>
-          </Box>
-          <DiffContent
-            theme={theme}
-            height={row}
-            rawLine={rawLine}
-            diffFile={diffFile}
-            diffLine={diffLine}
-            width={contentWidth}
-            plainLine={plainLine}
-            syntaxLine={syntaxLine}
-            enableHighlight={enableHighlight}
-          />
-        </Box>
+        <DiffUnifiedNewLine
+          theme={theme}
+          width={width}
+          height={row}
+          columns={columns}
+          rawLine={rawLine}
+          index={lineNumber}
+          diffLine={diffLine}
+          diffFile={diffFile}
+          plainLine={plainLine}
+          syntaxLine={syntaxLine}
+          contentWidth={contentWidth}
+          enableHighlight={enableHighlight}
+          lineNumber={unifiedLine.newLineNumber!}
+        />
       );
     }
+  } else {
+    return (
+      <Box data-line={lineNumber} data-state={unifiedLine.diff ? "diff" : "plain"} height={row} width={columns}>
+        <Box width={width * 2 + 2} flexShrink={0}>
+          <Box width={width} justifyContent="flex-end">
+            <Text dimColor wrap="wrap" color={color} backgroundColor={bg} data-line-old-num={unifiedLine.oldLineNumber}>
+              {unifiedLine.oldLineNumber
+                .toString()
+                .padStart(width)
+                .padEnd(width * row)}
+            </Text>
+          </Box>
+          <Box width={1}>
+            <Text backgroundColor={bg} wrap="wrap">
+              {" ".padEnd(row)}
+            </Text>
+          </Box>
+          <Box width={width} justifyContent="flex-end">
+            <Text dimColor wrap="wrap" color={color} backgroundColor={bg} data-line-new-num={unifiedLine.newLineNumber}>
+              {unifiedLine.newLineNumber
+                .toString()
+                .padStart(width)
+                .padEnd(width * row)}
+            </Text>
+          </Box>
+          <Box width={1}>
+            <Text backgroundColor={bg} wrap="wrap">
+              {" ".padEnd(row)}
+            </Text>
+          </Box>
+        </Box>
+        <DiffContent
+          theme={theme}
+          height={row}
+          rawLine={rawLine}
+          diffFile={diffFile}
+          diffLine={diffLine}
+          width={contentWidth}
+          plainLine={plainLine}
+          syntaxLine={syntaxLine}
+          enableHighlight={enableHighlight}
+        />
+      </Box>
+    );
   }
-);
-
-_DiffUnifiedLine.displayName = "_DiffUnifiedLine";
+};
 
 export const DiffUnifiedContentLine = ({
   index,
@@ -349,7 +332,7 @@ export const DiffUnifiedContentLine = ({
   if (unifiedLine?.isHidden) return null;
 
   return (
-    <_DiffUnifiedLine
+    <InternalDiffUnifiedLine
       index={index}
       width={width}
       theme={theme}
