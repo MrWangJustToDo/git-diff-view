@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable max-lines */
+import { SplitSide } from "./diff-file-utils";
 import { getFile, File } from "./file";
 import { DiffLine, DiffLineType, parseInstance, getDiffRange, getLang } from "./parse";
-
-import { SplitSide } from ".";
 
 import type { IRawDiff } from "./parse";
 import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/lowlight";
@@ -58,6 +57,8 @@ type HunkLineInfo = {
   _endHiddenIndex: number;
   _plainText: string;
 };
+
+type DiffFileHighlighter = Omit<DiffHighlighter, "getHighlighterEngine">;
 
 export interface DiffLineItem extends DiffLine {
   index: number;
@@ -127,8 +128,6 @@ export class DiffFile {
 
   #composeByMerge: boolean = false;
 
-  #enableTemplate: boolean = true;
-
   #composeByFullMerge: boolean = false;
 
   #highlighterName?: string;
@@ -136,8 +135,6 @@ export class DiffFile {
   #highlighterType?: string;
 
   #theme: "light" | "dark" = "light";
-
-  #_theme?: "light" | "dark";
 
   #hasExpandSplitAll = { state: false };
 
@@ -289,7 +286,6 @@ export class DiffFile {
         this._oldFileName,
         this.uuid ? this.uuid + "-old" : undefined
       );
-      this.#oldFileResult.enableTemplate = this.#enableTemplate;
     }
 
     if (this._newFileContent) {
@@ -300,7 +296,6 @@ export class DiffFile {
         this._newFileName,
         this.uuid ? this.uuid + "-new" : undefined
       );
-      this.#newFileResult.enableTemplate = this.#enableTemplate;
     }
   }
 
@@ -378,7 +373,6 @@ export class DiffFile {
         this._oldFileName,
         this.uuid ? this.uuid + "-old" : undefined
       );
-      this.#oldFileResult.enableTemplate = this.#enableTemplate;
       this.#newFileResult = getFile(
         this._newFileContent,
         this._newFileLang,
@@ -386,7 +380,6 @@ export class DiffFile {
         this._newFileName,
         this.uuid ? this.uuid + "-new" : undefined
       );
-      this.#newFileResult.enableTemplate = this.#enableTemplate;
       this.#oldFilePlaceholderLines = oldFilePlaceholderLines;
       this.#newFilePlaceholderLines = newFilePlaceholderLines;
       // all of the file just compose by diff, so we can not do the expand action
@@ -421,7 +414,6 @@ export class DiffFile {
         this._newFileName,
         this.uuid ? this.uuid + "-new" : undefined
       );
-      this.#newFileResult.enableTemplate = this.#enableTemplate;
     } else if (this.#newFileResult) {
       let oldLineNumber = 1;
       let newLineNumber = 1;
@@ -452,7 +444,6 @@ export class DiffFile {
         this._oldFileName,
         this.uuid ? this.uuid + "-old" : undefined
       );
-      this.#oldFileResult.enableTemplate = this.#enableTemplate;
     }
 
     this.#composeRaw();
@@ -640,6 +631,14 @@ export class DiffFile {
     });
   }
 
+  #syncSyntax() {
+    this.#highlighterName =
+      this.#oldFileResult?.highlighterName || this.#newFileResult?.highlighterName || this.#highlighterName;
+
+    this.#highlighterType =
+      this.#oldFileResult?.highlighterType || this.#newFileResult?.highlighterType || this.#highlighterType;
+  }
+
   #composeSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> }) {
     this.#oldFileResult?.doSyntax({ registerHighlighter, theme: this.#theme });
 
@@ -651,8 +650,6 @@ export class DiffFile {
   }
 
   #doSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> } = {}) {
-    if (this.#highlighterType === "class") return;
-
     if (this.#composeByMerge && !this.#composeByFullMerge) {
       if (__DEV__) {
         console.error(
@@ -665,11 +662,7 @@ export class DiffFile {
 
     this.#composeSyntax({ registerHighlighter });
 
-    this.#highlighterName =
-      this.#oldFileResult?.highlighterName || this.#newFileResult?.highlighterName || this.#highlighterName;
-
-    this.#highlighterType =
-      this.#oldFileResult?.highlighterType || this.#newFileResult?.highlighterType || this.#highlighterType;
+    this.#syncSyntax();
   }
 
   #getOldDiffLine(lineNumber: number | null) {
@@ -719,7 +712,6 @@ export class DiffFile {
   }
 
   initTheme(theme?: "light" | "dark") {
-    this.#_theme = this.#theme;
     this.#theme = theme || this.#theme || "light";
   }
 
@@ -730,6 +722,7 @@ export class DiffFile {
     this.#doDiff();
     this.#composeDiff();
     this.#composeFile();
+    this.#syncSyntax();
     this.#hasInitRaw = true;
     if (__DEV__) {
       if (this._diffList.some((l) => l) && !this.#diffLines.length) {
@@ -740,8 +733,14 @@ export class DiffFile {
     }
   }
 
-  initSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> } = {}) {
-    if (this.#hasInitSyntax && (!this.#_theme || this.#theme === this.#_theme)) return;
+  initSyntax({ registerHighlighter }: { registerHighlighter?: DiffFileHighlighter } = {}) {
+    if (
+      this.#hasInitSyntax &&
+      (registerHighlighter
+        ? registerHighlighter.name === this.#highlighterName && registerHighlighter.type === this.#highlighterType
+        : true)
+    )
+      return;
 
     this.#doSyntax({ registerHighlighter });
 
@@ -753,18 +752,6 @@ export class DiffFile {
   init() {
     this.initRaw();
     this.initSyntax();
-  }
-
-  enableTemplate() {
-    this.#enableTemplate = true;
-  }
-
-  disableTemplate() {
-    this.#enableTemplate = false;
-  }
-
-  getIsEnableTemplate() {
-    return this.#enableTemplate;
   }
 
   buildSplitDiffLines() {
@@ -1584,7 +1571,6 @@ export class DiffFile {
 
     const version = this._version_;
     const theme = this.#theme;
-    const enableTemplate = this.#enableTemplate;
 
     return {
       hasInitRaw,
@@ -1622,8 +1608,6 @@ export class DiffFile {
       version,
 
       theme,
-
-      enableTemplate,
 
       isFullMerge: false,
     };
@@ -1666,8 +1650,6 @@ export class DiffFile {
 
     this.#theme = data.theme;
 
-    this.#enableTemplate = data.enableTemplate;
-
     // mark this instance as a merged instance
     this.#composeByMerge = true;
 
@@ -1685,6 +1667,8 @@ export class DiffFile {
   };
 
   _getHighlighterName = () => this.#highlighterName || "";
+
+  _getHighlighterType = () => this.#highlighterType || "";
 
   _getIsPureDiffRender = () => this.#composeByDiff;
 

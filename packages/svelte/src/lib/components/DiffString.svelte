@@ -7,9 +7,8 @@
 	} from '@git-diff-view/core';
 
 	import DiffNoNewLine from './DiffNoNewLine.svelte';
-	import { addContentHighlightBGName, delContentHighlightBGName } from '$lib/utils/color.js';
 	import { diffFontSizeName } from '$lib/utils/size.js';
-	import { getSymbol, NewLineSymbol } from '$lib/utils/symbol.js';
+	import { NewLineSymbol } from '$lib/utils/symbol.js';
 
 	interface Props {
 		rawLine: string;
@@ -17,18 +16,13 @@
 		plainLine?: File['plainFile'][number];
 		operator?: 'add' | 'del';
 		enableWrap?: boolean;
-		enableTemplate?: boolean;
 	}
 
 	let props: Props = $props();
 
 	const initTemplate = () => {
 		if (props.diffLine?.changes?.hasLineChange) {
-			if (
-				props.enableTemplate &&
-				props.diffLine?.plainTemplate &&
-				typeof getPlainDiffTemplate === 'function'
-			) {
+			if (props.diffLine?.plainTemplate && typeof getPlainDiffTemplate === 'function') {
 				getPlainDiffTemplate({
 					diffLine: props.diffLine,
 					rawLine: props.rawLine,
@@ -36,7 +30,7 @@
 				});
 			}
 		} else {
-			if (props.enableTemplate && props.plainLine && !props.plainLine?.template) {
+			if (props.plainLine && !props.plainLine?.template) {
 				props.plainLine.template = getPlainLineTemplate(props.plainLine.value);
 			}
 		}
@@ -46,7 +40,7 @@
 </script>
 
 {#if props.diffLine?.changes?.hasLineChange}
-	{#if props.enableTemplate && props.diffLine?.plainTemplate}
+	{#if props.diffLine?.plainTemplate}
 		<span class="diff-line-content-raw">
 			<span data-template>
 				{@html props.diffLine.plainTemplate}
@@ -66,52 +60,9 @@
 			{/if}
 		</span>
 	{:else}
-		{@const range = props.diffLine.changes.range}
-		{@const str1 = props.rawLine.slice(0, range.location)}
-		{@const str2 = props.rawLine.slice(range.location, range.location + range.length)}
-		{@const str3 = props.rawLine.slice(range.location + range.length)}
-		{@const isLast = str2.includes('\n')}
-		{@const _str2 = isLast ? str2.replace('\n', '').replace('\r', '') : str2}
-		<span class="diff-line-content-raw">
-			<span data-range-start={range.location} data-range-end={range.location + range.length}>
-				<span>
-					{str1}
-				</span><span
-					data-diff-highlight
-					class="rounded-[0.2em]"
-					style={`
-                background-color:
-                  ${props.operator === 'add' ? `var(${addContentHighlightBGName})` : `var(${delContentHighlightBGName})`}
-              `}
-				>
-					{#if isLast}
-						<span>
-							{_str2}
-						</span><span data-newline-symbol>{getSymbol(props.diffLine.changes.newLineSymbol)}</span
-						>
-					{:else}
-						{str2}
-					{/if}
-				</span><span>
-					{str3.replace('\n', '').replace('\r', '')}
-				</span>
-			</span>{#if props.diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE}
-				<span
-					data-no-newline-at-end-of-file-symbol
-					class={props.enableWrap
-						? 'block !text-red-500'
-						: 'inline-block align-middle !text-red-500'}
-					style={`
-						width: var(${diffFontSizeName});
-						height: var(${diffFontSizeName})
-					`}
-				>
-					<DiffNoNewLine />
-				</span>
-			{/if}
-		</span>
+		<span class="diff-line-content-raw">{props.rawLine}</span>
 	{/if}
-{:else if props.enableTemplate && props.plainLine?.template}
+{:else if props.plainLine?.template}
 	<span class="diff-line-content-raw">
 		<span data-template>
 			{@html props.plainLine.template}

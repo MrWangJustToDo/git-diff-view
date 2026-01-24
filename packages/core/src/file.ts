@@ -56,6 +56,9 @@ export class File {
 
   maxLineNumber: number = 0;
 
+  /**
+   * @deprecated
+   */
   enableTemplate: boolean = true;
 
   static createInstance(data: File) {
@@ -85,8 +88,6 @@ export class File {
 
     file.maxLineNumber = data?.maxLineNumber;
 
-    file.enableTemplate = data?.enableTemplate ?? true;
-
     return file;
   }
 
@@ -109,16 +110,9 @@ export class File {
     registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
     theme?: "light" | "dark";
   }) {
-    if (!this.raw || (this.hasDoSyntax && this.theme === theme)) return;
+    if (!this.raw) return;
 
     const finalHighlighter = registerHighlighter || highlighter;
-
-    if (this.syntaxLength) {
-      if (__DEV__) {
-        console.error("current file already doSyntax before!");
-      }
-      return;
-    }
 
     if (this.rawLength > finalHighlighter.maxLineToIgnoreSyntax) {
       if (__DEV__) {
@@ -139,6 +133,14 @@ export class File {
       supportEngin = highlighter;
     }
 
+    if (
+      this.hasDoSyntax &&
+      supportEngin.name === this.highlighterName &&
+      supportEngin.type === this.highlighterType &&
+      (this.theme === theme || supportEngin.type === "class")
+    )
+      return;
+
     this.ast = supportEngin.getAST(this.raw, this.fileName, this.lang, theme);
 
     this.theme = theme;
@@ -147,12 +149,10 @@ export class File {
 
     const { syntaxFileObject, syntaxFileLineNumber } = supportEngin.processAST(this.ast);
 
-    if (this.enableTemplate) {
-      // get syntax template
-      Object.values(syntaxFileObject).forEach((line: SyntaxLineWithTemplate) => {
-        line.template = getSyntaxLineTemplate(line);
-      });
-    }
+    // get syntax template
+    Object.values(syntaxFileObject).forEach((line: SyntaxLineWithTemplate) => {
+      line.template = getSyntaxLineTemplate(line);
+    });
 
     this.syntaxFile = syntaxFileObject;
 
@@ -186,12 +186,10 @@ export class File {
 
     for (let i = 0; i < rawArray.length; i++) {
       this.rawFile[i + 1] = i < rawArray.length - 1 ? rawArray[i] + "\n" : rawArray[i];
-      if (this.enableTemplate) {
-        this.plainFile[i + 1] = {
-          value: this.rawFile[i + 1],
-          template: getPlainLineTemplate(this.rawFile[i + 1]),
-        };
-      }
+      this.plainFile[i + 1] = {
+        value: this.rawFile[i + 1],
+        template: getPlainLineTemplate(this.rawFile[i + 1]),
+      };
     }
 
     this.hasDoRaw = true;

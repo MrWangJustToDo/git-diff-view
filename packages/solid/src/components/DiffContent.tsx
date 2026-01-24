@@ -8,13 +8,7 @@ import {
   getPlainDiffTemplate,
   getPlainLineTemplate,
 } from "@git-diff-view/core";
-import {
-  addContentHighlightBGName,
-  delContentHighlightBGName,
-  diffFontSizeName,
-  getSymbol,
-  NewLineSymbol,
-} from "@git-diff-view/utils";
+import { diffFontSizeName, NewLineSymbol } from "@git-diff-view/utils";
 import { createMemo, For, Show } from "solid-js";
 
 import { DiffNoNewLine } from "./DiffNoNewLine";
@@ -25,13 +19,11 @@ const DiffString = (props: {
   operator?: "add" | "del";
   plainLine?: File["plainFile"][number];
   enableWrap?: boolean;
-  enableTemplate?: boolean;
 }) => {
   const getIsNewLineSymbolChanged = () => props.diffLine?.changes?.newLineSymbol;
 
   const initTemplateIfNeed = () => {
     if (
-      props.enableTemplate &&
       props.operator &&
       props.diffLine &&
       !props.diffLine?.plainTemplate &&
@@ -40,7 +32,7 @@ const DiffString = (props: {
       getPlainDiffTemplate({ diffLine: props.diffLine, rawLine: props.rawLine, operator: props.operator });
     }
 
-    if (props.enableTemplate && props.plainLine && !props.plainLine.template) {
+    if (props.plainLine && !props.plainLine.template) {
       props.plainLine.template = getPlainLineTemplate(props.plainLine.value);
     }
   };
@@ -52,10 +44,7 @@ const DiffString = (props: {
     <Show
       when={props.diffLine?.changes?.hasLineChange}
       fallback={
-        <Show
-          when={props.enableTemplate && props.plainLine?.template}
-          fallback={<span class="diff-line-content-raw">{props.rawLine}</span>}
-        >
+        <Show when={props.plainLine?.template} fallback={<span class="diff-line-content-raw">{props.rawLine}</span>}>
           <span class="diff-line-content-raw">
             {/* eslint-disable-next-line solid/no-innerhtml */}
             <span data-template innerHTML={props.plainLine?.template} />
@@ -63,56 +52,7 @@ const DiffString = (props: {
         </Show>
       }
     >
-      <Show
-        when={props.enableTemplate && props.diffLine?.plainTemplate}
-        fallback={(function () {
-          const range = props.diffLine?.changes?.range;
-          const str1 = props.rawLine.slice(0, range?.location);
-          const str2 = props.rawLine.slice(range?.location, (range?.location || 0) + (range?.length || 0));
-          const str3 = props.rawLine.slice((range?.location || 0) + (range?.length || 0));
-          const isLast = str2.includes("\n");
-          const _str2 = isLast ? str2.replace("\n", "").replace("\r", "") : str2;
-          return (
-            <span class="diff-line-content-raw">
-              <span data-range-start={range?.location} data-range-end={(range?.location || 0) + (range?.length || 0)}>
-                {str1}
-                <span
-                  data-diff-highlight
-                  class="rounded-[0.2em]"
-                  style={{
-                    "background-color":
-                      props.operator === "add"
-                        ? `var(${addContentHighlightBGName})`
-                        : `var(${delContentHighlightBGName})`,
-                  }}
-                >
-                  {isLast ? (
-                    <>
-                      {_str2}
-                      <span data-newline-symbol>{getSymbol(getIsNewLineSymbolChanged())}</span>
-                    </>
-                  ) : (
-                    str2
-                  )}
-                </span>
-                {str3}
-              </span>
-              {getIsNewLineSymbolChanged() === NewLineSymbol.NEWLINE && (
-                <span
-                  data-no-newline-at-end-of-file-symbol
-                  class={props.enableWrap ? "block !text-red-500" : "inline-block align-middle !text-red-500"}
-                  style={{
-                    width: `var(${diffFontSizeName})`,
-                    height: `var(${diffFontSizeName})`,
-                  }}
-                >
-                  <DiffNoNewLine />
-                </span>
-              )}
-            </span>
-          );
-        })()}
-      >
+      <Show when={props.diffLine?.plainTemplate} fallback={<span class="diff-line-content-raw">{props.rawLine}</span>}>
         <span class="diff-line-content-raw">
           {/* eslint-disable-next-line solid/no-innerhtml */}
           <span data-template innerHTML={props.diffLine?.plainTemplate} />
@@ -140,15 +80,11 @@ const DiffSyntax = (props: {
   syntaxLine?: File["syntaxFile"][number];
   operator?: "add" | "del";
   enableWrap?: boolean;
-  enableTemplate?: boolean;
 }) => {
-  const getRange = () => props.diffLine?.changes?.range;
-
   const getIsNewLineSymbolChanged = () => props.diffLine?.changes?.newLineSymbol;
 
   const initTemplateIfNeed = () => {
     if (
-      props.enableTemplate &&
       props.diffLine &&
       props.syntaxLine &&
       props.operator &&
@@ -158,7 +94,7 @@ const DiffSyntax = (props: {
       getSyntaxDiffTemplate({ diffLine: props.diffLine, syntaxLine: props.syntaxLine, operator: props.operator });
     }
 
-    if (props.enableTemplate && props.syntaxLine && !props.syntaxLine?.template) {
+    if (props.syntaxLine && !props.syntaxLine?.template) {
       props.syntaxLine.template = getSyntaxLineTemplate(props.syntaxLine);
     }
   };
@@ -175,7 +111,6 @@ const DiffSyntax = (props: {
           diffLine={props.diffLine}
           operator={props.operator}
           enableWrap={props.enableWrap}
-          enableTemplate={props.enableTemplate}
         />
       }
     >
@@ -183,7 +118,7 @@ const DiffSyntax = (props: {
         when={props.diffLine?.changes?.hasLineChange}
         fallback={
           <Show
-            when={props.enableTemplate && props.syntaxLine?.template}
+            when={props.syntaxLine?.template}
             fallback={
               <span class="diff-line-syntax-raw">
                 <For each={props.syntaxLine?.nodeList || []}>
@@ -209,88 +144,21 @@ const DiffSyntax = (props: {
         }
       >
         <Show
-          when={props.enableTemplate && props.diffLine?.syntaxTemplate}
+          when={props.diffLine?.syntaxTemplate}
           fallback={
             <span class="diff-line-syntax-raw">
-              <span
-                data-range-start={getRange()?.location}
-                data-range-end={(getRange()?.location || 0) + (getRange()?.length || 0)}
-              >
-                <For each={props.syntaxLine?.nodeList}>
-                  {({ node, wrapper }) => {
-                    if (
-                      node.endIndex < getRange()!.location ||
-                      getRange()!.location + getRange()!.length < node.startIndex
-                    ) {
-                      return (
-                        <span
-                          data-start={node.startIndex}
-                          data-end={node.endIndex}
-                          class={wrapper?.properties?.className?.join(" ")}
-                          style={wrapper?.properties?.style}
-                        >
-                          {node.value}
-                        </span>
-                      );
-                    } else {
-                      const index1 = getRange()!.location - node.startIndex;
-                      const index2 = index1 < 0 ? 0 : index1;
-                      const str1 = node.value.slice(0, index2);
-                      const str2 = node.value.slice(index2, index1 + getRange()!.length);
-                      const str3 = node.value.slice(index1 + getRange()!.length);
-                      const isStart = str1.length || getRange()!.location === node.startIndex;
-                      const isEnd = str3.length || node.endIndex === getRange()!.location + getRange()!.length - 1;
-                      const isLast = str2.includes("\n");
-                      const _str2 = isLast ? str2.replace("\n", "").replace("\r", "") : str2;
-                      return (
-                        <span
-                          data-start={node.startIndex}
-                          data-end={node.endIndex}
-                          class={wrapper?.properties?.className?.join(" ")}
-                          style={wrapper?.properties?.style}
-                        >
-                          {str1}
-                          <span
-                            data-diff-highlight
-                            style={{
-                              "background-color":
-                                props.operator === "add"
-                                  ? `var(${addContentHighlightBGName})`
-                                  : `var(${delContentHighlightBGName})`,
-                              "border-top-left-radius": isStart ? "0.2em" : undefined,
-                              "border-bottom-left-radius": isStart ? "0.2em" : undefined,
-                              "border-top-right-radius": isEnd || isLast ? "0.2em" : undefined,
-                              "border-bottom-right-radius": isEnd || isLast ? "0.2em" : undefined,
-                            }}
-                          >
-                            {isLast ? (
-                              <>
-                                {_str2}
-                                <span data-newline-symbol>{getSymbol(getIsNewLineSymbolChanged())}</span>
-                              </>
-                            ) : (
-                              str2
-                            )}
-                          </span>
-                          {str3}
-                        </span>
-                      );
-                    }
-                  }}
-                </For>
-              </span>
-              {getIsNewLineSymbolChanged() === NewLineSymbol.NEWLINE && (
-                <span
-                  data-no-newline-at-end-of-file-symbol
-                  class={props.enableWrap ? "block !text-red-500" : "inline-block align-middle !text-red-500"}
-                  style={{
-                    width: `var(${diffFontSizeName})`,
-                    height: `var(${diffFontSizeName})`,
-                  }}
-                >
-                  <DiffNoNewLine />
-                </span>
-              )}
+              <For each={props.syntaxLine?.nodeList || []}>
+                {({ node, wrapper }) => (
+                  <span
+                    data-start={node.startIndex}
+                    data-end={node.endIndex}
+                    class={wrapper?.properties?.className?.join(" ")}
+                    style={wrapper?.properties?.style}
+                  >
+                    {node.value}
+                  </span>
+                )}
+              </For>
             </span>
           }
         >
@@ -332,8 +200,6 @@ export const DiffContent = (props: {
   const getIsMaxLineLengthToIgnoreSyntax = () =>
     props.syntaxLine?.nodeList ? props.syntaxLine?.nodeList?.length > 150 : false;
 
-  const getIsEnableTemplate = () => props.diffFile.getIsEnableTemplate?.() ?? true;
-
   return (
     <div
       class="diff-line-content-item pl-[2.0em]"
@@ -355,7 +221,6 @@ export const DiffContent = (props: {
           diffLine={props.diffLine}
           syntaxLine={props.syntaxLine}
           enableWrap={props.enableWrap}
-          enableTemplate={getIsEnableTemplate()}
         />
       ) : (
         <DiffString
@@ -364,7 +229,6 @@ export const DiffContent = (props: {
           diffLine={props.diffLine}
           plainLine={props.plainLine}
           enableWrap={props.enableWrap}
-          enableTemplate={getIsEnableTemplate()}
         />
       )}
     </div>

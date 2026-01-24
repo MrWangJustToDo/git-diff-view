@@ -1,7 +1,12 @@
 <script lang="ts" generics="T extends any">
 	import { diffFontSizeName } from '$lib/utils/size.js';
 	import { DiffModeEnum } from '$lib/utils/symbol.js';
-	import { DiffFile, type DiffHighlighter, SplitSide } from '@git-diff-view/core';
+	import {
+		DiffFile,
+		type DiffHighlighter,
+		SplitSide,
+		highlighter as buildInHighlighter
+	} from '@git-diff-view/core';
 	import { onDestroy, type Snippet } from 'svelte';
 	import { useIsMounted } from '$lib/hooks/useIsMounted.svelte.js';
 	import type { HTMLAttributes } from 'svelte/elements';
@@ -162,12 +167,22 @@
 		theme;
 
 		if (enableHighlight) {
-			diffFile.initSyntax({
-				registerHighlighter: props.registerHighlighter
-			});
+			const finalHighlighter = props.registerHighlighter || buildInHighlighter;
+			if (
+				finalHighlighter.name !== diffFile._getHighlighterName() ||
+				finalHighlighter.type !== diffFile._getHighlighterType()
+			) {
+				diffFile.initSyntax({
+					registerHighlighter: finalHighlighter
+				});
+				diffFile.notifyAll();
+			} else {
+				diffFile.initSyntax({
+					registerHighlighter: finalHighlighter
+				});
+				if (finalHighlighter.type !== 'class') diffFile.notifyAll();
+			}
 		}
-
-		diffFile.notifyAll();
 	};
 
 	$effect(initSyntax);
@@ -178,6 +193,8 @@
 		unSubscribeAttr?.current?.();
 
 		if (!isMounted || !diffFile || !wrapperRef) return;
+
+		theme;
 
 		const init = () => {
 			wrapperRef?.setAttribute('data-theme', diffFile._getTheme() || 'light');
