@@ -1,8 +1,5 @@
 export const removeAllSelection = () => {
-  const selection = window.getSelection();
-  for (let i = 0; i < selection.rangeCount; i++) {
-    selection.removeRange(selection.getRangeAt(i));
-  }
+  window.getSelection()?.removeAllRanges();
 };
 
 export const syncScroll = (left: HTMLElement, right: HTMLElement) => {
