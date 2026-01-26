@@ -318,8 +318,9 @@ export declare class DiffLine {
 	plainTemplate?: string;
 	plainTemplateMode?: "fast-diff" | "relative";
 	syntaxTemplate?: string;
+	syntaxTemplateName?: string;
 	syntaxTemplateMode?: "fast-diff" | "relative";
-	constructor(text: string, type: DiffLineType, originalLineNumber: number | null, oldLineNumber: number | null, newLineNumber: number | null, noTrailingNewLine?: boolean, changes?: IRange, diffChanges?: DiffRange, _diffChanges?: DiffRange, plainTemplate?: string, plainTemplateMode?: "fast-diff" | "relative", syntaxTemplate?: string, syntaxTemplateMode?: "fast-diff" | "relative");
+	constructor(text: string, type: DiffLineType, originalLineNumber: number | null, oldLineNumber: number | null, newLineNumber: number | null, noTrailingNewLine?: boolean, changes?: IRange, diffChanges?: DiffRange, _diffChanges?: DiffRange, plainTemplate?: string, plainTemplateMode?: "fast-diff" | "relative", syntaxTemplate?: string, syntaxTemplateName?: string, syntaxTemplateMode?: "fast-diff" | "relative");
 	withNoTrailingNewLine(noTrailingNewLine: boolean): DiffLine;
 	isIncludeableLine(): boolean;
 	equals(other: DiffLine): boolean;
@@ -485,12 +486,14 @@ export declare const getPlainDiffTemplateByFastDiff: ({ diffLine, rawLine, opera
 export declare const getPlainLineTemplate: (line: string) => string;
 export declare const getSplitContentLines: (diffFile: DiffFile) => DiffSplitContentLineItem[];
 export declare const getSplitLines: (diffFile: DiffFile) => DiffSplitLineItem[];
-export declare const getSyntaxDiffTemplate: ({ diffLine, syntaxLine, operator, }: {
+export declare const getSyntaxDiffTemplate: ({ diffFile, diffLine, syntaxLine, operator, }: {
+	diffFile: DiffFile;
 	diffLine: DiffLine;
 	syntaxLine: SyntaxLine;
 	operator: "add" | "del";
 }) => void;
-export declare const getSyntaxDiffTemplateByFastDiff: ({ diffLine, syntaxLine, operator, }: {
+export declare const getSyntaxDiffTemplateByFastDiff: ({ diffFile, diffLine, syntaxLine, operator, }: {
+	diffFile: DiffFile;
 	diffLine: DiffLine;
 	syntaxLine: SyntaxLine;
 	operator: "add" | "del";

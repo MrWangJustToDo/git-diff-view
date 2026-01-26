@@ -524,6 +524,7 @@ export class DiffFile {
             this.deletionLength++;
           } else {
             getDiffRange(additions, deletions, {
+              diffFile: this,
               getAdditionRaw,
               getDeletionRaw,
               getAdditionSyntax,
@@ -534,7 +535,13 @@ export class DiffFile {
           }
           tmp.push(line);
         });
-        getDiffRange(additions, deletions, { getAdditionRaw, getDeletionRaw, getAdditionSyntax, getDeletionSyntax });
+        getDiffRange(additions, deletions, {
+          diffFile: this,
+          getAdditionRaw,
+          getDeletionRaw,
+          getAdditionSyntax,
+          getDeletionSyntax,
+        });
       });
     });
 

@@ -101,12 +101,14 @@ const DiffString = ({
 
 const DiffSyntax = ({
   rawLine,
+  diffFile,
   diffLine,
   operator,
   syntaxLine,
   enableWrap,
 }: {
   rawLine: string;
+  diffFile: DiffFile;
   diffLine?: DiffLine;
   syntaxLine?: File["syntaxFile"][number];
   operator?: "add" | "del";
@@ -122,7 +124,7 @@ const DiffSyntax = ({
     const isNewLineSymbolChanged = changes.newLineSymbol;
 
     if (!diffLine?.syntaxTemplate && typeof getSyntaxDiffTemplate === "function") {
-      getSyntaxDiffTemplate({ diffLine, syntaxLine, operator });
+      getSyntaxDiffTemplate({ diffFile, diffLine, syntaxLine, operator });
     }
 
     if (diffLine?.syntaxTemplate) {
@@ -176,6 +178,7 @@ const DiffSyntax = ({
 };
 
 export const DiffContent = ({
+  diffFile,
   diffLine,
   rawLine,
   plainLine,
@@ -216,6 +219,7 @@ export const DiffContent = ({
         <DiffSyntax
           operator={isAdded ? "add" : isDelete ? "del" : undefined}
           rawLine={rawLine}
+          diffFile={diffFile}
           diffLine={diffLine}
           syntaxLine={syntaxLine}
           enableWrap={enableWrap}

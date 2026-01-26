@@ -5,10 +5,7 @@ import {
   getSyntaxDiffTemplate,
   getSyntaxLineTemplate,
 } from "@git-diff-view/core";
-import {
-  diffFontSizeName,
-  NewLineSymbol,
-} from "@git-diff-view/utils";
+import { diffFontSizeName, NewLineSymbol } from "@git-diff-view/utils";
 
 import { DiffNoNewLine } from "./DiffNoNewLine";
 
@@ -74,26 +71,21 @@ const DiffString = ({
 
 const DiffSyntax = ({
   rawLine,
+  diffFile,
   diffLine,
   operator,
   syntaxLine,
   enableWrap,
 }: {
   rawLine: string;
+  diffFile: DiffFile;
   diffLine?: DiffLine;
   syntaxLine?: File["syntaxFile"][number];
   operator?: "add" | "del";
   enableWrap?: boolean;
 }) => {
   if (!syntaxLine) {
-    return (
-      <DiffString
-        rawLine={rawLine}
-        diffLine={diffLine}
-        operator={operator}
-        enableWrap={enableWrap}
-      />
-    );
+    return <DiffString rawLine={rawLine} diffLine={diffLine} operator={operator} enableWrap={enableWrap} />;
   }
 
   const changes = diffLine?.changes;
@@ -102,7 +94,7 @@ const DiffSyntax = ({
     const isNewLineSymbolChanged = changes.newLineSymbol;
 
     if (!diffLine?.syntaxTemplate && typeof getSyntaxDiffTemplate === "function") {
-      getSyntaxDiffTemplate({ diffLine, syntaxLine, operator });
+      getSyntaxDiffTemplate({ diffFile, diffLine, syntaxLine, operator });
     }
 
     if (diffLine?.syntaxTemplate) {
@@ -156,8 +148,9 @@ const DiffSyntax = ({
 };
 
 export const DiffContent = ({
-  diffLine,
   rawLine,
+  diffFile,
+  diffLine,
   plainLine,
   syntaxLine,
   enableWrap,
@@ -196,6 +189,7 @@ export const DiffContent = ({
         <DiffSyntax
           operator={isAdded ? "add" : isDelete ? "del" : undefined}
           rawLine={rawLine}
+          diffFile={diffFile}
           diffLine={diffLine}
           syntaxLine={syntaxLine}
           enableWrap={enableWrap}

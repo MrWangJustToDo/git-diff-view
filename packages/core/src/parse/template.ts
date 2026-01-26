@@ -4,6 +4,7 @@ import { escapeHtml } from "../escape-html";
 
 import { processTransformTemplateContent, isTransformEnabled } from "./transform";
 
+import type { DiffFile } from "../diff-file";
 import type { DiffLine } from "./diff-line";
 import type { SyntaxLine } from "@git-diff-view/lowlight";
 
@@ -114,17 +115,24 @@ export const getPlainDiffTemplateByFastDiff = ({
 };
 
 export const getSyntaxDiffTemplate = ({
+  diffFile,
   diffLine,
   syntaxLine,
   operator,
 }: {
+  diffFile: DiffFile;
   diffLine: DiffLine;
   syntaxLine: SyntaxLine;
   operator: "add" | "del";
 }) => {
   if (!syntaxLine) return;
 
-  if (diffLine.syntaxTemplate && diffLine.syntaxTemplateMode === "relative") return;
+  if (
+    diffLine.syntaxTemplate &&
+    diffLine.syntaxTemplateMode === "relative" &&
+    diffLine.syntaxTemplateName === diffFile._getHighlighterName()
+  )
+    return;
 
   const changes = diffLine.changes;
 
@@ -175,20 +183,29 @@ export const getSyntaxDiffTemplate = ({
   diffLine.syntaxTemplate = template;
 
   diffLine.syntaxTemplateMode = "relative";
+
+  diffLine.syntaxTemplateName = diffFile._getHighlighterName();
 };
 
 export const getSyntaxDiffTemplateByFastDiff = ({
+  diffFile,
   diffLine,
   syntaxLine,
   operator,
 }: {
+  diffFile: DiffFile;
   diffLine: DiffLine;
   syntaxLine: SyntaxLine;
   operator: "add" | "del";
 }) => {
   if (!syntaxLine) return;
 
-  if (diffLine.syntaxTemplate && diffLine.syntaxTemplateMode === "fast-diff") return;
+  if (
+    diffLine.syntaxTemplate &&
+    diffLine.syntaxTemplateMode === "fast-diff" &&
+    diffLine.syntaxTemplateName === diffFile._getHighlighterName()
+  )
+    return;
 
   const changes = diffLine.diffChanges;
 
@@ -294,6 +311,8 @@ export const getSyntaxDiffTemplateByFastDiff = ({
   diffLine.syntaxTemplate = template;
 
   diffLine.syntaxTemplateMode = "fast-diff";
+
+  diffLine.syntaxTemplateName = diffFile._getHighlighterName();
 };
 
 export const getSyntaxLineTemplate = (line: SyntaxLine) => {

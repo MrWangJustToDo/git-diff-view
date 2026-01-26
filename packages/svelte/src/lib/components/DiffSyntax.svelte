@@ -1,5 +1,6 @@
 <script lang="ts">
 	import {
+		DiffFile,
 		getSyntaxDiffTemplate,
 		getSyntaxLineTemplate,
 		type DiffLine,
@@ -12,6 +13,7 @@
 
 	interface Props {
 		rawLine: string;
+		diffFile: DiffFile;
 		diffLine?: DiffLine;
 		syntaxLine?: File['syntaxFile'][number];
 		operator?: 'add' | 'del';
@@ -29,6 +31,7 @@
 				typeof getSyntaxDiffTemplate === 'function'
 			) {
 				getSyntaxDiffTemplate({
+					diffFile: props.diffFile,
 					diffLine: props.diffLine,
 					syntaxLine: props.syntaxLine,
 					operator: props.operator || 'add'

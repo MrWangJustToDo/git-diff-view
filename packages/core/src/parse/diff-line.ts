@@ -25,6 +25,7 @@ export class DiffLine {
     public plainTemplate?: string,
     public plainTemplateMode?: "fast-diff" | "relative",
     public syntaxTemplate?: string,
+    public syntaxTemplateName?: string,
     public syntaxTemplateMode?: "fast-diff" | "relative"
   ) {}
 

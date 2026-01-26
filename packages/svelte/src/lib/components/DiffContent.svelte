@@ -41,6 +41,7 @@
 		<DiffSyntax
 			operator={isAdded ? 'add' : isDelete ? 'del' : undefined}
 			rawLine={props.rawLine}
+			diffFile={props.diffFile}
 			diffLine={props.diffLine}
 			syntaxLine={props.syntaxLine}
 			enableWrap={props.enableWrap}
