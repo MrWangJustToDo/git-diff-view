@@ -1,6 +1,6 @@
 import { DiffLineType, type DiffFile, checkDiffLineIncludeChange } from "@git-diff-view/core";
 import { NewLineSymbol } from "@git-diff-view/utils";
-import { Box, Text } from "ink";
+import { Box } from "ink";
 import * as React from "react";
 
 import {
@@ -13,6 +13,7 @@ import {
   diffPlainLineNumberColor,
 } from "./color";
 import { DiffContent } from "./DiffContent";
+import { DiffSplitLineNumberArea, DiffEmptyArea } from "./DiffLineNumber";
 import { getCurrentLineRow } from "./tools";
 
 const InternalDiffSplitLine = ({
@@ -33,35 +34,27 @@ const InternalDiffSplitLine = ({
   enableHighlight: boolean;
 }) => {
   const oldLine = diffFile.getSplitLeftLine(index);
-
   const newLine = diffFile.getSplitRightLine(index);
 
   const oldSyntaxLine = diffFile.getOldSyntaxLine(oldLine?.lineNumber);
-
   const oldPlainLine = diffFile.getOldPlainLine(oldLine.lineNumber);
-
   const newSyntaxLine = diffFile.getNewSyntaxLine(newLine?.lineNumber);
-
   const newPlainLine = diffFile.getNewPlainLine(newLine.lineNumber);
 
   const hasDiff = !!oldLine?.diff || !!newLine?.diff;
-
   const hasChange = checkDiffLineIncludeChange(oldLine?.diff) || checkDiffLineIncludeChange(newLine?.diff);
 
   const oldLineIsDelete = oldLine?.diff?.type === DiffLineType.Delete;
-
   const newLineIsAdded = newLine?.diff?.type === DiffLineType.Add;
 
   const hasOldLine = !!oldLine.lineNumber;
-
   const hasNewLine = !!newLine.lineNumber;
 
   const emptyBG = theme === "light" ? diffEmptyContent.light : diffEmptyContent.dark;
-
   const halfColumns = columns / 2;
 
+  // Calculate row heights
   let oldRow = getCurrentLineRow({ content: oldLine?.value || "", width: halfColumns - width - 1 });
-
   let newRow = getCurrentLineRow({ content: newLine?.value || "", width: halfColumns - width - 1 });
 
   oldRow =
@@ -75,9 +68,9 @@ const InternalDiffSplitLine = ({
       : newRow;
 
   const row = Math.max(oldRow, newRow);
-
   const contentWidth = columns / 2 - width - 2;
 
+  // Determine background colors for line numbers
   const oldLineNumberBG = oldLineIsDelete
     ? theme === "light"
       ? diffDelLineNumber.light
@@ -112,28 +105,17 @@ const InternalDiffSplitLine = ({
 
   return (
     <Box data-line={lineNumber} data-state={hasDiff ? "diff" : "plain"} height={row} width={columns}>
+      {/* Left side (old line) */}
       {hasOldLine ? (
         <>
-          <Box width={width + 2} flexShrink={0}>
-            <Box width={1}>
-              <Text backgroundColor={oldLineNumberBG} wrap="wrap">
-                {" ".padEnd(row)}
-              </Text>
-            </Box>
-            <Box width={width} justifyContent="flex-end">
-              <Text dimColor={!hasChange} wrap="wrap" color={color} backgroundColor={oldLineNumberBG}>
-                {oldLine.lineNumber
-                  .toString()
-                  .padStart(width)
-                  .padEnd(row * width)}
-              </Text>
-            </Box>
-            <Box width={1}>
-              <Text backgroundColor={oldLineNumberBG} wrap="wrap">
-                {" ".padEnd(row)}
-              </Text>
-            </Box>
-          </Box>
+          <DiffSplitLineNumberArea
+            lineNumber={oldLine.lineNumber}
+            width={width}
+            height={row}
+            backgroundColor={oldLineNumberBG}
+            color={color}
+            dim={!hasChange}
+          />
           <DiffContent
             theme={theme}
             height={row}
@@ -147,34 +129,20 @@ const InternalDiffSplitLine = ({
           />
         </>
       ) : (
-        <Box width={halfColumns}>
-          <Text backgroundColor={emptyBG} wrap="wrap">
-            {" ".padEnd(halfColumns * row)}
-          </Text>
-        </Box>
+        <DiffEmptyArea width={halfColumns} height={row} backgroundColor={emptyBG} />
       )}
+
+      {/* Right side (new line) */}
       {hasNewLine ? (
         <>
-          <Box width={width + 2} flexShrink={0}>
-            <Box width={1}>
-              <Text backgroundColor={newLineNumberBG} wrap="wrap">
-                {" ".padEnd(row)}
-              </Text>
-            </Box>
-            <Box width={width} justifyContent="flex-end">
-              <Text dimColor={!hasChange} wrap="wrap" color={color} backgroundColor={newLineNumberBG}>
-                {newLine.lineNumber
-                  .toString()
-                  .padStart(width)
-                  .padEnd(row * width)}
-              </Text>
-            </Box>
-            <Box width={1}>
-              <Text backgroundColor={newLineNumberBG} wrap="wrap">
-                {" ".padEnd(row)}
-              </Text>
-            </Box>
-          </Box>
+          <DiffSplitLineNumberArea
+            lineNumber={newLine.lineNumber}
+            width={width}
+            height={row}
+            backgroundColor={newLineNumberBG}
+            color={color}
+            dim={!hasChange}
+          />
           <DiffContent
             theme={theme}
             height={row}
@@ -188,11 +156,7 @@ const InternalDiffSplitLine = ({
           />
         </>
       ) : (
-        <Box width={halfColumns}>
-          <Text backgroundColor={emptyBG} wrap="wrap">
-            {" ".padEnd(halfColumns * row)}
-          </Text>
-        </Box>
+        <DiffEmptyArea width={halfColumns} height={row} backgroundColor={emptyBG} />
       )}
     </Box>
   );
@@ -216,7 +180,6 @@ export const DiffSplitContentLine = ({
   enableHighlight: boolean;
 }) => {
   const oldLine = diffFile.getSplitLeftLine(index);
-
   const newLine = diffFile.getSplitRightLine(index);
 
   if (oldLine?.isHidden && newLine?.isHidden) return null;

@@ -98,7 +98,7 @@ getDiffViewHighlighter().then((highlighter) => {
       },
       diffViewHighlight: true,
       registerHighlighter: highlighter,
-      diffViewMode: DiffModeEnum.Split,
+      diffViewMode: DiffModeEnum.SplitGitLab,
     })
     //     )
   );

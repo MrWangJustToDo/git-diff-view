@@ -1,6 +1,6 @@
 import { type DiffFile, type DiffLine, checkDiffLineIncludeChange, type File } from "@git-diff-view/core";
 import { NewLineSymbol } from "@git-diff-view/utils";
-import { Box, Text } from "ink";
+import { Box } from "ink";
 import * as React from "react";
 
 import {
@@ -12,8 +12,12 @@ import {
   diffPlainLineNumberColor,
 } from "./color";
 import { DiffContent } from "./DiffContent";
+import { DiffUnifiedLineNumberArea } from "./DiffLineNumber";
 import { getCurrentLineRow } from "./tools";
 
+/**
+ * Unified view line component for deleted lines (old side only)
+ */
 const DiffUnifiedOldLine = ({
   index,
   width,
@@ -45,33 +49,18 @@ const DiffUnifiedOldLine = ({
 }) => {
   const color = theme === "light" ? diffPlainLineNumberColor.light : diffPlainLineNumberColor.dark;
   const bg = theme === "light" ? diffDelLineNumber.light : diffDelLineNumber.dark;
+
   return (
     <Box data-line={index} data-state="diff" height={height} width={columns}>
-      <Box width={width * 2 + 2} flexShrink={0}>
-        <Box width={width} justifyContent="flex-end">
-          <Text color={color} wrap="wrap" backgroundColor={bg} data-line-old-num={lineNumber}>
-            {lineNumber
-              .toString()
-              .padStart(width)
-              .padEnd(width * height)}
-          </Text>
-        </Box>
-        <Box width={1}>
-          <Text backgroundColor={bg} wrap="wrap">
-            {" ".padEnd(height)}
-          </Text>
-        </Box>
-        <Box width={width}>
-          <Text backgroundColor={bg} wrap="wrap">
-            {" ".padStart(width * height)}
-          </Text>
-        </Box>
-        <Box width={1}>
-          <Text backgroundColor={bg} wrap="wrap">
-            {" ".padEnd(height)}
-          </Text>
-        </Box>
-      </Box>
+      <DiffUnifiedLineNumberArea
+        oldLineNumber={lineNumber}
+        newLineNumber={undefined}
+        width={width}
+        height={height}
+        backgroundColor={bg}
+        color={color}
+        dim={false}
+      />
       <DiffContent
         theme={theme}
         height={height}
@@ -87,6 +76,9 @@ const DiffUnifiedOldLine = ({
   );
 };
 
+/**
+ * Unified view line component for added lines (new side only)
+ */
 const DiffUnifiedNewLine = ({
   index,
   width,
@@ -118,33 +110,18 @@ const DiffUnifiedNewLine = ({
 }) => {
   const color = theme === "light" ? diffPlainLineNumberColor.light : diffPlainLineNumberColor.dark;
   const bg = theme === "light" ? diffAddLineNumber.light : diffAddLineNumber.dark;
+
   return (
     <Box data-line={index} data-state="diff" height={height} width={columns}>
-      <Box width={width * 2 + 2} flexShrink={0}>
-        <Box width={width}>
-          <Text backgroundColor={bg} wrap="wrap">
-            {" ".padStart(width * height)}
-          </Text>
-        </Box>
-        <Box width={1}>
-          <Text backgroundColor={bg} wrap="wrap">
-            {" ".padEnd(height)}
-          </Text>
-        </Box>
-        <Box width={width} justifyContent="flex-end">
-          <Text color={color} wrap="wrap" backgroundColor={bg} data-line-new-num={lineNumber}>
-            {lineNumber
-              .toString()
-              .padStart(width)
-              .padEnd(width * height)}
-          </Text>
-        </Box>
-        <Box width={1}>
-          <Text backgroundColor={bg} wrap="wrap">
-            {" ".padEnd(height)}
-          </Text>
-        </Box>
-      </Box>
+      <DiffUnifiedLineNumberArea
+        oldLineNumber={undefined}
+        newLineNumber={lineNumber}
+        width={width}
+        height={height}
+        backgroundColor={bg}
+        color={color}
+        dim={false}
+      />
       <DiffContent
         theme={theme}
         height={height}
@@ -180,15 +157,12 @@ const InternalDiffUnifiedLine = ({
   const unifiedLine = diffFile.getUnifiedLine(index);
 
   const hasDiff = unifiedLine.diff;
-
   const hasChange = checkDiffLineIncludeChange(unifiedLine.diff);
 
   const rawLine = unifiedLine.value || "";
-
   const diffLine = unifiedLine.diff;
 
   const newLineNumber = unifiedLine.newLineNumber;
-
   const oldLinenumber = unifiedLine.oldLineNumber;
 
   const syntaxLine = newLineNumber
@@ -206,7 +180,6 @@ const InternalDiffUnifiedLine = ({
   const contentWidth = columns - (width + 1) * 2;
 
   let row = getCurrentLineRow({ content: rawLine, width: contentWidth });
-
   row = diffLine?.changes?.hasLineChange && diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE ? row + 1 : row;
 
   const color = hasDiff
@@ -225,6 +198,7 @@ const InternalDiffUnifiedLine = ({
       ? diffExpandLineNumber.light
       : diffExpandLineNumber.dark;
 
+  // Handle changed lines (additions or deletions)
   if (hasChange) {
     if (unifiedLine.oldLineNumber) {
       return (
@@ -263,51 +237,33 @@ const InternalDiffUnifiedLine = ({
         />
       );
     }
-  } else {
-    return (
-      <Box data-line={lineNumber} data-state={unifiedLine.diff ? "diff" : "plain"} height={row} width={columns}>
-        <Box width={width * 2 + 2} flexShrink={0}>
-          <Box width={width} justifyContent="flex-end">
-            <Text dimColor wrap="wrap" color={color} backgroundColor={bg} data-line-old-num={unifiedLine.oldLineNumber}>
-              {unifiedLine.oldLineNumber
-                .toString()
-                .padStart(width)
-                .padEnd(width * row)}
-            </Text>
-          </Box>
-          <Box width={1}>
-            <Text backgroundColor={bg} wrap="wrap">
-              {" ".padEnd(row)}
-            </Text>
-          </Box>
-          <Box width={width} justifyContent="flex-end">
-            <Text dimColor wrap="wrap" color={color} backgroundColor={bg} data-line-new-num={unifiedLine.newLineNumber}>
-              {unifiedLine.newLineNumber
-                .toString()
-                .padStart(width)
-                .padEnd(width * row)}
-            </Text>
-          </Box>
-          <Box width={1}>
-            <Text backgroundColor={bg} wrap="wrap">
-              {" ".padEnd(row)}
-            </Text>
-          </Box>
-        </Box>
-        <DiffContent
-          theme={theme}
-          height={row}
-          rawLine={rawLine}
-          diffFile={diffFile}
-          diffLine={diffLine}
-          width={contentWidth}
-          plainLine={plainLine}
-          syntaxLine={syntaxLine}
-          enableHighlight={enableHighlight}
-        />
-      </Box>
-    );
   }
+
+  // Handle unchanged lines (context lines)
+  return (
+    <Box data-line={lineNumber} data-state={unifiedLine.diff ? "diff" : "plain"} height={row} width={columns}>
+      <DiffUnifiedLineNumberArea
+        oldLineNumber={unifiedLine.oldLineNumber}
+        newLineNumber={unifiedLine.newLineNumber}
+        width={width}
+        height={row}
+        backgroundColor={bg}
+        color={color}
+        dim={true}
+      />
+      <DiffContent
+        theme={theme}
+        height={row}
+        rawLine={rawLine}
+        diffFile={diffFile}
+        diffLine={diffLine}
+        width={contentWidth}
+        plainLine={plainLine}
+        syntaxLine={syntaxLine}
+        enableHighlight={enableHighlight}
+      />
+    </Box>
+  );
 };
 
 export const DiffUnifiedContentLine = ({
