@@ -23,23 +23,6 @@ export interface CharStyle {
 }
 
 /**
- * Apply hex color to text using chalk
- */
-export function hexToAnsi(hex: string, isBg = false): string {
-  if (isBg) {
-    return chalk.bgHex(hex)("");
-  }
-  return chalk.hex(hex)("");
-}
-
-/**
- * Reset all styles - chalk handles this automatically when string ends
- */
-export function resetAnsi(): string {
-  return chalk.reset("");
-}
-
-/**
  * Style a string with the given CharStyle using chalk
  */
 function styleText(text: string, style?: CharStyle): string {
@@ -58,41 +41,6 @@ function styleText(text: string, style?: CharStyle): string {
   }
 
   return styledChalk(text);
-}
-
-/**
- * Build an ANSI-styled string from characters with individual styles.
- * This allows Ink to wrap the text at character boundaries while preserving styling.
- */
-export function buildAnsiString(chars: Array<{ char: string; style?: CharStyle }>): string {
-  let result = "";
-  let currentStyle: CharStyle | undefined;
-  let currentText = "";
-
-  for (const { char, style } of chars) {
-    const styleChanged =
-      currentStyle?.color !== style?.color ||
-      currentStyle?.backgroundColor !== style?.backgroundColor ||
-      currentStyle?.dim !== style?.dim;
-
-    if (styleChanged) {
-      // Flush previous text with its style
-      if (currentText) {
-        result += styleText(currentText, currentStyle);
-        currentText = "";
-      }
-      currentStyle = style;
-    }
-
-    currentText += char;
-  }
-
-  // Flush remaining text
-  if (currentText) {
-    result += styleText(currentText, currentStyle);
-  }
-
-  return result;
 }
 
 /**
@@ -170,26 +118,6 @@ export function buildAnsiStringWithLineBreaks(
 
   // Build each line as an ANSI string and join with newlines
   return lines.map((line) => buildAnsiStringOptimized(line)).join("\n");
-}
-
-/**
- * Create a styled line with background color filling the entire width.
- * Useful for line numbers and operator columns.
- *
- * @param text - Text to display (will be on first row only if multiline)
- * @param height - Number of rows
- * @param style - Style to apply
- * @returns ANSI string with newlines
- */
-export function buildStyledLines(text: string, height: number, style: CharStyle): string {
-  const lines: string[] = [];
-
-  for (let row = 0; row < height; row++) {
-    const lineText = row === 0 ? text : " ".repeat(text.length);
-    lines.push(styleText(lineText, style));
-  }
-
-  return lines.join("\n");
 }
 
 /**
