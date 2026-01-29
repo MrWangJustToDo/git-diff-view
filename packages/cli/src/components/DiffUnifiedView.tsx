@@ -26,7 +26,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const unifiedLineLength = Math.max(diffFile.unifiedLineLength, diffFile.fileLineLength);
 
-  const width = unifiedLineLength.toString().length;
+  const lineNumWidth = unifiedLineLength.toString().length;
 
   const lines = getUnifiedContentLine(diffFile);
 
@@ -39,7 +39,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
           <DiffUnifiedHunkLine
             index={item.index}
             theme={theme}
-            width={width}
+            lineNumWidth={lineNumWidth}
             columns={columns}
             diffFile={diffFile}
             lineNumber={item.lineNumber}
@@ -47,9 +47,9 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
           <DiffUnifiedContentLine
             index={item.index}
             theme={theme}
-            width={width}
             columns={columns}
             diffFile={diffFile}
+            lineNumWidth={lineNumWidth}
             lineNumber={item.lineNumber}
             enableHighlight={enableHighlight}
           />
@@ -64,11 +64,11 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
       ))}
       <DiffUnifiedHunkLine
         theme={theme}
-        width={width}
         columns={columns}
         diffFile={diffFile}
         index={diffFile.unifiedLineLength}
         lineNumber={diffFile.unifiedLineLength}
+        lineNumWidth={lineNumWidth}
       />
     </>
   );

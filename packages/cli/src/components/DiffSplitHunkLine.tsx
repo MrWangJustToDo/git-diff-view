@@ -9,18 +9,18 @@ import { useDiffViewContext } from "./DiffViewContext";
 
 const DiffSplitHunkLineGitHub = ({
   index,
-  width,
   theme,
   columns,
   diffFile,
   lineNumber,
+  lineNumWidth,
 }: {
   index: number;
-  width: number;
   theme: "light" | "dark";
   columns: number;
   diffFile: DiffFile;
   lineNumber: number;
+  lineNumWidth: number;
 }) => {
   const currentHunk = diffFile.getSplitHunkLine(index);
 
@@ -30,12 +30,12 @@ const DiffSplitHunkLineGitHub = ({
 
   const hunkContentColor = theme === "light" ? diffHunkContentColor.light : diffHunkContentColor.dark;
 
-  const contentWidth = columns - width - 2;
+  const contentWidth = columns - lineNumWidth - 2;
 
   return (
     <Box data-line={`${lineNumber}-hunk`} data-state="hunk" height={1}>
-      <Box width={width + 2}>
-        <Text backgroundColor={hunkLineNumberBG}>{" ".padEnd(width + 2)}</Text>
+      <Box width={lineNumWidth + 2}>
+        <Text backgroundColor={hunkLineNumberBG}>{" ".padEnd(lineNumWidth + 2)}</Text>
       </Box>
       <Box width={contentWidth}>
         <Text backgroundColor={hunkContentBG} color={hunkContentColor} wrap="truncate">
@@ -48,18 +48,18 @@ const DiffSplitHunkLineGitHub = ({
 
 const DiffSplitHunkLineGitLab = ({
   index,
-  width,
   theme,
   columns,
   diffFile,
   lineNumber,
+  lineNumWidth,
 }: {
   index: number;
-  width: number;
   theme: "light" | "dark";
   columns: number;
   diffFile: DiffFile;
   lineNumber: number;
+  lineNumWidth: number;
 }) => {
   const currentHunk = diffFile.getSplitHunkLine(index);
 
@@ -69,20 +69,20 @@ const DiffSplitHunkLineGitLab = ({
 
   const hunkContentColor = theme === "light" ? diffHunkContentColor.light : diffHunkContentColor.dark;
 
-  const contentWidth = columns / 2 - width - 2;
+  const contentWidth = columns / 2 - lineNumWidth - 2;
 
   return (
     <Box data-line={`${lineNumber}-hunk`} data-state="hunk" height={1}>
-      <Box width={width + 2}>
-        <Text backgroundColor={hunkLineNumberBG}>{" ".padEnd(width + 2)}</Text>
+      <Box width={lineNumWidth + 2}>
+        <Text backgroundColor={hunkLineNumberBG}>{" ".padEnd(lineNumWidth + 2)}</Text>
       </Box>
       <Box width={contentWidth}>
         <Text backgroundColor={hunkContentBG} color={hunkContentColor} wrap="truncate">
           {(currentHunk.splitInfo?.plainText || currentHunk.text || "").padEnd(contentWidth)}
         </Text>
       </Box>
-      <Box width={width + 2}>
-        <Text backgroundColor={hunkLineNumberBG}>{" ".padEnd(width + 2)}</Text>
+      <Box width={lineNumWidth + 2}>
+        <Text backgroundColor={hunkLineNumberBG}>{" ".padEnd(lineNumWidth + 2)}</Text>
       </Box>
       <Box width={contentWidth}>
         <Text backgroundColor={hunkContentBG} color={hunkContentColor} wrap="truncate">
@@ -95,18 +95,18 @@ const DiffSplitHunkLineGitLab = ({
 
 const InternalDiffSplitHunkLine = ({
   index,
-  width,
   theme,
   columns,
   diffFile,
   lineNumber,
+  lineNumWidth,
 }: {
   index: number;
-  width: number;
   theme: "light" | "dark";
   columns: number;
   diffFile: DiffFile;
   lineNumber: number;
+  lineNumWidth: number;
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
@@ -120,22 +120,22 @@ const InternalDiffSplitHunkLine = ({
     return (
       <DiffSplitHunkLineGitHub
         index={index}
-        width={width}
         theme={theme}
         columns={columns}
         diffFile={diffFile}
         lineNumber={lineNumber}
+        lineNumWidth={lineNumWidth}
       />
     );
   } else {
     return (
       <DiffSplitHunkLineGitLab
         index={index}
-        width={width}
         theme={theme}
         columns={columns}
         diffFile={diffFile}
         lineNumber={lineNumber}
+        lineNumWidth={lineNumWidth}
       />
     );
   }
@@ -143,18 +143,18 @@ const InternalDiffSplitHunkLine = ({
 
 export const DiffSplitHunkLine = ({
   index,
-  width,
   theme,
   columns,
   diffFile,
   lineNumber,
+  lineNumWidth,
 }: {
   index: number;
-  width: number;
   theme: "light" | "dark";
   columns: number;
   diffFile: DiffFile;
   lineNumber: number;
+  lineNumWidth: number;
 }) => {
   const currentHunk = diffFile.getSplitHunkLine(index);
 
@@ -170,11 +170,11 @@ export const DiffSplitHunkLine = ({
   return (
     <InternalDiffSplitHunkLine
       index={index}
-      width={width}
       theme={theme}
       columns={columns}
       diffFile={diffFile}
       lineNumber={lineNumber}
+      lineNumWidth={lineNumWidth}
     />
   );
 };

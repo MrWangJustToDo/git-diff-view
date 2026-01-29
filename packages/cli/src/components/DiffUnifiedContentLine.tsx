@@ -20,7 +20,6 @@ import { getCurrentLineRow } from "./tools";
  */
 const DiffUnifiedOldLine = ({
   index,
-  width,
   theme,
   height,
   columns,
@@ -29,17 +28,18 @@ const DiffUnifiedOldLine = ({
   plainLine,
   syntaxLine,
   lineNumber,
+  lineNumWidth,
   diffFile,
   contentWidth,
   enableHighlight,
 }: {
   index: number;
-  width: number;
   height: number;
   theme: "light" | "dark";
   columns: number;
   rawLine: string;
   lineNumber: number;
+  lineNumWidth: number;
   plainLine?: File["plainFile"][number];
   syntaxLine?: File["syntaxFile"][number];
   diffLine?: DiffLine;
@@ -48,6 +48,7 @@ const DiffUnifiedOldLine = ({
   enableHighlight: boolean;
 }) => {
   const color = theme === "light" ? diffPlainLineNumberColor.light : diffPlainLineNumberColor.dark;
+
   const bg = theme === "light" ? diffDelLineNumber.light : diffDelLineNumber.dark;
 
   return (
@@ -55,7 +56,7 @@ const DiffUnifiedOldLine = ({
       <DiffUnifiedLineNumberArea
         oldLineNumber={lineNumber}
         newLineNumber={undefined}
-        width={width}
+        lineNumWidth={lineNumWidth}
         height={height}
         backgroundColor={bg}
         color={color}
@@ -81,7 +82,6 @@ const DiffUnifiedOldLine = ({
  */
 const DiffUnifiedNewLine = ({
   index,
-  width,
   theme,
   height,
   columns,
@@ -90,17 +90,18 @@ const DiffUnifiedNewLine = ({
   plainLine,
   syntaxLine,
   lineNumber,
+  lineNumWidth,
   diffFile,
   contentWidth,
   enableHighlight,
 }: {
   index: number;
-  width: number;
   height: number;
   theme: "light" | "dark";
   columns: number;
   rawLine: string;
   lineNumber: number;
+  lineNumWidth: number;
   plainLine?: File["plainFile"][number];
   syntaxLine?: File["syntaxFile"][number];
   diffLine?: DiffLine;
@@ -109,6 +110,7 @@ const DiffUnifiedNewLine = ({
   enableHighlight: boolean;
 }) => {
   const color = theme === "light" ? diffPlainLineNumberColor.light : diffPlainLineNumberColor.dark;
+
   const bg = theme === "light" ? diffAddLineNumber.light : diffAddLineNumber.dark;
 
   return (
@@ -116,7 +118,7 @@ const DiffUnifiedNewLine = ({
       <DiffUnifiedLineNumberArea
         oldLineNumber={undefined}
         newLineNumber={lineNumber}
-        width={width}
+        lineNumWidth={lineNumWidth}
         height={height}
         backgroundColor={bg}
         color={color}
@@ -139,19 +141,19 @@ const DiffUnifiedNewLine = ({
 
 const InternalDiffUnifiedLine = ({
   index,
-  width,
   theme,
   columns,
   diffFile,
   lineNumber,
+  lineNumWidth,
   enableHighlight,
 }: {
   index: number;
-  width: number;
   theme: "light" | "dark";
   columns: number;
   diffFile: DiffFile;
   lineNumber: number;
+  lineNumWidth: number;
   enableHighlight: boolean;
 }) => {
   const unifiedLine = diffFile.getUnifiedLine(index);
@@ -177,9 +179,11 @@ const InternalDiffUnifiedLine = ({
       ? diffFile.getOldPlainLine(oldLinenumber)
       : undefined;
 
-  const contentWidth = columns - (width + 1) * 2;
+  const contentWidth = columns - (lineNumWidth + 1) * 2 - 1;
 
-  let row = getCurrentLineRow({ content: rawLine, width: contentWidth });
+  // Use contentWidth - 1 to match the actual wrap width in DiffContent (operator column takes 1 char)
+  let row = getCurrentLineRow({ content: rawLine, width: contentWidth - 1 });
+
   row = diffLine?.changes?.hasLineChange && diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE ? row + 1 : row;
 
   const color = hasDiff
@@ -204,7 +208,6 @@ const InternalDiffUnifiedLine = ({
       return (
         <DiffUnifiedOldLine
           theme={theme}
-          width={width}
           height={row}
           columns={columns}
           rawLine={rawLine}
@@ -213,6 +216,7 @@ const InternalDiffUnifiedLine = ({
           diffLine={diffLine}
           plainLine={plainLine}
           syntaxLine={syntaxLine}
+          lineNumWidth={lineNumWidth}
           contentWidth={contentWidth}
           enableHighlight={enableHighlight}
           lineNumber={unifiedLine.oldLineNumber}
@@ -222,7 +226,6 @@ const InternalDiffUnifiedLine = ({
       return (
         <DiffUnifiedNewLine
           theme={theme}
-          width={width}
           height={row}
           columns={columns}
           rawLine={rawLine}
@@ -231,6 +234,7 @@ const InternalDiffUnifiedLine = ({
           diffFile={diffFile}
           plainLine={plainLine}
           syntaxLine={syntaxLine}
+          lineNumWidth={lineNumWidth}
           contentWidth={contentWidth}
           enableHighlight={enableHighlight}
           lineNumber={unifiedLine.newLineNumber!}
@@ -245,7 +249,7 @@ const InternalDiffUnifiedLine = ({
       <DiffUnifiedLineNumberArea
         oldLineNumber={unifiedLine.oldLineNumber}
         newLineNumber={unifiedLine.newLineNumber}
-        width={width}
+        lineNumWidth={lineNumWidth}
         height={row}
         backgroundColor={bg}
         color={color}
@@ -268,19 +272,19 @@ const InternalDiffUnifiedLine = ({
 
 export const DiffUnifiedContentLine = ({
   index,
-  width,
   theme,
   columns,
   diffFile,
   lineNumber,
+  lineNumWidth,
   enableHighlight,
 }: {
   index: number;
-  width: number;
   columns: number;
   theme: "light" | "dark";
   diffFile: DiffFile;
   lineNumber: number;
+  lineNumWidth: number;
   enableHighlight: boolean;
 }) => {
   const unifiedLine = diffFile.getUnifiedLine(index);
@@ -290,11 +294,11 @@ export const DiffUnifiedContentLine = ({
   return (
     <InternalDiffUnifiedLine
       index={index}
-      width={width}
       theme={theme}
       columns={columns}
       diffFile={diffFile}
       lineNumber={lineNumber}
+      lineNumWidth={lineNumWidth}
       enableHighlight={enableHighlight}
     />
   );

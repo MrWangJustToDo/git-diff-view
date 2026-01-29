@@ -18,19 +18,19 @@ import { getCurrentLineRow } from "./tools";
 
 const InternalDiffSplitLine = ({
   index,
-  width,
   theme,
   columns,
   diffFile,
   lineNumber,
+  lineNumWidth,
   enableHighlight,
 }: {
   index: number;
-  width: number;
   columns: number;
   theme: "light" | "dark";
   diffFile: DiffFile;
   lineNumber: number;
+  lineNumWidth: number;
   enableHighlight: boolean;
 }) => {
   const oldLine = diffFile.getSplitLeftLine(index);
@@ -52,10 +52,12 @@ const InternalDiffSplitLine = ({
 
   const emptyBG = theme === "light" ? diffEmptyContent.light : diffEmptyContent.dark;
   const halfColumns = columns / 2;
+  const contentWidth = columns / 2 - lineNumWidth - 2;
 
-  // Calculate row heights
-  let oldRow = getCurrentLineRow({ content: oldLine?.value || "", width: halfColumns - width - 1 });
-  let newRow = getCurrentLineRow({ content: newLine?.value || "", width: halfColumns - width - 1 });
+  // Calculate row heights - must match the actual wrap width used in DiffContent
+  // DiffContent receives contentWidth and wraps at (contentWidth - 1) for the operator column
+  let oldRow = getCurrentLineRow({ content: oldLine?.value || "", width: contentWidth - 1 });
+  let newRow = getCurrentLineRow({ content: newLine?.value || "", width: contentWidth - 1 });
 
   oldRow =
     oldLine?.diff?.changes?.hasLineChange && oldLine?.diff?.changes.newLineSymbol === NewLineSymbol.NEWLINE
@@ -68,7 +70,6 @@ const InternalDiffSplitLine = ({
       : newRow;
 
   const row = Math.max(oldRow, newRow);
-  const contentWidth = columns / 2 - width - 2;
 
   // Determine background colors for line numbers
   const oldLineNumberBG = oldLineIsDelete
@@ -110,7 +111,7 @@ const InternalDiffSplitLine = ({
         <>
           <DiffSplitLineNumberArea
             lineNumber={oldLine.lineNumber}
-            width={width}
+            lineNumWidth={lineNumWidth}
             height={row}
             backgroundColor={oldLineNumberBG}
             color={color}
@@ -137,7 +138,7 @@ const InternalDiffSplitLine = ({
         <>
           <DiffSplitLineNumberArea
             lineNumber={newLine.lineNumber}
-            width={width}
+            lineNumWidth={lineNumWidth}
             height={row}
             backgroundColor={newLineNumberBG}
             color={color}
@@ -164,19 +165,19 @@ const InternalDiffSplitLine = ({
 
 export const DiffSplitContentLine = ({
   index,
-  width,
   theme,
   columns,
   diffFile,
   lineNumber,
+  lineNumWidth,
   enableHighlight,
 }: {
   index: number;
-  width: number;
   columns: number;
   theme: "light" | "dark";
   diffFile: DiffFile;
   lineNumber: number;
+  lineNumWidth: number;
   enableHighlight: boolean;
 }) => {
   const oldLine = diffFile.getSplitLeftLine(index);
@@ -187,11 +188,11 @@ export const DiffSplitContentLine = ({
   return (
     <InternalDiffSplitLine
       index={index}
-      width={width}
       theme={theme}
       columns={columns}
       diffFile={diffFile}
       lineNumber={lineNumber}
+      lineNumWidth={lineNumWidth}
       enableHighlight={enableHighlight}
     />
   );

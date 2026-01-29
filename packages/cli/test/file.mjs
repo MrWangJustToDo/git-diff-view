@@ -430,7 +430,7 @@ getDiffViewHighlighter().then((highlighter) => {
       },
       diffViewHighlight: true,
       registerHighlighter: highlighter,
-      diffViewMode: DiffModeEnum.Unified,
+      diffViewMode: DiffModeEnum.Split,
     })
   );
 });

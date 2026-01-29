@@ -1,8 +1,8 @@
 import { getDiffViewHighlighter } from "@git-diff-view/shiki";
-import { createElement } from "@my-react/react";
-import { Box, render, Text } from "@my-react/react-terminal";
-// import { Box, render, Text } from "ink";
-// import { createElement } from "react";
+// import { createElement } from "@my-react/react";
+// import { Box, render, Text } from "@my-react/react-terminal";
+import { Box, render, Text } from "ink";
+import { createElement } from "react";
 
 import { DiffView, DiffModeEnum } from "@git-diff-view/cli";
 
@@ -98,7 +98,7 @@ getDiffViewHighlighter().then((highlighter) => {
       },
       diffViewHighlight: true,
       registerHighlighter: highlighter,
-      diffViewMode: DiffModeEnum.SplitGitLab,
+      diffViewMode: DiffModeEnum.Unified,
     })
     //     )
   );

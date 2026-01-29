@@ -1,4 +1,5 @@
 import { createStore, markRaw, ref } from "reactivity-store";
+import stringWidth from "string-width";
 
 import type { DiffModeEnum, DiffViewProps } from "./DiffView";
 import type { DiffLine } from "@git-diff-view/core";
@@ -118,7 +119,7 @@ export const createDiffConfigStore = <T = any>(
 };
 
 export const getCurrentLineRow = ({ content, width }: { content: string; width: number }) => {
-  return Math.ceil(content.length / width);
+  return Math.ceil(stringWidth(content) / width);
 };
 
 export const getStringContentWithFixedWidth = ({

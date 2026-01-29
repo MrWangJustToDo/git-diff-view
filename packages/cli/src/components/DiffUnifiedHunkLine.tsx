@@ -7,18 +7,18 @@ import type { DiffFile } from "@git-diff-view/core";
 
 const InternalDiffUnifiedHunkLine = ({
   index,
-  width,
   theme,
   columns,
   diffFile,
   lineNumber,
+  lineNumWidth,
 }: {
   index: number;
-  width: number;
   theme: "light" | "dark";
   columns: number;
   diffFile: DiffFile;
   lineNumber: number;
+  lineNumWidth: number;
 }) => {
   const currentHunk = diffFile.getUnifiedHunkLine(index);
 
@@ -28,12 +28,12 @@ const InternalDiffUnifiedHunkLine = ({
 
   const hunkContentColor = theme === "light" ? diffHunkContentColor.light : diffHunkContentColor.dark;
 
-  const contentWidth = columns - width * 2 - 2;
+  const contentWidth = columns - lineNumWidth * 2 - 3;
 
   return (
     <Box data-line={`${lineNumber}-hunk`} data-state="hunk" height={1}>
-      <Box width={width * 2 + 2} flexShrink={0}>
-        <Text backgroundColor={hunkLineNumberBG}>{" ".padEnd(width * 2 + 2)}</Text>
+      <Box width={lineNumWidth * 2 + 3} flexShrink={0}>
+        <Text backgroundColor={hunkLineNumberBG}>{" ".padEnd(lineNumWidth * 2 + 3)}</Text>
       </Box>
       <Box width={contentWidth} flexShrink={0}>
         <Text backgroundColor={hunkContentBG} color={hunkContentColor} wrap="truncate">
@@ -46,18 +46,18 @@ const InternalDiffUnifiedHunkLine = ({
 
 export const DiffUnifiedHunkLine = ({
   index,
-  width,
   theme,
   columns,
   diffFile,
   lineNumber,
+  lineNumWidth,
 }: {
   index: number;
-  width: number;
   theme: "light" | "dark";
   columns: number;
   diffFile: DiffFile;
   lineNumber: number;
+  lineNumWidth: number;
 }) => {
   const currentHunk = diffFile.getUnifiedHunkLine(index);
 
@@ -74,10 +74,10 @@ export const DiffUnifiedHunkLine = ({
     <InternalDiffUnifiedHunkLine
       index={index}
       theme={theme}
-      width={width}
       columns={columns}
       diffFile={diffFile}
       lineNumber={lineNumber}
+      lineNumWidth={lineNumWidth}
     />
   );
 };

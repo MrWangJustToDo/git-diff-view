@@ -23,7 +23,7 @@ export const DiffSplitView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const splitLineLength = Math.max(diffFile.splitLineLength, diffFile.fileLineLength);
 
-  const width = splitLineLength.toString().length;
+  const lineNumWidth = splitLineLength.toString().length;
 
   const lines = getSplitContentLines(diffFile);
 
@@ -35,15 +35,15 @@ export const DiffSplitView = memo(({ diffFile }: { diffFile: DiffFile }) => {
         <Fragment key={line.index}>
           <DiffSplitHunkLine
             theme={theme}
-            width={width}
             columns={columns}
             index={line.index}
-            lineNumber={line.lineNumber}
             diffFile={diffFile}
+            lineNumber={line.lineNumber}
+            lineNumWidth={lineNumWidth}
           />
           <DiffSplitContentLine
             theme={theme}
-            width={width}
+            lineNumWidth={lineNumWidth}
             columns={columns}
             index={line.index}
             diffFile={diffFile}
@@ -61,11 +61,11 @@ export const DiffSplitView = memo(({ diffFile }: { diffFile: DiffFile }) => {
       ))}
       <DiffSplitHunkLine
         theme={theme}
-        width={width}
         columns={columns}
+        diffFile={diffFile}
         index={diffFile.splitLineLength}
         lineNumber={diffFile.splitLineLength}
-        diffFile={diffFile}
+        lineNumWidth={lineNumWidth}
       />
     </>
   );

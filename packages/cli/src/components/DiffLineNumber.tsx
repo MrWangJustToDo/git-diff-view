@@ -18,14 +18,14 @@ import { buildStyledBlock, type CharStyle } from "./ansiString";
  */
 export const DiffSplitLineNumberArea: React.FC<{
   lineNumber?: number;
-  width: number;
+  lineNumWidth: number;
   height: number;
   backgroundColor: string;
   color: string;
   dim?: boolean;
-}> = React.memo(({ lineNumber, width, height, backgroundColor, color, dim = false }) => {
-  // Total width: leftPad + num + rightPad = 1 + width + 1
-  const totalWidth = width + 2;
+}> = React.memo(({ lineNumber, lineNumWidth, height, backgroundColor, color, dim = false }) => {
+  // Total width: leftPad + num + rightPad = 1 + lineNumWidth + 1
+  const totalWidth = lineNumWidth + 2;
 
   const content = React.useMemo(() => {
     const style: CharStyle = { backgroundColor, color, dim };
@@ -33,13 +33,14 @@ export const DiffSplitLineNumberArea: React.FC<{
 
     for (let row = 0; row < height; row++) {
       // Left padding + line number (right-aligned) + right padding
-      const numPart = row === 0 && lineNumber !== undefined ? lineNumber.toString().padStart(width) : " ".repeat(width);
+      const numPart =
+        row === 0 && lineNumber !== undefined ? lineNumber.toString().padStart(lineNumWidth) : " ".repeat(lineNumWidth);
       const lineText = ` ${numPart} `;
       lines.push(buildStyledBlock(lineText, totalWidth, 1, style, "left"));
     }
 
     return lines.join("\n");
-  }, [lineNumber, width, height, backgroundColor, color, dim, totalWidth]);
+  }, [lineNumber, lineNumWidth, height, backgroundColor, color, dim, totalWidth]);
 
   return (
     <Box width={totalWidth} flexShrink={0}>
@@ -57,14 +58,14 @@ DiffSplitLineNumberArea.displayName = "DiffSplitLineNumberArea";
 export const DiffUnifiedLineNumberArea: React.FC<{
   oldLineNumber?: number;
   newLineNumber?: number;
-  width: number;
+  lineNumWidth: number;
   height: number;
   backgroundColor: string;
   color: string;
   dim?: boolean;
-}> = React.memo(({ oldLineNumber, newLineNumber, width, height, backgroundColor, color, dim = false }) => {
-  // Total width: oldNum + separator + newNum + separator = width + 1 + width + 1
-  const totalWidth = width * 2 + 2;
+}> = React.memo(({ oldLineNumber, newLineNumber, lineNumWidth, height, backgroundColor, color, dim = false }) => {
+  // Total width: oldNum + separator + newNum + separator = lineNumWidth + 1 + lineNumWidth + 1
+  const totalWidth = lineNumWidth * 2 + 3;
 
   const content = React.useMemo(() => {
     const style: CharStyle = { backgroundColor, color, dim };
@@ -73,15 +74,19 @@ export const DiffUnifiedLineNumberArea: React.FC<{
     for (let row = 0; row < height; row++) {
       // Old number (right-aligned) + separator + new number (right-aligned) + separator
       const oldPart =
-        row === 0 && oldLineNumber !== undefined ? oldLineNumber.toString().padStart(width) : " ".repeat(width);
+        row === 0 && oldLineNumber !== undefined
+          ? oldLineNumber.toString().padStart(lineNumWidth)
+          : " ".repeat(lineNumWidth);
       const newPart =
-        row === 0 && newLineNumber !== undefined ? newLineNumber.toString().padStart(width) : " ".repeat(width);
-      const lineText = `${oldPart} ${newPart} `;
+        row === 0 && newLineNumber !== undefined
+          ? newLineNumber.toString().padStart(lineNumWidth)
+          : " ".repeat(lineNumWidth);
+      const lineText = ` ${oldPart} ${newPart} `;
       lines.push(buildStyledBlock(lineText, totalWidth, 1, style, "left"));
     }
 
     return lines.join("\n");
-  }, [oldLineNumber, newLineNumber, width, height, backgroundColor, color, dim, totalWidth]);
+  }, [oldLineNumber, newLineNumber, lineNumWidth, height, backgroundColor, color, dim, totalWidth]);
 
   return (
     <Box width={totalWidth} flexShrink={0}>
