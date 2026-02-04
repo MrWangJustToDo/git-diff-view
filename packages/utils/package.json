@@ -3,7 +3,7 @@
   "description": "@git-diff-view/utils",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.37",
+  "version": "0.0.38",
   "types": "index.d.ts",
   "type": "module",
   "files": [

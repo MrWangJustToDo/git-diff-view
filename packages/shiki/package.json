@@ -3,7 +3,7 @@
   "description": "@git-diff-view/shiki",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.37",
+  "version": "0.0.38",
   "types": "index.d.ts",
   "main": "./dist/esm/index.mjs",
   "type": "module",
@@ -47,6 +47,6 @@
   ],
   "dependencies": {
     "@types/hast": "^3.0.0",
-    "shiki": "^3.9.2"
+    "shiki": "^3.22.0"
   }
 }
