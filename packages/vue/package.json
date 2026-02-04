@@ -3,7 +3,7 @@
   "description": "@git-diff-view/vue",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "main": "./dist/vue-git-diff-view.mjs",
   "type": "module",
   "types": "index.d.ts",

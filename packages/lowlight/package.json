@@ -3,7 +3,7 @@
   "description": "@git-diff-view/lowlight",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.36",
+  "version": "0.0.37",
   "main": "index.js",
   "types": "index.d.ts",
   "files": [
