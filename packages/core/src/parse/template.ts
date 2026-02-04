@@ -81,6 +81,8 @@ export const getPlainDiffTemplateByFastDiff = ({
   rawLine: string;
   operator: "add" | "del";
 }) => {
+  if (diffLine.plainTemplate && diffLine.plainTemplateMode === 'fast-diff') return;
+
   const changes = diffLine.diffChanges;
 
   if (!changes || !changes.hasLineChange || !rawLine) return;

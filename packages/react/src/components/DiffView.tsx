@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { DiffFile, _cacheMap, SplitSide, highlighter as buildInHighlighter } from "@git-diff-view/core";
+import { DiffFile, _cacheMap, SplitSide } from "@git-diff-view/core";
 import { diffFontSizeName, DiffModeEnum } from "@git-diff-view/utils";
 import { memo, useEffect, useMemo, forwardRef, useImperativeHandle, useRef } from "react";
 import * as React from "react";
@@ -315,17 +315,18 @@ const DiffViewWithRef = <T extends unknown>(
     if (!diffFile) return;
 
     if (props.diffViewHighlight) {
-      const finalHighlighter = registerHighlighter || buildInHighlighter;
-
-      if (
-        finalHighlighter.name !== diffFile._getHighlighterName() ||
-        finalHighlighter.type !== diffFile._getHighlighterType()
-      ) {
-        diffFile.initSyntax({ registerHighlighter: finalHighlighter });
+      if (registerHighlighter) {
+        if (
+          registerHighlighter.name !== diffFile._getHighlighterName() ||
+          registerHighlighter.type !== diffFile._getHighlighterType() ||
+          registerHighlighter.type !== "class"
+        ) {
+          diffFile.initSyntax({ registerHighlighter: registerHighlighter });
+          diffFile.notifyAll();
+        }
+      } else if (diffFile._getHighlighterType() !== "class") {
+        diffFile.initSyntax();
         diffFile.notifyAll();
-      } else {
-        diffFile.initSyntax({ registerHighlighter: finalHighlighter });
-        if (finalHighlighter.type !== "class") diffFile.notifyAll();
       }
     }
   }, [diffFile, props.diffViewHighlight, registerHighlighter, diffViewTheme]);
