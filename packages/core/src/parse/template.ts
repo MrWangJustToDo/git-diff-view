@@ -81,7 +81,7 @@ export const getPlainDiffTemplateByFastDiff = ({
   rawLine: string;
   operator: "add" | "del";
 }) => {
-  if (diffLine.plainTemplate && diffLine.plainTemplateMode === 'fast-diff') return;
+  if (diffLine.plainTemplate && diffLine.plainTemplateMode === "fast-diff") return;
 
   const changes = diffLine.diffChanges;
 
@@ -132,7 +132,8 @@ export const getSyntaxDiffTemplate = ({
   if (
     diffLine.syntaxTemplate &&
     diffLine.syntaxTemplateMode === "relative" &&
-    diffLine.syntaxTemplateName === diffFile._getHighlighterName()
+    diffLine.syntaxTemplateName === diffFile._getHighlighterName() &&
+    diffFile._getHighlighterType() === "class"
   )
     return;
 
@@ -205,7 +206,8 @@ export const getSyntaxDiffTemplateByFastDiff = ({
   if (
     diffLine.syntaxTemplate &&
     diffLine.syntaxTemplateMode === "fast-diff" &&
-    diffLine.syntaxTemplateName === diffFile._getHighlighterName()
+    diffLine.syntaxTemplateName === diffFile._getHighlighterName() &&
+    diffFile._getHighlighterType() === "class"
   )
     return;
 
