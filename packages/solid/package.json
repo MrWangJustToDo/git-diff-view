@@ -3,7 +3,7 @@
   "description": "@git-diff-view/solid",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "main": "./dist/solid-git-diff-view.mjs",
   "type": "module",
   "types": "index.d.ts",
@@ -41,7 +41,7 @@
     "solid diff component"
   ],
   "dependencies": {
-    "@git-diff-view/core": "^0.0.38",
+    "@git-diff-view/core": "^0.0.39",
     "@types/hast": "^3.0.0",
     "highlight.js": "^11.11.0",
     "lowlight": "^3.3.0",
