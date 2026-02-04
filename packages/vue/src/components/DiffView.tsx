@@ -1,4 +1,4 @@
-import { DiffFile, _cacheMap, SplitSide, highlighter as buildInHighlighter } from "@git-diff-view/core";
+import { DiffFile, _cacheMap, SplitSide } from "@git-diff-view/core";
 import { diffFontSizeName, DiffModeEnum } from "@git-diff-view/utils";
 import { defineComponent, provide, ref, watch, watchEffect, computed, onUnmounted } from "vue";
 
@@ -163,21 +163,21 @@ export const DiffView = defineComponent<
       theme.value;
 
       if (enableHighlight.value) {
-        const finalHighlighter = props.registerHighlighter || buildInHighlighter;
-        if (
-          finalHighlighter.name !== instance._getHighlighterName() ||
-          finalHighlighter.type !== instance._getHighlighterType()
-        ) {
-          instance.initSyntax({
-            registerHighlighter: finalHighlighter,
-          });
-          instance.notifyAll();
-        } else {
-          instance.initSyntax({
-            registerHighlighter: finalHighlighter,
-          });
-
-          if (finalHighlighter.type !== "class") instance.notifyAll();
+        const registerHighlighter = props.registerHighlighter;
+        if (registerHighlighter) {
+          if (
+            registerHighlighter.name !== instance._getHighlighterName() ||
+            registerHighlighter.type !== instance._getHighlighterType() ||
+            registerHighlighter.type !== "class"
+          ) {
+            instance.initSyntax({
+              registerHighlighter: registerHighlighter,
+            });
+            instance.notifyAll();
+          } else if (instance._getHighlighterType() !== "class") {
+            instance.initSyntax({});
+            instance.notifyAll();
+          }
         }
       }
     };

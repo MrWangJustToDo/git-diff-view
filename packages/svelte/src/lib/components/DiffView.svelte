@@ -167,20 +167,21 @@
 		theme;
 
 		if (enableHighlight) {
-			const finalHighlighter = props.registerHighlighter || buildInHighlighter;
-			if (
-				finalHighlighter.name !== diffFile._getHighlighterName() ||
-				finalHighlighter.type !== diffFile._getHighlighterType()
-			) {
-				diffFile.initSyntax({
-					registerHighlighter: finalHighlighter
-				});
+			const registerHighlighter = props.registerHighlighter;
+			if (registerHighlighter) {
+				if (
+					registerHighlighter.name !== diffFile._getHighlighterName() ||
+					registerHighlighter.type !== diffFile._getHighlighterType() ||
+					registerHighlighter.type !== 'class'
+				) {
+					diffFile.initSyntax({
+						registerHighlighter: registerHighlighter
+					});
+					diffFile.notifyAll();
+				}
+			} else if (diffFile._getHighlighterType() !== 'class') {
+				diffFile.initSyntax();
 				diffFile.notifyAll();
-			} else {
-				diffFile.initSyntax({
-					registerHighlighter: finalHighlighter
-				});
-				if (finalHighlighter.type !== 'class') diffFile.notifyAll();
 			}
 		}
 	};
