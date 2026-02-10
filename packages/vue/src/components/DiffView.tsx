@@ -176,7 +176,7 @@ export const DiffView = defineComponent<
             instance.notifyAll();
           }
         } else if (
-          instance._getHighlighterName() !== buildInHighlighter.name ||
+          (!instance._getIsCloned() && instance._getHighlighterName() !== buildInHighlighter.name) ||
           instance._getHighlighterType() !== "class"
         ) {
           instance.initSyntax({});

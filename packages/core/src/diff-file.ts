@@ -134,6 +134,8 @@ export class DiffFile {
 
   #highlighterType?: string;
 
+  #isCloned: boolean = false;
+
   #theme: "light" | "dark" = "light";
 
   #hasExpandSplitAll = { state: false };
@@ -1660,6 +1662,8 @@ export class DiffFile {
     // mark this instance as a merged instance
     this.#composeByMerge = true;
 
+    this.#isCloned = true;
+
     if (__DEV__ && this._version_ !== data.version) {
       console.error("the version of the `diffInstance` is not match, some error may happen");
     }
@@ -1680,6 +1684,8 @@ export class DiffFile {
   _getIsPureDiffRender = () => this.#composeByDiff;
 
   _getTheme = () => this.#theme;
+
+  _getIsCloned = () => this.#isCloned;
 
   _addClonedInstance = (instance: DiffFile) => {
     const updateFunc = () => {

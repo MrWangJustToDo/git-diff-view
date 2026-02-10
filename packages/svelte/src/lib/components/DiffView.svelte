@@ -175,7 +175,7 @@
 					diffFile.notifyAll();
 				}
 			} else if (
-				diffFile._getHighlighterName() !== buildInHighlighter.name ||
+				(!diffFile._getIsCloned() && diffFile._getHighlighterName() !== buildInHighlighter.name) ||
 				diffFile._getHighlighterType() !== 'class'
 			) {
 				diffFile.initSyntax();

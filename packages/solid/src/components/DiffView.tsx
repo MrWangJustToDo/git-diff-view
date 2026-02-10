@@ -207,7 +207,7 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
             currentDiffFile.notifyAll();
           }
         } else if (
-          currentDiffFile._getHighlighterName() !== buildInHighlighter.name ||
+          (!currentDiffFile._getIsCloned() && currentDiffFile._getHighlighterName() !== buildInHighlighter.name) ||
           currentDiffFile._getHighlighterType() !== "class"
         ) {
           currentDiffFile.initSyntax();

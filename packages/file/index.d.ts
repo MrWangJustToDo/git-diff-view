@@ -210,6 +210,7 @@ export declare class DiffFile {
 	_getHighlighterType: () => string;
 	_getIsPureDiffRender: () => boolean;
 	_getTheme: () => "light" | "dark";
+	_getIsCloned: () => boolean;
 	_addClonedInstance: (instance: DiffFile) => void;
 	_notifyOthers: (instance: DiffFile) => void;
 	_delClonedInstance: (instance: DiffFile) => void;
