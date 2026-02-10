@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
-import { _cacheMap, DiffFile, SplitSide } from "@git-diff-view/core";
+import { _cacheMap, DiffFile, SplitSide, highlighter as buildInHighlighter } from "@git-diff-view/core";
 import { diffFontSizeName, DiffModeEnum } from "@git-diff-view/utils";
 import { type JSXElement, type JSX, createSignal, createEffect, createMemo, onCleanup, Show } from "solid-js";
 
@@ -206,7 +206,10 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
             currentDiffFile.initSyntax({ registerHighlighter: registerHighlighter });
             currentDiffFile.notifyAll();
           }
-        } else if (currentDiffFile._getHighlighterType() !== "class") {
+        } else if (
+          currentDiffFile._getHighlighterName() !== buildInHighlighter.name ||
+          currentDiffFile._getHighlighterType() !== "class"
+        ) {
           currentDiffFile.initSyntax();
           currentDiffFile.notifyAll();
         }

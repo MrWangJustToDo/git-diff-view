@@ -115,11 +115,6 @@
 
 	let wrapperRef = $state<HTMLElement | null>(null);
 
-	const setWidget = (v: { side?: SplitSide; lineNumber?: number }) => {
-		if (props) widgetState.side = v.side;
-		widgetState.lineNumber = v.lineNumber;
-	};
-
 	const enableHighlight = $derived(props.diffViewHighlight ?? true);
 
 	const theme = $derived(props.diffViewTheme);
@@ -179,7 +174,10 @@
 					});
 					diffFile.notifyAll();
 				}
-			} else if (diffFile._getHighlighterType() !== 'class') {
+			} else if (
+				diffFile._getHighlighterName() !== buildInHighlighter.name ||
+				diffFile._getHighlighterType() !== 'class'
+			) {
 				diffFile.initSyntax();
 				diffFile.notifyAll();
 			}
