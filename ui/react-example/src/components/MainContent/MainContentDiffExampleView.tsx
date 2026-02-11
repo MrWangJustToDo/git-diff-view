@@ -1,4 +1,4 @@
-import { SplitSide, disableCache } from "@git-diff-view/react";
+import { SplitSide, disableCache, highlighter as buildInHighlighter } from "@git-diff-view/react";
 import { Box, Button, Card, CloseButton, Group, Stack, useMantineColorScheme, Text } from "@mantine/core";
 import { usePrevious } from "@mantine/hooks";
 import { memo, useEffect, useState } from "react";
@@ -35,23 +35,17 @@ export const MainContentDiffExampleView = memo(
 
     const { highlight, mode, wrap, engine, tabSpace, fastDiff, autoExpandCommentLine } = useDiffConfig();
 
-    const prevEngine = usePrevious(engine);
-
     const prevTabSpace = usePrevious(tabSpace);
 
     const prevFastDiff = usePrevious(fastDiff);
 
     const prevAutoExpandCommentLine = usePrevious(autoExpandCommentLine);
 
-    // because of the cache, switch the highlighter engine will not work, need a new diffFile instance to avoid this
-    // see packages/core/src/file.ts:172 getFile
-    // TODO fix this in the future
-    // fixed
     useEffect(() => {
       if (tabSpace !== prevTabSpace || fastDiff !== prevFastDiff) {
         refreshDiffFile();
       }
-    }, [engine, prevEngine, tabSpace, prevTabSpace, fastDiff, prevFastDiff, refreshDiffFile]);
+    }, [tabSpace, prevTabSpace, fastDiff, prevFastDiff, refreshDiffFile]);
 
     useEffect(() => {
       if (autoExpandCommentLine !== prevAutoExpandCommentLine) {
@@ -139,7 +133,7 @@ export const MainContentDiffExampleView = memo(
               </Box>
             );
           }}
-          registerHighlighter={engine === "lowlight" ? undefined : highlighter}
+          registerHighlighter={engine === "lowlight" ? buildInHighlighter : highlighter}
           diffViewFontSize={13}
         />
       </Box>
