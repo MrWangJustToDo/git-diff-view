@@ -748,8 +748,13 @@ export class DiffFile {
       (registerHighlighter
         ? registerHighlighter.name === this.#highlighterName && registerHighlighter.type === this.#highlighterType
         : true)
-    )
+    ) {
+      this.#newFileSyntaxLines = this.#newFileResult?.syntaxFile;
+
+      this.#oldFileSyntaxLines = this.#oldFileResult?.syntaxFile;
+
       return;
+    }
 
     this.#doSyntax({ registerHighlighter });
 
