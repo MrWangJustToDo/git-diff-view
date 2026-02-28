@@ -56,11 +56,6 @@ export class File {
 
   maxLineNumber: number = 0;
 
-  /**
-   * @deprecated
-   */
-  enableTemplate: boolean = true;
-
   static createInstance(data: File) {
     const file = new File(data?.raw, data?.lang, data?.fileName);
 

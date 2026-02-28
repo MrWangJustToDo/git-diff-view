@@ -28,10 +28,6 @@ declare class File$1 {
 	highlighterName?: DiffHighlighter["name"];
 	highlighterType?: DiffHighlighter["type"];
 	maxLineNumber: number;
-	/**
-	 * @deprecated
-	 */
-	enableTemplate: boolean;
 	static createInstance(data: File$1): File$1;
 	constructor(row: string, lang: DiffHighlighterLang, fileName?: string);
 	constructor(row: string, lang: string, fileName?: string);

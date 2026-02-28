@@ -3,8 +3,6 @@ import { defineConfig } from 'vite';
 import devtoolsJson from 'vite-plugin-devtools-json';
 
 export default defineConfig({
-	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-	// @ts-ignore
 	plugins: [sveltekit(), devtoolsJson()],
 	server: {
 		fs: {

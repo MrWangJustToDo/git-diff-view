@@ -646,6 +646,14 @@ export class DiffFile {
 
     this.#highlighterType =
       this.#oldFileResult?.highlighterType || this.#newFileResult?.highlighterType || this.#highlighterType;
+
+    if (this.#oldFileResult?.highlighterName) {
+      this.#oldFileSyntaxLines = this.#oldFileResult.syntaxFile;
+    }
+
+    if (this.#newFileResult?.highlighterName) {
+      this.#newFileSyntaxLines = this.#newFileResult.syntaxFile;
+    }
   }
 
   #composeSyntax({ registerHighlighter }: { registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine"> }) {
