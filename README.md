@@ -138,6 +138,41 @@ setEnableFastDiffTemplate(true);
 |---------|----------|
 | ![default](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/main/default.png) | ![fastdiff](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/main/enableFastDiffTemplate.png) |
 
+### Range Mode
+
+Display only a portion of the diff by specifying a line number range. This is useful when you want to focus on a specific section of a large diff.
+
+```tsx
+import { DiffFile, SplitSide } from "@git-diff-view/core";
+
+// Create the full diff instance
+const diffFile = new DiffFile(/* ... */);
+diffFile.init();
+diffFile.buildSplitDiffLines();
+
+// Generate a new instance containing only lines 10-50 (based on new file line numbers)
+const rangeDiffFile = diffFile.generateInstanceFromLineNumberRange(10, 50);
+
+// Or specify which side's line numbers to use
+const rangeDiffFileOld = diffFile.generateInstanceFromLineNumberRange(10, 50, SplitSide.old);
+const rangeDiffFileNew = diffFile.generateInstanceFromLineNumberRange(10, 50, SplitSide.new);
+
+<DiffView diffFile={rangeDiffFile} />
+```
+
+**API: `generateInstanceFromLineNumberRange(start, end, side?)`**
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `start` | `number` | - | Start line number (must be less than `end`) |
+| `end` | `number` | - | End line number |
+| `side` | `SplitSide` | `SplitSide.new` | Which file's line numbers to use (`SplitSide.old` or `SplitSide.new`) |
+
+This method creates a new `DiffFile` instance containing only the diff lines within the specified range, making it ideal for:
+- Displaying relevant portions of large diffs
+- Creating focused code review experiences
+- Building paginated diff views
+
 ### Template Mode
 
 Optimized rendering mode enabled by default for better performance. [Learn more](https://github.com/MrWangJustToDo/git-diff-view/blob/main/packages/core/src/parse/template.ts)

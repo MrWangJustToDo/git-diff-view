@@ -6,7 +6,7 @@ import {
   getMaxLengthToIgnoreLineDiff,
   changeMaxLengthToIgnoreLineDiff,
 } from "@git-diff-view/react";
-import { useMantineColorScheme, Code, Button, Switch, NumberInput, Tooltip } from "@mantine/core";
+import { useMantineColorScheme, Code, Button, Switch, NumberInput, Tooltip, Divider, Collapse } from "@mantine/core";
 import { useCallbackRef } from "@mantine/hooks";
 import { debounce } from "lodash";
 import { useState, useCallback, useEffect, useMemo } from "react";
@@ -46,6 +46,14 @@ export const PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
 
   const [diffInstance, setDiffInstance] = useState<DiffFile>();
 
+  const [rangeDiffInstance, setRangeDiffInstance] = useState<DiffFile>();
+
+  const [rangeMode, setRangeMode] = useState(false);
+
+  const [start, setStart] = useState(0);
+
+  const [end, setEnd] = useState(0);
+
   const [fastDiffTemplate, setFastDiffTemplate] = useState(getEnableFastDiffTemplate());
 
   const [diffString, setDiffString] = useState(initialState.diffString);
@@ -65,6 +73,10 @@ export const PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
 
   const setDiffInstanceCb = useCallback(
     debounce((lang: string, diffString: string, content: string) => {
+      setRangeMode(false);
+      setStart(0);
+      setEnd(0);
+      setRangeDiffInstance(undefined);
       if (!diffString) {
         setDiffInstance(undefined);
         return;
@@ -98,6 +110,12 @@ export const PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
     reloadDiffInstance();
   }, [fastDiffTemplate]);
 
+  useEffect(() => {
+    if (diffInstance && start && end) {
+      setRangeDiffInstance(diffInstance.generateInstanceFromLineNumberRange(start, end));
+    }
+  }, [diffInstance, start, end]);
+
   const handleShare = useCallback(async () => {
     try {
       const success = await copyToClipboard(window.location.href);
@@ -114,37 +132,46 @@ export const PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
     }
   }, []);
 
+  const finalDiffInstance = rangeMode ? rangeDiffInstance : diffInstance;
+
   return (
     <div className="m-auto mb-[1em] mt-[1em] w-[90%]">
+      <div className="flex items-center gap-x-6">
+        <Button onClick={onClick}>Go to `File diff` mode</Button>
+        <Tooltip
+          label={
+            shareStatus === "copied"
+              ? "Copied!"
+              : shareStatus === "error"
+                ? "Failed to copy"
+                : "Copy share URL to clipboard"
+          }
+        >
+          <Button
+            variant={shareStatus === "copied" ? "filled" : "outline"}
+            color={shareStatus === "error" ? "red" : shareStatus === "copied" ? "green" : undefined}
+            onClick={handleShare}
+          >
+            {shareStatus === "copied" ? "Copied!" : shareStatus === "error" ? "Error" : "Share"}
+          </Button>
+        </Tooltip>
+      </div>
+      <Divider className="my-2" />
       <h2 className="flex flex-wrap gap-x-8 gap-y-4 text-[24px]">
         <span>
           <Code className="text-[24px]">Git diff</Code> mode
         </span>
-        <div className="inline-flex gap-x-2 text-[14px]">
-          <Button onClick={onClick}>Go to `File diff` mode</Button>
-          <Tooltip
-            label={
-              shareStatus === "copied"
-                ? "Copied!"
-                : shareStatus === "error"
-                  ? "Failed to copy"
-                  : "Copy share URL to clipboard"
-            }
-          >
-            <Button
-              variant={shareStatus === "copied" ? "filled" : "outline"}
-              color={shareStatus === "error" ? "red" : shareStatus === "copied" ? "green" : undefined}
-              onClick={handleShare}
-            >
-              {shareStatus === "copied" ? "Copied!" : shareStatus === "error" ? "Error" : "Share"}
-            </Button>
-          </Tooltip>
-        </div>
         <div className="inline-flex items-center gap-x-4">
           <Switch
             checked={fastDiffTemplate}
+            className="cursor-pointer"
             onChange={(e) => setFastDiffTemplate(e.target.checked)}
             label="Fast Diff Template (better line diff)"
+          />
+          <Switch
+            checked={rangeMode}
+            onChange={(e) => setRangeMode(e.target.checked)}
+            label="RangeMode (show part of diff)"
           />
           <Tooltip label="Ignore line diff when line length over this value">
             <NumberInput
@@ -159,6 +186,28 @@ export const PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
           </Tooltip>
         </div>
       </h2>
+      <Collapse in={rangeMode}>
+        <div className="flex items-center gap-x-6 py-2">
+          <NumberInput
+            value={start}
+            min={0}
+            label="Range Start"
+            max={diffInstance?.splitLineLength}
+            onChange={(n) => {
+              setStart(Number(n));
+            }}
+          />
+          <NumberInput
+            value={end}
+            min={0}
+            label="Range End"
+            max={diffInstance?.splitLineLength}
+            onChange={(n) => {
+              setEnd(Number(n));
+            }}
+          />
+        </div>
+      </Collapse>
       <div className="mt-[10px] flex flex-col gap-y-[10px]">
         <span className="border-color border-b p-[3px]">Lang: </span>
         <input
@@ -174,10 +223,10 @@ export const PlayGroundGitDiff = ({ onClick }: { onClick: () => void }) => {
         <CodeEditor code={content} onChange={setContent} lang={lang} minHeight="200px" />
       </div>
 
-      {diffInstance ? (
+      {finalDiffInstance ? (
         <DiffView<string>
           className="border-color mt-[10px] overflow-hidden rounded-[4px] border"
-          diffFile={diffInstance}
+          diffFile={finalDiffInstance}
           diffViewTheme={colorScheme === "dark" ? "dark" : "light"}
           diffViewFontSize={13}
           diffViewHighlight={true}

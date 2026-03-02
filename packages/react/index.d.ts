@@ -202,6 +202,14 @@ export declare class DiffFile {
 		isFullMerge: boolean;
 	};
 	mergeBundle: (data: ReturnType<DiffFile["getBundle"]>, notifyUpdate?: boolean) => void;
+	/**
+	 *
+	 * @param start start lineNumber
+	 * @param end end lineNumber
+	 * @param side range side
+	 * @returns a new instance can only show the content from start to end
+	 */
+	generateInstanceFromLineNumberRange: (start: number, end: number, side?: SplitSide) => DiffFile;
 	_getHighlighterName: () => string;
 	_getHighlighterType: () => string;
 	_getIsPureDiffRender: () => boolean;

@@ -1682,12 +1682,78 @@ export class DiffFile {
     }
 
     if (__DEV__ && !data.hasInitRaw) {
-      console.error("[@git-diff-view/core] Invalid bundle data. Try calling the 'initRaw' function before merge / getBundle.");
+      console.error(
+        "[@git-diff-view/core] Invalid bundle data. Try calling the 'initRaw' function before merge / getBundle."
+      );
     }
 
     if (notifyUpdate) {
       this.notifyAll();
     }
+  };
+
+  /**
+   * 
+   * @param start start lineNumber
+   * @param end end lineNumber
+   * @param side range side
+   * @returns a new instance can only show the content from start to end
+   */
+  generateInstanceFromLineNumberRange = (start: number, end: number, side = SplitSide.new) => {
+    if (start >= end) {
+      if (__DEV__) {
+        console.warn(`[@git-diff-view/core] The end line must gt start line`);
+      }
+
+      return this;
+    }
+
+    const splitStart = this.getSplitLineIndexByLineNumber(start, side);
+
+    const splitEnd = this.getSplitLineIndexByLineNumber(end, side);
+
+    const unifiedStart = this.getUnifiedLineIndexByLineNumber(start, side);
+
+    const unifiedEnd = this.getUnifiedLineIndexByLineNumber(end, side);
+
+    const l: Array<SplitLineItem> = [];
+    const r: Array<SplitLineItem> = [];
+    const u: Array<UnifiedLineItem> = [];
+
+    for (let i = splitStart; i <= splitEnd; i++) {
+      const _l = this.getSplitLeftLine(i);
+      const _r = this.getSplitRightLine(i);
+
+      if (_l.value || _r.value) {
+        l.push({ ..._l, isHidden: false });
+        r.push({ ..._r, isHidden: false });
+      }
+    }
+
+    for (let i = unifiedStart; i <= unifiedEnd; i++) {
+      const _u = this.getUnifiedLine(i);
+
+      if (_u.value) {
+        u.push({ ..._u, isHidden: false });
+      }
+    }
+
+    const contextDiffFile = DiffFile.createInstance(
+      {},
+      {
+        ...this.getBundle(),
+        composeByDiff: true,
+        splitHunkLines: {},
+        splitLeftLines: l,
+        splitRightLines: r,
+        splitLineLength: l.length,
+        unifiedHunkLines: {},
+        unifiedLines: u,
+        unifiedLineLength: u.length,
+      }
+    );
+
+    return contextDiffFile;
   };
 
   _getHighlighterName = () => this.#highlighterName || "";
