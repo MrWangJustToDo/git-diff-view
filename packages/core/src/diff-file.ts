@@ -361,7 +361,7 @@ export class DiffFile {
       if (!hasSymbolChanged && oldFileContent === newFileContent) {
         if (__DEV__) {
           console.warn(
-            'the composed "oldFileContent" and "newFileContent" are the same, maybe the "diff" string is not valid'
+            '[@git-diff-view/core] The composed "oldFileContent" and "newFileContent" are identical. This might indicate an invalid "diff" string.'
           );
         }
         return;
@@ -465,7 +465,7 @@ export class DiffFile {
         diffLine?.text !== fileLine?.value
       ) {
         console.warn(
-          `there are some mismatch from the 'oldFileContent' and 'diff' at line: ${line}, please make sure the 'oldFileContent' is correct`
+          `[@git-diff-view/core] Mismatch detected between 'oldFileContent' and 'diff' at line ${line}. Please verify the 'oldFileContent' is correct.`
         );
         break;
       }
@@ -478,7 +478,7 @@ export class DiffFile {
         diffLine?.text !== fileLine?.value
       ) {
         console.warn(
-          `there are some mismatch from the 'newFileContent' and 'diff' at line: ${line}, please make sure the 'newFileContent' is correct`
+          `[@git-diff-view/core] Mismatch detected between 'newFileContent' and 'diff' at line ${line}. Please verify the 'newFileContent' is correct.`
         );
         break;
       }
@@ -581,7 +581,7 @@ export class DiffFile {
           typedI.hunkInfo.newStartIndex &&
           typedI.hunkInfo.oldStartIndex !== typedI.hunkInfo.newStartIndex
         ) {
-          console.warn("the first hunk should start with the same line number");
+          console.warn("[@git-diff-view/core] The first hunk should start with the same line number.");
         }
 
         prevHunkLine = typedI;
@@ -614,7 +614,7 @@ export class DiffFile {
         if (__DEV__) {
           if (item.oldLineNumber <= maxOldLineNumber) {
             console.warn(
-              'the "lineNumber" from "diff" should be in ascending order, maybe current "diff" string is not a valid "diff" string'
+              '[@git-diff-view/core] Line numbers in "diff" must be in ascending order. This might indicate an invalid "diff" string.'
             );
           }
 
@@ -630,7 +630,7 @@ export class DiffFile {
         if (__DEV__) {
           if (item.newLineNumber <= maxNewLineNumber) {
             console.warn(
-              'the "lineNumber" from "diff" should be in ascending order, maybe current "diff" string is not a valid "diff" string'
+              '[@git-diff-view/core] Line numbers in "diff" must be in ascending order. This might indicate an invalid "diff" string.'
             );
           }
 
@@ -670,7 +670,7 @@ export class DiffFile {
     if (this.#composeByMerge && !this.#composeByFullMerge) {
       if (__DEV__) {
         console.error(
-          `this instance can not do syntax because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'`
+          "[@git-diff-view/core] Syntax highlighting failed due to missing data. Consider using '_getFullBundle' and '_mergeFullBundle' instead of 'getBundle' and 'mergeBundle'."
         );
       }
 
@@ -744,7 +744,7 @@ export class DiffFile {
     if (__DEV__) {
       if (this._diffList.some((l) => l) && !this.#diffLines.length) {
         console.warn(
-          "the hunks from the diff string is empty, maybe the diff string is not a valid diff string, please check the diff string format or the diff string itself"
+          "[@git-diff-view/core] No hunks found in the diff string. Please check the diff format and content."
         );
       }
     }
@@ -787,7 +787,7 @@ export class DiffFile {
 
     if (__DEV__ && !this.#oldFileResult && !this.#newFileResult && this.#composeByMerge && !this.#composeByFullMerge) {
       console.error(
-        "this instance can not `buildSplitDiffLines` because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'"
+        "[@git-diff-view/core] this instance can not `buildSplitDiffLines` because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'"
       );
     }
 
@@ -888,7 +888,7 @@ export class DiffFile {
         const prevHunkLine = oldDiffLine?.prevHunkLine || newDiffLine.prevHunkLine;
         if (prevHunkLine.isFirst) {
           if (__DEV__ && Number.isFinite(hideStart)) {
-            console.warn("the first hunk can not have a previous diff line");
+            console.warn("[@git-diff-view/core] The first hunk cannot have a previous diff line.");
           }
           prevHunkLine.splitInfo = {
             ...prevHunkLine.hunkInfo,
@@ -973,7 +973,7 @@ export class DiffFile {
 
     if (__DEV__ && !this.#oldFileResult && !this.#newFileResult && this.#composeByMerge && !this.#composeByFullMerge) {
       console.error(
-        "this instance can not `buildUnifiedDiffLines` because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'"
+        "[@git-diff-view/core] this instance can not `buildUnifiedDiffLines` because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'"
       );
     }
 
@@ -1066,7 +1066,7 @@ export class DiffFile {
         const prevHunkLine = oldDiffLine?.prevHunkLine || newDiffLine.prevHunkLine;
         if (prevHunkLine.isFirst) {
           if (__DEV__ && Number.isFinite(hideStart)) {
-            console.warn("the first hunk can not have a previous diff line");
+            console.warn("[@git-diff-view/core] The first hunk cannot have a previous diff line.");
           }
           prevHunkLine.unifiedInfo = {
             ...prevHunkLine.hunkInfo,
@@ -1221,7 +1221,7 @@ export class DiffFile {
     } else if (dir === "up") {
       if (current.isLast) {
         if (__DEV__) {
-          console.error("the last hunk can not expand up!");
+          console.error("[@git-diff-view/core] The last hunk cannot expand up!");
         }
         return;
       }
@@ -1251,7 +1251,7 @@ export class DiffFile {
     } else if (dir === "up-all") {
       if (current.isLast) {
         if (__DEV__) {
-          console.error("the last hunk can not expand up!");
+          console.error("[@git-diff-view/core] The last hunk cannot expand up!");
         }
         return;
       }
@@ -1352,7 +1352,7 @@ export class DiffFile {
     } else if (dir === "up") {
       if (current.isLast) {
         if (__DEV__) {
-          console.error("the last hunk can not expand up!");
+          console.error("[@git-diff-view/core] The last hunk cannot expand up!");
         }
         return;
       }
@@ -1380,7 +1380,7 @@ export class DiffFile {
     } else if (dir === "up-all") {
       if (current.isLast) {
         if (__DEV__) {
-          console.error("the last hunk can not expand up!");
+          console.error("[@git-diff-view/core] The last hunk cannot expand up!");
         }
         return;
       }
@@ -1678,11 +1678,11 @@ export class DiffFile {
     this.#isCloned = true;
 
     if (__DEV__ && this._version_ !== data.version) {
-      console.error("the version of the `diffInstance` is not match, some error may happen");
+      console.error("[@git-diff-view/core] The version of the `diffInstance` does not match. Some errors may occur.");
     }
 
     if (__DEV__ && !data.hasInitRaw) {
-      console.error(`there are not a valid bundle data, try to call 'initRaw' function before merge / getBundle`);
+      console.error("[@git-diff-view/core] Invalid bundle data. Try calling the 'initRaw' function before merge / getBundle.");
     }
 
     if (notifyUpdate) {

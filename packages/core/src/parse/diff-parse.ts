@@ -207,7 +207,7 @@ export class DiffParser {
       if (this.lineStartsWith("Binary files ") && this.lineEndsWith("differ")) {
         if (__DEV__) {
           console.warn(
-            "Found binary file marker in diff header, @git-diff-view/core currently does not support rendering binary diffs"
+            "[@git-diff-view/core] Binary file marker detected in diff header. Rendering binary diffs is currently not supported."
           );
         }
         return { isBinary: true };
@@ -219,7 +219,7 @@ export class DiffParser {
 
       if (this.lineStartsWith("+++")) {
         if (__DEV__ && !hasMinus) {
-          console.error("Invalid diff header, found +++ line before --- line");
+          console.error("[@git-diff-view/core] Invalid diff header: found '+++' line before '---' line.");
         }
         return { isBinary: false };
       }
