@@ -11,6 +11,9 @@ type DiffConfig = {
   fastDiff: boolean;
   shadowDOM: boolean;
   autoExpandCommentLine: boolean;
+  rangeMode: boolean;
+  rangeStart: number;
+  rangeEnd: number;
 };
 
 export const useDiffConfig = createState(
@@ -25,6 +28,9 @@ export const useDiffConfig = createState(
       fastDiff: false,
       shadowDOM: false,
       autoExpandCommentLine: false,
+      rangeMode: false,
+      rangeStart: 0,
+      rangeEnd: 0,
     }) as DiffConfig,
   {
     withActions(state) {
@@ -72,6 +78,21 @@ export const useDiffConfig = createState(
         setAutoExpandCommentLine: (v: boolean) => {
           if (v !== state.autoExpandCommentLine) {
             state.autoExpandCommentLine = v;
+          }
+        },
+        setRangeMode: (v: boolean) => {
+          if (v !== state.rangeMode) {
+            state.rangeMode = v;
+          }
+        },
+        setRangeStart: (v: number) => {
+          if (v !== state.rangeStart) {
+            state.rangeStart = v;
+          }
+        },
+        setRangeEnd: (v: number) => {
+          if (v !== state.rangeEnd) {
+            state.rangeEnd = v;
           }
         },
       };

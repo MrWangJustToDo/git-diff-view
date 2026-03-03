@@ -1,7 +1,7 @@
 import { SplitSide, disableCache, highlighter as buildInHighlighter } from "@git-diff-view/react";
 import { Box, Button, Card, CloseButton, Group, Stack, useMantineColorScheme, Text } from "@mantine/core";
 import { usePrevious } from "@mantine/hooks";
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useState, useMemo } from "react";
 
 import { useDiffConfig } from "../../hooks/useDiffConfig";
 import { DiffViewWithScrollBar } from "../DiffViewWithScrollBar";
@@ -33,7 +33,18 @@ export const MainContentDiffExampleView = memo(
       newFile: {},
     });
 
-    const { highlight, mode, wrap, engine, tabSpace, fastDiff, autoExpandCommentLine } = useDiffConfig();
+    const {
+      highlight,
+      mode,
+      wrap,
+      engine,
+      tabSpace,
+      fastDiff,
+      autoExpandCommentLine,
+      rangeMode,
+      rangeStart,
+      rangeEnd,
+    } = useDiffConfig();
 
     const prevTabSpace = usePrevious(tabSpace);
 
@@ -58,10 +69,17 @@ export const MainContentDiffExampleView = memo(
       }
     }, [autoExpandCommentLine, prevAutoExpandCommentLine]);
 
+    const finalDiffFile = useMemo(() => {
+      if (rangeMode && rangeStart && rangeEnd && rangeStart < rangeEnd) {
+        return diffFile.generateInstanceFromLineNumberRange(rangeStart, rangeEnd);
+      }
+      return diffFile;
+    }, [diffFile, rangeMode, rangeStart, rangeEnd]);
+
     return (
       <Box className="h-full overflow-auto">
         <DiffViewWithScrollBar
-          diffFile={diffFile}
+          diffFile={finalDiffFile}
           diffViewTheme={colorScheme === "light" ? "light" : "dark"}
           diffViewHighlight={highlight}
           diffViewMode={mode}
