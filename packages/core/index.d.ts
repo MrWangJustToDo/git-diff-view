@@ -192,6 +192,7 @@ export declare class DiffFile {
 		highlighterName: string;
 		highlighterType: string;
 		composeByDiff: boolean;
+		composeByRange: boolean;
 		hasSomeLineCollapsed: boolean;
 		hasExpandSplitAll: {
 			state: boolean;
@@ -263,6 +264,7 @@ export declare class DiffFile {
 		highlighterName: string;
 		highlighterType: string;
 		composeByDiff: boolean;
+		composeByRange: boolean;
 		hasSomeLineCollapsed: boolean;
 		hasExpandSplitAll: {
 			state: boolean;

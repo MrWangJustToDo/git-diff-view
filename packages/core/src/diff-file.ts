@@ -126,6 +126,8 @@ export class DiffFile {
 
   #composeByDiff: boolean = false;
 
+  #composeByRange: boolean = false;
+
   #composeByMerge: boolean = false;
 
   #composeByFullMerge: boolean = false;
@@ -1169,10 +1171,11 @@ export class DiffFile {
   };
 
   onSplitHunkExpand = (dir: "up" | "down" | "all" | "up-all" | "down-all", index: number, needTrigger = true) => {
-    const current = this.#splitHunksLines?.[index];
-    if (!current || !current.splitInfo) return;
+    if (this.getExpandEnabled()) return;
 
-    if (this.#composeByDiff) return;
+    const current = this.#splitHunksLines?.[index];
+
+    if (!current || !current.splitInfo) return;
 
     if (dir === "all") {
       for (let i = current.splitInfo.startHiddenIndex; i < current.splitInfo.endHiddenIndex; i++) {
@@ -1303,7 +1306,7 @@ export class DiffFile {
 
   // TODO! support rollback?
   onUnifiedHunkExpand = (dir: "up" | "down" | "all" | "up-all" | "down-all", index: number, needTrigger = true) => {
-    if (this.#composeByDiff) return;
+    if (this.getExpandEnabled()) return;
 
     const current = this.#unifiedHunksLines?.[index];
 
@@ -1405,7 +1408,7 @@ export class DiffFile {
   };
 
   onAllExpand = (mode: "split" | "unified") => {
-    if (this.#composeByDiff) return;
+    if (this.getExpandEnabled()) return;
 
     if (mode === "split") {
       Object.keys(this.#splitHunksLines || {}).forEach((key) => {
@@ -1431,7 +1434,7 @@ export class DiffFile {
   }
 
   onAllCollapse = (mode: "split" | "unified") => {
-    if (this.#composeByDiff) return;
+    if (this.getExpandEnabled()) return;
 
     if (mode === "split") {
       Object.values(this.#splitLeftLines || {}).forEach((item) => {
@@ -1552,7 +1555,7 @@ export class DiffFile {
 
   getUpdateCount = () => this.#updateCount;
 
-  getExpandEnabled = () => !this.#composeByDiff;
+  getExpandEnabled = () => !this.#composeByDiff && !this.#composeByRange;
 
   getBundle = () => {
     // common
@@ -1576,6 +1579,7 @@ export class DiffFile {
     const additionLength = this.additionLength;
     const deletionLength = this.deletionLength;
     const composeByDiff = this.#composeByDiff;
+    const composeByRange = this.#composeByRange;
     const highlighterName = this.#highlighterName;
     const highlighterType = this.#highlighterType;
     const hasSomeLineCollapsed = this.hasSomeLineCollapsed;
@@ -1623,6 +1627,7 @@ export class DiffFile {
       highlighterName,
       highlighterType,
       composeByDiff,
+      composeByRange,
       hasSomeLineCollapsed,
       hasExpandSplitAll,
       hasExpandUnifiedAll,
@@ -1641,6 +1646,7 @@ export class DiffFile {
     this.#hasBuildSplit = data.hasBuildSplit;
     this.#hasBuildUnified = data.hasBuildUnified;
     this.#composeByDiff = data.composeByDiff;
+    this.#composeByRange = data.composeByRange;
     this.#highlighterName = data.highlighterName;
     this.#highlighterType = data.highlighterType;
 
@@ -1741,8 +1747,8 @@ export class DiffFile {
     const contextDiffFile = DiffFile.createInstance(
       {},
       {
-        ...this.getBundle(),
-        composeByDiff: true,
+        ...this._getFullBundle(),
+        composeByRange: true,
         splitHunkLines: {},
         splitLeftLines: l,
         splitRightLines: r,
