@@ -1693,7 +1693,7 @@ export class DiffFile {
   };
 
   /**
-   * 
+   *
    * @param start start lineNumber
    * @param end end lineNumber
    * @param side range side
@@ -1724,18 +1724,18 @@ export class DiffFile {
       const _l = this.getSplitLeftLine(i);
       const _r = this.getSplitRightLine(i);
 
-      if (_l.value || _r.value) {
-        l.push({ ..._l, isHidden: false });
-        r.push({ ..._r, isHidden: false });
-      }
+      if (!_l.value && !_r.value) continue;
+
+      l.push({ ..._l, isHidden: false });
+      r.push({ ..._r, isHidden: false });
     }
 
     for (let i = unifiedStart; i <= unifiedEnd; i++) {
       const _u = this.getUnifiedLine(i);
 
-      if (_u.value) {
-        u.push({ ..._u, isHidden: false });
-      }
+      if (!_u.value) continue;
+
+      u.push({ ..._u, isHidden: false });
     }
 
     const contextDiffFile = DiffFile.createInstance(
