@@ -1724,7 +1724,7 @@ export class DiffFile {
       const _l = this.getSplitLeftLine(i);
       const _r = this.getSplitRightLine(i);
 
-      if (!_l.value && !_r.value) continue;
+      if (!_l?.value && !_r?.value) continue;
 
       l.push({ ..._l, isHidden: false });
       r.push({ ..._r, isHidden: false });
@@ -1733,7 +1733,7 @@ export class DiffFile {
     for (let i = unifiedStart; i <= unifiedEnd; i++) {
       const _u = this.getUnifiedLine(i);
 
-      if (!_u.value) continue;
+      if (!_u?.value) continue;
 
       u.push({ ..._u, isHidden: false });
     }
