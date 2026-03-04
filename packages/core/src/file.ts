@@ -18,7 +18,9 @@ if (__DEV__ && typeof globalThis !== "undefined") {
     globalThis[devKey] = globalThis[devKey].filter((i) => i !== map);
 
     if (globalThis[devKey].length > 0) {
-      console.warn("[@git-diff-view/core] Multiple instances of @git-diff-view/core detected in the current environment.");
+      console.warn(
+        "[@git-diff-view/core] Multiple instances of @git-diff-view/core detected in the current environment."
+      );
     }
 
     globalThis[devKey].push(map);
@@ -111,7 +113,9 @@ export class File {
 
     if (this.rawLength > finalHighlighter.maxLineToIgnoreSyntax) {
       if (__DEV__) {
-        console.warn(`[@git-diff-view/core] Ignoring syntax highlighting for the current file as the raw length exceeds the threshold: ${this.rawLength}`);
+        console.warn(
+          `[@git-diff-view/core] Ignoring syntax highlighting for the current file as the raw length exceeds the threshold: ${this.rawLength}`
+        );
       }
       return;
     }
@@ -198,7 +202,12 @@ export class File {
       Object.values(this.syntaxFile).forEach(({ value, lineNumber }) => {
         if (value !== this.rawFile[lineNumber]) {
           console.warn(
-            "[@git-diff-view/core] Content mismatch detected at line " + lineNumber + ": " + value + " !== " + this.rawFile[lineNumber]
+            "[@git-diff-view/core] Content mismatch detected at line " +
+              lineNumber +
+              ": " +
+              value +
+              " !== " +
+              this.rawFile[lineNumber]
           );
         }
       });
