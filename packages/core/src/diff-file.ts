@@ -1171,7 +1171,7 @@ export class DiffFile {
   };
 
   onSplitHunkExpand = (dir: "up" | "down" | "all" | "up-all" | "down-all", index: number, needTrigger = true) => {
-    if (this.getExpandEnabled()) return;
+    if (!this.getExpandEnabled()) return;
 
     const current = this.#splitHunksLines?.[index];
 
@@ -1306,7 +1306,7 @@ export class DiffFile {
 
   // TODO! support rollback?
   onUnifiedHunkExpand = (dir: "up" | "down" | "all" | "up-all" | "down-all", index: number, needTrigger = true) => {
-    if (this.getExpandEnabled()) return;
+    if (!this.getExpandEnabled()) return;
 
     const current = this.#unifiedHunksLines?.[index];
 
@@ -1408,7 +1408,7 @@ export class DiffFile {
   };
 
   onAllExpand = (mode: "split" | "unified") => {
-    if (this.getExpandEnabled()) return;
+    if (!this.getExpandEnabled()) return;
 
     if (mode === "split") {
       Object.keys(this.#splitHunksLines || {}).forEach((key) => {
@@ -1434,7 +1434,7 @@ export class DiffFile {
   }
 
   onAllCollapse = (mode: "split" | "unified") => {
-    if (this.getExpandEnabled()) return;
+    if (!this.getExpandEnabled()) return;
 
     if (mode === "split") {
       Object.values(this.#splitLeftLines || {}).forEach((item) => {
