@@ -19,7 +19,7 @@
     "directory": "packages/cli"
   },
   "scripts": {
-    "dev": "DEV=true node ./test/index.mjs",
+    "dev": "DEV=true node ./test/file.mjs",
     "gen:color": "node ./gen.mjs",
     "gen:type": "dts-bundle-generator -o index.d.ts dist/types/index.d.ts"
   },

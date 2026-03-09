@@ -36,6 +36,8 @@ export type DiffViewProps<T> = {
   diffViewTabWidth?: "small" | "medium" | "large";
   registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
   diffViewHighlight?: boolean;
+  // hide the diff operator (+/-/space) and show padding instead
+  diffViewHideOperator?: boolean;
   renderExtendLine?: ({
     diffFile,
     side,
@@ -83,6 +85,7 @@ const InternalDiffView = <T extends unknown>(
     renderExtendLine,
     diffViewTabSpace,
     diffViewTabWidth,
+    diffViewHideOperator,
   } = props;
 
   const diffFileId = useMemo(() => diffFile.getId(), [diffFile]);
@@ -107,6 +110,8 @@ const InternalDiffView = <T extends unknown>(
       setTabSpace,
       tabWidth,
       setTabWidth,
+      hideOperator,
+      setHideOperator,
     } = useDiffContext.getReadonlyState();
 
     if (diffFileId && diffFileId !== id) {
@@ -140,6 +145,10 @@ const InternalDiffView = <T extends unknown>(
     if (diffViewTabWidth !== tabWidth) {
       setTabWidth(diffViewTabWidth);
     }
+
+    if (diffViewHideOperator !== hideOperator) {
+      setHideOperator(diffViewHideOperator);
+    }
   }, [
     useDiffContext,
     diffViewHighlight,
@@ -150,6 +159,7 @@ const InternalDiffView = <T extends unknown>(
     renderExtendLine,
     diffViewTabSpace,
     diffViewTabWidth,
+    diffViewHideOperator,
   ]);
 
   useEffect(() => {

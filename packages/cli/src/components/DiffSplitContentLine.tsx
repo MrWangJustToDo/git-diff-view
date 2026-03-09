@@ -55,9 +55,9 @@ const InternalDiffSplitLine = ({
   const contentWidth = columns / 2 - lineNumWidth - 2;
 
   // Calculate row heights - must match the actual wrap width used in DiffContent
-  // DiffContent receives contentWidth and wraps at (contentWidth - 1) for the operator column
-  let oldRow = getCurrentLineRow({ content: oldLine?.value || "", width: contentWidth - 1 });
-  let newRow = getCurrentLineRow({ content: newLine?.value || "", width: contentWidth - 1 });
+  // DiffContent receives contentWidth and wraps at (contentWidth - 2) for the operator column and end padding
+  let oldRow = getCurrentLineRow({ content: oldLine?.value || "", width: contentWidth - 2 });
+  let newRow = getCurrentLineRow({ content: newLine?.value || "", width: contentWidth - 2 });
 
   oldRow =
     oldLine?.diff?.changes?.hasLineChange && oldLine?.diff?.changes.newLineSymbol === NewLineSymbol.NEWLINE

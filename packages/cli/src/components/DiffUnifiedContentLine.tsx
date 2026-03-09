@@ -181,8 +181,8 @@ const InternalDiffUnifiedLine = ({
 
   const contentWidth = columns - (lineNumWidth + 1) * 2 - 1;
 
-  // Use contentWidth - 1 to match the actual wrap width in DiffContent (operator column takes 1 char)
-  let row = getCurrentLineRow({ content: rawLine, width: contentWidth - 1 });
+  // Use contentWidth - 2 to match the actual wrap width in DiffContent (operator column takes 1 char, end padding takes 1 char)
+  let row = getCurrentLineRow({ content: rawLine, width: contentWidth - 2 });
 
   row = diffLine?.changes?.hasLineChange && diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE ? row + 1 : row;
 

@@ -124,7 +124,7 @@ const DiffString = React.memo(
 
     const { useDiffContext } = useDiffViewContext();
 
-    const { enableTabSpace, tabWidth } = useDiffContext((s) => ({ enableTabSpace: s.tabSpace, tabWidth: s.tabWidth }));
+    const { enableTabSpace, tabWidth } = useDiffContext.useShallowStableSelector((s) => ({ enableTabSpace: s.tabSpace, tabWidth: s.tabWidth }));
 
     // Memoize the ANSI content to avoid rebuilding on every render
     const ansiContent = React.useMemo(() => {
@@ -167,12 +167,12 @@ const DiffString = React.memo(
         chars.push(...processCharsForAnsi(rawLine, enableTabSpace, tabWidth, baseStyle));
       }
 
-      // Use width - 1 because the operator column takes 1 character
-      return buildAnsiStringWithLineBreaks(chars, width - 1);
+      // Use width - 2 because the operator column takes 1 character and end padding takes 1 character
+      return buildAnsiStringWithLineBreaks(chars, width - 2);
     }, [bg, width, theme, rawLine, changes, operator, enableTabSpace, tabWidth]);
 
     return (
-      <Box width={width - 1} backgroundColor={bg}>
+      <Box width={width - 2} backgroundColor={bg}>
         <Text wrap="truncate">{ansiContent}</Text>
       </Box>
     );
@@ -250,7 +250,7 @@ const DiffSyntax = React.memo(
   }) => {
     const { useDiffContext } = useDiffViewContext();
 
-    const { enableTabSpace, tabWidth } = useDiffContext((s) => ({ enableTabSpace: s.tabSpace, tabWidth: s.tabWidth }));
+    const { enableTabSpace, tabWidth } = useDiffContext.useShallowStableSelector((s) => ({ enableTabSpace: s.tabSpace, tabWidth: s.tabWidth }));
 
     // Memoize the ANSI content with syntax highlighting
     const ansiContent = React.useMemo(() => {
@@ -340,8 +340,8 @@ const DiffSyntax = React.memo(
         }
       }
 
-      // Use width - 1 because the operator column takes 1 character
-      return buildAnsiStringWithLineBreaks(chars, width - 1);
+      // Use width - 2 because the operator column takes 1 character and end padding takes 1 character
+      return buildAnsiStringWithLineBreaks(chars, width - 2);
     }, [bg, width, theme, rawLine, diffLine, operator, syntaxLine, enableTabSpace, tabWidth]);
 
     // Fallback to DiffString if no syntax line
@@ -360,7 +360,7 @@ const DiffSyntax = React.memo(
     }
 
     return (
-      <Box width={width - 1} backgroundColor={bg}>
+      <Box width={width - 2} backgroundColor={bg}>
         <Text wrap="truncate">{ansiContent}</Text>
       </Box>
     );
@@ -398,6 +398,31 @@ const DiffOperator = React.memo(
 
 DiffOperator.displayName = "DiffOperator";
 
+/**
+ * DiffPadding component - Renders a 1-char padding column
+ * using chalk for proper multi-row support.
+ */
+const DiffPadding = React.memo(({ height, backgroundColor }: { height: number; backgroundColor: string }) => {
+  const content = React.useMemo(() => {
+    const lines: string[] = [];
+    const style: CharStyle = { backgroundColor };
+
+    for (let row = 0; row < height; row++) {
+      lines.push(buildStyledBlock(" ", 1, 1, style, "left"));
+    }
+
+    return lines.join("\n");
+  }, [height, backgroundColor]);
+
+  return (
+    <Box width={1} flexShrink={0}>
+      <Text wrap="truncate">{content}</Text>
+    </Box>
+  );
+});
+
+DiffPadding.displayName = "DiffPadding";
+
 export const DiffContent = React.memo(
   ({
     theme,
@@ -419,6 +444,10 @@ export const DiffContent = React.memo(
     diffFile: DiffFile;
     enableHighlight: boolean;
   }) => {
+    const { useDiffContext } = useDiffViewContext();
+
+    const hideOperator = useDiffContext.useShallowStableSelector((s) => s.hideOperator);
+
     const isAdded = diffLine?.type === DiffLineType.Add;
     const isDelete = diffLine?.type === DiffLineType.Delete;
     const isMaxLineLengthToIgnoreSyntax = syntaxLine?.nodeList?.length > 150;
@@ -443,7 +472,11 @@ export const DiffContent = React.memo(
 
     return (
       <Box height={height} width={width}>
-        <DiffOperator operatorChar={operatorChar} height={height} backgroundColor={bg} />
+        {hideOperator ? (
+          <DiffPadding height={height} backgroundColor={bg} />
+        ) : (
+          <DiffOperator operatorChar={operatorChar} height={height} backgroundColor={bg} />
+        )}
         {enableHighlight && syntaxLine && !isMaxLineLengthToIgnoreSyntax ? (
           <DiffSyntax
             bg={bg}
@@ -467,6 +500,7 @@ export const DiffContent = React.memo(
             plainLine={plainLine}
           />
         )}
+        <DiffPadding height={height} backgroundColor={bg} />
       </Box>
     );
   }

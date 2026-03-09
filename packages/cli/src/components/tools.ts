@@ -72,6 +72,10 @@ export const createDiffConfigStore = <T = any>(
     const setRenderExtendLine = (_renderExtendLine: typeof renderExtendLine.value) =>
       (renderExtendLine.value = _renderExtendLine);
 
+    const hideOperator = ref(props.diffViewHideOperator);
+
+    const setHideOperator = (_hideOperator: boolean) => (hideOperator.value = _hideOperator);
+
     return {
       id,
       setId,
@@ -91,6 +95,8 @@ export const createDiffConfigStore = <T = any>(
       setExtendData,
       renderExtendLine,
       setRenderExtendLine,
+      hideOperator,
+      setHideOperator,
     };
     // fix rollup type error
   }) as UseSelectorWithStore<{
@@ -115,6 +121,8 @@ export const createDiffConfigStore = <T = any>(
     setExtendData: (extendData: DiffViewProps<any>["extendData"]) => void;
     renderExtendLine: Ref<typeof props.renderExtendLine>;
     setRenderExtendLine: (renderExtendLine: typeof props.renderExtendLine) => void;
+    hideOperator: Ref<boolean>;
+    setHideOperator: (hideOperator: boolean) => void;
   }>;
 };
 
