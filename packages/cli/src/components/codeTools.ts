@@ -93,5 +93,6 @@ export const createCodeConfigStore = <T = any>(props: CodeViewProps<T> & { isMou
 };
 
 export const getCurrentLineRow = ({ content, width }: { content: string; width: number }) => {
-  return Math.ceil(stringWidth(content) / width);
+  // Ensure minimum of 1 row for empty lines
+  return Math.max(1, Math.ceil(stringWidth(content) / width));
 };

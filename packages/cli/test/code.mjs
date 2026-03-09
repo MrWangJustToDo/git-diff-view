@@ -210,11 +210,11 @@ export const highlighterReady = new Promise<DiffHighlighter>((r) => {
 getDiffViewHighlighter().then((highlighter) => {
   render(
     createElement(CodeView, {
-      data: {content: temp1, fileLang: 'ts'},
+      data: { content: temp1, fileLang: "ts" },
       // width: 80,
       codeViewTheme: "dark",
       extendData: {
-        newFile: { 107: { data: "test extend data" } },
+        107: { data: "test extend data" },
       },
       renderExtendLine: ({ data }) => {
         return createElement(

@@ -422,7 +422,7 @@ getDiffViewHighlighter().then((highlighter) => {
       // diffViewTabWidth: 'small',
       // diffViewTabSpace: true,
       extendData: {
-        newFile: { 107: { data: "test extend data" } },
+        newFile: { 97: { data: "test extend data" } },
       },
       renderExtendLine: ({ data }) => {
         return createElement(
