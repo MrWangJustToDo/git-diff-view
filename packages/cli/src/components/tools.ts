@@ -1,10 +1,12 @@
-import { createStore, markRaw, ref } from "reactivity-store";
+import { createStore, markRaw, ref, configureEnv } from "reactivity-store";
 import stringWidth from "string-width";
 
 import type { DiffModeEnum, DiffViewProps } from "./DiffView";
 import type { DiffLine } from "@git-diff-view/core";
 import type { DOMElement } from "ink";
 import type { Ref, UseSelectorWithStore } from "reactivity-store";
+
+configureEnv({ allowNonBrowserUpdates: true });
 
 export const createDiffConfigStore = <T = any>(
   props: DiffViewProps<T> & { isMounted: boolean },
