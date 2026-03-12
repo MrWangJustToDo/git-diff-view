@@ -19,7 +19,7 @@
     "directory": "packages/cli"
   },
   "scripts": {
-    "dev": "DEV=true node ./test/index.mjs",
+    "dev": "DEV=true node ./test/file.mjs",
     "gen:color": "node ./gen.mjs",
     "gen:type": "dts-bundle-generator -o index.d.ts dist/types/index.d.ts"
   },
@@ -56,7 +56,7 @@
     "highlight.js": "^11.11.0",
     "lowlight": "^3.3.0",
     "fast-diff": "^1.3.0",
-    "reactivity-store": "^0.3.12",
+    "reactivity-store": "^0.4.0",
     "string-width": "^7.0.0",
     "use-sync-external-store": "^1.6.0"
   },

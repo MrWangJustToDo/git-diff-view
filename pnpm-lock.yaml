@@ -131,8 +131,8 @@ importers:
         specifier: ^19.2.0
         version: 19.2.0
       reactivity-store:
-        specifier: ^0.3.12
-        version: 0.3.12(react@19.2.0)
+        specifier: ^0.4.0
+        version: 0.4.0(react@19.2.0)
       string-width:
         specifier: ^7.0.0
         version: 7.2.0
@@ -229,8 +229,8 @@ importers:
         specifier: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
         version: 19.2.0(react@19.2.0)
       reactivity-store:
-        specifier: ^0.3.12
-        version: 0.3.12(react@19.2.0)
+        specifier: ^0.4.0
+        version: 0.4.0(react@19.2.0)
       use-sync-external-store:
         specifier: ^1.6.0
         version: 1.6.0(react@19.2.0)
@@ -278,8 +278,8 @@ importers:
         specifier: ^3.3.0
         version: 3.3.0
       reactivity-store:
-        specifier: ^0.3.12
-        version: 0.3.12(react@19.2.0)
+        specifier: ^0.4.0
+        version: 0.4.0(react@19.2.0)
     devDependencies:
       autoprefixer:
         specifier: ^10.4.21
@@ -565,8 +565,8 @@ importers:
         specifier: ^19.2.0
         version: 19.2.0(react@19.2.0)
       reactivity-store:
-        specifier: ^0.3.12
-        version: 0.3.12(react@19.2.0)
+        specifier: ^0.4.0
+        version: 0.4.0(react@19.2.0)
     devDependencies:
       '@my-react/react-refresh':
         specifier: ^0.3.22
@@ -2419,6 +2419,9 @@ packages:
   '@vue/reactivity@3.5.22':
     resolution: {integrity: sha512-f2Wux4v/Z2pqc9+4SmgZC1p73Z53fyD90NFWXiX9AKVnVBEvLFOWCEgJD3GdGnlxPZt01PSlfmLqbLYzY/Fw4A==}
 
+  '@vue/reactivity@3.5.30':
+    resolution: {integrity: sha512-179YNgKATuwj9gB+66snskRDOitDiuOZqkYia7mHKJaidOMo/WJxHKF8DuGc4V4XbYTJANlfEKb0yxTQotnx4Q==}
+
   '@vue/runtime-core@3.5.22':
     resolution: {integrity: sha512-EHo4W/eiYeAzRTN5PCextDUZ0dMs9I8mQ2Fy+OkzvRPUYQEyK9yAjbasrMCXbLNhF7P0OUyivLjIy0yc6VrLJQ==}
 
@@ -2432,6 +2435,9 @@ packages:
 
   '@vue/shared@3.5.22':
     resolution: {integrity: sha512-F4yc6palwq3TT0u+FYf0Ns4Tfl9GRFURDN2gWG7L1ecIaS/4fCIuFOjMTnCyjsu/OK6vaDKLCrGAa+KvvH+h4w==}
+
+  '@vue/shared@3.5.30':
+    resolution: {integrity: sha512-YXgQ7JjaO18NeK2K9VTbDHaFy62WrObMa6XERNfNOkAhD1F1oDSf3ZJ7K6GqabZ0BvSDHajp8qfS5Sa2I9n8uQ==}
 
   accepts@2.0.0:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
@@ -5089,8 +5095,8 @@ packages:
     resolution: {integrity: sha512-tmbWg6W31tQLeB5cdIBOicJDJRR2KzXsV7uSK9iNfLWQ5bIZfxuPEHp7M8wiHyHnn0DD1i7w3Zmin0FtkrwoCQ==}
     engines: {node: '>=0.10.0'}
 
-  reactivity-store@0.3.12:
-    resolution: {integrity: sha512-Idz9EL4dFUtQbHySZQzckWOTUfqjdYpUtNW0iOysC32mG7IjiUGB77QrsyR5eAWBkRiS9JscF6A3fuQAIy+LrQ==}
+  reactivity-store@0.4.0:
+    resolution: {integrity: sha512-uL9uoREOBg2o4zUa8vMU0AbvAOk0osPloizscmyZqMvJzcuuKX3ELFYYr1DX8gAcfvlhPduz4QuLZn1eChCu4Q==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
@@ -7956,6 +7962,10 @@ snapshots:
     dependencies:
       '@vue/shared': 3.5.22
 
+  '@vue/reactivity@3.5.30':
+    dependencies:
+      '@vue/shared': 3.5.30
+
   '@vue/runtime-core@3.5.22':
     dependencies:
       '@vue/reactivity': 3.5.22
@@ -7975,6 +7985,8 @@ snapshots:
       vue: 3.5.22(typescript@5.9.3)
 
   '@vue/shared@3.5.22': {}
+
+  '@vue/shared@3.5.30': {}
 
   accepts@2.0.0:
     dependencies:
@@ -10832,10 +10844,10 @@ snapshots:
 
   react@19.2.0: {}
 
-  reactivity-store@0.3.12(react@19.2.0):
+  reactivity-store@0.4.0(react@19.2.0):
     dependencies:
-      '@vue/reactivity': 3.5.22
-      '@vue/shared': 3.5.22
+      '@vue/reactivity': 3.5.30
+      '@vue/shared': 3.5.30
       react: 19.2.0
       use-sync-external-store: 1.6.0(react@19.2.0)
 

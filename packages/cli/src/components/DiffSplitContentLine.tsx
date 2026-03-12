@@ -55,19 +55,22 @@ const InternalDiffSplitLine = ({
   const contentWidth = columns / 2 - lineNumWidth - 2;
 
   // Calculate row heights - must match the actual wrap width used in DiffContent
-  // DiffContent receives contentWidth and wraps at (contentWidth - 1) for the operator column
-  let oldRow = getCurrentLineRow({ content: oldLine?.value || "", width: contentWidth - 1 });
-  let newRow = getCurrentLineRow({ content: newLine?.value || "", width: contentWidth - 1 });
+  // DiffContent receives contentWidth and wraps at (contentWidth - 2) for the operator column and end padding
+  const noNewlineText = "\\ No newline at end of file";
 
-  oldRow =
+  // Include "No newline" text in row calculation if present
+  const oldContent =
     oldLine?.diff?.changes?.hasLineChange && oldLine?.diff?.changes.newLineSymbol === NewLineSymbol.NEWLINE
-      ? oldRow + 1
-      : oldRow;
+      ? (oldLine?.value || "") + noNewlineText
+      : oldLine?.value || "";
 
-  newRow =
+  const newContent =
     newLine?.diff?.changes?.hasLineChange && newLine?.diff?.changes.newLineSymbol === NewLineSymbol.NEWLINE
-      ? newRow + 1
-      : newRow;
+      ? (newLine?.value || "") + noNewlineText
+      : newLine?.value || "";
+
+  const oldRow = getCurrentLineRow({ content: oldContent, width: contentWidth - 2 });
+  const newRow = getCurrentLineRow({ content: newContent, width: contentWidth - 2 });
 
   const row = Math.max(oldRow, newRow);
 

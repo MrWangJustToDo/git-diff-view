@@ -216,9 +216,6 @@ export class File {
 }
 
 // TODO add highlight engine key to cache key
-/**
- * @internal
- */
 export function getFile(
   raw: string,
   lang: DiffHighlighterLang,
@@ -226,13 +223,7 @@ export function getFile(
   fileName?: string,
   uuid?: string
 ): File;
-/**
- * @internal
- */
 export function getFile(raw: string, lang: string, theme: "light" | "dark", fileName?: string, uuid?: string): File;
-/**
- * @internal
- */
 export function getFile(
   raw: string,
   lang: DiffHighlighterLang | string,

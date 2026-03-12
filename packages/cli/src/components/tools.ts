@@ -1,10 +1,12 @@
-import { createStore, markRaw, ref } from "reactivity-store";
+import { createStore, markRaw, ref, configureEnv } from "reactivity-store";
 import stringWidth from "string-width";
 
 import type { DiffModeEnum, DiffViewProps } from "./DiffView";
 import type { DiffLine } from "@git-diff-view/core";
 import type { DOMElement } from "ink";
 import type { Ref, UseSelectorWithStore } from "reactivity-store";
+
+configureEnv({ allowNonBrowserUpdates: true });
 
 export const createDiffConfigStore = <T = any>(
   props: DiffViewProps<T> & { isMounted: boolean },
@@ -72,6 +74,10 @@ export const createDiffConfigStore = <T = any>(
     const setRenderExtendLine = (_renderExtendLine: typeof renderExtendLine.value) =>
       (renderExtendLine.value = _renderExtendLine);
 
+    const hideOperator = ref(props.diffViewHideOperator);
+
+    const setHideOperator = (_hideOperator: boolean) => (hideOperator.value = _hideOperator);
+
     return {
       id,
       setId,
@@ -91,6 +97,8 @@ export const createDiffConfigStore = <T = any>(
       setExtendData,
       renderExtendLine,
       setRenderExtendLine,
+      hideOperator,
+      setHideOperator,
     };
     // fix rollup type error
   }) as UseSelectorWithStore<{
@@ -115,11 +123,14 @@ export const createDiffConfigStore = <T = any>(
     setExtendData: (extendData: DiffViewProps<any>["extendData"]) => void;
     renderExtendLine: Ref<typeof props.renderExtendLine>;
     setRenderExtendLine: (renderExtendLine: typeof props.renderExtendLine) => void;
+    hideOperator: Ref<boolean>;
+    setHideOperator: (hideOperator: boolean) => void;
   }>;
 };
 
 export const getCurrentLineRow = ({ content, width }: { content: string; width: number }) => {
-  return Math.ceil(stringWidth(content) / width);
+  // Ensure minimum of 1 row for empty lines
+  return Math.max(1, Math.ceil(stringWidth(content) / width));
 };
 
 export const getStringContentWithFixedWidth = ({

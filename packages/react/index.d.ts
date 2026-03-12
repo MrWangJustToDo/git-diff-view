@@ -637,6 +637,8 @@ export declare function diffChanges(addition: DiffLine, deletion: DiffLine): {
 	delRange: DiffRange;
 };
 export declare function escapeHtml(string: unknown): string;
+export declare function getFile(raw: string, lang: DiffHighlighterLang, theme: "light" | "dark", fileName?: string, uuid?: string): File$1;
+export declare function getFile(raw: string, lang: string, theme: "light" | "dark", fileName?: string, uuid?: string): File$1;
 /** Get the changed ranges in the strings, relative to each other. */
 export declare function relativeChanges(addition: DiffLine, deletion: DiffLine): {
 	addRange: IRange;

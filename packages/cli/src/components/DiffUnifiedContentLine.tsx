@@ -181,10 +181,15 @@ const InternalDiffUnifiedLine = ({
 
   const contentWidth = columns - (lineNumWidth + 1) * 2 - 1;
 
-  // Use contentWidth - 1 to match the actual wrap width in DiffContent (operator column takes 1 char)
-  let row = getCurrentLineRow({ content: rawLine, width: contentWidth - 1 });
+  // Include "No newline" text in row calculation if present
+  const noNewlineText = "\\ No newline at end of file";
+  const contentWithSymbol =
+    diffLine?.changes?.hasLineChange && diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE
+      ? rawLine + noNewlineText
+      : rawLine;
 
-  row = diffLine?.changes?.hasLineChange && diffLine.changes.newLineSymbol === NewLineSymbol.NEWLINE ? row + 1 : row;
+  // Use contentWidth - 2 to match the actual wrap width in DiffContent (operator column takes 1 char, end padding takes 1 char)
+  const row = getCurrentLineRow({ content: contentWithSymbol, width: contentWidth - 2 });
 
   const color = hasDiff
     ? theme === "light"
