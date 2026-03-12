@@ -3,7 +3,7 @@
   "description": "@git-diff-view/cli",
   "author": "MrWangJustToDo",
   "license": "MIT",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "index.mjs",
   "type": "module",
   "types": "index.d.ts",
@@ -46,11 +46,12 @@
     }
   ],
   "keywords": [
+    "code component",
     "diff component",
     "cli diff component"
   ],
   "dependencies": {
-    "@git-diff-view/core": "^0.1.1",
+    "@git-diff-view/core": "^0.1.2",
     "@types/hast": "^3.0.0",
     "chalk": "^5.6.2",
     "highlight.js": "^11.11.0",

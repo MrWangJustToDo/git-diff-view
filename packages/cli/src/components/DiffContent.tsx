@@ -124,7 +124,10 @@ const DiffString = React.memo(
 
     const { useDiffContext } = useDiffViewContext();
 
-    const { enableTabSpace, tabWidth } = useDiffContext.useShallowStableSelector((s) => ({ enableTabSpace: s.tabSpace, tabWidth: s.tabWidth }));
+    const { enableTabSpace, tabWidth } = useDiffContext.useShallowStableSelector((s) => ({
+      enableTabSpace: s.tabSpace,
+      tabWidth: s.tabWidth,
+    }));
 
     // Memoize the ANSI content to avoid rebuilding on every render
     const ansiContent = React.useMemo(() => {
@@ -250,7 +253,10 @@ const DiffSyntax = React.memo(
   }) => {
     const { useDiffContext } = useDiffViewContext();
 
-    const { enableTabSpace, tabWidth } = useDiffContext.useShallowStableSelector((s) => ({ enableTabSpace: s.tabSpace, tabWidth: s.tabWidth }));
+    const { enableTabSpace, tabWidth } = useDiffContext.useShallowStableSelector((s) => ({
+      enableTabSpace: s.tabSpace,
+      tabWidth: s.tabWidth,
+    }));
 
     // Memoize the ANSI content with syntax highlighting
     const ansiContent = React.useMemo(() => {
