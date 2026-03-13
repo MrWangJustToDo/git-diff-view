@@ -4,8 +4,7 @@
 	import {
 		DiffFile,
 		type DiffHighlighter,
-		SplitSide,
-		highlighter as buildInHighlighter
+		SplitSide
 	} from '@git-diff-view/core';
 	import { onDestroy, type Snippet } from 'svelte';
 	import { useIsMounted } from '$lib/hooks/useIsMounted.svelte.js';
@@ -164,23 +163,13 @@
 		if (enableHighlight) {
 			const registerHighlighter = props.registerHighlighter;
 			if (registerHighlighter) {
-				if (
-					registerHighlighter.name !== diffFile._getHighlighterName() ||
-					registerHighlighter.type !== diffFile._getHighlighterType() ||
-					registerHighlighter.type !== 'class'
-				) {
-					diffFile.initSyntax({
-						registerHighlighter: registerHighlighter
-					});
-					diffFile.notifyAll();
-				}
-			} else if (
-				(!diffFile._getIsCloned() && diffFile._getHighlighterName() !== buildInHighlighter.name) ||
-				diffFile._getHighlighterType() !== 'class'
-			) {
+				diffFile.initSyntax({
+					registerHighlighter: registerHighlighter
+				});
+			} else {
 				diffFile.initSyntax();
-				diffFile.notifyAll();
 			}
+			diffFile.notifyAll();
 		}
 	};
 
