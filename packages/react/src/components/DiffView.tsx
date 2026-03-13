@@ -315,22 +315,23 @@ const DiffViewWithRef = <T extends unknown>(
     if (!diffFile) return;
 
     if (props.diffViewHighlight) {
+      // Always call initSyntax when highlight is enabled.
+      // initSyntax() is idempotent — when syntax is already initialized with a
+      // matching highlighter, it efficiently re-syncs syntax line references
+      // from the underlying File objects without recomputing.
+      //
+      // Previously, this effect skipped initSyntax() when the highlighter
+      // name/type already matched. However, on remount the global File cache
+      // causes initRaw() → #syncSyntax() to copy highlighter metadata from
+      // cached File objects into the fresh DiffFile, making it appear that
+      // syntax was already set up when it wasn't. This left syntax lines null
+      // and highlighting was lost on subsequent renders.
       if (registerHighlighter) {
-        if (
-          registerHighlighter.name !== diffFile._getHighlighterName() ||
-          registerHighlighter.type !== diffFile._getHighlighterType() ||
-          registerHighlighter.type !== "class"
-        ) {
-          diffFile.initSyntax({ registerHighlighter: registerHighlighter });
-          diffFile.notifyAll();
-        }
-      } else if (
-        (!diffFile._getIsCloned() && diffFile._getHighlighterName() !== buildInHighlighter.name) ||
-        diffFile._getHighlighterType() !== "class"
-      ) {
+        diffFile.initSyntax({ registerHighlighter: registerHighlighter });
+      } else {
         diffFile.initSyntax();
-        diffFile.notifyAll();
       }
+      diffFile.notifyAll();
     }
   }, [diffFile, props.diffViewHighlight, registerHighlighter, diffViewTheme]);
 
