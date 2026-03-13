@@ -1,9 +1,19 @@
-import { highlighter } from "@git-diff-view/lowlight";
-
 import { Cache } from "./cache";
 import { getPlainLineTemplate, getSyntaxLineTemplate, processTransformForFile } from "./parse";
 
 import type { DiffAST, DiffHighlighter, DiffHighlighterLang, SyntaxLine } from "@git-diff-view/lowlight";
+
+let _defaultHighlighter: Omit<DiffHighlighter, "getHighlighterEngine"> | null = null;
+
+/**
+ * Register a default highlighter to use when no `registerHighlighter` is
+ * provided to `DiffView`. This is called automatically by
+ * `@git-diff-view/lowlight` when it is imported, so most users don't need
+ * to call this directly.
+ */
+export function setDefaultHighlighter(h: Omit<DiffHighlighter, "getHighlighterEngine">) {
+  _defaultHighlighter = h;
+}
 
 const map = new Cache<string, File>();
 
@@ -109,7 +119,16 @@ export class File {
   }) {
     if (!this.raw) return;
 
-    const finalHighlighter = registerHighlighter || highlighter;
+    const finalHighlighter = registerHighlighter || _defaultHighlighter;
+
+    if (!finalHighlighter) {
+      if (__DEV__) {
+        console.warn(
+          "[@git-diff-view/core] No syntax highlighter available. Import @git-diff-view/lowlight or provide a registerHighlighter."
+        );
+      }
+      return;
+    }
 
     if (this.rawLength > finalHighlighter.maxLineToIgnoreSyntax) {
       if (__DEV__) {
@@ -121,15 +140,15 @@ export class File {
     }
 
     // check current lang is support or not
-    // if it's a unsupported lang, fallback to use lowlightHighlighter
+    // if it's a unsupported lang, fallback to use the default highlighter
     let supportEngin = finalHighlighter;
 
     try {
       if (!finalHighlighter.hasRegisteredCurrentLang(this.lang)) {
-        supportEngin = highlighter;
+        supportEngin = _defaultHighlighter || finalHighlighter;
       }
     } catch {
-      supportEngin = highlighter;
+      supportEngin = _defaultHighlighter || finalHighlighter;
     }
 
     if (

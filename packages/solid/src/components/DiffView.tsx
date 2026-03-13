@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
-import { _cacheMap, DiffFile, SplitSide, highlighter as buildInHighlighter } from "@git-diff-view/core";
+import { _cacheMap, DiffFile, SplitSide } from "@git-diff-view/core";
 import { diffFontSizeName, DiffModeEnum } from "@git-diff-view/utils";
 import { type JSXElement, type JSX, createSignal, createEffect, createMemo, onCleanup, Show } from "solid-js";
 

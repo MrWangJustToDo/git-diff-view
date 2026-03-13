@@ -4,8 +4,7 @@
 	import {
 		DiffFile,
 		type DiffHighlighter,
-		SplitSide,
-		highlighter as buildInHighlighter
+		SplitSide
 	} from '@git-diff-view/core';
 	import { onDestroy, type Snippet } from 'svelte';
 	import { useIsMounted } from '$lib/hooks/useIsMounted.svelte.js';

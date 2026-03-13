@@ -1,4 +1,5 @@
 import { processAST } from "@git-diff-view/utils";
+import { setDefaultHighlighter } from "@git-diff-view/core";
 import { createLowlight, all } from "lowlight";
 
 import type { _getAST } from "./lang";
@@ -150,5 +151,9 @@ export { processAST } from "@git-diff-view/utils";
 export const versions = __VERSION__;
 
 export const highlighter: DiffHighlighter = instance as DiffHighlighter;
+
+// Auto-register as the default highlighter in @git-diff-view/core
+// so that syntax highlighting works out of the box when this package is imported.
+setDefaultHighlighter(highlighter);
 
 export * from "./lang";
