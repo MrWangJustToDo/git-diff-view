@@ -44,7 +44,7 @@ export function useCodeTerminalSize(): { columns: number } {
     return () => {
       process.stdout.off("resize", debounceUpdate);
     };
-  }, [wrapper]);
+  }, [hasWidth, wrapper]);
 
   return { columns: size };
 }

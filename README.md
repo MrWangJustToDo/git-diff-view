@@ -119,12 +119,12 @@ file.buildSplitDiffLines();
 - ✅ **Extend Data** - Attach and render custom data per line
 - ✅ **Web Worker Support** - Offload processing for better performance
 - ✅ **SSR & RSC** - Full server-side rendering support for React and Vue
-- ✅ **Diff Match Patch** - Enhanced line-level diff with FastDiff template (experimental)
+- ✅ **Diff Match Patch** - Enhanced line-level diff with FastDiff template
 - ✅ **Multiple Platforms** - React, Vue, Solid, Svelte, and CLI
 
 ## ⚡ Advanced Features
 
-### FastDiff Template (Experimental)
+### FastDiff Template
 
 Enhanced line-by-line diff visualization for better readability.
 

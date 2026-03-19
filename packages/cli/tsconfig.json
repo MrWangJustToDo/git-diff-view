@@ -6,6 +6,6 @@
     "moduleResolution": "Bundler",
     "jsx": "react"
   },
-  "include": ["./src"],
+  "include": ["./src", ".eslintrc.cjs"],
   "exclude": ["node_modules"]
 }

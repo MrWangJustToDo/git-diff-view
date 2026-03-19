@@ -167,7 +167,7 @@ const CodeSyntax = React.memo(
       }
 
       return buildAnsiStringWithLineBreaks(chars, width);
-    }, [bg, width, theme, rawLine, syntaxLine, enableTabSpace, tabWidth]);
+    }, [bg, width, theme, syntaxLine, enableTabSpace, tabWidth]);
 
     // Fallback to CodeString if no syntax line
     if (!syntaxLine) {

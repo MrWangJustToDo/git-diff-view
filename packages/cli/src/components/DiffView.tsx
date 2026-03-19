@@ -89,6 +89,7 @@ const InternalDiffView = <T extends unknown>(
   const diffFileId = useMemo(() => diffFile.getId(), [diffFile]);
 
   // performance optimization
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const useDiffContext = useMemo(() => createDiffConfigStore(props, diffFileId), []);
 
   useEffect(() => {
@@ -158,6 +159,8 @@ const InternalDiffView = <T extends unknown>(
     diffViewTabSpace,
     diffViewTabWidth,
     diffViewHideOperator,
+    props.extendData,
+    props.renderExtendLine,
   ]);
 
   useEffect(() => {

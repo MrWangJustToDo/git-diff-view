@@ -115,7 +115,7 @@ CodeLine.displayName = "CodeLine";
 /**
  * CodeViewContent - renders all code lines using terminal size from context
  */
-const CodeViewContent = memo(({ file, theme, width }: { file: File; theme: "light" | "dark", width?: number }) => {
+const CodeViewContent = memo(({ file, theme, width }: { file: File; theme: "light" | "dark"; width?: number }) => {
   const { useCodeContext } = useCodeViewContext();
 
   const enableHighlight = useCodeContext((s) => s.enableHighlight);
@@ -180,9 +180,10 @@ const InternalCodeView = <T,>(
     codeViewTheme,
   } = props;
 
-  const fileId = useMemo(() => file.fileName || "code-file", [file.fileName]);
+  const fileId = file.getId();
 
   // Performance optimization using store
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const useCodeContext = useMemo(() => createCodeConfigStore(props, fileId), []);
 
   useEffect(() => {
@@ -238,6 +239,8 @@ const InternalCodeView = <T,>(
     renderExtendLine,
     codeViewTabSpace,
     codeViewTabWidth,
+    props.extendData,
+    props.renderExtendLine,
   ]);
 
   useEffect(() => {

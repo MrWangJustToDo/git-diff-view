@@ -348,7 +348,7 @@ const DiffSyntax = React.memo(
 
       // Use width - 2 because the operator column takes 1 character and end padding takes 1 character
       return buildAnsiStringWithLineBreaks(chars, width - 2);
-    }, [bg, width, theme, rawLine, diffLine, operator, syntaxLine, enableTabSpace, tabWidth]);
+    }, [bg, width, theme, diffLine, operator, syntaxLine, enableTabSpace, tabWidth]);
 
     // Fallback to DiffString if no syntax line
     if (!syntaxLine) {

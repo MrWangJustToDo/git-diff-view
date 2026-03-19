@@ -36,7 +36,7 @@ type SyntaxLineWithTemplate = SyntaxLine & {
 const idSet = new Set<string>();
 
 export class File {
-  #id = '';
+  #id = "";
 
   ast?: DiffAST;
 
