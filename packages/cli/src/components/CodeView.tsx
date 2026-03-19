@@ -7,7 +7,6 @@ import { Box } from "ink";
 import React, { Fragment, forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 
 import { useCodeTerminalSize } from "../hooks/useCodeTerminalSize";
-import { useIsMounted } from "../hooks/useIsMounted";
 
 import { CodeContent } from "./CodeContent";
 import { CodeExtendLine } from "./CodeExtendLine";
@@ -28,6 +27,7 @@ export type CodeViewProps<T> = {
     fileName?: string | null;
     fileLang?: DiffHighlighterLang | string | null;
   };
+  file?: File;
   extendData?: Record<string, { data: T }>;
   width?: number;
   codeViewTheme?: "light" | "dark";
@@ -115,12 +115,12 @@ CodeLine.displayName = "CodeLine";
 /**
  * CodeViewContent - renders all code lines using terminal size from context
  */
-const CodeViewContent = memo(({ file, theme }: { file: File; theme: "light" | "dark" }) => {
+const CodeViewContent = memo(({ file, theme, width }: { file: File; theme: "light" | "dark", width?: number }) => {
   const { useCodeContext } = useCodeViewContext();
 
   const enableHighlight = useCodeContext((s) => s.enableHighlight);
 
-  const { columns } = useCodeTerminalSize();
+  const { columns: _columns } = useCodeTerminalSize();
 
   // Calculate line number width based on max line number
   const lineNumWidth = useMemo(() => {
@@ -133,6 +133,8 @@ const CodeViewContent = memo(({ file, theme }: { file: File; theme: "light" | "d
     const totalLines = file.rawLength || 0;
     return Array.from({ length: totalLines }, (_, i) => i + 1);
   }, [file.rawLength]);
+
+  const columns = width || _columns;
 
   if (!columns) return null;
 
@@ -163,14 +165,13 @@ CodeViewContent.displayName = "CodeViewContent";
 const InternalCodeView = <T,>(
   props: Omit<CodeViewProps<T>, "data"> & {
     file: File;
-    isMounted: boolean;
     wrapperRef?: RefObject<DOMElement>;
   }
 ) => {
   const {
     file,
+    width: _width,
     codeViewHighlight,
-    isMounted,
     wrapperRef,
     extendData,
     renderExtendLine,
@@ -188,8 +189,8 @@ const InternalCodeView = <T,>(
     const {
       id,
       setId,
-      mounted,
-      setMounted,
+      width,
+      setWidth,
       enableHighlight,
       setEnableHighlight,
       setExtendData,
@@ -205,8 +206,8 @@ const InternalCodeView = <T,>(
       setId(fileId);
     }
 
-    if (mounted !== isMounted) {
-      setMounted(isMounted);
+    if (_width !== width) {
+      setWidth(_width);
     }
 
     if (codeViewHighlight !== enableHighlight) {
@@ -229,10 +230,10 @@ const InternalCodeView = <T,>(
       setTabWidth(codeViewTabWidth);
     }
   }, [
+    _width,
     useCodeContext,
     codeViewHighlight,
     fileId,
-    isMounted,
     extendData,
     renderExtendLine,
     codeViewTabSpace,
@@ -253,7 +254,7 @@ const InternalCodeView = <T,>(
   return (
     <CodeViewContext.Provider value={value}>
       <Box data-component="git-code-view" data-theme={theme} data-version={__VERSION__} flexDirection="column">
-        <CodeViewContent file={file} theme={theme} />
+        <CodeViewContent file={file} theme={theme} width={_width} />
       </Box>
     </CodeViewContext.Provider>
   );
@@ -262,42 +263,37 @@ const InternalCodeView = <T,>(
 const MemoedInternalCodeView = memo(InternalCodeView);
 
 const CodeViewContainerWithRef = <T,>(props: CodeViewProps<T>, ref: ForwardedRef<{ getFileInstance: () => File }>) => {
-  const { registerHighlighter, data, codeViewTheme, width, ...restProps } = props;
+  const { registerHighlighter, data, codeViewTheme, file, ...restProps } = props;
 
   const domRef = useRef<DOMElement>(null);
 
   const theme = codeViewTheme || "light";
 
-  const file = useMemo(() => {
+  const width = restProps.width;
+
+  const finalFile = useMemo(() => {
+    if (file) return file;
     if (data) {
       return getFile(data.content || "", data.fileLang || "", theme, data.fileName || "");
     }
     return null;
-  }, [data, theme]);
-
-  const fileRef = useRef(file);
-
-  if (fileRef.current && fileRef.current !== file) {
-    fileRef.current = file;
-  }
-
-  const isMounted = useIsMounted();
+  }, [data, theme, file]);
 
   useEffect(() => {
-    if (!file) return;
-    file.doRaw();
-  }, [file]);
+    if (!finalFile) return;
+    finalFile.doRaw();
+  }, [finalFile]);
 
   useEffect(() => {
-    if (!file) return;
+    if (!finalFile) return;
     if (props.codeViewHighlight) {
-      file.doSyntax({ registerHighlighter: registerHighlighter, theme: codeViewTheme });
+      finalFile.doSyntax({ registerHighlighter: registerHighlighter, theme: codeViewTheme });
     }
-  }, [file, props.codeViewHighlight, codeViewTheme, registerHighlighter]);
+  }, [finalFile, props.codeViewHighlight, codeViewTheme, registerHighlighter]);
 
-  useImperativeHandle(ref, () => ({ getFileInstance: () => file }), [file]);
+  useImperativeHandle(ref, () => ({ getFileInstance: () => finalFile }), [finalFile]);
 
-  if (!file) return null;
+  if (!finalFile) return null;
 
   return (
     <Box
@@ -307,11 +303,10 @@ const CodeViewContainerWithRef = <T,>(props: CodeViewProps<T>, ref: ForwardedRef
       flexShrink={typeof width === "number" ? 0 : undefined}
     >
       <MemoedInternalCodeView
-        key={file.fileName}
+        key={finalFile.getId()}
         {...restProps}
         wrapperRef={domRef}
-        file={file}
-        isMounted={isMounted}
+        file={finalFile}
         codeViewTheme={codeViewTheme}
         codeViewTabWidth={props.codeViewTabWidth || "medium"}
       />

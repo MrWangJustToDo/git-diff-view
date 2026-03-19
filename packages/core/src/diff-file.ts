@@ -711,10 +711,10 @@ export class DiffFile {
   }
 
   initId() {
-    let id = "--" + Math.random().toString().slice(2);
+    let id = "diff--" + Math.random().toString().slice(2);
 
     while (idSet.has(id)) {
-      id = "--" + Math.random().toString().slice(2);
+      id = "diff--" + Math.random().toString().slice(2);
     }
 
     idSet.add(id);

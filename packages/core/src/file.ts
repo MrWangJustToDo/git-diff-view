@@ -33,7 +33,11 @@ type SyntaxLineWithTemplate = SyntaxLine & {
   template?: string;
 };
 
+const idSet = new Set<string>();
+
 export class File {
+  #id = '';
+
   ast?: DiffAST;
 
   theme?: "light" | "dark";
@@ -98,6 +102,28 @@ export class File {
     this.raw = processTransformForFile(raw);
 
     Object.defineProperty(this, "__v_skip", { value: true });
+
+    this.initId();
+  }
+
+  initId() {
+    let id = "file--" + Math.random().toString().slice(2);
+
+    while (idSet.has(id)) {
+      id = "file--" + Math.random().toString().slice(2);
+    }
+
+    idSet.add(id);
+
+    this.#id = id;
+  }
+
+  getId() {
+    return this.#id;
+  }
+
+  clearId() {
+    idSet.delete(this.#id);
   }
 
   doSyntax({

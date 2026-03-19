@@ -10,7 +10,7 @@ import { DiffSplitExtendLine } from "./DiffSplitExtendLine";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLine";
 import { useDiffViewContext } from "./DiffViewContext";
 
-export const DiffSplitView = memo(({ diffFile }: { diffFile: DiffFile }) => {
+export const DiffSplitView = memo(({ diffFile, width }: { diffFile: DiffFile; width?: number }) => {
   const { useDiffContext } = useDiffViewContext();
 
   const enableHighlight = useDiffContext.useShallowStableSelector((s) => s.enableHighlight);
@@ -19,13 +19,15 @@ export const DiffSplitView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const theme = diffFile._getTheme();
 
-  const { columns } = useTerminalSize();
+  const { columns: _columns } = useTerminalSize();
 
   const splitLineLength = Math.max(diffFile.splitLineLength, diffFile.fileLineLength);
 
   const lineNumWidth = splitLineLength.toString().length;
 
   const lines = getSplitContentLines(diffFile);
+
+  const columns = width || _columns;
 
   if (!columns) return null;
 

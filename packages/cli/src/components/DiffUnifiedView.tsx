@@ -13,7 +13,7 @@ import { useDiffViewContext } from "./DiffViewContext";
 
 import type { DiffFile } from "@git-diff-view/core";
 
-export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
+export const DiffUnifiedView = memo(({ diffFile, width }: { diffFile: DiffFile; width?: number }) => {
   const { useDiffContext } = useDiffViewContext();
 
   const enableHighlight = useDiffContext.useShallowStableSelector((s) => s.enableHighlight);
@@ -22,13 +22,15 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const theme = diffFile._getTheme();
 
-  const { columns } = useTerminalSize();
+  const { columns: _columns } = useTerminalSize();
 
   const unifiedLineLength = Math.max(diffFile.unifiedLineLength, diffFile.fileLineLength);
 
   const lineNumWidth = unifiedLineLength.toString().length;
 
   const lines = getUnifiedContentLine(diffFile);
+
+  const columns = width || _columns;
 
   if (!columns) return null;
 

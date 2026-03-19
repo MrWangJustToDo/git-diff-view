@@ -5,9 +5,9 @@ import { useDiffViewContext } from "../components/DiffViewContext";
 
 import type { DOMElement } from "ink";
 
-const TERMINAL_PADDING_X = 4;
+export const TERMINAL_PADDING_X = 4;
 
-const getValidColumns = (columns: number): number => {
+export const getValidColumns = (columns: number): number => {
   if (columns % 2 === 0) {
     return columns;
   } else {
@@ -15,17 +15,32 @@ const getValidColumns = (columns: number): number => {
   }
 };
 
-export function useTerminalSize(): { columns: number; rows: number } {
+// eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+export const debounce = <T extends Function>(action: T, time: number): T => {
+  let id: NodeJS.Timeout | null = null;
+  return ((...args) => {
+    clearTimeout(id);
+    id = setTimeout(() => action.call(null, ...args), time);
+  }) as unknown as T;
+};
+
+export function useTerminalSize(): { columns: number } {
   const { useDiffContext } = useDiffViewContext();
 
   const wrapper = useDiffContext((s) => s.wrapper);
 
-  const [size, setSize] = useState({
-    columns: 0,
-    rows: process.stdout.rows || 20,
-  });
+  const [size, setSize] = useState(() => getValidColumns((process?.stdout?.columns || 60) - TERMINAL_PADDING_X));
+
+  useDiffContext.useShallowStableSelector(
+    (s) => s.width,
+    (p, c) => typeof p === typeof c
+  );
+
+  const hasWidth = typeof useDiffContext.getReadonlyState().width === "number";
 
   useLayoutEffect(() => {
+    if (hasWidth) return;
+
     function updateSize() {
       const terminalWidth = getValidColumns((process.stdout.columns || 60) - TERMINAL_PADDING_X);
 
@@ -37,19 +52,16 @@ export function useTerminalSize(): { columns: number; rows: number } {
 
       width = Math.min(width, terminalWidth);
 
-      setSize({
-        columns: width,
-        rows: process.stdout.rows || 20,
-      });
+      setSize(width);
     }
 
-    updateSize();
+    const debounceUpdate = debounce(updateSize, 200);
 
-    process.stdout.on("resize", updateSize);
+    process.stdout.on("resize", debounceUpdate);
     return () => {
-      process.stdout.off("resize", updateSize);
+      process.stdout.off("resize", debounceUpdate);
     };
-  }, [wrapper]);
+  }, [wrapper, hasWidth]);
 
-  return size;
+  return { columns: size };
 }

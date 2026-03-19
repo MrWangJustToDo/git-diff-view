@@ -4,7 +4,6 @@ import { DiffModeEnum } from "@git-diff-view/utils";
 import { Box } from "ink";
 import React, { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 
-import { useIsMounted } from "../hooks/useIsMounted";
 import { useUnmount } from "../hooks/useUnmount";
 
 import { DiffSplitView } from "./DiffSplitView";
@@ -71,15 +70,14 @@ type DiffViewProps_2<T> = Omit<DiffViewProps<T>, "data"> & {
 
 const InternalDiffView = <T extends unknown>(
   props: Omit<DiffViewProps<T>, "data"> & {
-    isMounted: boolean;
     wrapperRef?: RefObject<DOMElement>;
   }
 ) => {
   const {
+    width: _width,
     diffFile,
     diffViewMode,
     diffViewHighlight,
-    isMounted,
     wrapperRef,
     extendData,
     renderExtendLine,
@@ -99,8 +97,6 @@ const InternalDiffView = <T extends unknown>(
       setId,
       mode,
       setMode,
-      mounted,
-      setMounted,
       enableHighlight,
       setEnableHighlight,
       setExtendData,
@@ -112,6 +108,8 @@ const InternalDiffView = <T extends unknown>(
       setTabWidth,
       hideOperator,
       setHideOperator,
+      width,
+      setWidth,
     } = useDiffContext.getReadonlyState();
 
     if (diffFileId && diffFileId !== id) {
@@ -120,10 +118,6 @@ const InternalDiffView = <T extends unknown>(
 
     if (diffViewMode && diffViewMode !== mode) {
       setMode(diffViewMode);
-    }
-
-    if (mounted !== isMounted) {
-      setMounted(isMounted);
     }
 
     if (diffViewHighlight !== enableHighlight) {
@@ -149,12 +143,16 @@ const InternalDiffView = <T extends unknown>(
     if (diffViewHideOperator !== hideOperator) {
       setHideOperator(diffViewHideOperator);
     }
+
+    if (_width !== width) {
+      setWidth(_width);
+    }
   }, [
+    _width,
     useDiffContext,
     diffViewHighlight,
     diffViewMode,
     diffFileId,
-    isMounted,
     extendData,
     renderExtendLine,
     diffViewTabSpace,
@@ -181,9 +179,9 @@ const InternalDiffView = <T extends unknown>(
         data-highlighter={diffFile._getHighlighterName()}
       >
         {diffViewMode & DiffModeEnum.Split ? (
-          <DiffSplitView diffFile={diffFile} />
+          <DiffSplitView diffFile={diffFile} width={_width} />
         ) : (
-          <DiffUnifiedView diffFile={diffFile} />
+          <DiffUnifiedView diffFile={diffFile} width={_width} />
         )}
       </Box>
     </DiffViewContext.Provider>
@@ -196,7 +194,9 @@ const DiffViewContainerWithRef = <T extends unknown>(
   props: DiffViewProps<T>,
   ref: ForwardedRef<{ getDiffFileInstance: () => DiffFile }>
 ) => {
-  const { registerHighlighter, data, diffViewTheme, diffFile: _diffFile, width, ...restProps } = props;
+  const { registerHighlighter, data, diffViewTheme, diffFile: _diffFile, ...restProps } = props;
+
+  const width = restProps.width;
 
   const domRef = useRef<DOMElement>(null);
 
@@ -228,8 +228,6 @@ const DiffViewContainerWithRef = <T extends unknown>(
     diffFileRef.current.clear?.();
     diffFileRef.current = diffFile;
   }
-
-  const isMounted = useIsMounted();
 
   useEffect(() => {
     if (_diffFile && diffFile) {
@@ -275,7 +273,6 @@ const DiffViewContainerWithRef = <T extends unknown>(
         {...restProps}
         wrapperRef={domRef}
         diffFile={diffFile}
-        isMounted={isMounted}
         diffViewTheme={diffViewTheme}
         diffViewTabWidth={props.diffViewTabWidth || "medium"}
         diffViewMode={restProps.diffViewMode || DiffModeEnum.SplitGitHub}

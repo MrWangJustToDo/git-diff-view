@@ -5,11 +5,15 @@ import type { CodeViewProps } from "./CodeView";
 import type { DOMElement } from "ink";
 import type { Ref, UseSelectorWithStore } from "reactivity-store";
 
-export const createCodeConfigStore = <T = any>(props: CodeViewProps<T> & { isMounted: boolean }, fileId: string) => {
+export const createCodeConfigStore = <T = any>(props: CodeViewProps<T>, fileId: string) => {
   return createStore(() => {
     const id = ref(fileId);
 
     const setId = (_id: string) => (id.value = _id);
+
+    const width = ref(props.width);
+
+    const setWidth = (w: number) => (width.value = w);
 
     const tabSpace = ref(props.codeViewTabSpace);
 
@@ -22,10 +26,6 @@ export const createCodeConfigStore = <T = any>(props: CodeViewProps<T> & { isMou
     const wrapper = ref<{ current: DOMElement }>(markRaw({ current: null }));
 
     const setWrapper = (_wrapper?: DOMElement) => (wrapper.value = markRaw({ current: _wrapper }));
-
-    const mounted = ref(props.isMounted);
-
-    const setMounted = (_mounted: boolean) => (mounted.value = _mounted);
 
     const enableHighlight = ref(props.codeViewHighlight);
 
@@ -56,10 +56,10 @@ export const createCodeConfigStore = <T = any>(props: CodeViewProps<T> & { isMou
     return {
       id,
       setId,
+      width,
+      setWidth,
       wrapper,
       setWrapper,
-      mounted,
-      setMounted,
       tabSpace,
       setTabSpace,
       tabWidth,
@@ -75,10 +75,10 @@ export const createCodeConfigStore = <T = any>(props: CodeViewProps<T> & { isMou
   }) as UseSelectorWithStore<{
     id: Ref<string>;
     setId: (id: string) => void;
+    width: Ref<number>;
+    setWidth: (w: number) => void;
     wrapper: Ref<{ current: DOMElement }>;
     setWrapper: (wrapper?: DOMElement) => void;
-    mounted: Ref<boolean>;
-    setMounted: (mounted: boolean) => void;
     tabSpace: Ref<boolean>;
     setTabSpace: (tabSpace: boolean) => void;
     tabWidth: Ref<"small" | "medium" | "large">;

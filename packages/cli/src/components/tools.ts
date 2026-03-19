@@ -8,10 +8,7 @@ import type { Ref, UseSelectorWithStore } from "reactivity-store";
 
 configureEnv({ allowNonBrowserUpdates: true });
 
-export const createDiffConfigStore = <T = any>(
-  props: DiffViewProps<T> & { isMounted: boolean },
-  diffFileId: string
-) => {
+export const createDiffConfigStore = <T = any>(props: DiffViewProps<T>, diffFileId: string) => {
   return createStore(() => {
     const id = ref(diffFileId);
 
@@ -20,6 +17,10 @@ export const createDiffConfigStore = <T = any>(
     const mode = ref(props.diffViewMode);
 
     const setMode = (_mode: DiffModeEnum) => (mode.value = _mode);
+
+    const width = ref(props.width);
+
+    const setWidth = (_width?: number) => (width.value = _width);
 
     const tabSpace = ref(props.diffViewTabSpace);
 
@@ -32,10 +33,6 @@ export const createDiffConfigStore = <T = any>(
     const wrapper = ref<{ current: DOMElement }>(markRaw({ current: null }));
 
     const setWrapper = (_wrapper?: DOMElement) => (wrapper.value = markRaw({ current: _wrapper }));
-
-    const mounted = ref(props.isMounted);
-
-    const setMounted = (_mounted: boolean) => (mounted.value = _mounted);
 
     const enableHighlight = ref(props.diffViewHighlight);
 
@@ -84,9 +81,9 @@ export const createDiffConfigStore = <T = any>(
       mode,
       setMode,
       wrapper,
+      width,
+      setWidth,
       setWrapper,
-      mounted,
-      setMounted,
       tabSpace,
       setTabSpace,
       tabWidth,
@@ -106,10 +103,10 @@ export const createDiffConfigStore = <T = any>(
     setId: (id: string) => void;
     mode: Ref<DiffModeEnum>;
     setMode: (mode: DiffModeEnum) => void;
+    width: Ref<number>;
+    setWidth: (width: number) => void;
     wrapper: Ref<{ current: DOMElement }>;
     setWrapper: (wrapper?: DOMElement) => void;
-    mounted: Ref<boolean>;
-    setMounted: (mounted: boolean) => void;
     tabSpace: Ref<boolean>;
     setTabSpace: (tabSpace: boolean) => void;
     tabWidth: Ref<"small" | "medium" | "large">;

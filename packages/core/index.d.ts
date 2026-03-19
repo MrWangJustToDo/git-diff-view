@@ -32,6 +32,9 @@ declare class File$1 {
 	static createInstance(data: File$1): File$1;
 	constructor(row: string, lang: DiffHighlighterLang, fileName?: string);
 	constructor(row: string, lang: string, fileName?: string);
+	initId(): void;
+	getId(): string;
+	clearId(): void;
 	doSyntax({ registerHighlighter, theme, }: {
 		registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
 		theme?: "light" | "dark";
