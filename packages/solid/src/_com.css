@@ -167,6 +167,11 @@ td {
   display: block;
 }
 
+.diff-line-extend-wrapper,
+.diff-line-widget-wrapper {
+  display: flow-root;
+}
+
 .diff-line-extend-wrapper * {
   color: initial;
 }
