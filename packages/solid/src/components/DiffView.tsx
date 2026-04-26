@@ -198,21 +198,11 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
       if (props.diffViewHighlight) {
         const registerHighlighter = props.registerHighlighter;
         if (registerHighlighter) {
-          if (
-            registerHighlighter.name !== currentDiffFile._getHighlighterName() ||
-            registerHighlighter.type !== currentDiffFile._getHighlighterType() ||
-            registerHighlighter.type !== "class"
-          ) {
-            currentDiffFile.initSyntax({ registerHighlighter: registerHighlighter });
-            currentDiffFile.notifyAll();
-          }
-        } else if (
-          (!currentDiffFile._getIsCloned() && currentDiffFile._getHighlighterName() !== buildInHighlighter.name) ||
-          currentDiffFile._getHighlighterType() !== "class"
-        ) {
+          currentDiffFile.initSyntax({ registerHighlighter: registerHighlighter });
+        } else {
           currentDiffFile.initSyntax();
-          currentDiffFile.notifyAll();
         }
+        currentDiffFile.notifyAll();
       }
     }
   };
