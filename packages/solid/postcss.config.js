@@ -9,7 +9,12 @@ export default {
         if (filePath.includes("_base.css")) {
           return prefixedSelector;
         }
-        if (selector.includes("diff-line-extend-wrapper") || selector.includes("diff-line-widget-wrapper")) {
+        if (
+          selector.includes("diff-line-extend-wrapper") ||
+          selector.includes("diff-line-widget-wrapper") ||
+          selector.includes("diff-multiselect-wrapper") ||
+          selector.includes("diff-multi-selecting")
+        ) {
           return selector;
         }
         if (selector.includes("[data-theme")) {

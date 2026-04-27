@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { setContext, getContext } from 'svelte';
 
 const key = Symbol('extend');
@@ -11,7 +10,7 @@ export function setExtend<T>(props: {
 
 export function getExtend() {
 	return getContext(key) as () => {
-		oldFile?: Record<string, { data: any }>;
-		newFile?: Record<string, { data: any }>;
+		oldFile?: Record<string, { data: unknown }>;
+		newFile?: Record<string, { data: unknown }>;
 	};
 }

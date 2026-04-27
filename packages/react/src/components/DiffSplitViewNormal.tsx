@@ -10,6 +10,7 @@ import {
 } from "@git-diff-view/utils";
 import { Fragment, memo, useEffect, useRef } from "react";
 import * as React from "react";
+// @ts-ignore
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
 import { useTextWidth } from "../hooks/useTextWidth";
@@ -84,9 +85,9 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
 
   const ref2 = useRef<HTMLDivElement>(null);
 
-  const ref = useRef<HTMLStyleElement>();
+  const ref = useRef<HTMLStyleElement>(null);
 
-  const tempRef = useRef<SplitSide>();
+  const tempRef = useRef<SplitSide>(undefined);
 
   const splitLineLength = Math.max(diffFile.splitLineLength, diffFile.fileLineLength);
 
@@ -119,7 +120,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
 
   const width = Math.max(40, _width + 25);
 
-  const setStyle = (side: SplitSide) => {
+  const setStyle = (side?: SplitSide) => {
     if (!ref.current) return;
     if (!side) {
       ref.current.textContent = "";
@@ -130,7 +131,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
   };
 
   const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
-    let ele = e.target;
+    let ele: Element | null = e.target as Element;
 
     // need remove all the selection
     if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
@@ -146,11 +147,11 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
 
     while (ele && ele instanceof HTMLElement) {
       const state = ele.getAttribute("data-state");
-      const side = ele.getAttribute("data-side");
+      const side = ele.getAttribute("data-side") as unknown as SplitSide;
       if (side) {
-        if (tempRef.current !== SplitSide[side]) {
-          tempRef.current = SplitSide[side];
-          setStyle(SplitSide[side]);
+        if (tempRef.current !== (SplitSide[side] as unknown as SplitSide)) {
+          tempRef.current = SplitSide[side] as unknown as SplitSide;
+          setStyle(SplitSide[side] as unknown as SplitSide);
           removeAllSelection();
         }
       }
@@ -188,8 +189,8 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
         <DiffSplitViewTable
           side={SplitSide.old}
           diffFile={diffFile}
-          enableAddWidget={enableAddWidget}
-          enableHighlight={enableHighlight}
+          enableAddWidget={!!enableAddWidget}
+          enableHighlight={!!enableHighlight}
           onMouseDown={onMouseDown}
         />
       </div>
@@ -208,8 +209,8 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
         <DiffSplitViewTable
           side={SplitSide.new}
           diffFile={diffFile}
-          enableAddWidget={enableAddWidget}
-          enableHighlight={enableHighlight}
+          enableAddWidget={!!enableAddWidget}
+          enableHighlight={!!enableHighlight}
           onMouseDown={onMouseDown}
         />
       </div>

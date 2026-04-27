@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable max-lines */
 import { SplitSide } from "./diff-file-utils";
 import { getFile, File } from "./file";
@@ -74,9 +73,9 @@ export interface DiffHunkItem extends DiffLineItem {
 }
 
 export class DiffFile {
-  #oldFileResult?: File;
+  #oldFileResult?: File | null;
 
-  #newFileResult?: File;
+  #newFileResult?: File | null;
 
   #diffListResults?: IRawDiff[];
 
@@ -460,8 +459,8 @@ export class DiffFile {
   // check the fileContent is match the diff result or not
   #checkFile() {
     for (const line in this.#oldFileDiffLines || {}) {
-      const diffLine = this.#oldFileDiffLines[line];
-      const fileLine = this.#oldFilePlainLines[line];
+      const diffLine = this.#oldFileDiffLines?.[line];
+      const fileLine = this.#oldFilePlainLines?.[line];
       if (
         (this.#oldFilePlaceholderLines ? !this.#oldFilePlaceholderLines[line] : true) &&
         diffLine?.text !== fileLine?.value
@@ -473,8 +472,8 @@ export class DiffFile {
       }
     }
     for (const line in this.#newFileDiffLines || {}) {
-      const diffLine = this.#newFileDiffLines[line];
-      const fileLine = this.#newFilePlainLines[line];
+      const diffLine = this.#newFileDiffLines?.[line];
+      const fileLine = this.#newFilePlainLines?.[line];
       if (
         (this.#newFilePlaceholderLines ? !this.#newFilePlaceholderLines[line] : true) &&
         diffLine?.text !== fileLine?.value
@@ -611,7 +610,7 @@ export class DiffFile {
       if (item.oldLineNumber) {
         this.diffLineLength = Math.max(this.diffLineLength, item.oldLineNumber);
 
-        this.#oldFileDiffLines[item.oldLineNumber] = item;
+        this.#oldFileDiffLines![item.oldLineNumber] = item;
 
         if (__DEV__) {
           if (item.oldLineNumber <= maxOldLineNumber) {
@@ -627,7 +626,7 @@ export class DiffFile {
       if (item.newLineNumber) {
         this.diffLineLength = Math.max(this.diffLineLength, item.newLineNumber);
 
-        this.#newFileDiffLines[item.newLineNumber] = item;
+        this.#newFileDiffLines![item.newLineNumber] = item;
 
         if (__DEV__) {
           if (item.newLineNumber <= maxNewLineNumber) {
@@ -744,7 +743,7 @@ export class DiffFile {
     this.#syncSyntax();
     this.#hasInitRaw = true;
     if (__DEV__) {
-      if (this._diffList.some((l) => l) && !this.#diffLines.length) {
+      if (this._diffList.some((l) => l) && !this.#diffLines?.length) {
         console.warn(
           "[@git-diff-view/core] No hunks found in the diff string. Please check the diff format and content."
         );
@@ -887,41 +886,43 @@ export class DiffFile {
       prevIsHidden = isHidden;
 
       if (oldDiffLine?.prevHunkLine || newDiffLine?.prevHunkLine) {
-        const prevHunkLine = oldDiffLine?.prevHunkLine || newDiffLine.prevHunkLine;
-        if (prevHunkLine.isFirst) {
-          if (__DEV__ && Number.isFinite(hideStart)) {
-            console.warn("[@git-diff-view/core] The first hunk cannot have a previous diff line.");
+        const prevHunkLine = oldDiffLine?.prevHunkLine || newDiffLine?.prevHunkLine;
+        if (prevHunkLine) {
+          if (prevHunkLine.isFirst) {
+            if (__DEV__ && Number.isFinite(hideStart)) {
+              console.warn("[@git-diff-view/core] The first hunk cannot have a previous diff line.");
+            }
+            prevHunkLine.splitInfo = {
+              ...prevHunkLine.hunkInfo,
+
+              startHiddenIndex: 0,
+              endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
+              plainText: prevHunkLine.text,
+
+              _startHiddenIndex: 0,
+              _endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
+              _plainText: prevHunkLine.text,
+            };
+            hideStart = Infinity;
+          } else if (Number.isFinite(hideStart)) {
+            prevHunkLine.splitInfo = {
+              ...prevHunkLine.hunkInfo,
+
+              startHiddenIndex: hideStart,
+              endHiddenIndex: len,
+              plainText: prevHunkLine.text,
+
+              _startHiddenIndex: hideStart,
+              _endHiddenIndex: len,
+              _plainText: prevHunkLine.text,
+            };
+            hideStart = Infinity;
           }
-          prevHunkLine.splitInfo = {
-            ...prevHunkLine.hunkInfo,
-
-            startHiddenIndex: 0,
-            endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
-            plainText: prevHunkLine.text,
-
-            _startHiddenIndex: 0,
-            _endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
-            _plainText: prevHunkLine.text,
+          this.#splitHunksLines = {
+            ...this.#splitHunksLines,
+            [len]: prevHunkLine,
           };
-          hideStart = Infinity;
-        } else if (Number.isFinite(hideStart)) {
-          prevHunkLine.splitInfo = {
-            ...prevHunkLine.hunkInfo,
-
-            startHiddenIndex: hideStart,
-            endHiddenIndex: len,
-            plainText: prevHunkLine.text,
-
-            _startHiddenIndex: hideStart,
-            _endHiddenIndex: len,
-            _plainText: prevHunkLine.text,
-          };
-          hideStart = Infinity;
         }
-        this.#splitHunksLines = {
-          ...this.#splitHunksLines,
-          [len]: prevHunkLine,
-        };
       }
     }
 
@@ -1065,41 +1066,43 @@ export class DiffFile {
       prevIsHidden = isHidden;
 
       if (oldDiffLine?.prevHunkLine || newDiffLine?.prevHunkLine) {
-        const prevHunkLine = oldDiffLine?.prevHunkLine || newDiffLine.prevHunkLine;
-        if (prevHunkLine.isFirst) {
-          if (__DEV__ && Number.isFinite(hideStart)) {
-            console.warn("[@git-diff-view/core] The first hunk cannot have a previous diff line.");
+        const prevHunkLine = oldDiffLine?.prevHunkLine || newDiffLine?.prevHunkLine;
+        if (prevHunkLine) {
+          if (prevHunkLine.isFirst) {
+            if (__DEV__ && Number.isFinite(hideStart)) {
+              console.warn("[@git-diff-view/core] The first hunk cannot have a previous diff line.");
+            }
+            prevHunkLine.unifiedInfo = {
+              ...prevHunkLine.hunkInfo,
+
+              startHiddenIndex: 0,
+              endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
+              plainText: prevHunkLine.text,
+
+              _startHiddenIndex: 0,
+              _endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
+              _plainText: prevHunkLine.text,
+            };
+            hideStart = Infinity;
+          } else if (Number.isFinite(hideStart)) {
+            prevHunkLine.unifiedInfo = {
+              ...prevHunkLine.hunkInfo,
+
+              startHiddenIndex: hideStart,
+              endHiddenIndex: len,
+              plainText: prevHunkLine.text,
+
+              _startHiddenIndex: hideStart,
+              _endHiddenIndex: len,
+              _plainText: prevHunkLine.text,
+            };
+            hideStart = Infinity;
           }
-          prevHunkLine.unifiedInfo = {
-            ...prevHunkLine.hunkInfo,
-
-            startHiddenIndex: 0,
-            endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
-            plainText: prevHunkLine.text,
-
-            _startHiddenIndex: 0,
-            _endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
-            _plainText: prevHunkLine.text,
+          this.#unifiedHunksLines = {
+            ...this.#unifiedHunksLines,
+            [len]: prevHunkLine,
           };
-          hideStart = Infinity;
-        } else if (Number.isFinite(hideStart)) {
-          prevHunkLine.unifiedInfo = {
-            ...prevHunkLine.hunkInfo,
-
-            startHiddenIndex: hideStart,
-            endHiddenIndex: len,
-            plainText: prevHunkLine.text,
-
-            _startHiddenIndex: hideStart,
-            _endHiddenIndex: len,
-            _plainText: prevHunkLine.text,
-          };
-          hideStart = Infinity;
         }
-        this.#unifiedHunksLines = {
-          ...this.#unifiedHunksLines,
-          [len]: prevHunkLine,
-        };
       }
     }
 
@@ -1837,6 +1840,10 @@ export class DiffFile {
     }
   };
 
+  _getAllListener = () => {
+    return this.#listeners;
+  };
+
   _destroy = () => {
     this.clearId();
     this.#listeners.splice(0, this.#listeners.length);
@@ -1846,22 +1853,22 @@ export class DiffFile {
 
   clear = () => {
     this._destroy();
-    this.#oldFileResult = null;
-    this.#newFileResult = null;
-    this.#diffLines = null;
-    this.#diffListResults = null;
-    this.#newFileDiffLines = null;
-    this.#oldFileDiffLines = null;
-    this.#newFileLines = null;
-    this.#oldFileLines = null;
-    this.#newFileSyntaxLines = null;
-    this.#oldFileSyntaxLines = null;
-    this.#splitHunksLines = null;
-    this.#splitLeftLines = null;
-    this.#splitRightLines = null;
-    this.#unifiedHunksLines = null;
-    this.#unifiedLines = null;
-    this.#theme = undefined;
+    this.#oldFileResult = undefined;
+    this.#newFileResult = undefined;
+    this.#diffLines = undefined;
+    this.#diffListResults = undefined;
+    this.#newFileDiffLines = undefined;
+    this.#oldFileDiffLines = undefined;
+    this.#newFileLines = undefined;
+    this.#oldFileLines = undefined;
+    this.#newFileSyntaxLines = undefined;
+    this.#oldFileSyntaxLines = undefined;
+    this.#splitHunksLines = undefined;
+    this.#splitLeftLines = [];
+    this.#splitRightLines = [];
+    this.#unifiedHunksLines = undefined;
+    this.#unifiedLines = [];
+    this.#theme = "light";
   };
 }
 

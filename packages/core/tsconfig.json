@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
     "rootDir": "src",
-    "target": "ES2015",
+    "target": "es2018",
+    "types": ["node"],
     "moduleResolution": "Bundler",
     "stripInternal": true
   },

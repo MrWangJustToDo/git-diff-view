@@ -212,7 +212,8 @@ export const DiffUnifiedContentLine = defineComponent(
           : undefined;
     });
 
-    const onOpenAddWidget = (lineNumber: number, side: SplitSide) => setWidget({ side: side, lineNumber: lineNumber });
+    const onOpenAddWidget = (lineNumber: number, side: SplitSide) =>
+      setWidget?.({ side: side, lineNumber: lineNumber });
 
     return () => {
       if (currentItemHasHidden.value) return null;
@@ -222,14 +223,14 @@ export const DiffUnifiedContentLine = defineComponent(
           return (
             <DiffUnifiedOldLine
               index={props.lineNumber}
-              enableWrap={enableWrap.value}
+              enableWrap={!!enableWrap?.value}
               diffFile={props.diffFile}
               rawLine={unifiedItem.value.value || ""}
               diffLine={unifiedItem.value.diff}
               plainLine={currentPlainLine.value}
               syntaxLine={currentSyntaxLine.value}
-              enableHighlight={enableHighlight.value}
-              enableAddWidget={enableAddWidget.value}
+              enableHighlight={!!enableHighlight?.value}
+              enableAddWidget={!!enableAddWidget?.value}
               lineNumber={unifiedItem.value.oldLineNumber}
               onAddWidgetClick={onAddWidgetClick}
               onOpenAddWidget={onOpenAddWidget}
@@ -239,14 +240,14 @@ export const DiffUnifiedContentLine = defineComponent(
           return (
             <DiffUnifiedNewLine
               index={props.lineNumber}
-              enableWrap={enableWrap.value}
+              enableWrap={!!enableWrap?.value}
               diffFile={props.diffFile}
               rawLine={unifiedItem.value.value || ""}
               diffLine={unifiedItem.value.diff}
               plainLine={currentPlainLine.value}
               syntaxLine={currentSyntaxLine.value}
-              enableHighlight={enableHighlight.value}
-              enableAddWidget={enableAddWidget.value}
+              enableHighlight={!!enableHighlight?.value}
+              enableAddWidget={!!enableAddWidget?.value}
               lineNumber={unifiedItem.value.newLineNumber!}
               onAddWidgetClick={onAddWidgetClick}
               onOpenAddWidget={onOpenAddWidget}
@@ -272,11 +273,11 @@ export const DiffUnifiedContentLine = defineComponent(
                 minWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
               }}
             >
-              {enableAddWidget.value && unifiedItem.value.diff && (
+              {enableAddWidget?.value && unifiedItem.value.diff && (
                 <DiffUnifiedAddWidget
                   index={props.index}
                   diffFile={props.diffFile}
-                  lineNumber={unifiedItem.value.newLineNumber}
+                  lineNumber={unifiedItem.value.newLineNumber ?? -1}
                   side={SplitSide.new}
                   onOpenAddWidget={onOpenAddWidget}
                   onWidgetClick={onAddWidgetClick}
@@ -299,9 +300,9 @@ export const DiffUnifiedContentLine = defineComponent(
               }}
             >
               <DiffContent
-                enableWrap={enableWrap.value}
+                enableWrap={!!enableWrap?.value}
                 diffFile={props.diffFile}
-                enableHighlight={enableHighlight.value}
+                enableHighlight={!!enableHighlight?.value}
                 rawLine={unifiedItem.value.value || ""}
                 diffLine={unifiedItem.value.diff}
                 plainLine={currentPlainLine.value}

@@ -342,7 +342,7 @@ export const DiffSplitHunkLine = defineComponent(
     const diffViewMode = useMode();
 
     return () => {
-      if (diffViewMode.value === DiffModeEnum.SplitGitHub || diffViewMode.value === DiffModeEnum.Split) {
+      if (diffViewMode?.value === DiffModeEnum.SplitGitHub || diffViewMode?.value === DiffModeEnum.Split) {
         return <DiffSplitHunkLineGitHub index={props.index} diffFile={props.diffFile} lineNumber={props.lineNumber} />;
       } else {
         return <DiffSplitHunkLineGitLab index={props.index} diffFile={props.diffFile} lineNumber={props.lineNumber} />;

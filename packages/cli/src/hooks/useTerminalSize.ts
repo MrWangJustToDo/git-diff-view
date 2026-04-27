@@ -18,8 +18,8 @@ export const getValidColumns = (columns: number): number => {
 // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
 export const debounce = <T extends Function>(action: T, time: number): T => {
   let id: NodeJS.Timeout | null = null;
-  return ((...args) => {
-    clearTimeout(id);
+  return ((...args: any[]) => {
+    if (id) clearTimeout(id);
     id = setTimeout(() => action.call(null, ...args), time);
   }) as unknown as T;
 };

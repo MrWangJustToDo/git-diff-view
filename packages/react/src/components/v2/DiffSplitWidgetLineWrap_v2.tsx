@@ -1,5 +1,4 @@
 import { borderColorName, emptyBGName } from "@git-diff-view/utils";
-import * as React from "react";
 
 import { SplitSide } from "../DiffView";
 import { useDiffViewContext } from "../DiffViewContext";
@@ -39,7 +38,7 @@ const InternalDiffSplitWidgetLine = ({
     renderWidgetLine?.({
       diffFile,
       side: SplitSide.old,
-      lineNumber: oldLine.lineNumber,
+      lineNumber: oldLine.lineNumber ?? -1,
       onClose: () => setWidget({}),
     });
 
@@ -48,7 +47,7 @@ const InternalDiffSplitWidgetLine = ({
     renderWidgetLine?.({
       diffFile,
       side: SplitSide.new,
-      lineNumber: newLine.lineNumber,
+      lineNumber: newLine.lineNumber ?? -1,
       onClose: () => setWidget({}),
     });
 
@@ -112,8 +111,8 @@ export const DiffSplitWidgetLine = ({
       index={index}
       diffFile={diffFile}
       lineNumber={lineNumber}
-      oldLineWidget={oldLineWidget}
-      newLineWidget={newLineWidget}
+      oldLineWidget={!!oldLineWidget}
+      newLineWidget={!!newLineWidget}
     />
   );
 };

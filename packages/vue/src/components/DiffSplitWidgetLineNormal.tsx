@@ -24,15 +24,15 @@ export const DiffSplitWidgetLine = defineComponent(
     const oldLineWidget = computed(
       () =>
         oldLine.value.lineNumber &&
-        widget.value.side === SplitSide.old &&
-        widget.value.lineNumber === oldLine.value.lineNumber
+        widget?.value.side === SplitSide.old &&
+        widget?.value.lineNumber === oldLine.value.lineNumber
     );
 
     const newLineWidget = computed(
       () =>
         newLine.value.lineNumber &&
-        widget.value.side === SplitSide.new &&
-        widget.value.lineNumber === newLine.value.lineNumber
+        widget?.value.side === SplitSide.new &&
+        widget?.value.lineNumber === newLine.value.lineNumber
     );
 
     const currentLine = computed(() => (props.side === SplitSide.old ? oldLine.value : newLine.value));
@@ -54,12 +54,12 @@ export const DiffSplitWidgetLine = defineComponent(
     );
 
     const currentIsShow = computed(
-      () => (!!oldLineWidget.value || !!newLineWidget.value) && !currentIsHidden.value && !!slots.widget
+      () => (!!oldLineWidget.value || !!newLineWidget.value) && !currentIsHidden.value && !!slots?.widget
     );
 
-    const currentEnable = computed(() => currentWidget.value && !!currentIsShow.value);
+    const currentEnable = computed(() => !!currentWidget.value && !!currentIsShow.value);
 
-    const onCloseWidget = () => setWidget({});
+    const onCloseWidget = () => setWidget?.({});
 
     useSyncHeight({
       selector: lineSelector,
@@ -92,10 +92,10 @@ export const DiffSplitWidgetLine = defineComponent(
                 style={{ width: width.value + "px" }}
               >
                 {width.value > 0 &&
-                  slots.widget?.({
+                  slots?.widget?.({
                     diffFile: props.diffFile,
                     side: props.side,
-                    lineNumber: currentLine.value.lineNumber,
+                    lineNumber: currentLine.value.lineNumber ?? -1,
                     onClose: onCloseWidget,
                   })}
               </div>

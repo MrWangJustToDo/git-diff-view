@@ -1,7 +1,7 @@
 export class Cache<K, V> extends Map<K, V> {
   #keyArray: K[] = [];
 
-  name: string;
+  name?: string;
 
   #maxLength = 30;
 
@@ -25,7 +25,7 @@ export class Cache<K, V> extends Map<K, V> {
   #checkLength() {
     while (this.#keyArray.length > this.#maxLength) {
       const key = this.#keyArray.shift();
-      this.delete(key);
+      if (key) this.delete(key);
     }
   }
 }

@@ -1,10 +1,9 @@
+import { DiffView, DiffModeEnum } from "@git-diff-view/cli";
 import { getDiffViewHighlighter } from "@git-diff-view/shiki";
 // import { createElement } from "@my-react/react";
 // import { Box, render, Text } from "@my-react/react-terminal";
 import { Box, render, Text } from "ink";
 import { createElement } from "react";
-
-import { DiffView, DiffModeEnum } from "@git-diff-view/cli";
 
 const hunk = `diff --git a/packages/myreact-reactivity/src/reactive/feature.ts b/packages/myreact-reactivity/src/reactive/feature.ts
 index 5b301628..15aac42f 100644

@@ -2,8 +2,8 @@
 import { type DiffFile, getSplitLines } from "@git-diff-view/core";
 import { removeAllSelection, diffFontSizeName, diffAsideWidthName } from "@git-diff-view/utils";
 import { memo, useMemo, useRef } from "react";
-import * as React from "react";
 // SEE https://github.com/facebook/react/pull/25231
+// @ts-ignore
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
 import { useTextWidth } from "../../hooks/useTextWidth";
@@ -36,7 +36,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
 
   const lines = getSplitLines(diffFile);
 
-  const setStyle = (side: SplitSide) => {
+  const setStyle = (side?: SplitSide) => {
     if (!ref.current) return;
     if (!side) {
       ref.current.textContent = "";
@@ -48,7 +48,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
   };
 
   const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
-    let ele = e.target;
+    let ele: Element | null = e.target as Element;
 
     // need remove all the selection
     if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
@@ -58,9 +58,9 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
 
     while (ele && ele instanceof HTMLElement) {
       const state = ele.getAttribute("data-state");
-      const side = ele.getAttribute("data-side");
+      const side = ele.getAttribute("data-side") as unknown as SplitSide;
       if (side) {
-        setStyle(SplitSide[side]);
+        setStyle(SplitSide[side] as unknown as SplitSide);
         removeAllSelection();
       }
       if (state) {

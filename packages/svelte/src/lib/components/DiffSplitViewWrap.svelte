@@ -82,11 +82,11 @@
 			const state = ele.getAttribute('data-state');
 			const side = ele.getAttribute('data-side');
 			if (side) {
-				// @ts-ignore
+				// @ts-expect-error - dynamic key access
 				if (selectState.current !== SplitSide[side]) {
-					// @ts-ignore
+					// @ts-expect-error - dynamic key access
 					selectState.current = SplitSide[side];
-					// @ts-ignore
+					// @ts-expect-error - dynamic key access
 					onSelect(SplitSide[side]);
 					removeAllSelection();
 				}

@@ -6,7 +6,6 @@ import {
   hunkContentColorName,
   borderColorName,
 } from "@git-diff-view/utils";
-import * as React from "react";
 
 import { DiffModeEnum } from "..";
 

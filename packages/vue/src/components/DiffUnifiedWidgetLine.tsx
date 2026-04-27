@@ -21,24 +21,24 @@ export const DiffUnifiedWidgetLine = defineComponent(
     const oldWidget = computed(
       () =>
         unifiedItem.value?.oldLineNumber &&
-        widget.value.side === SplitSide.old &&
-        widget.value.lineNumber === unifiedItem.value.oldLineNumber
+        widget?.value.side === SplitSide.old &&
+        widget?.value.lineNumber === unifiedItem.value.oldLineNumber
     );
 
     const newWidget = computed(
       () =>
         unifiedItem.value?.newLineNumber &&
-        widget.value.side === SplitSide.new &&
-        widget.value.lineNumber === unifiedItem.value.newLineNumber
+        widget?.value.side === SplitSide.new &&
+        widget?.value.lineNumber === unifiedItem.value.newLineNumber
     );
 
     const currentIsHidden = computed(() => unifiedItem.value.isHidden);
 
     const currentIsShow = computed(
-      () => (oldWidget.value || newWidget.value) && !currentIsHidden.value && !!slots.widget
+      () => !!(oldWidget.value || newWidget.value) && !currentIsHidden.value && !!slots?.widget
     );
 
-    const onCloseWidget = () => setWidget({});
+    const onCloseWidget = () => setWidget?.({});
 
     const width = useDomWidth({
       selector: ref(".unified-diff-table-wrapper"),
@@ -52,20 +52,20 @@ export const DiffUnifiedWidgetLine = defineComponent(
         <tr data-line={`${props.lineNumber}-widget`} data-state="widget" class="diff-line diff-line-widget">
           <td class="diff-line-widget-content p-0" colspan={2}>
             <div class="diff-line-widget-wrapper sticky left-0 z-[1]" style={{ width: width.value + "px" }}>
-              {(enableWrap.value ? true : width.value > 0) &&
+              {(enableWrap?.value ? true : width.value > 0) &&
                 oldWidget.value &&
-                slots.widget?.({
+                slots?.widget?.({
                   diffFile: props.diffFile,
                   side: SplitSide.old,
-                  lineNumber: unifiedItem.value.oldLineNumber,
+                  lineNumber: unifiedItem.value.oldLineNumber ?? -1,
                   onClose: onCloseWidget,
                 })}
-              {(enableWrap.value ? true : width.value > 0) &&
+              {(enableWrap?.value ? true : width.value > 0) &&
                 newWidget.value &&
-                slots.widget?.({
+                slots?.widget?.({
                   diffFile: props.diffFile,
                   side: SplitSide.new,
-                  lineNumber: unifiedItem.value.newLineNumber,
+                  lineNumber: unifiedItem.value.newLineNumber ?? -1,
                   onClose: onCloseWidget,
                 })}
             </div>

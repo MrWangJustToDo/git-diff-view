@@ -1,11 +1,15 @@
 {
   "compilerOptions": {
     "rootDir": "src",
-    "target": "ES2015",
+    "target": "es2018",
     "moduleResolution": "Bundler",
     "stripInternal": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
   },
-  "include": ["./src"],
-  "exclude": ["node_modules"]
+  "include": [
+    "./src"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

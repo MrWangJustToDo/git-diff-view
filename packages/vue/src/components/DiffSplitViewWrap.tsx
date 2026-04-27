@@ -54,11 +54,11 @@ export const DiffSplitViewWrap = defineComponent(
 
       while (ele && ele instanceof HTMLElement) {
         const state = ele.getAttribute("data-state");
-        const side = ele.getAttribute("data-side");
+        const side = ele.getAttribute("data-side") as unknown as SplitSide;
         if (side) {
-          if (selectState.current !== SplitSide[side]) {
-            selectState.current = SplitSide[side];
-            onSelect(SplitSide[side]);
+          if (selectState.current !== (SplitSide[side as unknown as SplitSide] as unknown as SplitSide)) {
+            selectState.current = SplitSide[side] as unknown as SplitSide;
+            onSelect(SplitSide[side] as unknown as SplitSide);
             removeAllSelection();
           }
         }
@@ -81,7 +81,7 @@ export const DiffSplitViewWrap = defineComponent(
 
     const fontSize = useFontSize();
 
-    const font = computed(() => ({ fontSize: fontSize.value + "px", fontFamily: "Menlo, Consolas, monospace" }));
+    const font = computed(() => ({ fontSize: fontSize?.value + "px", fontFamily: "Menlo, Consolas, monospace" }));
 
     useSubscribeDiffFile(props, (diffFile) => {
       lines.value = getSplitContentLines(diffFile);

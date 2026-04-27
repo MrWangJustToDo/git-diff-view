@@ -1,11 +1,10 @@
+import { DiffView, DiffModeEnum } from "@git-diff-view/cli";
 import { generateDiffFile } from "@git-diff-view/file";
 import { getDiffViewHighlighter } from "@git-diff-view/shiki";
 import { Box, render, Text } from "ink";
 import { createElement } from "react";
 // import { createElement } from '@my-react/react';
 // import { Box, render, Text } from '@my-react/react-terminal'
-
-import { DiffView, DiffModeEnum } from "@git-diff-view/cli";
 
 export const temp1 = `import { processAST, DiffHighlighter } from '@git-diff-view/core';
 import githubLight from 'shiki/themes/github-light.mjs';

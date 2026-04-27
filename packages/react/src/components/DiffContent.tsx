@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import {
   DiffLineType,
   getSyntaxDiffTemplate,
@@ -7,7 +6,6 @@ import {
   getPlainLineTemplate,
 } from "@git-diff-view/core";
 import { memoFunc, diffFontSizeName, NewLineSymbol } from "@git-diff-view/utils";
-import * as React from "react";
 
 import { DiffNoNewLine } from "./DiffNoNewLine";
 
@@ -30,7 +28,7 @@ const formatStringToCamelCase = (str: string) => {
 
 export const getStyleObjectFromString = memoFunc((str: string) => {
   if (!str) return temp;
-  const style = {};
+  const style: Record<string, string> = {};
   str.split(";").forEach((el) => {
     const [property, value] = el.split(":");
     if (!property) return;
@@ -60,7 +58,7 @@ const DiffString = ({
     const isNewLineSymbolChanged = changes.newLineSymbol;
 
     if (!diffLine?.plainTemplate && typeof getPlainDiffTemplate === "function") {
-      getPlainDiffTemplate({ diffLine, rawLine, operator });
+      getPlainDiffTemplate({ diffLine: diffLine!, rawLine, operator: operator! });
     }
 
     if (diffLine?.plainTemplate) {
@@ -85,6 +83,7 @@ const DiffString = ({
   }
 
   if (plainLine && !plainLine?.template) {
+    // eslint-disable-next-line react-hooks/immutability
     plainLine.template = getPlainLineTemplate(plainLine.value);
   }
 
@@ -124,7 +123,7 @@ const DiffSyntax = ({
     const isNewLineSymbolChanged = changes.newLineSymbol;
 
     if (!diffLine?.syntaxTemplate && typeof getSyntaxDiffTemplate === "function") {
-      getSyntaxDiffTemplate({ diffFile, diffLine, syntaxLine, operator });
+      getSyntaxDiffTemplate({ diffFile, diffLine: diffLine!, syntaxLine, operator: operator! });
     }
 
     if (diffLine?.syntaxTemplate) {
@@ -149,6 +148,7 @@ const DiffSyntax = ({
   }
 
   if (!syntaxLine.template) {
+    // eslint-disable-next-line react-hooks/immutability
     syntaxLine.template = getSyntaxLineTemplate(syntaxLine);
   }
 
@@ -198,7 +198,7 @@ export const DiffContent = ({
 
   const isDelete = diffLine?.type === DiffLineType.Delete;
 
-  const isMaxLineLengthToIgnoreSyntax = syntaxLine?.nodeList?.length > 150;
+  const isMaxLineLengthToIgnoreSyntax = syntaxLine && syntaxLine?.nodeList?.length > 150;
 
   return (
     <div

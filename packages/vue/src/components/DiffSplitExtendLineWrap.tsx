@@ -19,34 +19,34 @@ export const DiffSplitExtendLine = defineComponent(
 
     const enableExpand = computed(() => props.diffFile.getExpandEnabled());
 
-    const oldLineExtend = computed(() => extendData.value?.oldFile?.[oldLine.value?.lineNumber]);
+    const oldLineExtend = computed(() => extendData?.value?.oldFile?.[oldLine.value?.lineNumber ?? -1]);
 
-    const newLineExtend = computed(() => extendData.value?.newFile?.[newLine.value.lineNumber]);
+    const newLineExtend = computed(() => extendData?.value?.newFile?.[newLine.value.lineNumber ?? -1]);
 
     const hasHidden = computed(() => oldLine.value.isHidden && newLine.value.isHidden);
 
     const currentIsShow = computed(() =>
-      Boolean((oldLineExtend.value || newLineExtend.value) && (!hasHidden.value || enableExpand.value) && slots.extend)
+      Boolean((oldLineExtend.value || newLineExtend.value) && (!hasHidden.value || enableExpand.value) && slots?.extend)
     );
 
     return () => {
       if (!currentIsShow.value) return null;
 
       const oldExtendRendered = oldLineExtend.value
-        ? slots.extend?.({
+        ? slots?.extend?.({
             diffFile: props.diffFile,
             side: SplitSide.old,
-            lineNumber: oldLine.value.lineNumber,
+            lineNumber: oldLine.value.lineNumber ?? -1,
             data: oldLineExtend.value.data,
             onUpdate: props.diffFile.notifyAll,
           })
         : null;
 
       const newExtendRendered = newLineExtend.value
-        ? slots.extend?.({
+        ? slots?.extend?.({
             diffFile: props.diffFile,
             side: SplitSide.new,
-            lineNumber: newLine.value.lineNumber,
+            lineNumber: newLine.value.lineNumber ?? -1,
             data: newLineExtend.value.data,
             onUpdate: props.diffFile.notifyAll,
           })

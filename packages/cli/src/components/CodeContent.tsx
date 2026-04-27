@@ -226,7 +226,7 @@ export const CodeContent = React.memo(
     syntaxLine?: File["syntaxFile"][number];
     enableHighlight: boolean;
   }) => {
-    const isMaxLineLengthToIgnoreSyntax = syntaxLine?.nodeList?.length > 150;
+    const isMaxLineLengthToIgnoreSyntax = syntaxLine && syntaxLine?.nodeList?.length > 150;
 
     // Background color for normal code
     const bg = React.useMemo(() => {

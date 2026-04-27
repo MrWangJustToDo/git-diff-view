@@ -4,8 +4,8 @@ import type { DiffViewProps } from '@git-diff-view/svelte';
 
 export type MessageData = {
 	id: number;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	data: DiffViewProps<any>['data'];
+
+	data: DiffViewProps<unknown>['data'];
 	theme?: 'light' | 'dark';
 	bundle: ReturnType<DiffFile['getBundle']>;
 };

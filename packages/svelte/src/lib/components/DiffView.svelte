@@ -1,4 +1,4 @@
-<script lang="ts" generics="T extends any">
+<script lang="ts" generics="T extends unknown">
 	import { diffFontSizeName } from '$lib/utils/size.js';
 	import { DiffModeEnum } from '$lib/utils/symbol.js';
 	import {
@@ -159,7 +159,7 @@
 	const initSyntax = () => {
 		if (!diffFile || !isMounted) return;
 
-		theme;
+		void theme;
 
 		if (enableHighlight) {
 			const registerHighlighter = props.registerHighlighter;
@@ -193,7 +193,7 @@
 
 		if (!isMounted || !diffFile || !wrapperRef) return;
 
-		theme;
+		void theme;
 
 		const init = () => {
 			wrapperRef?.setAttribute('data-theme', diffFile._getTheme() || 'light');

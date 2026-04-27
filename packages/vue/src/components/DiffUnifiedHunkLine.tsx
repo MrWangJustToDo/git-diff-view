@@ -131,8 +131,8 @@ export const DiffUnifiedHunkLine = defineComponent(
             <div
               class="pl-[1.5em]"
               style={{
-                whiteSpace: enableWrap.value ? "pre-wrap" : "pre",
-                wordBreak: enableWrap.value ? "break-all" : "initial",
+                whiteSpace: enableWrap?.value ? "pre-wrap" : "pre",
+                wordBreak: enableWrap?.value ? "break-all" : "initial",
                 color: `var(${hunkContentColorName})`,
               }}
             >

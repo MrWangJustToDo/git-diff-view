@@ -94,8 +94,6 @@
 	const width = $derived.by(useTextWidth({ text: () => maxText, font: () => font }));
 
 	const computedWidth = $derived.by(() => Math.max(40, width + 10));
-
-	const id = $derived.by(() => `diff-root${props.diffFile.getId()}`);
 </script>
 
 <div

@@ -42,29 +42,30 @@ export const DiffSplitContentLine = defineComponent(
 
     const currentSyntaxLine = ref(
       props.side === SplitSide.old
-        ? props.diffFile.getOldSyntaxLine(currentLine.value?.lineNumber)
-        : props.diffFile.getNewSyntaxLine(currentLine.value?.lineNumber)
+        ? props.diffFile.getOldSyntaxLine(currentLine.value?.lineNumber ?? -1)
+        : props.diffFile.getNewSyntaxLine(currentLine.value?.lineNumber ?? -1)
     );
 
     const currentPlainLine = ref(
       props.side === SplitSide.old
-        ? props.diffFile.getOldPlainLine(currentLine.value?.lineNumber)
-        : props.diffFile.getNewPlainLine(currentLine.value?.lineNumber)
+        ? props.diffFile.getOldPlainLine(currentLine.value?.lineNumber ?? -1)
+        : props.diffFile.getNewPlainLine(currentLine.value?.lineNumber ?? -1)
     );
 
     useSubscribeDiffFile(props, (diffFile) => {
       currentSyntaxLine.value =
         props.side === SplitSide.old
-          ? diffFile.getOldSyntaxLine(currentLine.value?.lineNumber)
-          : diffFile.getNewSyntaxLine(currentLine.value?.lineNumber);
+          ? diffFile.getOldSyntaxLine(currentLine.value?.lineNumber ?? -1)
+          : diffFile.getNewSyntaxLine(currentLine.value?.lineNumber ?? -1);
 
       currentPlainLine.value =
         props.side === SplitSide.old
-          ? diffFile.getOldPlainLine(currentLine.value?.lineNumber)
-          : diffFile.getNewPlainLine(currentLine.value?.lineNumber);
+          ? diffFile.getOldPlainLine(currentLine.value?.lineNumber ?? -1)
+          : diffFile.getNewPlainLine(currentLine.value?.lineNumber ?? -1);
     });
 
-    const onOpenAddWidget = (lineNumber: number, side: SplitSide) => setWidget({ side: side, lineNumber: lineNumber });
+    const onOpenAddWidget = (lineNumber: number, side: SplitSide) =>
+      setWidget?.({ side: side, lineNumber: lineNumber });
 
     return () => {
       if (currentLineHasHidden.value) return null;
@@ -96,10 +97,10 @@ export const DiffSplitContentLine = defineComponent(
                   maxWidth: `var(${diffAsideWidthName})`,
                 }}
               >
-                {currentLineHasDiff.value && enableAddWidget.value && (
+                {currentLineHasDiff.value && enableAddWidget?.value && (
                   <DiffSplitAddWidget
                     index={props.index}
-                    lineNumber={currentLine.value.lineNumber}
+                    lineNumber={currentLine.value.lineNumber ?? -1}
                     side={props.side}
                     diffFile={props.diffFile}
                     onWidgetClick={onAddWidgetClick}
@@ -125,7 +126,7 @@ export const DiffSplitContentLine = defineComponent(
                   diffLine={currentLine.value?.diff}
                   plainLine={currentPlainLine.value}
                   syntaxLine={currentSyntaxLine.value}
-                  enableHighlight={enableHighlight.value}
+                  enableHighlight={!!enableHighlight?.value}
                 />
               </td>
             </>

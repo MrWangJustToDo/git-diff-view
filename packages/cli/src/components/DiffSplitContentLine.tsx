@@ -1,7 +1,6 @@
 import { DiffLineType, type DiffFile, checkDiffLineIncludeChange } from "@git-diff-view/core";
 import { NewLineSymbol } from "@git-diff-view/utils";
 import { Box } from "ink";
-import * as React from "react";
 
 import {
   diffAddLineNumber,
@@ -36,10 +35,10 @@ const InternalDiffSplitLine = ({
   const oldLine = diffFile.getSplitLeftLine(index);
   const newLine = diffFile.getSplitRightLine(index);
 
-  const oldSyntaxLine = diffFile.getOldSyntaxLine(oldLine?.lineNumber);
-  const oldPlainLine = diffFile.getOldPlainLine(oldLine.lineNumber);
-  const newSyntaxLine = diffFile.getNewSyntaxLine(newLine?.lineNumber);
-  const newPlainLine = diffFile.getNewPlainLine(newLine.lineNumber);
+  const oldSyntaxLine = diffFile.getOldSyntaxLine(oldLine?.lineNumber ?? -1);
+  const oldPlainLine = diffFile.getOldPlainLine(oldLine.lineNumber ?? -1);
+  const newSyntaxLine = diffFile.getNewSyntaxLine(newLine?.lineNumber ?? -1);
+  const newPlainLine = diffFile.getNewPlainLine(newLine.lineNumber ?? -1);
 
   const hasDiff = !!oldLine?.diff || !!newLine?.diff;
   const hasChange = checkDiffLineIncludeChange(oldLine?.diff) || checkDiffLineIncludeChange(newLine?.diff);
@@ -125,7 +124,7 @@ const InternalDiffSplitLine = ({
             height={row}
             diffFile={diffFile}
             width={contentWidth}
-            rawLine={oldLine.value}
+            rawLine={oldLine.value || ""}
             diffLine={oldLine.diff}
             plainLine={oldPlainLine}
             syntaxLine={oldSyntaxLine}

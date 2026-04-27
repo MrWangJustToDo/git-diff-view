@@ -30,21 +30,21 @@ yarn add @git-diff-view/svelte
 
 ```svelte
 <script>
-  import { DiffView, DiffModeEnum } from "@git-diff-view/svelte";
-  import "@git-diff-view/svelte/styles/diff-view.css";
+	import { DiffView, DiffModeEnum } from '@git-diff-view/svelte';
+	import '@git-diff-view/svelte/styles/diff-view.css';
 
-  const diffData = {
-    oldFile: { fileName: "old.ts", content: "..." },
-    newFile: { fileName: "new.ts", content: "..." },
-    hunks: ["..."]
-  };
+	const diffData = {
+		oldFile: { fileName: 'old.ts', content: '...' },
+		newFile: { fileName: 'new.ts', content: '...' },
+		hunks: ['...']
+	};
 </script>
 
 <DiffView
-  data={diffData}
-  diffViewMode={DiffModeEnum.Split}
-  diffViewTheme="dark"
-  diffViewHighlight={true}
+	data={diffData}
+	diffViewMode={DiffModeEnum.Split}
+	diffViewTheme="dark"
+	diffViewHighlight={true}
 />
 ```
 
@@ -54,18 +54,21 @@ yarn add @git-diff-view/svelte
 
 ```svelte
 <script>
-  import { DiffView } from "@git-diff-view/svelte";
-  import { DiffFile, generateDiffFile } from "@git-diff-view/file";
-  import "@git-diff-view/svelte/styles/diff-view.css";
+	import { DiffView } from '@git-diff-view/svelte';
+	import { DiffFile, generateDiffFile } from '@git-diff-view/file';
+	import '@git-diff-view/svelte/styles/diff-view.css';
 
-  const file = generateDiffFile(
-    "old.ts", oldContent,
-    "new.ts", newContent,
-    "typescript", "typescript"
-  );
-  file.initTheme('dark');
-  file.init();
-  file.buildSplitDiffLines();
+	const file = generateDiffFile(
+		'old.ts',
+		oldContent,
+		'new.ts',
+		newContent,
+		'typescript',
+		'typescript'
+	);
+	file.initTheme('dark');
+	file.init();
+	file.buildSplitDiffLines();
 </script>
 
 <DiffView diffFile={file} />
@@ -75,22 +78,22 @@ yarn add @git-diff-view/svelte
 
 ```svelte
 <script>
-  import { DiffView } from "@git-diff-view/svelte";
-  import { DiffFile } from "@git-diff-view/core";
-  import "@git-diff-view/svelte/styles/diff-view.css";
+	import { DiffView } from '@git-diff-view/svelte';
+	import { DiffFile } from '@git-diff-view/core';
+	import '@git-diff-view/svelte/styles/diff-view.css';
 
-  const file = new DiffFile(
-    oldFileName,
-    oldContent,
-    newFileName,
-    newContent,
-    hunks,
-    oldFileLang,
-    newFileLang
-  );
-  file.initTheme('dark');
-  file.init();
-  file.buildSplitDiffLines();
+	const file = new DiffFile(
+		oldFileName,
+		oldContent,
+		newFileName,
+		newContent,
+		hunks,
+		oldFileLang,
+		newFileLang
+	);
+	file.initTheme('dark');
+	file.init();
+	file.buildSplitDiffLines();
 </script>
 
 <DiffView diffFile={file} />
@@ -100,11 +103,11 @@ yarn add @git-diff-view/svelte
 
 ```svelte
 <script>
-  // Default styles with Tailwind (next release will be pure CSS)
-  import "@git-diff-view/svelte/styles/diff-view.css";
+	// Default styles with Tailwind (next release will be pure CSS)
+	import '@git-diff-view/svelte/styles/diff-view.css';
 
-  // Pure CSS (no Tailwind conflicts)
-  import "@git-diff-view/svelte/styles/diff-view-pure.css";
+	// Pure CSS (no Tailwind conflicts)
+	import '@git-diff-view/svelte/styles/diff-view-pure.css';
 </script>
 ```
 
@@ -112,41 +115,41 @@ yarn add @git-diff-view/svelte
 
 ### Props
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `data` | `DiffData` | Diff data with `oldFile`, `newFile`, and `hunks` |
-| `diffFile` | `DiffFile` | Pre-processed diff file instance |
-| `diffViewMode` | `Split \| Unified` | View mode (default: `Split`) |
-| `diffViewTheme` | `light \| dark` | Theme (default: `light`) |
-| `diffViewHighlight` | `boolean` | Enable syntax highlighting |
-| `diffViewWrap` | `boolean` | Enable line wrapping |
-| `diffViewFontSize` | `number` | Font size in pixels |
-| `diffViewAddWidget` | `boolean` | Enable widget button |
-| `extendData` | `ExtendData` | Additional data per line |
-| `renderWidgetLine` | `Snippet` | Custom widget snippet |
-| `renderExtendLine` | `Snippet` | Custom extend data snippet |
+| Prop                | Type               | Description                                      |
+| ------------------- | ------------------ | ------------------------------------------------ |
+| `data`              | `DiffData`         | Diff data with `oldFile`, `newFile`, and `hunks` |
+| `diffFile`          | `DiffFile`         | Pre-processed diff file instance                 |
+| `diffViewMode`      | `Split \| Unified` | View mode (default: `Split`)                     |
+| `diffViewTheme`     | `light \| dark`    | Theme (default: `light`)                         |
+| `diffViewHighlight` | `boolean`          | Enable syntax highlighting                       |
+| `diffViewWrap`      | `boolean`          | Enable line wrapping                             |
+| `diffViewFontSize`  | `number`           | Font size in pixels                              |
+| `diffViewAddWidget` | `boolean`          | Enable widget button                             |
+| `extendData`        | `ExtendData`       | Additional data per line                         |
+| `renderWidgetLine`  | `Snippet`          | Custom widget snippet                            |
+| `renderExtendLine`  | `Snippet`          | Custom extend data snippet                       |
 
 ### Events
 
-| Event | Payload | Description |
-|-------|---------|-------------|
+| Event              | Payload                | Description                         |
+| ------------------ | ---------------------- | ----------------------------------- |
 | `onAddWidgetClick` | `{ side, lineNumber }` | Fired when widget button is clicked |
 
 ### DiffData Type
 
 ```typescript
 type DiffData = {
-  oldFile?: {
-    fileName?: string | null;
-    fileLang?: string | null;
-    content?: string | null;
-  };
-  newFile?: {
-    fileName?: string | null;
-    fileLang?: string | null;
-    content?: string | null;
-  };
-  hunks: string[];
+	oldFile?: {
+		fileName?: string | null;
+		fileLang?: string | null;
+		content?: string | null;
+	};
+	newFile?: {
+		fileName?: string | null;
+		fileLang?: string | null;
+		content?: string | null;
+	};
+	hunks: string[];
 };
 ```
 

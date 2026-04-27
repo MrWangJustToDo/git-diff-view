@@ -20,6 +20,7 @@ import { Github } from "./components/icons";
 import { usePreviewTypeWithRouter } from "./hooks/usePreviewType";
 import { Example } from "./views/Example";
 import { Main } from "./views/Main";
+import { MultiSelectView } from "./views/MultiSelect";
 import { PlayGround } from "./views/PlayGround";
 import { WorkerExample } from "./views/Worker";
 
@@ -32,7 +33,7 @@ function App() {
 
   const [opened, { toggle, close }] = useDisclosure();
 
-  const goto = (type: "main" | "example" | "try" | "worker") => {
+  const goto = (type: "main" | "example" | "try" | "worker" | "multiselect") => {
     const url = new URL(window.location.href);
     url.searchParams.set("type", type);
     url.searchParams.delete("tab");
@@ -76,6 +77,13 @@ function App() {
             </Button>
             <Button variant="light" color={type === "worker" ? "blue" : "gray"} onClick={() => goto("worker")}>
               Worker
+            </Button>
+            <Button
+              variant="light"
+              color={type === "multiselect" ? "blue" : "gray"}
+              onClick={() => goto("multiselect")}
+            >
+              MultiSelect
             </Button>
             <Button
               variant="default"
@@ -150,6 +158,7 @@ function App() {
         )}
         {type === "try" && <PlayGround />}
         {type === "worker" && <WorkerExample />}
+        {type === "multiselect" && <MultiSelectView />}
         <DevTool />
       </AppShell.Main>
     </AppShell>

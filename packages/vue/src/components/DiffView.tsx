@@ -82,7 +82,7 @@ export const DiffView = defineComponent<
       return null;
     };
 
-    const diffFile = ref<DiffFile>(getInstance());
+    const diffFile = ref<DiffFile | null>(getInstance());
 
     const id = ref(diffFile.value?.getId?.());
 
@@ -142,7 +142,7 @@ export const DiffView = defineComponent<
       if (!isMounted.value || !diffFile.value || !props.diffFile) return;
       const instance = diffFile.value as DiffFile;
       props.diffFile._addClonedInstance(instance);
-      onClean(() => props.diffFile._delClonedInstance(instance));
+      onClean(() => props.diffFile?._delClonedInstance(instance));
     };
 
     const initDiff = () => {

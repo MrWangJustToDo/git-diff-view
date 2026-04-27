@@ -7,7 +7,6 @@ import {
   hunkContentColorName,
   borderColorName,
 } from "@git-diff-view/utils";
-import * as React from "react";
 
 import { ExpandUp, ExpandDown, ExpandAll } from "../DiffExpand";
 import { DiffModeEnum } from "../DiffView";

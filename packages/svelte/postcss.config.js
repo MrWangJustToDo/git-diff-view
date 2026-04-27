@@ -11,7 +11,9 @@ export default {
 				}
 				if (
 					selector.includes('diff-line-extend-wrapper') ||
-					selector.includes('diff-line-widget-wrapper')
+					selector.includes('diff-line-widget-wrapper') ||
+					selector.includes('diff-multiselect-wrapper') ||
+					selector.includes('diff-multi-selecting')
 				) {
 					return selector;
 				}

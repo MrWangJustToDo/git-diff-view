@@ -39,11 +39,21 @@ const InternalDiffSplitWidgetLine = ({
 
   const oldWidgetRendered =
     oldLineWidget &&
-    renderWidgetLine?.({ diffFile, side: SplitSide.old, lineNumber: oldLine.lineNumber, onClose: () => setWidget({}) });
+    renderWidgetLine?.({
+      diffFile,
+      side: SplitSide.old,
+      lineNumber: oldLine.lineNumber ?? -1,
+      onClose: () => setWidget({}),
+    });
 
   const newWidgetRendered =
     newLineWidget &&
-    renderWidgetLine?.({ diffFile, side: SplitSide.new, lineNumber: newLine.lineNumber, onClose: () => setWidget({}) });
+    renderWidgetLine?.({
+      diffFile,
+      side: SplitSide.new,
+      lineNumber: newLine.lineNumber ?? -1,
+      onClose: () => setWidget({}),
+    });
 
   if (!renderWidgetLine) return null;
 

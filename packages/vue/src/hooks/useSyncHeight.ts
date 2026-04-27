@@ -24,14 +24,14 @@ export const useSyncHeight = ({
   const isMounted = useIsMounted();
 
   const observeHeight = (onCancel: (cb: () => void) => void) => {
-    if (!isMounted.value) return;
+    if (!isMounted?.value) return;
 
     if (enable.value) {
       let clean = () => {};
 
-      const rootDocument = getElementRoot(dom.value);
+      const rootDocument = getElementRoot(dom?.value);
 
-      const container = rootDocument.querySelector(`#diff-root${id.value}`);
+      const container = rootDocument.querySelector(`#diff-root${id?.value}`);
 
       const elements = Array.from(container?.querySelectorAll(selector.value) || []);
 
@@ -63,8 +63,8 @@ export const useSyncHeight = ({
         cb();
 
         const cleanCb = () => {
-          typedTarget.__observeCallback.delete(cb);
-          if (typedTarget.__observeCallback.size === 0) {
+          typedTarget?.__observeCallback?.delete(cb);
+          if (typedTarget?.__observeCallback?.size === 0) {
             typedTarget.__observeInstance?.disconnect();
             target.removeAttribute("data-observe");
             delete typedTarget.__observeCallback;
@@ -83,7 +83,7 @@ export const useSyncHeight = ({
 
         typedTarget.__observeCallback.add(cb);
 
-        const observer = new ResizeObserver(() => typedTarget.__observeCallback.forEach((cb) => cb()));
+        const observer = new ResizeObserver(() => typedTarget?.__observeCallback?.forEach((cb) => cb()));
 
         typedTarget.__observeInstance = observer;
 

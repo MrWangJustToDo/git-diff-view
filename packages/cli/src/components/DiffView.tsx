@@ -1,8 +1,9 @@
+/* eslint-disable react-hooks/refs */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 import { DiffFile, _cacheMap, SplitSide } from "@git-diff-view/core";
 import { DiffModeEnum } from "@git-diff-view/utils";
 import { Box } from "ink";
-import React, { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 
 import { useUnmount } from "../hooks/useUnmount";
 
@@ -13,7 +14,7 @@ import { createDiffConfigStore } from "./tools";
 
 import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/core";
 import type { DOMElement } from "ink";
-import type { ForwardedRef, ReactNode, RefObject } from "react";
+import type { ForwardedRef, JSX, ReactNode, RefObject } from "react";
 
 _cacheMap.name = "@git-diff-view/cli";
 
@@ -70,7 +71,7 @@ type DiffViewProps_2<T> = Omit<DiffViewProps<T>, "data"> & {
 
 const InternalDiffView = <T extends unknown>(
   props: Omit<DiffViewProps<T>, "data"> & {
-    wrapperRef?: RefObject<DOMElement>;
+    wrapperRef: RefObject<DOMElement | null>;
   }
 ) => {
   const {
@@ -86,11 +87,11 @@ const InternalDiffView = <T extends unknown>(
     diffViewHideOperator,
   } = props;
 
-  const diffFileId = useMemo(() => diffFile.getId(), [diffFile]);
+  const diffFileId = useMemo(() => diffFile!.getId(), [diffFile]);
 
   // performance optimization
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const useDiffContext = useMemo(() => createDiffConfigStore(props, diffFileId), []);
+  const useDiffContext = useMemo(() => createDiffConfigStore<any>(props, diffFileId), []);
 
   useEffect(() => {
     const {
@@ -122,7 +123,7 @@ const InternalDiffView = <T extends unknown>(
     }
 
     if (diffViewHighlight !== enableHighlight) {
-      setEnableHighlight(diffViewHighlight);
+      setEnableHighlight(!!diffViewHighlight);
     }
 
     if (props.extendData) {
@@ -134,18 +135,18 @@ const InternalDiffView = <T extends unknown>(
     }
 
     if (diffViewTabSpace !== tabSpace) {
-      setTabSpace(diffViewTabSpace);
+      setTabSpace(!!diffViewTabSpace);
     }
 
-    if (diffViewTabWidth !== tabWidth) {
+    if (diffViewTabWidth && diffViewTabWidth !== tabWidth) {
       setTabWidth(diffViewTabWidth);
     }
 
     if (diffViewHideOperator !== hideOperator) {
-      setHideOperator(diffViewHideOperator);
+      setHideOperator(!!diffViewHideOperator);
     }
 
-    if (_width !== width) {
+    if (_width && _width !== width) {
       setWidth(_width);
     }
   }, [
@@ -165,7 +166,7 @@ const InternalDiffView = <T extends unknown>(
 
   useEffect(() => {
     const { wrapper, setWrapper } = useDiffContext.getReadonlyState();
-    if (wrapperRef.current !== wrapper.current) {
+    if (wrapperRef.current && wrapperRef.current !== wrapper.current) {
       setWrapper(wrapperRef.current);
     }
   });
@@ -176,26 +177,26 @@ const InternalDiffView = <T extends unknown>(
     <DiffViewContext.Provider value={value}>
       <Box
         data-component="git-diff-view"
-        data-theme={diffFile._getTheme() || "light"}
+        data-theme={diffFile!._getTheme() || "light"}
         data-version={__VERSION__}
         flexDirection="column"
-        data-highlighter={diffFile._getHighlighterName()}
+        data-highlighter={diffFile!._getHighlighterName()}
       >
-        {diffViewMode & DiffModeEnum.Split ? (
-          <DiffSplitView diffFile={diffFile} width={_width} />
+        {diffViewMode! & DiffModeEnum.Split ? (
+          <DiffSplitView diffFile={diffFile!} width={_width} />
         ) : (
-          <DiffUnifiedView diffFile={diffFile} width={_width} />
+          <DiffUnifiedView diffFile={diffFile!} width={_width} />
         )}
       </Box>
     </DiffViewContext.Provider>
   );
 };
 
-const MemoedInternalDiffView = memo(InternalDiffView);
+const MemoedInternalDiffView = memo(InternalDiffView) as typeof InternalDiffView;
 
 const DiffViewContainerWithRef = <T extends unknown>(
   props: DiffViewProps<T>,
-  ref: ForwardedRef<{ getDiffFileInstance: () => DiffFile }>
+  ref: ForwardedRef<{ getDiffFileInstance: () => DiffFile | null }>
 ) => {
   const { registerHighlighter, data, diffViewTheme, diffFile: _diffFile, ...restProps } = props;
 

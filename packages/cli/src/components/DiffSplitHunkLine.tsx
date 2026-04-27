@@ -1,6 +1,5 @@
 import { type DiffFile } from "@git-diff-view/core";
 import { Box, Text } from "ink";
-import * as React from "react";
 
 import { DiffModeEnum } from "..";
 

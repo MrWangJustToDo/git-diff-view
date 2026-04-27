@@ -1,5 +1,4 @@
 import { addWidgetBGName, addWidgetColorName, diffFontSizeName } from "@git-diff-view/utils";
-import * as React from "react";
 
 import { SplitSide } from "./DiffView";
 
@@ -39,7 +38,8 @@ export const DiffSplitAddWidget = ({
           color: `var(${addWidgetColorName})`,
           backgroundColor: `var(${addWidgetBGName})`,
         }}
-        onClick={() => {
+        onMouseDown={(e) => {
+          e.stopPropagation();
           onOpenAddWidget(lineNumber, side);
           onWidgetClick?.(lineNumber, side);
         }}
@@ -79,7 +79,8 @@ export const DiffUnifiedAddWidget = ({
           color: `var(${addWidgetColorName})`,
           backgroundColor: `var(${addWidgetBGName})`,
         }}
-        onClick={() => {
+        onMouseDown={(e) => {
+          e.stopPropagation();
           onOpenAddWidget(lineNumber, side);
           onWidgetClick?.(lineNumber, side);
         }}

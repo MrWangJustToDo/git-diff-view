@@ -1,4 +1,3 @@
-import * as React from "react";
 import { useCallback } from "react";
 
 import { SplitSide } from "..";
@@ -47,7 +46,7 @@ const InternalDiffUnifiedExtendLine = ({
             renderExtendLine?.({
               diffFile,
               side: SplitSide.old,
-              lineNumber: unifiedItem.oldLineNumber,
+              lineNumber: unifiedItem.oldLineNumber ?? -1,
               data: oldLineExtend.data,
               onUpdate: diffFile.notifyAll,
             })}
@@ -57,7 +56,7 @@ const InternalDiffUnifiedExtendLine = ({
             renderExtendLine?.({
               diffFile,
               side: SplitSide.new,
-              lineNumber: unifiedItem.newLineNumber,
+              lineNumber: unifiedItem.newLineNumber ?? -1,
               data: newLineExtend.data,
               onUpdate: diffFile.notifyAll,
             })}
@@ -85,8 +84,8 @@ export const DiffUnifiedExtendLine = ({
   const { oldLineExtend, newLineExtend } = useDiffContext(
     useCallback(
       (s) => ({
-        oldLineExtend: s.extendData?.oldFile?.[unifiedItem?.oldLineNumber],
-        newLineExtend: s.extendData?.newFile?.[unifiedItem?.newLineNumber],
+        oldLineExtend: s.extendData?.oldFile?.[unifiedItem?.oldLineNumber ?? -1],
+        newLineExtend: s.extendData?.newFile?.[unifiedItem?.newLineNumber ?? -1],
       }),
       [unifiedItem.oldLineNumber, unifiedItem.newLineNumber]
     )

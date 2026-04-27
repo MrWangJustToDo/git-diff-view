@@ -6,7 +6,6 @@ import {
   hunkContentBGName,
   hunkContentColorName,
 } from "@git-diff-view/utils";
-import * as React from "react";
 
 import { DiffModeEnum, SplitSide } from "..";
 import { useSyncHeight } from "../hooks/useSyncHeight";

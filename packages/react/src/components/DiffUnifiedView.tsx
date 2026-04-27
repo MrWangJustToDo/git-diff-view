@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { getUnifiedContentLine, SplitSide } from "@git-diff-view/core";
 import { diffFontSizeName, removeAllSelection, diffAsideWidthName, getDiffIdFromElement } from "@git-diff-view/utils";
-import * as React from "react";
 import { Fragment, memo, useEffect, useMemo, useRef } from "react";
+// @ts-ignore
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
 import { useTextWidth } from "../hooks/useTextWidth";
@@ -23,7 +23,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const ref = useRef<HTMLStyleElement>(null);
 
-  const tempRef = useRef<SplitSide>();
+  const tempRef = useRef<SplitSide>(undefined);
 
   const useDiffContextRef = useRef(useDiffContext);
 
@@ -66,7 +66,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const lines = getUnifiedContentLine(diffFile);
 
-  const setStyle = (side: SplitSide) => {
+  const setStyle = (side?: SplitSide) => {
     if (!ref.current) return;
     if (!side) {
       ref.current.textContent = "";
@@ -77,7 +77,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
   };
 
   const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
-    let ele = e.target;
+    let ele: Element | null = e.target as Element;
 
     // need remove all the selection
     if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
@@ -149,21 +149,21 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
                     index={item.index}
                     lineNumber={item.lineNumber}
                     diffFile={diffFile}
-                    enableWrap={enableWrap}
-                    enableHighlight={enableHighlight}
-                    enableAddWidget={enableAddWidget}
+                    enableWrap={!!enableWrap}
+                    enableHighlight={!!enableHighlight}
+                    enableAddWidget={!!enableAddWidget}
                   />
                   <DiffUnifiedWidgetLine
                     index={item.index}
                     lineNumber={item.lineNumber}
                     diffFile={diffFile}
-                    enableWrap={enableWrap}
+                    enableWrap={!!enableWrap}
                   />
                   <DiffUnifiedExtendLine
                     index={item.index}
                     lineNumber={item.lineNumber}
                     diffFile={diffFile}
-                    enableWrap={enableWrap}
+                    enableWrap={!!enableWrap}
                   />
                 </Fragment>
               ))}

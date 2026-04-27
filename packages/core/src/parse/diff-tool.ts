@@ -122,10 +122,10 @@ export const getDiffRange = (
     getDeletionSyntax,
   }: {
     diffFile: DiffFile;
-    getAdditionRaw: (lineNumber: number) => string;
-    getDeletionRaw: (lineNumber: number) => string;
-    getAdditionSyntax: (lineNumber: number) => SyntaxLine;
-    getDeletionSyntax: (lineNumber: number) => SyntaxLine;
+    getAdditionRaw: (lineNumber: number) => string | undefined;
+    getDeletionRaw: (lineNumber: number) => string | undefined;
+    getAdditionSyntax: (lineNumber: number) => SyntaxLine | undefined;
+    getDeletionSyntax: (lineNumber: number) => SyntaxLine | undefined;
   }
 ) => {
   if (additions.length === deletions.length) {
@@ -138,11 +138,11 @@ export const getDiffRange = (
         // fix: get diff with ignoreWhiteSpace config
         const _addition = DiffLine.prototype.clone.call(
           addition,
-          getAdditionRaw(addition.newLineNumber) || addition.text || ""
+          getAdditionRaw(addition.newLineNumber!) || addition.text || ""
         );
         const _deletion = DiffLine.prototype.clone.call(
           deletion,
-          getDeletionRaw(deletion.oldLineNumber) || deletion.text || ""
+          getDeletionRaw(deletion.oldLineNumber!) || deletion.text || ""
         );
         const { addRange, delRange } = relativeChanges(_addition, _deletion);
         addition.changes = addRange;
@@ -151,34 +151,34 @@ export const getDiffRange = (
       if (!getEnableFastDiffTemplate()) {
         getPlainDiffTemplate({
           diffLine: addition,
-          rawLine: getAdditionRaw(addition.newLineNumber),
+          rawLine: getAdditionRaw(addition.newLineNumber!) || "",
           operator: "add",
         });
         getPlainDiffTemplate({
           diffLine: deletion,
-          rawLine: getDeletionRaw(deletion.oldLineNumber),
+          rawLine: getDeletionRaw(deletion.oldLineNumber!) || "",
           operator: "del",
         });
         getSyntaxDiffTemplate({
           diffFile,
           diffLine: addition,
-          syntaxLine: getAdditionSyntax(addition.newLineNumber),
+          syntaxLine: getAdditionSyntax(addition.newLineNumber!) || null,
           operator: "add",
         });
         getSyntaxDiffTemplate({
           diffFile,
           diffLine: deletion,
-          syntaxLine: getDeletionSyntax(deletion.oldLineNumber),
+          syntaxLine: getDeletionSyntax(deletion.oldLineNumber!) || null,
           operator: "del",
         });
       } else {
         const _addition = DiffLine.prototype.clone.call(
           addition,
-          getAdditionRaw(addition.newLineNumber) || addition.text || ""
+          getAdditionRaw(addition.newLineNumber!) || addition.text || ""
         );
         const _deletion = DiffLine.prototype.clone.call(
           deletion,
-          getDeletionRaw(deletion.oldLineNumber) || deletion.text || ""
+          getDeletionRaw(deletion.oldLineNumber!) || deletion.text || ""
         );
         const { addRange, delRange } = diffChanges(_addition, _deletion);
         addition.diffChanges = addRange;
@@ -187,24 +187,24 @@ export const getDiffRange = (
         deletion._diffChanges = addRange;
         getPlainDiffTemplateByFastDiff({
           diffLine: addition,
-          rawLine: getAdditionRaw(addition.newLineNumber),
+          rawLine: getAdditionRaw(addition.newLineNumber!) || "",
           operator: "add",
         });
         getPlainDiffTemplateByFastDiff({
           diffLine: deletion,
-          rawLine: getDeletionRaw(deletion.oldLineNumber),
+          rawLine: getDeletionRaw(deletion.oldLineNumber!) || "",
           operator: "del",
         });
         getSyntaxDiffTemplateByFastDiff({
           diffFile,
           diffLine: addition,
-          syntaxLine: getAdditionSyntax(addition.newLineNumber),
+          syntaxLine: getAdditionSyntax(addition.newLineNumber!) || null,
           operator: "add",
         });
         getSyntaxDiffTemplateByFastDiff({
           diffFile,
           diffLine: deletion,
-          syntaxLine: getDeletionSyntax(deletion.oldLineNumber),
+          syntaxLine: getDeletionSyntax(deletion.oldLineNumber!) || null,
           operator: "del",
         });
       }

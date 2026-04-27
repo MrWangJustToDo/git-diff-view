@@ -114,6 +114,7 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
     lineNumber: props.initialWidgetState?.lineNumber,
   });
 
+  // eslint-disable-next-line solid/reactivity -- initial value only, updates happen via setId in createEffect below
   const reactiveHook = createDiffConfigStore(props, diffFile()?.getId() || "");
 
   createEffect(() => {

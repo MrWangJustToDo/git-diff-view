@@ -83,6 +83,7 @@ export const useSyncHeight = ({
 					return;
 				}
 
+				// eslint-disable-next-line svelte/prefer-svelte-reactivity -- intentionally using native Set for non-reactive callback storage
 				typedTarget.__observeCallback = new Set();
 
 				typedTarget.__observeCallback.add(cb);

@@ -4,7 +4,7 @@
  */
 import { _cacheMap, getFile } from "@git-diff-view/core";
 import { Box } from "ink";
-import React, { Fragment, forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import { Fragment, forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from "react";
 
 import { useCodeTerminalSize } from "../hooks/useCodeTerminalSize";
 
@@ -17,7 +17,7 @@ import { diffPlainLineNumber, diffPlainLineNumberColor } from "./color";
 
 import type { DiffHighlighter, DiffHighlighterLang, File } from "@git-diff-view/core";
 import type { DOMElement } from "ink";
-import type { ForwardedRef, ReactNode, RefObject } from "react";
+import type { ForwardedRef, JSX, ReactNode, RefObject } from "react";
 
 _cacheMap.name = "@git-diff-view/cli";
 
@@ -165,7 +165,7 @@ CodeViewContent.displayName = "CodeViewContent";
 const InternalCodeView = <T,>(
   props: Omit<CodeViewProps<T>, "data"> & {
     file: File;
-    wrapperRef?: RefObject<DOMElement>;
+    wrapperRef: RefObject<DOMElement | null>;
   }
 ) => {
   const {
@@ -184,7 +184,7 @@ const InternalCodeView = <T,>(
 
   // Performance optimization using store
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const useCodeContext = useMemo(() => createCodeConfigStore(props, fileId), []);
+  const useCodeContext = useMemo(() => createCodeConfigStore<any>(props, fileId), []);
 
   useEffect(() => {
     const {
@@ -207,12 +207,12 @@ const InternalCodeView = <T,>(
       setId(fileId);
     }
 
-    if (_width !== width) {
+    if (_width && _width !== width) {
       setWidth(_width);
     }
 
     if (codeViewHighlight !== enableHighlight) {
-      setEnableHighlight(codeViewHighlight);
+      setEnableHighlight(!!codeViewHighlight);
     }
 
     if (props.extendData) {
@@ -224,10 +224,10 @@ const InternalCodeView = <T,>(
     }
 
     if (codeViewTabSpace !== tabSpace) {
-      setTabSpace(codeViewTabSpace);
+      setTabSpace(!!codeViewTabSpace);
     }
 
-    if (codeViewTabWidth !== tabWidth) {
+    if (codeViewTabWidth && codeViewTabWidth !== tabWidth) {
       setTabWidth(codeViewTabWidth);
     }
   }, [
@@ -245,7 +245,7 @@ const InternalCodeView = <T,>(
 
   useEffect(() => {
     const { wrapper, setWrapper } = useCodeContext.getReadonlyState();
-    if (wrapperRef.current !== wrapper.current) {
+    if (wrapperRef.current && wrapperRef.current !== wrapper.current) {
       setWrapper(wrapperRef.current);
     }
   });
@@ -263,9 +263,12 @@ const InternalCodeView = <T,>(
   );
 };
 
-const MemoedInternalCodeView = memo(InternalCodeView);
+const MemoedInternalCodeView = memo(InternalCodeView) as typeof InternalCodeView;
 
-const CodeViewContainerWithRef = <T,>(props: CodeViewProps<T>, ref: ForwardedRef<{ getFileInstance: () => File }>) => {
+const CodeViewContainerWithRef = <T,>(
+  props: CodeViewProps<T>,
+  ref: ForwardedRef<{ getFileInstance: () => File | null }>
+) => {
   const { registerHighlighter, data, codeViewTheme, file, ...restProps } = props;
 
   const domRef = useRef<DOMElement>(null);

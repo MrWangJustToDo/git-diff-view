@@ -4,7 +4,7 @@ import { Root } from 'hast';
 import { CSSProperties, SlotsType } from 'vue';
 
 declare class Cache$1<K, V> extends Map<K, V> {
-	name: string;
+	name?: string;
 	get maxLength(): number;
 	setMaxLength(length: number): void;
 	set(key: K, value: V): this;
@@ -277,6 +277,9 @@ export declare class DiffFile {
 		theme: "light" | "dark";
 	};
 	_mergeFullBundle: (data: ReturnType<DiffFile["_getFullBundle"]>, notifyUpdate?: boolean) => void;
+	_getAllListener: () => ((() => void) & {
+		isSyncExternal?: boolean;
+	})[];
 	_destroy: () => void;
 	clear: () => void;
 }
@@ -333,6 +336,48 @@ export declare class DiffLine {
 	isIncludeableLine(): boolean;
 	equals(other: DiffLine): boolean;
 	clone(text: string): DiffLine;
+}
+/**
+ * Framework-agnostic multi-select manager for diff views
+ * Handles mouse events and selection state management
+ */
+export declare class DiffMultiSelectManager {
+	constructor(container: HTMLElement, diffFile: DiffFileForMultiSelect, options?: MultiSelectOptions);
+	/**
+	 * Get the current selection result with line data from DiffFile
+	 */
+	getSelectionResult(): MultiSelectResult | null;
+	/**
+	 * Get the current selection state
+	 */
+	getState(): MultiSelectState;
+	/**
+	 * Set preselected lines (e.g., from existing comments)
+	 */
+	setPreselectedLines(lines: {
+		old?: number[];
+		new?: number[];
+	}): void;
+	/**
+	 * Clear the current selection
+	 */
+	clearSelection(): void;
+	/**
+	 * Update options
+	 */
+	updateOptions(options: Partial<MultiSelectOptions>): void;
+	/**
+	 * Update the DiffFile instance
+	 */
+	updateDiffFile(diffFile: DiffFileForMultiSelect): void;
+	/**
+	 * Update the container element
+	 */
+	updateContainer(container: HTMLElement): void;
+	/**
+	 * Destroy the manager and cleanup event listeners
+	 */
+	destroy(): void;
 }
 /**
  * A parser for the GNU unified diff format
@@ -462,6 +507,7 @@ export declare class DiffParser {
 	 */
 	parse(text: string): IRawDiff;
 }
+export declare const DEFAULT_SELECTED_CLASS = "diff-multi-select-active";
 /** How many new lines will be added to a diff hunk by default. */
 export declare const DefaultDiffExpansionStep = 40;
 export declare const _cacheMap: Cache$1<string, File$1>;
@@ -497,13 +543,13 @@ export declare const getSplitLines: (diffFile: DiffFile) => DiffSplitLineItem[];
 export declare const getSyntaxDiffTemplate: ({ diffFile, diffLine, syntaxLine, operator, }: {
 	diffFile: DiffFile;
 	diffLine: DiffLine;
-	syntaxLine: SyntaxLine;
+	syntaxLine: SyntaxLine | null;
 	operator: "add" | "del";
 }) => void;
 export declare const getSyntaxDiffTemplateByFastDiff: ({ diffFile, diffLine, syntaxLine, operator, }: {
 	diffFile: DiffFile;
 	diffLine: DiffLine;
-	syntaxLine: SyntaxLine;
+	syntaxLine: SyntaxLine | null;
 	operator: "add" | "del";
 }) => void;
 export declare const getSyntaxLineTemplate: (line: SyntaxLine) => string;
@@ -523,6 +569,13 @@ export declare const highlighter: DiffHighlighter;
  * ```
  */
 export declare const isTransformEnabled: () => boolean;
+/**
+ * CSS class names used for multi-select styling
+ */
+export declare const multiSelectClassNames: {
+	readonly selected: "diff-multi-select-active";
+	readonly selecting: "diff-multi-selecting";
+};
 export declare const parseInstance: DiffParser;
 export declare const processAST: (ast: DiffAST) => {
 	syntaxFileObject: Record<number, SyntaxLine>;
@@ -635,18 +688,81 @@ export declare enum SplitSide {
 }
 export declare function _getAST(raw: string, fileName?: string, lang?: DiffHighlighterLang, theme?: "light" | "dark"): DiffAST;
 export declare function _getAST(raw: string, fileName?: string, lang?: string, theme?: "light" | "dark"): DiffAST;
+/**
+ * Factory function to create a multi-select manager
+ */
+export declare function createDiffMultiSelectManager(container: HTMLElement, diffFile: DiffFileForMultiSelect, options?: MultiSelectOptions): DiffMultiSelectManager;
 export declare function diffChanges(addition: DiffLine, deletion: DiffLine): {
 	addRange: DiffRange;
 	delRange: DiffRange;
 };
 export declare function escapeHtml(string: unknown): string;
+/**
+ * Convert extendData to preselected lines format
+ * Use this when you have existing comments/annotations on lines
+ */
+export declare function extendDataToPreselectedLines<T>(extendData?: {
+	oldFile?: Record<string, {
+		data: T;
+		fromLine?: number;
+	}>;
+	newFile?: Record<string, {
+		data: T;
+		fromLine?: number;
+	}>;
+}): {
+	old: number[] | undefined;
+	new: number[] | undefined;
+};
 export declare function getFile(raw: string, lang: DiffHighlighterLang, theme: "light" | "dark", fileName?: string, uuid?: string): File$1;
 export declare function getFile(raw: string, lang: string, theme: "light" | "dark", fileName?: string, uuid?: string): File$1;
+/**
+ * Get line number from a split mode line number cell element
+ */
+export declare function getLineNumberFromElement_Split(el: HTMLElement | null): number | null;
+/**
+ * Get line numbers from a unified mode element
+ */
+export declare function getLineNumbersFromElement_Unified(el: HTMLElement | null): {
+	old?: number;
+	new?: number;
+} | null;
+/**
+ * Find the number holder element from a target element in split mode
+ */
+export declare function getNumberHolderElement_Split(el: HTMLElement | null, inMouseDown?: boolean): HTMLElement | null;
+/**
+ * Get selected lines data from DiffFile for split mode
+ */
+export declare function getSelectedLinesFromDiffFile_Split(diffFile: DiffFileForMultiSelect, range: LineRange): SelectedLine[];
+/**
+ * Get selected lines data from DiffFile for unified mode
+ */
+export declare function getSelectedLinesFromDiffFile_Unified(diffFile: DiffFileForMultiSelect, range: LineRange): SelectedLine[];
+/**
+ * Get side (old/new) from a split mode element
+ */
+export declare function getSideFromElement_Split(el: HTMLElement | null): MultiSelectSide | null;
+/**
+ * Ensure start <= end in a range
+ */
+export declare function normalizeRange<T extends {
+	startLineNumber: number;
+	endLineNumber: number;
+}>(range: T): T;
 /** Get the changed ranges in the strings, relative to each other. */
 export declare function relativeChanges(addition: DiffLine, deletion: DiffLine): {
 	addRange: IRange;
 	delRange: IRange;
 };
+/**
+ * Update visual selection state for split mode
+ */
+export declare function updateSelectionVisual_Split(container: HTMLElement | null, selectedRange: LineRange | null, diffFile: DiffFile | null, preselectedLines?: PreselectedLineType, className?: string): void;
+/**
+ * Update visual selection state for unified mode
+ */
+export declare function updateSelectionVisual_Unified(container: HTMLElement | null, selectedRange: LineRange | null, diffFile: DiffFile | null, preselectedLines?: PreselectedLineType, className?: string): void;
 export declare let composeLen: number;
 export interface DiffHunkItem extends DiffLineItem {
 	isFirst: boolean;
@@ -714,6 +830,63 @@ export interface IRawDiff {
 	/** Whether or not the diff has invisible bidi characters */
 	readonly hasHiddenBidiChars: boolean;
 }
+export interface LineRange {
+	side: MultiSelectSide;
+	startLineNumber: number;
+	endLineNumber: number;
+}
+export interface MultiSelectOptions {
+	/**
+	 * Enable multi-select feature
+	 * @default true
+	 */
+	enabled?: boolean;
+	/**
+	 * Callback when selection changes (for visual updates)
+	 */
+	onSelectionChange?: (range: LineRange | null, state: MultiSelectState) => void;
+	/**
+	 * Callback when selection is complete (mouseup)
+	 * Provides the selected range and line data from DiffFile
+	 */
+	onSelectionComplete?: (result: MultiSelectResult | null) => void;
+	/**
+	 * Custom function to scope selection to one hunk
+	 * Return the scoped range or null to cancel selection
+	 */
+	scopeToHunk?: (range: LineRange) => LineRange | null;
+	/**
+	 * CSS class to add to selected cells
+	 * @default "diff-multi-select-active"
+	 */
+	selectedClassName?: string;
+	/**
+	 * Whether it's unified mode
+	 * @default false
+	 */
+	isUnifiedMode?: boolean;
+}
+export interface MultiSelectResult {
+	range: LineRange;
+	lines: SelectedLine[];
+}
+export interface MultiSelectState {
+	isSelecting: boolean;
+	startInfo: {
+		lineNumber: number;
+		side: MultiSelectSide;
+	} | null;
+	currentRange: LineRange | null;
+}
+export interface SelectedLine {
+	index: number;
+	lineNumber: number;
+	value?: string;
+	isHide?: boolean;
+	isDelete?: boolean;
+	isAdd?: boolean;
+	isContext?: boolean;
+}
 export interface SplitLineItem {
 	lineNumber?: number;
 	value?: string;
@@ -730,6 +903,10 @@ export interface UnifiedLineItem {
 	_isHidden?: boolean;
 }
 export type DiffAST = Root;
+/**
+ * Type alias for DiffFile used by multi-select
+ */
+export type DiffFileForMultiSelect = DiffFile;
 export type DiffFileHighlighter = Omit<DiffHighlighter, "getHighlighterEngine">;
 export type DiffHighlighter = {
 	name: string;
@@ -789,6 +966,11 @@ export type HunkLineInfo = {
 	_startHiddenIndex: number;
 	_endHiddenIndex: number;
 	_plainText: string;
+};
+export type MultiSelectSide = "old" | "new";
+export type PreselectedLineType = {
+	old?: number[];
+	new?: number[];
 };
 export type SyntaxLine = {
 	value: string;

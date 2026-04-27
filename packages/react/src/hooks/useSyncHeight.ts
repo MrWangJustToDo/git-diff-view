@@ -60,8 +60,8 @@ export const useSyncHeight = ({
         cb();
 
         const cleanCb = () => {
-          typedTarget.__observeCallback.delete(cb);
-          if (typedTarget.__observeCallback.size === 0) {
+          typedTarget?.__observeCallback?.delete(cb);
+          if (typedTarget?.__observeCallback?.size === 0) {
             typedTarget.__observeInstance?.disconnect();
             typedTarget.removeAttribute("data-observe");
             delete typedTarget.__observeCallback;
@@ -79,7 +79,7 @@ export const useSyncHeight = ({
 
         typedTarget.__observeCallback.add(cb);
 
-        const observer = new ResizeObserver(() => typedTarget.__observeCallback.forEach((cb) => cb()));
+        const observer = new ResizeObserver(() => typedTarget?.__observeCallback?.forEach((cb) => cb()));
 
         typedTarget.__observeInstance = observer;
 

@@ -1,7 +1,6 @@
 import { type DiffFile, type DiffLine, checkDiffLineIncludeChange, type File } from "@git-diff-view/core";
 import { NewLineSymbol } from "@git-diff-view/utils";
 import { Box } from "ink";
-import * as React from "react";
 
 import {
   diffAddLineNumber,

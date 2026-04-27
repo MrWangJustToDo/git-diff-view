@@ -1,5 +1,3 @@
-/* eslint-disable import/export */
-
 export * from "./components/DiffView";
 
 export * from "./components/CodeView";

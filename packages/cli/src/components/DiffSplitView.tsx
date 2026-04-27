@@ -1,6 +1,7 @@
 import { getSplitContentLines, type DiffFile } from "@git-diff-view/core";
 import { Fragment, memo } from "react";
-import * as React from "react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
 import { useTerminalSize } from "../hooks/useTerminalSize";

@@ -65,6 +65,7 @@ export const useDomWidth = ({
 				return;
 			}
 
+			// eslint-disable-next-line svelte/prefer-svelte-reactivity -- intentionally using native Set for non-reactive callback storage
 			typedWrapper.__observeCallback = new Set();
 
 			typedWrapper.__observeCallback.add(cb);

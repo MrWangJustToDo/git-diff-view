@@ -2,9 +2,9 @@ import type { DiffModeEnum, SplitSide } from "..";
 import type { DiffFile } from "@git-diff-view/core";
 import type { InjectionKey, Ref, Slot } from "vue";
 
-export const idSymbol: InjectionKey<Ref<string>> = Symbol();
+export const idSymbol: InjectionKey<Ref<string | undefined>> = Symbol();
 
-export const domSymbol: InjectionKey<Ref<HTMLElement>> = Symbol();
+export const domSymbol: InjectionKey<Ref<HTMLElement | undefined>> = Symbol();
 
 export const mountedSymbol: InjectionKey<Ref<boolean>> = Symbol();
 

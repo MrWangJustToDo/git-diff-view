@@ -49,7 +49,7 @@ const InternalDiffSplitExtendLine = ({
     renderExtendLine?.({
       diffFile,
       side,
-      lineNumber: currentLineNumber,
+      lineNumber: currentLineNumber ?? -1,
       data: currentExtend?.data,
       onUpdate: diffFile.notifyAll,
     });
@@ -119,8 +119,8 @@ export const DiffSplitExtendLine = ({
   const { oldLineExtend, newLineExtend } = useDiffContext(
     React.useCallback(
       (s) => ({
-        oldLineExtend: s.extendData?.oldFile?.[oldLine?.lineNumber],
-        newLineExtend: s.extendData?.newFile?.[newLine?.lineNumber],
+        oldLineExtend: s.extendData?.oldFile?.[oldLine?.lineNumber ?? -1],
+        newLineExtend: s.extendData?.newFile?.[newLine?.lineNumber ?? -1],
       }),
       [oldLine?.lineNumber, newLine?.lineNumber]
     )

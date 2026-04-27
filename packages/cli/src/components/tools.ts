@@ -30,9 +30,9 @@ export const createDiffConfigStore = <T = any>(props: DiffViewProps<T>, diffFile
 
     const setTabWidth = (_tabWidth: "small" | "medium" | "large") => (tabWidth.value = _tabWidth);
 
-    const wrapper = ref<{ current: DOMElement }>(markRaw({ current: null }));
+    const wrapper = ref<{ current: DOMElement | null }>(markRaw({ current: null }));
 
-    const setWrapper = (_wrapper?: DOMElement) => (wrapper.value = markRaw({ current: _wrapper }));
+    const setWrapper = (_wrapper?: DOMElement) => (wrapper.value = markRaw({ current: _wrapper || null }));
 
     const enableHighlight = ref(props.diffViewHighlight);
 
@@ -43,7 +43,8 @@ export const createDiffConfigStore = <T = any>(props: DiffViewProps<T>, diffFile
       newFile: { ...props.extendData?.newFile },
     });
 
-    const setExtendData = (_extendData: DiffViewProps<any>["extendData"]) => {
+    const setExtendData = (__extendData: DiffViewProps<any>["extendData"]) => {
+      const _extendData = __extendData || {};
       const existOldKeys = Object.keys(extendData.value.oldFile || {});
       const inComingOldKeys = Object.keys(_extendData.oldFile || {});
       for (const key of existOldKeys) {
@@ -52,7 +53,7 @@ export const createDiffConfigStore = <T = any>(props: DiffViewProps<T>, diffFile
         }
       }
       for (const key of inComingOldKeys) {
-        extendData.value.oldFile[key] = _extendData.oldFile[key];
+        extendData.value.oldFile[key] = _extendData.oldFile![key];
       }
       const existNewKeys = Object.keys(extendData.value.newFile || {});
       const inComingNewKeys = Object.keys(_extendData.newFile || {});
@@ -62,7 +63,7 @@ export const createDiffConfigStore = <T = any>(props: DiffViewProps<T>, diffFile
         }
       }
       for (const key of inComingNewKeys) {
-        extendData.value.newFile[key] = _extendData.newFile[key];
+        extendData.value.newFile[key] = _extendData.newFile![key];
       }
     };
 

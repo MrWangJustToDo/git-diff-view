@@ -77,7 +77,7 @@ function isInValidString(s: string) {
 function checkNewLineSymbolChange(
   addition: DiffLine,
   deletion: DiffLine
-): { addSymbol: NewLineSymbol; addString: string; delSymbol: NewLineSymbol; delString: string } {
+): { addSymbol?: NewLineSymbol; addString: string; delSymbol?: NewLineSymbol; delString: string } {
   const stringA = addition.text;
 
   const stringB = deletion.text;

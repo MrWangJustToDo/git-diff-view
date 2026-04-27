@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useDiffViewContext } from "../components/DiffViewContext";
 
 export type ObserveElement = HTMLElement & {
-  __observeCallback: Set<() => void>;
-  __observeInstance: ResizeObserver;
+  __observeCallback?: Set<() => void>;
+  __observeInstance?: ResizeObserver;
 };
 
 export const useDomWidth = ({ selector, enable }: { selector: string; enable: boolean }) => {
@@ -39,8 +39,8 @@ export const useDomWidth = ({ selector, enable }: { selector: string; enable: bo
       cb();
 
       const cleanCb = () => {
-        typedWrapper.__observeCallback.delete(cb);
-        if (typedWrapper.__observeCallback.size === 0) {
+        typedWrapper?.__observeCallback?.delete(cb);
+        if (typedWrapper?.__observeCallback?.size === 0) {
           typedWrapper.__observeInstance?.disconnect();
           typedWrapper.removeAttribute("data-observe");
           delete typedWrapper.__observeCallback;
@@ -58,7 +58,7 @@ export const useDomWidth = ({ selector, enable }: { selector: string; enable: bo
 
       typedWrapper.__observeCallback.add(cb);
 
-      const observer = new ResizeObserver(() => typedWrapper.__observeCallback.forEach((cb) => cb()));
+      const observer = new ResizeObserver(() => typedWrapper?.__observeCallback?.forEach((cb) => cb()));
 
       typedWrapper.__observeInstance = observer;
 

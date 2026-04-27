@@ -1,5 +1,4 @@
 import { Box, Text } from "ink";
-import * as React from "react";
 
 import { diffHunkContent, diffHunkContentColor, diffHunkLineNumber } from "./color";
 

@@ -14,7 +14,7 @@ export const useTextWidth = ({
 }) => {
   const isMounted = useIsMounted();
 
-  const fontSize = parseInt(font.value.fontSize);
+  const fontSize = parseInt(font?.value?.fontSize || "13");
 
   let baseSize = 6;
 

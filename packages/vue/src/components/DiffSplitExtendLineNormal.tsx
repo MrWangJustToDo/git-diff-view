@@ -29,9 +29,9 @@ export const DiffSplitExtendLine = defineComponent(
 
     const enableExpand = computed(() => props.diffFile.getExpandEnabled());
 
-    const oldLineExtend = computed(() => extendData.value?.oldFile?.[oldLine.value?.lineNumber]);
+    const oldLineExtend = computed(() => extendData?.value?.oldFile?.[oldLine.value?.lineNumber ?? -1]);
 
-    const newLineExtend = computed(() => extendData.value?.newFile?.[newLine.value.lineNumber]);
+    const newLineExtend = computed(() => extendData?.value?.newFile?.[newLine.value.lineNumber ?? -1]);
 
     const currentItem = computed(() => (props.side === SplitSide.old ? oldLine.value : newLine.value));
 
@@ -45,7 +45,7 @@ export const DiffSplitExtendLine = defineComponent(
 
     const currentIsShow = computed(() =>
       Boolean(
-        (oldLineExtend.value || newLineExtend.value) && (!currentIsHidden.value || enableExpand.value) && slots.extend
+        (oldLineExtend.value || newLineExtend.value) && (!currentIsHidden.value || enableExpand.value) && slots?.extend
       )
     );
 
@@ -88,10 +88,10 @@ export const DiffSplitExtendLine = defineComponent(
                 style={{ width: width.value + "px" }}
               >
                 {width.value > 0 &&
-                  slots.extend?.({
+                  slots?.extend?.({
                     diffFile: props.diffFile,
                     side: props.side,
-                    lineNumber: currentLineNumber.value,
+                    lineNumber: currentLineNumber.value ?? -1,
                     data: currentExtend.value.data,
                     onUpdate: props.diffFile.notifyAll,
                   })}

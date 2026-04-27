@@ -63,7 +63,7 @@ const processCharsForAnsi = (
 
 // for shiki highlighter
 export const getStyleObjectFromString = memoFunc((str: string) => {
-  const re = { light: {}, dark: {} };
+  const re: { light: Record<string, string>; dark: Record<string, string> } = { light: {}, dark: {} };
   if (!str) return re;
   str.split(";").forEach((el) => {
     const [property, value] = el.split(":");
@@ -85,8 +85,8 @@ export const getStyleFromClassName = memoFunc((className: string) => {
   const re = { light: {}, dark: {} };
   if (!className) return re;
   className.split(" ").forEach((name) => {
-    const dark = GitHubDark[name] || {};
-    const light = GitHubLight[name] || {};
+    const dark = (GitHubDark as Record<string, any>)[name] || {};
+    const light = (GitHubLight as Record<string, any>)[name] || {};
     Object.assign(re.dark, dark);
     Object.assign(re.light, light);
   });
@@ -456,7 +456,7 @@ export const DiffContent = React.memo(
 
     const isAdded = diffLine?.type === DiffLineType.Add;
     const isDelete = diffLine?.type === DiffLineType.Delete;
-    const isMaxLineLengthToIgnoreSyntax = syntaxLine?.nodeList?.length > 150;
+    const isMaxLineLengthToIgnoreSyntax = syntaxLine && syntaxLine?.nodeList?.length > 150;
 
     // Memoize background color calculation
     const bg = React.useMemo(() => {

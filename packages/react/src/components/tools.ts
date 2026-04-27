@@ -42,7 +42,8 @@ export const createDiffConfigStore = (props: DiffViewProps<any> & { isMounted: b
       newFile: { ...props.extendData?.newFile },
     });
 
-    const setExtendData = (_extendData: DiffViewProps<any>["extendData"]) => {
+    const setExtendData = (__extendData: DiffViewProps<any>["extendData"]) => {
+      const _extendData = __extendData || {};
       const existOldKeys = Object.keys(extendData.value.oldFile || {});
       const inComingOldKeys = Object.keys(_extendData.oldFile || {});
       for (const key of existOldKeys) {
@@ -51,7 +52,7 @@ export const createDiffConfigStore = (props: DiffViewProps<any> & { isMounted: b
         }
       }
       for (const key of inComingOldKeys) {
-        extendData.value.oldFile[key] = _extendData.oldFile[key];
+        extendData.value.oldFile[key] = _extendData.oldFile![key];
       }
       const existNewKeys = Object.keys(extendData.value.newFile || {});
       const inComingNewKeys = Object.keys(_extendData.newFile || {});
@@ -61,7 +62,7 @@ export const createDiffConfigStore = (props: DiffViewProps<any> & { isMounted: b
         }
       }
       for (const key of inComingNewKeys) {
-        extendData.value.newFile[key] = _extendData.newFile[key];
+        extendData.value.newFile[key] = _extendData.newFile![key];
       }
     };
 
@@ -119,9 +120,9 @@ export const createDiffConfigStore = (props: DiffViewProps<any> & { isMounted: b
 
 export const createDiffWidgetStore = (useDiffContextRef: RefObject<ReturnType<typeof createDiffConfigStore>>) => {
   return createStore(() => {
-    const widgetSide = ref<SplitSide>(undefined);
+    const widgetSide = ref<SplitSide | undefined>(undefined);
 
-    const widgetLineNumber = ref<number>(undefined);
+    const widgetLineNumber = ref<number | undefined>(undefined);
 
     const setWidget = ({ side, lineNumber }: { side?: SplitSide; lineNumber?: number }) => {
       const { renderWidgetLine } = useDiffContextRef.current?.getReadonlyState?.() || {};

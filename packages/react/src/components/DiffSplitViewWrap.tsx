@@ -2,8 +2,8 @@
 import { type DiffFile, getSplitContentLines } from "@git-diff-view/core";
 import { diffAsideWidthName, diffFontSizeName, getDiffIdFromElement, removeAllSelection } from "@git-diff-view/utils";
 import { Fragment, memo, useMemo, useRef } from "react";
-import * as React from "react";
 // SEE https://github.com/facebook/react/pull/25231
+// @ts-ignore
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
 import { SplitSide } from "..";
@@ -24,7 +24,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
 
   const ref = useRef<HTMLStyleElement>(null);
 
-  const tempRef = useRef<SplitSide>();
+  const tempRef = useRef<SplitSide>(undefined);
 
   const { fontSize, enableAddWidget, enableHighlight } = useDiffContext.useShallowStableSelector((s) => ({
     fontSize: s.fontSize,
@@ -45,7 +45,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
 
   const lines = getSplitContentLines(diffFile);
 
-  const setStyle = (side: SplitSide) => {
+  const setStyle = (side?: SplitSide) => {
     if (!ref.current) return;
     if (!side) {
       ref.current.textContent = "";
@@ -57,7 +57,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
   };
 
   const onMouseDown: MouseEventHandler<HTMLTableSectionElement> = (e) => {
-    let ele = e.target;
+    let ele: Element | null = e.target as Element;
 
     // need remove all the selection
     if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
@@ -73,11 +73,11 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
 
     while (ele && ele instanceof HTMLElement) {
       const state = ele.getAttribute("data-state");
-      const side = ele.getAttribute("data-side");
+      const side = ele.getAttribute("data-side") as unknown as SplitSide;
       if (side) {
-        if (tempRef.current !== SplitSide[side]) {
-          tempRef.current = SplitSide[side];
-          setStyle(SplitSide[side]);
+        if (tempRef.current !== (SplitSide[side] as unknown as SplitSide)) {
+          tempRef.current = SplitSide[side] as unknown as SplitSide;
+          setStyle(SplitSide[side] as unknown as SplitSide);
           removeAllSelection();
         }
       }
@@ -133,8 +133,8 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
                   index={line.index}
                   lineNumber={line.lineNumber}
                   diffFile={diffFile}
-                  enableAddWidget={enableAddWidget}
-                  enableHighlight={enableHighlight}
+                  enableAddWidget={!!enableAddWidget}
+                  enableHighlight={!!enableHighlight}
                 />
                 <DiffSplitWidgetLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
                 <DiffSplitExtendLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />

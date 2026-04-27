@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { getUnifiedContentLine } from "@git-diff-view/core";
-import * as React from "react";
 import { Fragment, memo } from "react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
 import { useTerminalSize } from "../hooks/useTerminalSize";

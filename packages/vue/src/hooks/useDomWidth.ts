@@ -6,8 +6,8 @@ import { useDom, useId, useIsMounted } from "../context";
 import type { Ref } from "vue";
 
 export type ObserveElement = HTMLElement & {
-  __observeCallback: Set<() => void>;
-  __observeInstance: ResizeObserver;
+  __observeCallback?: Set<() => void>;
+  __observeInstance?: ResizeObserver;
 };
 
 export const useDomWidth = ({ selector, enable }: { selector: Ref<string>; enable: Ref<boolean> }) => {
@@ -20,12 +20,12 @@ export const useDomWidth = ({ selector, enable }: { selector: Ref<string>; enabl
   const width = ref(0);
 
   const observeWidth = (onCancel: (cb: () => void) => void) => {
-    if (!mounted.value) return;
+    if (!mounted?.value) return;
 
     if (enable.value) {
-      const rootDocument = getElementRoot(dom.value);
+      const rootDocument = getElementRoot(dom?.value);
 
-      const container = rootDocument.querySelector(`#diff-root${id.value}`);
+      const container = rootDocument.querySelector(`#diff-root${id?.value}`);
 
       const wrapper = container?.querySelector(selector.value);
 
@@ -41,8 +41,8 @@ export const useDomWidth = ({ selector, enable }: { selector: Ref<string>; enabl
       cb();
 
       const cleanCb = () => {
-        typedWrapper.__observeCallback.delete(cb);
-        if (typedWrapper.__observeCallback.size === 0) {
+        typedWrapper?.__observeCallback?.delete(cb);
+        if (typedWrapper?.__observeCallback?.size === 0) {
           typedWrapper.__observeInstance?.disconnect();
           typedWrapper.removeAttribute("data-observe");
           delete typedWrapper.__observeCallback;
@@ -62,7 +62,7 @@ export const useDomWidth = ({ selector, enable }: { selector: Ref<string>; enabl
 
       typedWrapper.__observeCallback.add(cb);
 
-      const observer = new ResizeObserver(() => typedWrapper.__observeCallback.forEach((cb) => cb()));
+      const observer = new ResizeObserver(() => typedWrapper?.__observeCallback?.forEach((cb) => cb()));
 
       typedWrapper.__observeInstance = observer;
 

@@ -22,42 +22,42 @@ export const DiffSplitWidgetLine = defineComponent(
     const oldLineWidget = computed(
       () =>
         oldLine.value.lineNumber &&
-        widget.value.side === SplitSide.old &&
-        widget.value.lineNumber === oldLine.value.lineNumber
+        widget?.value.side === SplitSide.old &&
+        widget?.value.lineNumber === oldLine.value.lineNumber
     );
 
     const newLineWidget = computed(
       () =>
         newLine.value.lineNumber &&
-        widget.value.side === SplitSide.new &&
-        widget.value.lineNumber === newLine.value.lineNumber
+        widget?.value.side === SplitSide.new &&
+        widget?.value.lineNumber === newLine.value.lineNumber
     );
 
     const hasHidden = computed(() => oldLine.value.isHidden && newLine.value.isHidden);
 
     const currentIsShow = computed(
-      () => (!!oldLineWidget.value || !!newLineWidget.value) && !hasHidden.value && !!slots.widget
+      () => (!!oldLineWidget.value || !!newLineWidget.value) && !hasHidden.value && !!slots?.widget
     );
 
-    const onCloseWidget = () => setWidget({});
+    const onCloseWidget = () => setWidget?.({});
 
     return () => {
       if (!currentIsShow.value) return null;
 
       const oldWidgetRendered = oldLineWidget.value
-        ? slots.widget?.({
+        ? slots?.widget?.({
             diffFile: props.diffFile,
             side: SplitSide.old,
-            lineNumber: oldLine.value.lineNumber,
+            lineNumber: oldLine.value.lineNumber ?? -1,
             onClose: onCloseWidget,
           })
         : null;
 
       const newWidgetRendered = newLineWidget.value
-        ? slots.widget?.({
+        ? slots?.widget?.({
             diffFile: props.diffFile,
             side: SplitSide.new,
-            lineNumber: newLine.value.lineNumber,
+            lineNumber: newLine.value.lineNumber ?? -1,
             onClose: onCloseWidget,
           })
         : null;

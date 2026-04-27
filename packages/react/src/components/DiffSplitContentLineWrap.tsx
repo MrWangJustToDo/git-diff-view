@@ -7,7 +7,6 @@ import {
   borderColorName,
   expandLineNumberColorName,
 } from "@git-diff-view/utils";
-import * as React from "react";
 
 import { SplitSide } from "..";
 
@@ -33,13 +32,13 @@ const InternalDiffSplitLine = ({
 
   const newLine = diffFile.getSplitRightLine(index);
 
-  const oldSyntaxLine = diffFile.getOldSyntaxLine(oldLine?.lineNumber);
+  const oldSyntaxLine = diffFile.getOldSyntaxLine(oldLine?.lineNumber ?? -1);
 
-  const oldPlainLine = diffFile.getOldPlainLine(oldLine.lineNumber);
+  const oldPlainLine = diffFile.getOldPlainLine(oldLine.lineNumber ?? -1);
 
-  const newSyntaxLine = diffFile.getNewSyntaxLine(newLine?.lineNumber);
+  const newSyntaxLine = diffFile.getNewSyntaxLine(newLine?.lineNumber ?? -1);
 
-  const newPlainLine = diffFile.getNewPlainLine(newLine.lineNumber);
+  const newPlainLine = diffFile.getNewPlainLine(newLine.lineNumber ?? -1);
 
   const hasDiff = !!oldLine?.diff || !!newLine?.diff;
 
@@ -84,7 +83,7 @@ const InternalDiffSplitLine = ({
             {hasDiff && enableAddWidget && (
               <DiffSplitAddWidget
                 index={index}
-                lineNumber={oldLine.lineNumber}
+                lineNumber={oldLine.lineNumber ?? -1}
                 side={SplitSide.old}
                 diffFile={diffFile}
                 onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
@@ -104,7 +103,7 @@ const InternalDiffSplitLine = ({
             {hasDiff && enableAddWidget && (
               <DiffSplitAddWidget
                 index={index}
-                lineNumber={oldLine.lineNumber}
+                lineNumber={oldLine.lineNumber ?? -1}
                 side={SplitSide.old}
                 diffFile={diffFile}
                 onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
@@ -115,7 +114,7 @@ const InternalDiffSplitLine = ({
             <DiffContent
               enableWrap={true}
               diffFile={diffFile}
-              rawLine={oldLine.value}
+              rawLine={oldLine.value || ""}
               diffLine={oldLine.diff}
               plainLine={oldPlainLine}
               syntaxLine={oldSyntaxLine}
@@ -148,7 +147,7 @@ const InternalDiffSplitLine = ({
             {hasDiff && enableAddWidget && (
               <DiffSplitAddWidget
                 index={index}
-                lineNumber={newLine.lineNumber}
+                lineNumber={newLine.lineNumber ?? -1}
                 side={SplitSide.new}
                 diffFile={diffFile}
                 onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
@@ -168,7 +167,7 @@ const InternalDiffSplitLine = ({
             {hasDiff && enableAddWidget && (
               <DiffSplitAddWidget
                 index={index}
-                lineNumber={newLine.lineNumber}
+                lineNumber={newLine.lineNumber ?? -1}
                 side={SplitSide.new}
                 diffFile={diffFile}
                 onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}

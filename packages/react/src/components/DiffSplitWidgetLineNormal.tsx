@@ -54,7 +54,7 @@ const InternalDiffSplitWidgetLine = ({
     renderWidgetLine?.({
       diffFile,
       side,
-      lineNumber: currentLine.lineNumber,
+      lineNumber: currentLine.lineNumber ?? -1,
       onClose: () => setWidget({}),
     });
 
@@ -62,7 +62,7 @@ const InternalDiffSplitWidgetLine = ({
     selector: `div[data-line="${lineNumber}-widget-content"]`,
     wrapper: `tr[data-line="${lineNumber}-widget"]`,
     side: SplitSide[currentHasWidget ? side : otherSide],
-    enable: hasWidget && typeof renderWidgetLine === "function",
+    enable: !!hasWidget && typeof renderWidgetLine === "function",
   });
 
   const width = useDomWidth({

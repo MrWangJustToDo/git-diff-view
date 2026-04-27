@@ -23,7 +23,12 @@ export default ts.config(
 		languageOptions: {
 			globals: { ...globals.browser, ...globals.node }
 		},
-		rules: { 'no-undef': 'off' }
+		rules: {
+			'no-undef': 'off',
+			'svelte/no-at-html-tags': 'off',
+			'svelte/require-each-key': 'off',
+			'import/no-named-as-default-member': 'off'
+		}
 	},
 	{
 		files: ['**/*.svelte'],

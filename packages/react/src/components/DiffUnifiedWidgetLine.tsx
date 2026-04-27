@@ -55,10 +55,10 @@ const InternalDiffUnifiedWidgetLine = ({
         <div className="diff-line-widget-wrapper sticky left-0 z-[1]" style={{ width }}>
           {(enableWrap ? true : width > 0) &&
             oldWidget &&
-            renderWidgetLine?.({ diffFile, side: SplitSide.old, lineNumber: unifiedItem.oldLineNumber, onClose })}
+            renderWidgetLine?.({ diffFile, side: SplitSide.old, lineNumber: unifiedItem.oldLineNumber ?? -1, onClose })}
           {(enableWrap ? true : width > 0) &&
             newWidget &&
-            renderWidgetLine?.({ diffFile, side: SplitSide.new, lineNumber: unifiedItem.newLineNumber, onClose })}
+            renderWidgetLine?.({ diffFile, side: SplitSide.new, lineNumber: unifiedItem.newLineNumber ?? -1, onClose })}
         </div>
       </td>
     </tr>

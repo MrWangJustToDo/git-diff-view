@@ -129,8 +129,7 @@
 								extend = {
 									...extend,
 									[_side]: {
-										// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-										// @ts-ignore
+										// @ts-expect-error - dynamic key access
 										...extend?.[_side],
 										[lineNumber]: { data: v }
 									}
@@ -147,12 +146,7 @@
 	{/snippet}
 	{#snippet renderExtendLine({ data }: { data: string })}
 		<div class="flex border bg-slate-400 px-[10px] py-[8px]">
-			<h2 class="text-[20px]">
-				{' '}
-				{'>>'}
-				{data}
-				{' '}
-			</h2>
+			<h2 class="text-[20px]">&nbsp;&gt;&gt; {data}&nbsp;</h2>
 		</div>
 	{/snippet}
 	{#if diffFile}

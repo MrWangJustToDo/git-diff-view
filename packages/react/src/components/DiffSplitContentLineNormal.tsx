@@ -7,7 +7,6 @@ import {
   emptyBGName,
   expandLineNumberColorName,
 } from "@git-diff-view/utils";
-import * as React from "react";
 
 import { SplitSide } from "..";
 
@@ -63,9 +62,9 @@ const InternalDiffSplitLine = ({
 
   const lineNumberBG = getLineNumberBG(isAdded, isDelete, hasDiff);
 
-  const syntaxLine = getCurrentSyntaxLine(currentLine.lineNumber);
+  const syntaxLine = getCurrentSyntaxLine(currentLine.lineNumber ?? -1);
 
-  const plainLine = getCurrentPlainLine(currentLine.lineNumber);
+  const plainLine = getCurrentPlainLine(currentLine.lineNumber ?? -1);
 
   return (
     <tr
@@ -89,7 +88,7 @@ const InternalDiffSplitLine = ({
             {hasDiff && enableAddWidget && (
               <DiffSplitAddWidget
                 index={index}
-                lineNumber={currentLine.lineNumber}
+                lineNumber={currentLine.lineNumber ?? -1}
                 side={side}
                 diffFile={diffFile}
                 onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}

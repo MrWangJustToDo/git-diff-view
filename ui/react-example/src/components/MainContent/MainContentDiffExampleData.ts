@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 export const temp1 = `import { processAST, DiffHighlighter } from '@git-diff-view/core';
 import githubLight from 'shiki/themes/github-light.mjs';
 import githubDark from 'shiki/themes/github-dark.mjs';

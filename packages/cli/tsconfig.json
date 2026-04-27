@@ -2,9 +2,10 @@
   "compilerOptions": {
     "rootDir": "src",
     "target": "ESNext",
+    "types": ["node"],
     "esModuleInterop": true,
     "moduleResolution": "Bundler",
-    "jsx": "react"
+    "jsx": "react-jsx"
   },
   "include": ["./src", ".eslintrc.cjs"],
   "exclude": ["node_modules"]

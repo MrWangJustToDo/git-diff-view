@@ -1,5 +1,3 @@
-import * as React from "react";
-
 export const DiffNoNewLine = () => {
   return (
     <svg aria-label="No newline at end of file" role="img" viewBox="0 0 16 16" version="1.1" fill="currentColor">

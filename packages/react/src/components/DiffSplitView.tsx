@@ -1,5 +1,4 @@
 import { memo, useEffect, useMemo, useRef } from "react";
-import * as React from "react";
 
 import { DiffSplitViewNormal } from "./DiffSplitViewNormal";
 import { DiffSplitViewWrap } from "./DiffSplitViewWrap";

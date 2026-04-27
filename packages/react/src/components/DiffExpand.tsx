@@ -1,5 +1,3 @@
-import * as React from "react";
-
 export const ExpandDown = ({ className }: { className?: string }) => {
   return (
     <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" className={className}>

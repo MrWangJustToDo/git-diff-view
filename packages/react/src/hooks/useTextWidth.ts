@@ -11,7 +11,7 @@ export const useTextWidth = ({
   font: { fontFamily?: string; fontStyle?: string; fontSize?: string };
 }) => {
   const [width, setWidth] = useState(() => {
-    const fontSize = parseInt(font.fontSize);
+    const fontSize = parseInt(font.fontSize || "13");
     let baseSize = 6;
     baseSize += fontSize > 10 ? (fontSize - 10) * 0.6 : 0;
     return baseSize * text.length;

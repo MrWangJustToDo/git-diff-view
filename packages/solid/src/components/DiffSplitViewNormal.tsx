@@ -30,6 +30,7 @@ const DiffSplitViewTable = (props: {
 
   const [lines, setLines] = createSignal(getAllLines());
 
+  // eslint-disable-next-line solid/reactivity -- selectState is a mutable ref-like object, only .current changes
   const selectState = props.selectState;
 
   createEffect(() => {

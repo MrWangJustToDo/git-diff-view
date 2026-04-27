@@ -6,7 +6,6 @@ import {
   hunkContentColorName,
   diffAsideWidthName,
 } from "@git-diff-view/utils";
-import * as React from "react";
 
 import { useSyncHeight } from "../../hooks/useSyncHeight";
 import { ExpandUp, ExpandDown, ExpandAll } from "../DiffExpand";

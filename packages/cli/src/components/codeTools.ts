@@ -23,9 +23,9 @@ export const createCodeConfigStore = <T = any>(props: CodeViewProps<T>, fileId: 
 
     const setTabWidth = (_tabWidth: "small" | "medium" | "large") => (tabWidth.value = _tabWidth);
 
-    const wrapper = ref<{ current: DOMElement }>(markRaw({ current: null }));
+    const wrapper = ref<{ current: DOMElement | null }>(markRaw({ current: null }));
 
-    const setWrapper = (_wrapper?: DOMElement) => (wrapper.value = markRaw({ current: _wrapper }));
+    const setWrapper = (_wrapper?: DOMElement) => (wrapper.value = markRaw({ current: _wrapper || null }));
 
     const enableHighlight = ref(props.codeViewHighlight);
 
@@ -44,7 +44,7 @@ export const createCodeConfigStore = <T = any>(props: CodeViewProps<T>, fileId: 
         }
       }
       for (const key of inComingKeys) {
-        extendData.value[key] = _extendData[key];
+        extendData.value[key] = _extendData![key];
       }
     };
 

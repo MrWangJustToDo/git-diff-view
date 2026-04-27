@@ -179,3 +179,97 @@ td {
 .diff-line-widget-wrapper * {
   color: initial;
 }
+
+/* Multi-select styles for line range selection */
+.diff-multi-select-active.diff-line-new-num,
+.diff-multi-select-active.diff-line-old-num,
+.diff-multi-select-active.diff-line-num {
+  z-index: 2;
+}
+
+.diff-multi-select-active.diff-line-content,
+.diff-multi-select-active.diff-line-new-content,
+.diff-multi-select-active.diff-line-old-content {
+  position: relative;
+}
+
+.diff-multi-select-active.diff-line-new-num::after,
+.diff-multi-select-active.diff-line-old-num::after,
+.diff-multi-select-active.diff-line-num::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  opacity: 0.15;
+  background-color: var(--diff-multi-select-bg, #f0c000);
+  pointer-events: none;
+}
+
+.diff-multi-select-active.diff-line-new-num::before,
+.diff-multi-select-active.diff-line-old-num::before,
+.diff-multi-select-active.diff-line-num::before {
+  content: "";
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: -2px;
+  width: 4px;
+  background-color: var(--diff-multi-select-border, #2588fa);
+}
+
+.diff-multi-select-active.diff-line-new-content::after,
+.diff-multi-select-active.diff-line-old-content::after,
+.diff-multi-select-active.diff-line-content::after {
+  content: "";
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  opacity: 0.15;
+  background-color: var(--diff-multi-select-bg, #f0c000);
+  pointer-events: none;
+}
+
+/* Multi-select: ensure proper positioning for line number cells */
+.diff-multi-selecting .diff-line-old-num,
+.diff-multi-selecting .diff-line-new-num,
+.diff-multi-selecting .diff-line-num {
+  user-select: none;
+}
+
+.diff-multi-selecting .diff-line-old-content,
+.diff-multi-selecting .diff-line-new-content,
+.diff-multi-selecting .diff-line-content {
+  user-select: none;
+}
+
+/* Prevent text selection during multi-line selection */
+.diff-multi-selecting {
+  user-select: none;
+}
+
+.diff-multi-selecting * {
+  user-select: none;
+}
+
+/* Hide addWidget button during active dragging selection */
+.diff-multi-selecting .diff-add-widget-wrapper {
+  display: none;
+}
+
+/* Ensure addWidget button is above selection overlay */
+.diff-multiselect-wrapper .diff-add-widget-wrapper {
+  z-index: 10;
+}
+
+/* Line number span should not interfere with click events */
+.diff-line-new-num span[data-line-num],
+.diff-line-old-num span[data-line-num] {
+  pointer-events: none;
+}
+
+.diff-multiselect-wrapper .diff-line-old-num,
+.diff-multiselect-wrapper .diff-line-new-num,
+.diff-multiselect-wrapper .diff-line-num {
+  cursor: pointer;
+}

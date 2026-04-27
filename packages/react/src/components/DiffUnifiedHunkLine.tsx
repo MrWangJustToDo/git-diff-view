@@ -6,7 +6,6 @@ import {
   hunkLineNumberBGName,
   plainLineNumberColorName,
 } from "@git-diff-view/utils";
-import * as React from "react";
 
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 import { useDiffViewContext } from "./DiffViewContext";

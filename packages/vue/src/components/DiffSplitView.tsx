@@ -12,7 +12,7 @@ export const DiffSplitView = defineComponent(
     const enableWrap = useEnableWrap();
 
     return () => {
-      return enableWrap.value ? (
+      return enableWrap?.value ? (
         <DiffSplitViewWrap diffFile={props.diffFile} />
       ) : (
         <DiffSplitViewNormal diffFile={props.diffFile} />

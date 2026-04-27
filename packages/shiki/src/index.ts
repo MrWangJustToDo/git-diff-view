@@ -168,7 +168,7 @@ Object.defineProperty(instance, "getAST", {
 
     try {
       return (provider || customInternal || defaultInternal)?.codeToHast(raw, {
-        lang: lang,
+        lang: lang ?? "",
         themes: {
           dark: "github-dark",
           light: "github-light",

@@ -1,5 +1,4 @@
 import { emptyBGName } from "@git-diff-view/utils";
-import * as React from "react";
 
 import { useDomWidth } from "../../hooks/useDomWidth";
 import { useSyncHeight } from "../../hooks/useSyncHeight";
@@ -52,7 +51,7 @@ const InternalDiffSplitWidgetLine = ({
     wrapper: `div[data-state="widget"][data-line="${lineNumber}-widget"]`,
     selector: `div[data-line="${lineNumber}-widget-content"]`,
     side: SplitSide[currentHasWidget ? side : otherSide],
-    enable: hasWidget && typeof renderWidgetLine === "function",
+    enable: !!hasWidget && typeof renderWidgetLine === "function",
   });
 
   const width = useDomWidth({
@@ -81,7 +80,7 @@ const InternalDiffSplitWidgetLine = ({
               renderWidgetLine?.({
                 diffFile,
                 side,
-                lineNumber: currentLine.lineNumber,
+                lineNumber: currentLine.lineNumber ?? -1,
                 onClose: () => setWidget({}),
               })}
           </div>

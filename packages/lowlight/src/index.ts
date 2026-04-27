@@ -98,7 +98,7 @@ Object.defineProperty(instance, "getAST", {
   value: (raw: string, fileName?: string, lang?: string) => {
     let hasRegisteredLang = true;
 
-    if (!lowlight.registered(lang)) {
+    if (!lowlight.registered(lang || "")) {
       if (__DEV__) {
         console.warn(`not support current lang: ${lang} yet`);
       }
@@ -119,7 +119,7 @@ Object.defineProperty(instance, "getAST", {
       return;
     }
 
-    if (hasRegisteredLang) {
+    if (hasRegisteredLang && lang) {
       return lowlight.highlight(lang, raw);
     } else {
       return lowlight.highlightAuto(raw);

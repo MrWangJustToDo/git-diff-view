@@ -1,11 +1,14 @@
-import { File } from ".";
+import type { Cache } from "./cache";
+import type { File } from "./file";
+
+type GitDiffCache = Cache<string, File>[] | undefined;
 
 declare global {
   const __DEV__: boolean;
   const __VERSION__: string;
 
-  export interface globalThis {
-    "@git-diff-cache": Map<string, File>[];
+  interface GlobalThis {
+    "@git-diff-cache": GitDiffCache;
   }
 
   namespace NodeJS {

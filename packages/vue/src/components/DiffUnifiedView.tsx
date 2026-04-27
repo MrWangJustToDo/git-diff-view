@@ -47,7 +47,7 @@ export const DiffUnifiedView = defineComponent(
     };
 
     const onMouseDown = (e: MouseEvent) => {
-      let ele = e.target as HTMLElement;
+      let ele: Element | null = e.target as HTMLElement;
 
       if (ele && ele?.nodeName === "BUTTON") {
         removeAllSelection();
@@ -82,7 +82,7 @@ export const DiffUnifiedView = defineComponent(
       }
     };
 
-    const font = computed(() => ({ fontSize: fontSize.value + "px", fontFamily: "Menlo, Consolas, monospace" }));
+    const font = computed(() => ({ fontSize: fontSize?.value + "px", fontFamily: "Menlo, Consolas, monospace" }));
 
     const width = useTextWidth({ text: maxText, font });
 
@@ -91,7 +91,7 @@ export const DiffUnifiedView = defineComponent(
     return () => {
       return (
         <div
-          class={`unified-diff-view ${enableWrap.value ? "unified-diff-view-wrap" : "unified-diff-view-normal"} w-full`}
+          class={`unified-diff-view ${enableWrap?.value ? "unified-diff-view-wrap" : "unified-diff-view-normal"} w-full`}
         >
           <style data-select-style ref={styleRef} />
           <div
@@ -103,7 +103,7 @@ export const DiffUnifiedView = defineComponent(
             }}
           >
             <table
-              class={`unified-diff-table w-full border-collapse border-spacing-0 ${enableWrap.value ? "table-fixed" : ""}`}
+              class={`unified-diff-table w-full border-collapse border-spacing-0 ${enableWrap?.value ? "table-fixed" : ""}`}
             >
               <colgroup>
                 <col class="unified-diff-table-num-col" />

@@ -30,7 +30,7 @@ const DiffString = ({
     const isNewLineSymbolChanged = changes.newLineSymbol;
 
     if (!diffLine?.plainTemplate && typeof getPlainDiffTemplate === "function") {
-      getPlainDiffTemplate({ diffLine, rawLine, operator });
+      getPlainDiffTemplate({ diffLine: diffLine!, rawLine, operator: operator! });
     }
 
     if (diffLine?.plainTemplate) {
@@ -94,7 +94,7 @@ const DiffSyntax = ({
     const isNewLineSymbolChanged = changes.newLineSymbol;
 
     if (!diffLine?.syntaxTemplate && typeof getSyntaxDiffTemplate === "function") {
-      getSyntaxDiffTemplate({ diffFile, diffLine, syntaxLine, operator });
+      getSyntaxDiffTemplate({ diffFile, diffLine: diffLine!, syntaxLine, operator: operator! });
     }
 
     if (diffLine?.syntaxTemplate) {
@@ -168,7 +168,7 @@ export const DiffContent = ({
 
   const isDelete = diffLine?.type === DiffLineType.Delete;
 
-  const isMaxLineLengthToIgnoreSyntax = syntaxLine?.nodeList?.length > 150;
+  const isMaxLineLengthToIgnoreSyntax = syntaxLine && syntaxLine?.nodeList?.length > 150;
 
   return (
     <div

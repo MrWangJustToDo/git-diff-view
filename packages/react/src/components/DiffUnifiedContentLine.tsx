@@ -11,7 +11,6 @@ import {
   plainLineNumberColorName,
   expandLineNumberColorName,
 } from "@git-diff-view/utils";
-import * as React from "react";
 
 import { SplitSide } from "..";
 
@@ -268,7 +267,7 @@ const InternalDiffUnifiedLine = ({
             <DiffUnifiedAddWidget
               index={index}
               diffFile={diffFile}
-              lineNumber={unifiedLine.newLineNumber}
+              lineNumber={unifiedLine.newLineNumber ?? -1}
               side={SplitSide.new}
               onWidgetClick={(...props) => onAddWidgetClick.current?.(...props)}
               onOpenAddWidget={(lineNumber, side) => setWidget({ lineNumber, side })}

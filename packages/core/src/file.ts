@@ -137,7 +137,7 @@ export class File {
 
     const finalHighlighter = registerHighlighter || highlighter;
 
-    if (this.rawLength > finalHighlighter.maxLineToIgnoreSyntax) {
+    if (this.rawLength && this.rawLength > finalHighlighter.maxLineToIgnoreSyntax) {
       if (__DEV__) {
         console.warn(
           `[@git-diff-view/core] Ignoring syntax highlighting for the current file as the raw length exceeds the threshold: ${this.rawLength}`
@@ -274,7 +274,7 @@ export function getFile(
   if (map.has(otherThemeKey)) {
     const cacheFile = map.get(otherThemeKey);
     // 基于className的ast不需要重新生成
-    if (cacheFile.highlighterType === "class") {
+    if (cacheFile?.highlighterType === "class") {
       return cacheFile;
     }
   }

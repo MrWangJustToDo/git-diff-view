@@ -50,7 +50,7 @@ export const getDiffIdFromElement = (element?: HTMLElement) => {
       while (el) {
         if (el.getAttribute && el.getAttribute("data-component") === "git-diff-view") {
           const ele = el.querySelector(".diff-view-wrapper");
-          return ele.getAttribute("id");
+          return ele?.getAttribute("id");
         }
         el = el.parentElement;
       }

@@ -40,7 +40,7 @@ const DiffSplitViewTable = defineComponent(
     const selectState = props.selectState;
 
     const onMouseDown = (e: MouseEvent) => {
-      let ele = e.target as HTMLElement;
+      let ele: Element | null = e.target as HTMLElement;
 
       if (ele && ele?.nodeName === "BUTTON") {
         removeAllSelection();
@@ -171,7 +171,7 @@ export const DiffSplitViewNormal = defineComponent(
 
     const selectState = { current: undefined as SplitSide | undefined };
 
-    const font = computed(() => ({ fontSize: fontSize.value + "px", fontFamily: "Menlo, Consolas, monospace" }));
+    const font = computed(() => ({ fontSize: fontSize?.value + "px", fontFamily: "Menlo, Consolas, monospace" }));
 
     const width = useTextWidth({ text: maxText, font });
 

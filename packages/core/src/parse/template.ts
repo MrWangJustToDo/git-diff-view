@@ -124,7 +124,7 @@ export const getSyntaxDiffTemplate = ({
 }: {
   diffFile: DiffFile;
   diffLine: DiffLine;
-  syntaxLine: SyntaxLine;
+  syntaxLine: SyntaxLine | null;
   operator: "add" | "del";
 }) => {
   if (!syntaxLine) return;
@@ -198,7 +198,7 @@ export const getSyntaxDiffTemplateByFastDiff = ({
 }: {
   diffFile: DiffFile;
   diffLine: DiffLine;
-  syntaxLine: SyntaxLine;
+  syntaxLine: SyntaxLine | null;
   operator: "add" | "del";
 }) => {
   if (!syntaxLine) return;

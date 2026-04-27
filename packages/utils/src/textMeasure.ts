@@ -19,7 +19,7 @@ class TextMeasure {
   }
 
   measure(text: string, font?: { fontFamily?: string; fontStyle?: string; fontSize?: string }) {
-    const currentKey = getStableKey(font, text);
+    const currentKey = getStableKey(font || {}, text);
     if (this.#map[currentKey]) {
       return this.#map[currentKey];
     }

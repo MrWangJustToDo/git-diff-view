@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { setContext, getContext, type Snippet } from 'svelte';
 
 import type { DiffFile, SplitSide } from '@git-diff-view/core';
@@ -27,7 +26,7 @@ export function getRenderExtend() {
 			{
 				lineNumber: number;
 				side: SplitSide;
-				data: any;
+				data: unknown;
 				diffFile: DiffFile;
 				onUpdate: () => void;
 			}

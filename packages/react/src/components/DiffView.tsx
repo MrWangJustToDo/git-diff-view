@@ -3,7 +3,6 @@
 import { DiffFile, _cacheMap, SplitSide, highlighter as buildInHighlighter } from "@git-diff-view/core";
 import { diffFontSizeName, DiffModeEnum } from "@git-diff-view/utils";
 import { memo, useEffect, useMemo, forwardRef, useImperativeHandle, useRef } from "react";
-import * as React from "react";
 
 import { useIsMounted } from "../hooks/useIsMounted";
 import { useUnmount } from "../hooks/useUnmount";
@@ -16,7 +15,7 @@ import { createDiffConfigStore } from "./tools";
 
 import type { createDiffWidgetStore } from "./tools";
 import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/core";
-import type { CSSProperties, ForwardedRef, ReactNode, RefObject } from "react";
+import type { CSSProperties, ForwardedRef, JSX, ReactNode, RefObject } from "react";
 
 _cacheMap.name = "@git-diff-view/react";
 
@@ -90,7 +89,7 @@ type DiffViewProps_2<T> = Omit<DiffViewProps<T>, "data"> & {
 const InternalDiffView = <T extends unknown>(
   props: Omit<DiffViewProps<T>, "data" | "registerHighlighter"> & {
     isMounted: boolean;
-    wrapperRef?: RefObject<HTMLDivElement>;
+    wrapperRef: RefObject<HTMLDivElement | null>;
   }
 ) => {
   const {
@@ -111,7 +110,7 @@ const InternalDiffView = <T extends unknown>(
     isMounted,
   } = props;
 
-  const diffFileId = useMemo(() => diffFile.getId(), [diffFile]);
+  const diffFileId = useMemo(() => diffFile!.getId(), [diffFile]);
 
   // performance optimization
   const useDiffContext = useMemo(
@@ -160,15 +159,15 @@ const InternalDiffView = <T extends unknown>(
     }
 
     if (diffViewAddWidget !== enableAddWidget) {
-      setEnableAddWidget(diffViewAddWidget);
+      setEnableAddWidget(!!diffViewAddWidget);
     }
 
     if (diffViewHighlight !== enableHighlight) {
-      setEnableHighlight(diffViewHighlight);
+      setEnableHighlight(!!diffViewHighlight);
     }
 
     if (diffViewWrap !== enableWrap) {
-      setEnableWrap(diffViewWrap);
+      setEnableWrap(!!diffViewWrap);
     }
 
     if (extendData) {
@@ -211,7 +210,9 @@ const InternalDiffView = <T extends unknown>(
   ]);
 
   useEffect(() => {
-    useDiffContext.getReadonlyState().setDom(wrapperRef?.current);
+    if (wrapperRef?.current) {
+      useDiffContext.getReadonlyState().setDom(wrapperRef?.current);
+    }
   }, [useDiffContext, wrapperRef]);
 
   const value = useMemo(() => ({ useDiffContext }), [useDiffContext]);
@@ -221,9 +222,9 @@ const InternalDiffView = <T extends unknown>(
       <div
         className="diff-tailwindcss-wrapper"
         data-component="git-diff-view"
-        data-theme={diffFile._getTheme() || "light"}
+        data-theme={diffFile!._getTheme() || "light"}
         data-version={__VERSION__}
-        data-highlighter={diffFile._getHighlighterName()}
+        data-highlighter={diffFile!._getHighlighterName()}
         ref={wrapperRef}
       >
         <div
@@ -238,10 +239,10 @@ const InternalDiffView = <T extends unknown>(
             className={"diff-view-wrapper" + (className ? ` ${className}` : "")}
             style={style}
           >
-            {diffViewMode & DiffModeEnum.Split ? (
-              <DiffSplitView diffFile={diffFile} />
+            {diffViewMode! & DiffModeEnum.Split ? (
+              <DiffSplitView diffFile={diffFile!} />
             ) : (
-              <DiffUnifiedView diffFile={diffFile} />
+              <DiffUnifiedView diffFile={diffFile!} />
             )}
           </div>
         </div>
@@ -250,11 +251,11 @@ const InternalDiffView = <T extends unknown>(
   );
 };
 
-const MemoedInternalDiffView = memo(InternalDiffView);
+const MemoedInternalDiffView = memo(InternalDiffView) as typeof InternalDiffView;
 
 const DiffViewWithRef = <T extends unknown>(
   props: DiffViewProps<T>,
-  ref: ForwardedRef<{ getDiffFileInstance: () => DiffFile }>
+  ref: ForwardedRef<{ getDiffFileInstance: () => DiffFile | null }>
 ) => {
   const { registerHighlighter, data, diffViewTheme, diffFile: _diffFile, ...restProps } = props;
 
@@ -282,9 +283,11 @@ const DiffViewWithRef = <T extends unknown>(
 
   const diffFileRef = useRef(diffFile);
 
-  const wrapperRef = useRef<HTMLDivElement>();
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
+  // eslint-disable-next-line react-hooks/refs
   if (diffFileRef.current && diffFileRef.current !== diffFile) {
+    // eslint-disable-next-line react-hooks/refs
     diffFileRef.current.clear?.();
     diffFileRef.current = diffFile;
   }
@@ -371,14 +374,17 @@ const DiffViewWithRef = <T extends unknown>(
 };
 
 // type helper function
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function ReactDiffView<T>(
-  props: DiffViewProps_1<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
+  props: DiffViewProps_1<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile | null }> }
 ): JSX.Element;
 function ReactDiffView<T>(
-  props: DiffViewProps_2<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
+  props: DiffViewProps_2<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile | null }> }
 ): JSX.Element;
-function ReactDiffView<T>(props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }) {
-  return <DiffViewWithRef {...props} />;
+function ReactDiffView<T>(
+  _props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile | null }> }
+) {
+  return <></>;
 }
 
 const InnerDiffView = forwardRef(DiffViewWithRef);
