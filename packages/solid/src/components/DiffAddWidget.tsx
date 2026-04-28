@@ -32,7 +32,8 @@ export const DiffSplitAddWidget = (props: {
           color: `var(${addWidgetColorName})`,
           "background-color": `var(${addWidgetBGName})`,
         }}
-        onClick={() => {
+        onMouseDown={(e) => {
+          e.stopPropagation();
           props.onOpenAddWidget(props.lineNumber, props.side);
           props.onWidgetClick?.()?.current?.(props.lineNumber, props.side);
         }}
@@ -67,7 +68,8 @@ export const DiffUnifiedAddWidget = (props: {
           color: `var(${addWidgetColorName})`,
           "background-color": `var(${addWidgetBGName})`,
         }}
-        onClick={() => {
+        onMouseDown={(e) => {
+          e.stopPropagation();
           props.onOpenAddWidget(props.lineNumber, props.side);
           props.onWidgetClick?.()?.current?.(props.lineNumber, props.side);
         }}

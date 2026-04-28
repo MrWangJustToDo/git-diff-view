@@ -65,6 +65,8 @@ export class DiffMultiSelectManager {
       if (id) clearTimeout(id);
       id = setTimeout(() => this.#updateVisual(), 16);
     };
+
+    Object.defineProperty(this, "__v_skip", { value: true });
   }
 
   #bindEvents(): void {

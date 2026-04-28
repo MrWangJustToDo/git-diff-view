@@ -66,6 +66,7 @@
 			]
 		>;
 		onAddWidgetClick?: (lineNumber: number, side: SplitSide) => void;
+		onDiffFileCreated?: (diffFile: DiffFile | null) => void;
 	}
 
 	let props: Props = $props();
@@ -103,6 +104,10 @@
 	};
 
 	const diffFile = $derived.by(getInstance);
+
+	$effect(() => {
+		props.onDiffFileCreated?.(diffFile);
+	});
 
 	const getId = () => diffFile?.getId?.();
 

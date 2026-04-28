@@ -88,6 +88,7 @@ export const DiffSplitContentLine = defineComponent(
                   backgroundColor: oldLineNumberBG,
                   color: `var(${hasDiff.value ? plainLineNumberColorName : expandLineNumberColorName})`,
                 }}
+                data-side={SplitSide[SplitSide.old]}
               >
                 {hasDiff.value && enableAddWidget?.value && (
                   <DiffSplitAddWidget
@@ -150,6 +151,7 @@ export const DiffSplitContentLine = defineComponent(
                   borderLeftColor: `var(${borderColorName})`,
                   borderLeftStyle: "solid",
                 }}
+                data-side={SplitSide[SplitSide.new]}
               >
                 {hasDiff.value && enableAddWidget?.value && (
                   <DiffSplitAddWidget

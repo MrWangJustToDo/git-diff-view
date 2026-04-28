@@ -38,7 +38,8 @@ export const DiffSplitAddWidget = ({
           color: `var(${addWidgetColorName})`,
           backgroundColor: `var(${addWidgetBGName})`,
         }}
-        onClick={() => {
+        onMousedown={(e) => {
+          e.stopPropagation();
           onOpenAddWidget(lineNumber, side);
           onWidgetClick?.("onAddWidgetClick", lineNumber, side);
         }}
@@ -78,7 +79,8 @@ export const DiffUnifiedAddWidget = ({
           color: `var(${addWidgetColorName})`,
           backgroundColor: `var(${addWidgetBGName})`,
         }}
-        onClick={() => {
+        onMousedown={(e) => {
+          e.stopPropagation();
           onOpenAddWidget(lineNumber, side);
           onWidgetClick?.("onAddWidgetClick", lineNumber, side);
         }}

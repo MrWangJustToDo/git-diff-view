@@ -1060,6 +1060,102 @@ export declare const DiffView: import("vue").DefineSetupFnComponent<DiffViewProp
 	onOnAddWidgetClick?: (lineNumber: number, side: SplitSide) => any;
 }, import("vue").PublicProps>;
 export declare const version: string;
+/**
+ * Extended data item with fromLine support for multi-line comments
+ */
+export interface MultiSelectExtendDataItem<T = unknown> {
+	data: T;
+	/**
+	 * Starting line number for multi-line selection
+	 * If not provided, defaults to the key (end line number)
+	 */
+	fromLine?: number;
+}
+/**
+ * Extended data format for multi-select diff view
+ */
+export type MultiSelectExtendData<T = unknown> = {
+	oldFile?: Record<string, MultiSelectExtendDataItem<T>>;
+	newFile?: Record<string, MultiSelectExtendDataItem<T>>;
+};
+export type DiffViewWithMultiSelectProps<T> = Omit<DiffViewProps<T>, "extendData"> & {
+	/**
+	 * Enable multi-select feature
+	 * @default true
+	 */
+	enableMultiSelect?: boolean;
+	/**
+	 * Extended data with fromLine support for multi-line comments
+	 */
+	extendData?: MultiSelectExtendData<T>;
+	/**
+	 * Callback when multi-line selection is complete
+	 */
+	onMultiSelectComplete?: (result: MultiSelectResult) => void;
+	/**
+	 * Callback when selection changes (during drag)
+	 */
+	onMultiSelectChange?: (range: LineRange | null, state: MultiSelectState) => void;
+	/**
+	 * Custom function to scope selection to one hunk
+	 */
+	scopeMultiSelectToHunk?: (range: LineRange) => LineRange | null;
+};
+export type multiSelectTypeSlots = SlotsType<{
+	widget: {
+		lineNumber: number;
+		side: SplitSide;
+		diffFile: DiffFile;
+		onClose: () => void;
+	};
+	extend: {
+		lineNumber: number;
+		fromLineNumber: number;
+		side: SplitSide;
+		data: any;
+		diffFile: DiffFile;
+		onUpdate: () => void;
+	};
+}>;
+export declare const DiffViewWithMultiSelect: import("vue").DefineSetupFnComponent<DiffViewWithMultiSelectProps<any>, {
+	onAddWidgetClick: (props: {
+		lineNumber: number;
+		fromLineNumber?: number;
+		side: SplitSide;
+	}) => void;
+	onMultiSelectComplete: (result: MultiSelectResult) => void;
+	onMultiSelectChange: (range: LineRange | null, state: MultiSelectState) => void;
+}, multiSelectTypeSlots, Omit<DiffViewProps<any>, "extendData"> & {
+	/**
+	 * Enable multi-select feature
+	 * @default true
+	 */
+	enableMultiSelect?: boolean;
+	/**
+	 * Extended data with fromLine support for multi-line comments
+	 */
+	extendData?: MultiSelectExtendData<any>;
+	/**
+	 * Callback when multi-line selection is complete
+	 */
+	onMultiSelectComplete?: (result: MultiSelectResult) => void;
+	/**
+	 * Callback when selection changes (during drag)
+	 */
+	onMultiSelectChange?: (range: LineRange | null, state: MultiSelectState) => void;
+	/**
+	 * Custom function to scope selection to one hunk
+	 */
+	scopeMultiSelectToHunk?: (range: LineRange) => LineRange | null;
+} & {
+	onOnAddWidgetClick?: (props: {
+		lineNumber: number;
+		fromLineNumber?: number;
+		side: SplitSide;
+	}) => any;
+	onOnMultiSelectComplete?: (result: MultiSelectResult) => any;
+	onOnMultiSelectChange?: (range: LineRange, state: MultiSelectState) => any;
+}, import("vue").PublicProps>;
 
 export {
 	File$1 as File,

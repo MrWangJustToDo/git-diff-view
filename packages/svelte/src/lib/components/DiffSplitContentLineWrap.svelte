@@ -103,6 +103,7 @@
 					background-color: ${getLineNumberBG(false, oldLineIsDelete(), hasDiff)};
 					color: var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName})
 				`}
+				data-side={SplitSide[SplitSide.old]}
 			>
 				{#if hasDiff && enableAddWidget}
 					<DiffSplitAddWidget
@@ -166,6 +167,7 @@
 					border-left-color: var(${borderColorName});
 					border-left-style: solid
 				`}
+				data-side={SplitSide[SplitSide.new]}
 			>
 				{#if hasDiff && enableAddWidget}
 					<DiffSplitAddWidget

@@ -259,7 +259,7 @@ td {
 
 /* Ensure addWidget button is above selection overlay */
 .diff-multiselect-wrapper .diff-add-widget-wrapper {
-  z-index: 10;
+  z-index: 10 !important;
 }
 
 /* Line number span should not interfere with click events */

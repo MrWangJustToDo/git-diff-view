@@ -58,6 +58,7 @@ export type DiffViewProps<T> = {
     onUpdate: () => void;
   }) => JSXElement;
   onAddWidgetClick?: (lineNumber: number, side: SplitSide) => void;
+  onDiffFileCreated?: (diffFile: DiffFile | null) => void;
 };
 
 type DiffViewProps_1<T> = Omit<DiffViewProps<T>, "data"> & {
@@ -102,6 +103,10 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
   const [wrapperRef, setWrapRef] = createSignal<HTMLDivElement | null>(null);
 
   const diffFile = createMemo(getInstance);
+
+  createEffect(() => {
+    props.onDiffFileCreated?.(diffFile());
+  });
 
   const [isMounted, setIsMounted] = createSignal(false);
 

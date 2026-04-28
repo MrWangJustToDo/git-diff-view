@@ -89,6 +89,7 @@ export const DiffSplitContentLine = (props: { index: number; diffFile: DiffFile;
                 "background-color": getLineNumberBG(false, oldLineIsDelete(), hasDiff()),
                 color: `var(${hasDiff() ? plainLineNumberColorName : expandLineNumberColorName})`,
               }}
+              data-side={SplitSide[SplitSide.old]}
             >
               {hasDiff() && enableAddWidget() && (
                 <DiffSplitAddWidget
@@ -151,6 +152,7 @@ export const DiffSplitContentLine = (props: { index: number; diffFile: DiffFile;
                 "border-left-color": `var(${borderColorName})`,
                 "border-left-style": "solid",
               }}
+              data-side={SplitSide[SplitSide.new]}
             >
               {hasDiff() && enableAddWidget() && (
                 <DiffSplitAddWidget

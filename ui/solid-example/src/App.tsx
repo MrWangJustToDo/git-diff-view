@@ -1,4 +1,4 @@
-import { DiffFile, DiffModeEnum, DiffView, SplitSide } from "@git-diff-view/solid";
+import { DiffFile, DiffModeEnum, DiffView, DiffViewWithMultiSelect, SplitSide } from "@git-diff-view/solid";
 import { createEffect, createSignal, Show } from "solid-js";
 
 import * as data from "./data";
@@ -59,8 +59,18 @@ function App() {
 
     if (currentDiffFile) {
       setExtend({ oldFile: {}, newFile: {} });
+      setMultiSelectExtend({ oldFile: {}, newFile: {} });
     }
   });
+
+  const [showMultiSelect, setShowMultiSelect] = createSignal(false);
+  const [multiSelectExtend, setMultiSelectExtend] = createSignal<Record<string, any>>({ oldFile: {}, newFile: {} });
+  const [multiSelectV, setMultiSelectV] = createSignal("");
+  const [multiSelectWidget, setMultiSelectWidget] = createSignal<{
+    lineNumber: number;
+    fromLineNumber: number;
+    side: SplitSide;
+  } | null>(null);
 
   return (
     <>
@@ -162,6 +172,116 @@ function App() {
           />
         </Show>
       </div>
+
+      {/* MultiSelect Example */}
+      <div class="m-auto mb-[1em] w-[90%]">
+        <button
+          class="rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold leading-5 text-white hover:bg-orange-700"
+          onClick={() => setShowMultiSelect((s) => !s)}
+        >
+          {showMultiSelect() ? "Hide MultiSelect Example" : "Show MultiSelect Example"}
+        </button>
+      </div>
+      <Show when={showMultiSelect()}>
+        <div class="m-auto mb-[5em] w-[90%]">
+          <h2 class="mb-[0.5em] text-[20px]">MultiSelect: Drag on line numbers to select multiple lines</h2>
+          <div class="overflow-hidden rounded-[5px] border border-solid border-[#e1e1e1]">
+            <Show when={diffFile()}>
+              <DiffViewWithMultiSelect
+                diffFile={diffFile()}
+                diffViewWrap={wrap()}
+                diffViewMode={mode()}
+                diffViewFontSize={14}
+                diffViewHighlight={highlight()}
+                diffViewTheme={dark() ? "dark" : "light"}
+                diffViewAddWidget
+                enableMultiSelect={true}
+                extendData={multiSelectExtend()}
+                onAddWidgetClick={(props) => {
+                  setMultiSelectV("");
+                  setMultiSelectWidget({
+                    lineNumber: props.lineNumber,
+                    fromLineNumber: props.fromLineNumber ?? props.lineNumber,
+                    side: props.side,
+                  });
+                }}
+                renderWidgetLine={({ onClose }) => {
+                  const widget = multiSelectWidget();
+                  if (!widget) return null;
+                  return (
+                    <div class="flex w-full flex-col border px-[4px] py-[8px]">
+                      <p class="mb-[4px] text-sm text-gray-500">
+                        {widget.fromLineNumber === widget.lineNumber
+                          ? `Add comment on line ${widget.lineNumber}`
+                          : `Add comment on lines ${widget.fromLineNumber} - ${widget.lineNumber}`}
+                      </p>
+                      <textarea
+                        class="min-h-[80px] w-full border p-[2px]"
+                        value={multiSelectV()}
+                        onChange={(e) => setMultiSelectV(e.target.value)}
+                      />
+                      <div class="m-[5px] mt-[0.8em] text-right">
+                        <div class="inline-flex justify-end gap-x-[12px]">
+                          <button
+                            class="rounded-[4px] border px-[12px] py-[6px]"
+                            onClick={() => {
+                              setMultiSelectWidget(null);
+                              setMultiSelectV("");
+                              onClose();
+                            }}
+                          >
+                            cancel
+                          </button>
+                          <button
+                            class="rounded-[4px] border px-[12px] py-[6px]"
+                            onClick={() => {
+                              const w = multiSelectWidget();
+                              const val = multiSelectV();
+                              if (!w || !val.trim()) {
+                                setMultiSelectWidget(null);
+                                setMultiSelectV("");
+                                onClose();
+                                return;
+                              }
+                              const _side = w.side === SplitSide.old ? "oldFile" : "newFile";
+                              setMultiSelectExtend((prev) => {
+                                const sideData = { ...(prev as any)[_side] };
+                                const existing = sideData[w.lineNumber]?.data || [];
+                                sideData[w.lineNumber] = {
+                                  data: [...existing, val.trim()],
+                                  fromLine: w.fromLineNumber,
+                                };
+                                return { ...prev, [_side]: sideData };
+                              });
+                              setMultiSelectV("");
+                              setMultiSelectWidget(null);
+                              onClose();
+                            }}
+                          >
+                            submit
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                }}
+                renderExtendLine={({ data, lineNumber, fromLineNumber }) => (
+                  <div class="flex flex-col border bg-slate-100 px-[10px] py-[8px]">
+                    {fromLineNumber !== lineNumber && (
+                      <p class="mb-[4px] text-xs text-gray-500">
+                        Lines {fromLineNumber} - {lineNumber}
+                      </p>
+                    )}
+                    {(data as string[]).map((d, i) => (
+                      <div class="mb-[4px] rounded border bg-white p-[6px]">{d}</div>
+                    ))}
+                  </div>
+                )}
+              />
+            </Show>
+          </div>
+        </div>
+      </Show>
     </>
   );
 }

@@ -32,7 +32,8 @@
 			color: var(${addWidgetColorName});
 			background-color: var(${addWidgetBGName});
     `}
-		onclick={() => {
+		onmousedown={(e) => {
+			e.stopPropagation();
 			props.onOpenAddWidget(props.lineNumber, props.side);
 			props.onWidgetClick?.(props.lineNumber, props.side);
 		}}

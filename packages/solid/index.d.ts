@@ -1052,6 +1052,7 @@ export type DiffViewProps<T> = {
 		onUpdate: () => void;
 	}) => JSXElement;
 	onAddWidgetClick?: (lineNumber: number, side: SplitSide) => void;
+	onDiffFileCreated?: (diffFile: DiffFile | null) => void;
 };
 export type DiffViewProps_1<T> = Omit<DiffViewProps<T>, "data"> & {
 	data?: {
@@ -1086,6 +1087,106 @@ export type DiffViewProps_2<T> = Omit<DiffViewProps<T>, "data"> & {
 declare function SolidDiffView<T>(props: DiffViewProps_1<T>): JSXElement;
 declare function SolidDiffView<T>(props: DiffViewProps_2<T>): JSXElement;
 export declare const DiffView: typeof SolidDiffView;
+/**
+ * Extended data item with fromLine support for multi-line comments
+ */
+export interface MultiSelectExtendDataItem<T = unknown> {
+	data: T;
+	/**
+	 * Starting line number for multi-line selection
+	 * If not provided, defaults to the key (end line number)
+	 */
+	fromLine?: number;
+}
+/**
+ * Extended data format for multi-select diff view
+ */
+export type MultiSelectExtendData<T = unknown> = {
+	oldFile?: Record<string, MultiSelectExtendDataItem<T>>;
+	newFile?: Record<string, MultiSelectExtendDataItem<T>>;
+};
+export type DiffViewWithMultiSelectProps<T> = {
+	data?: {
+		oldFile?: {
+			fileName?: string | null;
+			fileLang?: DiffHighlighterLang | string | null;
+			content?: string | null;
+		};
+		newFile?: {
+			fileName?: string | null;
+			fileLang?: DiffHighlighterLang | string | null;
+			content?: string | null;
+		};
+		hunks: string[];
+	};
+	/**
+	 * Extended data with fromLine support for multi-line comments
+	 */
+	extendData?: MultiSelectExtendData<T>;
+	initialWidgetState?: {
+		side: SplitSide;
+		lineNumber: number;
+	};
+	diffFile?: DiffFile;
+	class?: string;
+	style?: JSX.CSSProperties;
+	registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
+	diffViewMode?: DiffModeEnum;
+	diffViewWrap?: boolean;
+	diffViewTheme?: "light" | "dark";
+	diffViewFontSize?: number;
+	diffViewHighlight?: boolean;
+	diffViewAddWidget?: boolean;
+	/**
+	 * Enable multi-select feature
+	 * @default true
+	 */
+	enableMultiSelect?: boolean;
+	/**
+	 * Callback when multi-line selection is complete
+	 */
+	onMultiSelectComplete?: (result: MultiSelectResult) => void;
+	/**
+	 * Callback when selection changes (during drag)
+	 */
+	onMultiSelectChange?: (range: LineRange | null, state: MultiSelectState) => void;
+	/**
+	 * Custom function to scope selection to one hunk
+	 */
+	scopeMultiSelectToHunk?: (range: LineRange) => LineRange | null;
+	onAddWidgetClick?: (props: {
+		lineNumber: number;
+		fromLineNumber?: number;
+		side: SplitSide;
+	}) => void;
+	renderWidgetLine?: ({ diffFile, side, lineNumber, onClose, }: {
+		lineNumber: number;
+		side: SplitSide;
+		diffFile: DiffFile;
+		onClose: () => void;
+	}) => JSXElement;
+	renderExtendLine?: ({ diffFile, side, data, lineNumber, fromLineNumber, onUpdate, }: {
+		lineNumber: number;
+		fromLineNumber: number;
+		side: SplitSide;
+		data: T;
+		diffFile: DiffFile;
+		onUpdate: () => void;
+	}) => JSXElement;
+	ref?: (ref: DiffViewWithMultiSelectRef) => void;
+};
+export interface DiffViewWithMultiSelectRef {
+	getDiffFileInstance: () => DiffFile | null;
+	getSelectionResult: () => MultiSelectResult | null;
+	getSelectionState: () => MultiSelectState;
+	clearSelection: () => void;
+	setPreselectedLines: (lines: {
+		old: number[];
+		new: number[];
+	}) => void;
+}
+declare function SolidDiffViewWithMultiSelect<T>(props: DiffViewWithMultiSelectProps<T>): JSXElement;
+export declare const DiffViewWithMultiSelect: typeof SolidDiffViewWithMultiSelect;
 
 export {
 	File$1 as File,
