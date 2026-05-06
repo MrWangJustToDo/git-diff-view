@@ -202,6 +202,17 @@
 		}
 	};
 
+	let isWrapModeInitial = true;
+	$effect(() => {
+		props.diffViewWrap;
+		props.diffViewMode;
+		if (isWrapModeInitial) {
+			isWrapModeInitial = false;
+			return;
+		}
+		multiResult = undefined;
+	});
+
 	$effect(initManager);
 
 	$effect(() => {
@@ -219,6 +230,8 @@
 		if (multiResult) {
 			const currentSide = SplitSide[side] as unknown as 'new' | 'old';
 			const currentMultiResult = multiResult[currentSide] as number[];
+			const otherSide = currentSide === "new" ? "old" : "new";
+			const otherMultiResult = multiResult[otherSide] as number[];
 			if (currentMultiResult?.length) {
 				const max = Math.max(...currentMultiResult);
 				if (max === lineNum) {
@@ -228,6 +241,19 @@
 						lineNumber: max,
 						fromLineNumber: Math.min(...currentMultiResult),
 						side
+					});
+					return;
+				}
+			}
+			if (isUnifiedMode && otherMultiResult?.length) {
+				const max = Math.max(...otherMultiResult);
+				if (max === lineNum) {
+					const finalResult = { [otherSide]: otherMultiResult };
+					multiResult = finalResult as typeof multiResult;
+					props.onAddWidgetClick?.({
+						lineNumber: max,
+						fromLineNumber: Math.min(...otherMultiResult),
+						side: otherSide === "old" ? SplitSide.old : SplitSide.new
 					});
 					return;
 				}

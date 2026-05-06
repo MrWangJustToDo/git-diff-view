@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useImperativeHandle, useState,
 
 import { multiSelectClassNames, createDiffMultiSelectManager } from "..";
 import { useCallbackRef } from "../hooks/useCallbackRef";
+import { useUpdateEffect } from "../hooks/useUpdateEffect";
 
 import { DiffModeEnum, DiffView, SplitSide } from "./DiffView";
 
@@ -123,6 +124,10 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(
   const [multiResult, setMultiResult] = useState<ReturnType<typeof extendDataToPreselectedLines>>();
 
   const isUnifiedMode = !(diffViewMode & DiffModeEnum.Split);
+
+  useUpdateEffect(() => {
+    setMultiResult(undefined);
+  }, [props.diffViewWrap, diffViewMode]);
 
   const getDiffFile = useCallback(() => {
     return diffViewRef.current?.getDiffFileInstance() ?? null;
@@ -289,12 +294,27 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(
           if (multiResult) {
             const currentSide = SplitSide[side] as unknown as "new" | "old";
             const currentMultiResult = multiResult[currentSide] as number[];
+            const otherSide = currentSide === "new" ? "old" : "new";
+            const otherMultiResult = multiResult[otherSide] as number[];
             if (currentMultiResult?.length) {
               const max = Math.max(...currentMultiResult);
               if (max === lineNum) {
                 const finalResult = { [currentSide]: currentMultiResult };
                 setMultiResult(finalResult as typeof multiResult);
                 onAddWidgetClick?.({ lineNumber: max, fromLineNumber: Math.min(...currentMultiResult), side });
+                return;
+              }
+            }
+            if (isUnifiedMode && otherMultiResult?.length) {
+              const max = Math.max(...otherMultiResult);
+              if (max === lineNum) {
+                const finalResult = { [otherSide]: otherMultiResult };
+                setMultiResult(finalResult as typeof multiResult);
+                onAddWidgetClick?.({
+                  lineNumber: max,
+                  fromLineNumber: Math.min(...otherMultiResult),
+                  side: otherSide === "old" ? SplitSide.old : SplitSide.new,
+                });
                 return;
               }
             }

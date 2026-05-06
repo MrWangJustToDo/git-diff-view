@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 import { SplitSide, createDiffMultiSelectManager, multiSelectClassNames } from "@git-diff-view/core";
 import { DiffModeEnum } from "@git-diff-view/utils";
-import { type JSXElement, type JSX, createSignal, createEffect, createMemo, onCleanup } from "solid-js";
+import { type JSXElement, type JSX, createSignal, createEffect, createMemo, onCleanup, on } from "solid-js";
 
 import { DiffView } from "./DiffView";
 
@@ -123,6 +123,16 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
   const enableMultiSelect = () => props.enableMultiSelect ?? true;
   const isUnifiedMode = () => !((props.diffViewMode ?? DiffModeEnum.SplitGitHub) & DiffModeEnum.Split);
 
+  createEffect(
+    on(
+      () => [props.diffViewWrap, props.diffViewMode],
+      () => {
+        setMultiResult(undefined);
+      },
+      { defer: true }
+    )
+  );
+
   createEffect(() => {
     const container = containerRef();
     const diffFile = innerDiffFile();
@@ -218,7 +228,9 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
     const currentMultiResult = multiResult();
     if (currentMultiResult) {
       const currentSide = SplitSide[side] as unknown as "new" | "old";
+      const otherSide = currentSide === "new" ? "old" : "new";
       const sideResult = currentMultiResult[currentSide] as number[];
+      const otherSideResult = currentMultiResult[otherSide] as number[];
       if (sideResult?.length) {
         const max = Math.max(...sideResult);
         if (max === lineNum) {
@@ -228,6 +240,19 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
             lineNumber: max,
             fromLineNumber: Math.min(...sideResult),
             side,
+          });
+          return;
+        }
+      }
+      if (isUnifiedMode() && otherSideResult?.length) {
+        const max = Math.max(...otherSideResult);
+        if (max === lineNum) {
+          const finalResult = { [otherSide]: otherSideResult };
+          setMultiResult(finalResult as ReturnType<typeof extendDataToPreselectedLines>);
+          props.onAddWidgetClick?.({
+            lineNumber: max,
+            fromLineNumber: Math.min(...otherSideResult),
+            side: otherSide === "old" ? SplitSide.old : SplitSide.new,
           });
           return;
         }

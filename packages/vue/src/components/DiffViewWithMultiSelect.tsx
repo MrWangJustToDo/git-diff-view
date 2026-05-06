@@ -150,6 +150,13 @@ export const DiffViewWithMultiSelect = defineComponent<
       });
     };
 
+    watch(
+      () => [props.diffViewWrap, props.diffViewMode],
+      () => {
+        multiResult.value = undefined;
+      }
+    );
+
     watchEffect((onClean) => initManager(onClean));
 
     watch(
@@ -192,6 +199,8 @@ export const DiffViewWithMultiSelect = defineComponent<
       if (multiResult.value) {
         const currentSide = SplitSide[side] as unknown as "new" | "old";
         const currentMultiResult = multiResult.value[currentSide] as number[];
+        const otherSide = currentSide === "new" ? "old" : "new";
+        const otherMultiResult = multiResult.value[otherSide] as number[];
         if (currentMultiResult?.length) {
           const max = Math.max(...currentMultiResult);
           if (max === lineNum) {
@@ -201,6 +210,19 @@ export const DiffViewWithMultiSelect = defineComponent<
               lineNumber: max,
               fromLineNumber: Math.min(...currentMultiResult),
               side,
+            });
+            return;
+          }
+        }
+        if (isUnifiedMode.value && otherMultiResult?.length) {
+          const max = Math.max(...otherMultiResult);
+          if (max === lineNum) {
+            const finalResult = { [otherSide]: otherMultiResult };
+            multiResult.value = finalResult as typeof multiResult.value;
+            options.emit("onAddWidgetClick", {
+              lineNumber: max,
+              fromLineNumber: Math.min(...otherMultiResult),
+              side: otherSide === "old" ? SplitSide.old : SplitSide.new,
             });
             return;
           }

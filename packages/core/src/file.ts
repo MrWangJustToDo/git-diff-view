@@ -107,10 +107,10 @@ export class File {
   }
 
   initId() {
-    let id = "file--" + Math.random().toString().slice(2);
+    let id = "-file--" + Math.random().toString().slice(2);
 
     while (idSet.has(id)) {
-      id = "file--" + Math.random().toString().slice(2);
+      id = "-file--" + Math.random().toString().slice(2);
     }
 
     idSet.add(id);
