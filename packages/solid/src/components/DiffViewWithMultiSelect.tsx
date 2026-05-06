@@ -102,7 +102,7 @@ export type DiffViewWithMultiSelectProps<T> = {
     diffFile: DiffFile;
     onUpdate: () => void;
   }) => JSXElement;
-  ref?: (ref: DiffViewWithMultiSelectRef) => void;
+  onInstanceCreated?: (instance: DiffViewWithMultiSelectRef) => void;
 };
 
 export interface DiffViewWithMultiSelectRef {
@@ -262,7 +262,7 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
   };
 
   createEffect(() => {
-    props.ref?.({
+    props.onInstanceCreated?.({
       getDiffFileInstance: () => innerDiffFile(),
       getSelectionResult,
       getSelectionState,

@@ -1173,7 +1173,7 @@ export type DiffViewWithMultiSelectProps<T> = {
 		diffFile: DiffFile;
 		onUpdate: () => void;
 	}) => JSXElement;
-	ref?: (ref: DiffViewWithMultiSelectRef) => void;
+	onInstanceCreated?: (instance: DiffViewWithMultiSelectRef) => void;
 };
 export interface DiffViewWithMultiSelectRef {
 	getDiffFileInstance: () => DiffFile | null;

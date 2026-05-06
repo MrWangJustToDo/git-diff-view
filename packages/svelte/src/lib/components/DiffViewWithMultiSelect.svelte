@@ -103,7 +103,7 @@
 				}
 			]
 		>;
-		ref?: (ref: DiffViewWithMultiSelectRef) => void;
+		onInstanceCreated?: (instance: DiffViewWithMultiSelectRef) => void;
 	}
 
 	interface DiffViewWithMultiSelectRef {
@@ -262,7 +262,7 @@
 	};
 
 	$effect(() => {
-		props.ref?.({
+		props.onInstanceCreated?.({
 			getDiffFileInstance: () => innerDiffFile,
 			getSelectionResult,
 			getSelectionState,
