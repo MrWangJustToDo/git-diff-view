@@ -216,7 +216,11 @@ export const DiffViewWithMultiSelect = defineComponent<
         }
         if (isUnifiedMode.value && otherMultiResult?.length) {
           const max = Math.max(...otherMultiResult);
-          if (max === lineNum) {
+          const diffFile = getDiffFile();
+          const index = diffFile?.getUnifiedLineIndexByLineNumber(lineNum, side) ?? -1;
+          const unifiedItem = diffFile?.getUnifiedLine(index);
+          const otherSideLineNum = side === SplitSide.old ? unifiedItem?.newLineNumber : unifiedItem?.oldLineNumber;
+          if (max === otherSideLineNum) {
             const finalResult = { [otherSide]: otherMultiResult };
             multiResult.value = finalResult as typeof multiResult.value;
             options.emit("onAddWidgetClick", {

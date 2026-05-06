@@ -204,7 +204,9 @@
 
 	let isWrapModeInitial = true;
 	$effect(() => {
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		props.diffViewWrap;
+		// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 		props.diffViewMode;
 		if (isWrapModeInitial) {
 			isWrapModeInitial = false;
@@ -230,7 +232,7 @@
 		if (multiResult) {
 			const currentSide = SplitSide[side] as unknown as 'new' | 'old';
 			const currentMultiResult = multiResult[currentSide] as number[];
-			const otherSide = currentSide === "new" ? "old" : "new";
+			const otherSide = currentSide === 'new' ? 'old' : 'new';
 			const otherMultiResult = multiResult[otherSide] as number[];
 			if (currentMultiResult?.length) {
 				const max = Math.max(...currentMultiResult);
@@ -247,13 +249,18 @@
 			}
 			if (isUnifiedMode && otherMultiResult?.length) {
 				const max = Math.max(...otherMultiResult);
-				if (max === lineNum) {
+				const diffFile = innerDiffFile;
+				const index = diffFile?.getUnifiedLineIndexByLineNumber(lineNum, side) ?? -1;
+				const unifiedItem = diffFile?.getUnifiedLine(index);
+				const otherSideLineNum =
+					side === SplitSide.old ? unifiedItem?.newLineNumber : unifiedItem?.oldLineNumber;
+				if (max === otherSideLineNum) {
 					const finalResult = { [otherSide]: otherMultiResult };
 					multiResult = finalResult as typeof multiResult;
 					props.onAddWidgetClick?.({
 						lineNumber: max,
 						fromLineNumber: Math.min(...otherMultiResult),
-						side: otherSide === "old" ? SplitSide.old : SplitSide.new
+						side: otherSide === 'old' ? SplitSide.old : SplitSide.new
 					});
 					return;
 				}

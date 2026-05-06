@@ -246,7 +246,11 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
       }
       if (isUnifiedMode() && otherSideResult?.length) {
         const max = Math.max(...otherSideResult);
-        if (max === lineNum) {
+        const diffFile = innerDiffFile();
+        const index = diffFile?.getUnifiedLineIndexByLineNumber(lineNum, side) ?? -1;
+        const unifiedItem = diffFile?.getUnifiedLine(index);
+        const otherSideLineNum = side === SplitSide.old ? unifiedItem?.newLineNumber : unifiedItem?.oldLineNumber;
+        if (max === otherSideLineNum) {
           const finalResult = { [otherSide]: otherSideResult };
           setMultiResult(finalResult as ReturnType<typeof extendDataToPreselectedLines>);
           props.onAddWidgetClick?.({
