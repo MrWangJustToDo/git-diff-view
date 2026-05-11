@@ -1159,8 +1159,9 @@ export type DiffViewWithMultiSelectProps<T> = {
 		fromLineNumber?: number;
 		side: SplitSide;
 	}) => void;
-	renderWidgetLine?: ({ diffFile, side, lineNumber, onClose, }: {
+	renderWidgetLine?: ({ diffFile, side, lineNumber, fromLineNumber, onClose, }: {
 		lineNumber: number;
+		fromLineNumber: number;
 		side: SplitSide;
 		diffFile: DiffFile;
 		onClose: () => void;

@@ -16,6 +16,8 @@ import type {
 } from "@git-diff-view/core";
 import type { CSSProperties, SlotsType, VNode } from "vue";
 
+type MultiResult = ReturnType<typeof extendDataToPreselectedLines>;
+
 /**
  * Extended data item with fromLine support for multi-line comments
  */
@@ -65,7 +67,7 @@ export type DiffViewWithMultiSelectProps<T> = Omit<DiffViewProps<T>, "extendData
 };
 
 type multiSelectTypeSlots = SlotsType<{
-  widget: { lineNumber: number; side: SplitSide; diffFile: DiffFile; onClose: () => void };
+  widget: { lineNumber: number; fromLineNumber: number; side: SplitSide; diffFile: DiffFile; onClose: () => void };
   extend: {
     lineNumber: number;
     fromLineNumber: number;
@@ -90,7 +92,12 @@ export const DiffViewWithMultiSelect = defineComponent<
     const containerRef = ref<HTMLDivElement>();
     const diffViewRef = ref<{ getDiffFileInstance: () => DiffFile | null }>();
     const managerRef = ref<DiffMultiSelectManager | null>(null);
-    const multiResult = ref<ReturnType<typeof extendDataToPreselectedLines>>();
+    let multiResultRef: MultiResult | undefined;
+
+    const updateMultiResult = (result?: MultiResult) => {
+      multiResultRef = result;
+      managerRef.value?.setPreselectedLines(result || { old: [], new: [] });
+    };
 
     const enableMultiSelect = computed(() => props.enableMultiSelect ?? true);
     const isUnifiedMode = computed(() => !(props.diffViewMode ?? DiffModeEnum.SplitGitHub & DiffModeEnum.Split));
@@ -127,10 +134,10 @@ export const DiffViewWithMultiSelect = defineComponent<
             options.emit("onMultiSelectComplete", result);
             const finalResult = {
               [result.range.side as "old" | "new"]: [result.range.startLineNumber, result.range.endLineNumber],
-            } as typeof multiResult.value;
-            multiResult.value = finalResult;
+            } as MultiResult;
+            updateMultiResult(finalResult);
           } else {
-            multiResult.value = undefined;
+            updateMultiResult(undefined);
           }
         },
         scopeToHunk: props.scopeMultiSelectToHunk,
@@ -153,24 +160,11 @@ export const DiffViewWithMultiSelect = defineComponent<
     watch(
       () => [props.diffViewWrap, props.diffViewMode],
       () => {
-        multiResult.value = undefined;
+        updateMultiResult(undefined);
       }
     );
 
     watchEffect((onClean) => initManager(onClean));
-
-    watch(
-      () => multiResult.value,
-      () => {
-        if (managerRef.value) {
-          if (multiResult.value) {
-            managerRef.value.setPreselectedLines(multiResult.value);
-          } else {
-            managerRef.value.setPreselectedLines({ old: [], new: [] });
-          }
-        }
-      }
-    );
 
     const convertedExtendData = computed(() => {
       if (!props.extendData) return undefined;
@@ -196,16 +190,17 @@ export const DiffViewWithMultiSelect = defineComponent<
 
     const handleAddWidgetClick = (lineNum: number, side: SplitSide) => {
       managerRef.value?.clearSelection();
-      if (multiResult.value) {
+      const multiResult = multiResultRef;
+      if (multiResult) {
         const currentSide = SplitSide[side] as unknown as "new" | "old";
-        const currentMultiResult = multiResult.value[currentSide] as number[];
+        const currentMultiResult = multiResult[currentSide] as number[];
         const otherSide = currentSide === "new" ? "old" : "new";
-        const otherMultiResult = multiResult.value[otherSide] as number[];
+        const otherMultiResult = multiResult[otherSide] as number[];
         if (currentMultiResult?.length) {
           const max = Math.max(...currentMultiResult);
           if (max === lineNum) {
             const finalResult = { [currentSide]: currentMultiResult };
-            multiResult.value = finalResult as typeof multiResult.value;
+            updateMultiResult(finalResult as MultiResult);
             options.emit("onAddWidgetClick", {
               lineNumber: max,
               fromLineNumber: Math.min(...currentMultiResult),
@@ -222,7 +217,7 @@ export const DiffViewWithMultiSelect = defineComponent<
           const otherSideLineNum = side === SplitSide.old ? unifiedItem?.newLineNumber : unifiedItem?.oldLineNumber;
           if (max === otherSideLineNum) {
             const finalResult = { [otherSide]: otherMultiResult };
-            multiResult.value = finalResult as typeof multiResult.value;
+            updateMultiResult(finalResult as MultiResult);
             options.emit("onAddWidgetClick", {
               lineNumber: max,
               fromLineNumber: Math.min(...otherMultiResult),
@@ -231,9 +226,10 @@ export const DiffViewWithMultiSelect = defineComponent<
             return;
           }
         }
-        multiResult.value = { old: [], new: [] };
+        updateMultiResult(undefined);
         options.emit("onAddWidgetClick", { lineNumber: lineNum, fromLineNumber: lineNum, side });
       } else {
+        updateMultiResult(undefined);
         options.emit("onAddWidgetClick", { lineNumber: lineNum, fromLineNumber: lineNum, side });
       }
     };
@@ -256,9 +252,7 @@ export const DiffViewWithMultiSelect = defineComponent<
       managerRef.value?.clearSelection();
     };
 
-    const setPreselectedLines = (lines: { old: number[]; new: number[] }) => {
-      multiResult.value = lines;
-    };
+    const setPreselectedLines = updateMultiResult;
 
     onUnmounted(() => {
       managerRef.value?.destroy();
@@ -305,6 +299,35 @@ export const DiffViewWithMultiSelect = defineComponent<
           }
         : undefined;
 
+      const widgetSlot = options.slots.widget;
+
+      const internalWidgetSlot = widgetSlot
+        ? ({
+            lineNumber,
+            side,
+            diffFile,
+            onClose,
+          }: {
+            lineNumber: number;
+            side: SplitSide;
+            diffFile: DiffFile;
+            onClose: () => void;
+          }): VNode[] => {
+            const sideKey = side === SplitSide.old ? "old" : "new";
+            const multiResultItem = multiResultRef?.[sideKey] as number[];
+            const fromLineNumber = multiResultItem ? Math.min(...multiResultItem) : lineNumber;
+            const toLineNumber = multiResultItem ? Math.max(...multiResultItem) : lineNumber;
+
+            return widgetSlot({
+              lineNumber: toLineNumber,
+              fromLineNumber,
+              side,
+              diffFile,
+              onClose,
+            });
+          }
+        : undefined;
+
       return (
         <div ref={containerRef} class="diff-multiselect-wrapper">
           <DiffView
@@ -324,7 +347,7 @@ export const DiffViewWithMultiSelect = defineComponent<
             extendData={convertedExtendData.value}
             onOnAddWidgetClick={handleAddWidgetClick}
             v-slots={{
-              widget: options.slots.widget,
+              widget: internalWidgetSlot,
               extend: internalExtendSlot,
             }}
           />

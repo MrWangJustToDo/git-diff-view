@@ -89,16 +89,26 @@ export const DiffViewWithMultiSelect = memo(
     }, []);
 
     const renderWidgetLine = useCallback(
-      ({ onClose }: { lineNumber: number; side: SplitSide; diffFile: DiffFile; onClose: () => void }) => {
+      ({
+        lineNumber,
+        fromLineNumber,
+        onClose,
+      }: {
+        lineNumber: number;
+        fromLineNumber: number;
+        side: SplitSide;
+        diffFile: DiffFile;
+        onClose: () => void;
+      }) => {
         if (!widgetState) return null;
 
         return (
           <Box className="border-color border-b border-t border-solid" p="sm">
             <Stack>
               <Text size="sm" fw={500}>
-                {widgetState.fromLineNumber === widgetState.lineNumber
-                  ? `Add comment on line ${widgetState.lineNumber}`
-                  : `Add comment on lines ${widgetState.fromLineNumber} - ${widgetState.lineNumber}`}
+                {fromLineNumber === lineNumber
+                  ? `Add comment on line ${lineNumber}`
+                  : `Add comment on lines ${fromLineNumber} - ${lineNumber}`}
               </Text>
 
               <Textarea onChange={setCommentText} />

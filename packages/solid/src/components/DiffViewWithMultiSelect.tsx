@@ -17,6 +17,8 @@ import type {
   extendDataToPreselectedLines,
 } from "@git-diff-view/core";
 
+type MultiResult = ReturnType<typeof extendDataToPreselectedLines>;
+
 /**
  * Extended data item with fromLine support for multi-line comments
  */
@@ -80,9 +82,11 @@ export type DiffViewWithMultiSelectProps<T> = {
     diffFile,
     side,
     lineNumber,
+    fromLineNumber,
     onClose,
   }: {
     lineNumber: number;
+    fromLineNumber: number;
     side: SplitSide;
     diffFile: DiffFile;
     onClose: () => void;
@@ -117,8 +121,12 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
   const [containerRef, setContainerRef] = createSignal<HTMLDivElement | null>(null);
   const [innerDiffFile, setInnerDiffFile] = createSignal<DiffFile | null>(null);
   let managerRef: DiffMultiSelectManager | null = null;
+  let multiResultRef: MultiResult | undefined;
 
-  const [multiResult, setMultiResult] = createSignal<ReturnType<typeof extendDataToPreselectedLines>>();
+  const updateMultiResult = (result?: MultiResult) => {
+    multiResultRef = result;
+    managerRef?.setPreselectedLines(result || { old: [], new: [] });
+  };
 
   const enableMultiSelect = () => props.enableMultiSelect ?? true;
   const isUnifiedMode = () => !((props.diffViewMode ?? DiffModeEnum.SplitGitHub) & DiffModeEnum.Split);
@@ -127,7 +135,7 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
     on(
       () => [props.diffViewWrap, props.diffViewMode],
       () => {
-        setMultiResult(undefined);
+        updateMultiResult(undefined);
       },
       { defer: true }
     )
@@ -163,10 +171,10 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
           props.onMultiSelectComplete?.(result);
           const finalResult = {
             [result.range.side as "old" | "new"]: [result.range.startLineNumber, result.range.endLineNumber],
-          } as ReturnType<typeof extendDataToPreselectedLines>;
-          setMultiResult(finalResult);
+          } as MultiResult;
+          updateMultiResult(finalResult);
         } else {
-          setMultiResult(undefined);
+          updateMultiResult(undefined);
         }
       },
       scopeToHunk: props.scopeMultiSelectToHunk,
@@ -184,17 +192,6 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
       managerRef?.destroy();
       managerRef = null;
     });
-  });
-
-  createEffect(() => {
-    const result = multiResult();
-    if (managerRef) {
-      if (result) {
-        managerRef.setPreselectedLines(result);
-      } else {
-        managerRef.setPreselectedLines({ old: [], new: [] });
-      }
-    }
   });
 
   const convertedExtendData = createMemo(() => {
@@ -225,17 +222,17 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
 
   const handleAddWidgetClick = (lineNum: number, side: SplitSide) => {
     managerRef?.clearSelection();
-    const currentMultiResult = multiResult();
-    if (currentMultiResult) {
+    const multiResult = multiResultRef;
+    if (multiResult) {
       const currentSide = SplitSide[side] as unknown as "new" | "old";
       const otherSide = currentSide === "new" ? "old" : "new";
-      const sideResult = currentMultiResult[currentSide] as number[];
-      const otherSideResult = currentMultiResult[otherSide] as number[];
+      const sideResult = multiResult[currentSide] as number[];
+      const otherSideResult = multiResult[otherSide] as number[];
       if (sideResult?.length) {
         const max = Math.max(...sideResult);
         if (max === lineNum) {
           const finalResult = { [currentSide]: sideResult };
-          setMultiResult(finalResult as ReturnType<typeof extendDataToPreselectedLines>);
+          updateMultiResult(finalResult as MultiResult);
           props.onAddWidgetClick?.({
             lineNumber: max,
             fromLineNumber: Math.min(...sideResult),
@@ -252,7 +249,7 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
         const otherSideLineNum = side === SplitSide.old ? unifiedItem?.newLineNumber : unifiedItem?.oldLineNumber;
         if (max === otherSideLineNum) {
           const finalResult = { [otherSide]: otherSideResult };
-          setMultiResult(finalResult as ReturnType<typeof extendDataToPreselectedLines>);
+          updateMultiResult(finalResult as MultiResult);
           props.onAddWidgetClick?.({
             lineNumber: max,
             fromLineNumber: Math.min(...otherSideResult),
@@ -261,9 +258,10 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
           return;
         }
       }
-      setMultiResult({ old: [], new: [] });
+      updateMultiResult(undefined);
       props.onAddWidgetClick?.({ lineNumber: lineNum, fromLineNumber: lineNum, side });
     } else {
+      updateMultiResult(undefined);
       props.onAddWidgetClick?.({ lineNumber: lineNum, fromLineNumber: lineNum, side });
     }
   };
@@ -286,9 +284,7 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
     managerRef?.clearSelection();
   };
 
-  const setPreselectedLines = (lines: { old: number[]; new: number[] }) => {
-    setMultiResult(lines);
-  };
+  const setPreselectedLines = updateMultiResult;
 
   createEffect(() => {
     props.onInstanceCreated?.({
@@ -299,6 +295,36 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
       setPreselectedLines,
     });
   });
+
+  const getInternalRenderWidgetLine = () => {
+    const renderWidgetLine = props.renderWidgetLine;
+    if (!renderWidgetLine) return undefined;
+
+    return ({
+      lineNumber,
+      side,
+      diffFile,
+      onClose,
+    }: {
+      lineNumber: number;
+      side: SplitSide;
+      diffFile: DiffFile;
+      onClose: () => void;
+    }) => {
+      const sideKey = side === SplitSide.old ? "old" : "new";
+      const multiResultItem = multiResultRef?.[sideKey] as number[];
+      const fromLineNumber = multiResultItem ? Math.min(...multiResultItem) : lineNumber;
+      const toLineNumber = multiResultItem ? Math.max(...multiResultItem) : lineNumber;
+
+      return renderWidgetLine({
+        lineNumber: toLineNumber,
+        fromLineNumber,
+        side,
+        diffFile,
+        onClose,
+      });
+    };
+  };
 
   const getInternalRenderExtendLine = () => {
     const renderExtendLine = props.renderExtendLine;
@@ -350,7 +376,7 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
         extendData={convertedExtendData()}
         onAddWidgetClick={handleAddWidgetClick}
         onDiffFileCreated={setInnerDiffFile}
-        renderWidgetLine={props.renderWidgetLine}
+        renderWidgetLine={getInternalRenderWidgetLine()}
         renderExtendLine={getInternalRenderExtendLine()}
       />
     </div>

@@ -85,6 +85,7 @@
 			[
 				{
 					lineNumber: number;
+					fromLineNumber: number;
 					side: SplitSide;
 					diffFile: DiffFile;
 					onClose: () => void;
@@ -118,8 +119,15 @@
 
 	let containerRef = $state<HTMLDivElement | null>(null);
 	let innerDiffFile = $state<DiffFile | null>(null);
+	type MultiResult = ReturnType<typeof extendDataToPreselectedLines>;
+
 	let managerRef: DiffMultiSelectManager | null = null;
-	let multiResult = $state<ReturnType<typeof extendDataToPreselectedLines>>();
+	let multiResultRef: MultiResult | undefined;
+
+	const updateMultiResult = (result?: MultiResult) => {
+		multiResultRef = result;
+		managerRef?.setPreselectedLines(result || { old: [], new: [] });
+	};
 
 	const enableMultiSelect = $derived(props.enableMultiSelect ?? true);
 	const isUnifiedMode = $derived(
@@ -175,21 +183,21 @@
 				}
 				props.onMultiSelectChange?.(range, state);
 			},
-			onSelectionComplete: (result) => {
-				containerRef?.classList.remove(multiSelectClassNames.selecting);
-				if (result && result.lines.length > 0) {
-					props.onMultiSelectComplete?.(result);
-					const finalResult = {
-						[result.range.side as 'old' | 'new']: [
-							result.range.startLineNumber,
-							result.range.endLineNumber
-						]
-					} as typeof multiResult;
-					multiResult = finalResult;
-				} else {
-					multiResult = undefined;
-				}
-			},
+		onSelectionComplete: (result) => {
+			containerRef?.classList.remove(multiSelectClassNames.selecting);
+			if (result && result.lines.length > 0) {
+				props.onMultiSelectComplete?.(result);
+				const finalResult = {
+					[result.range.side as 'old' | 'new']: [
+						result.range.startLineNumber,
+						result.range.endLineNumber
+					]
+				} as MultiResult;
+				updateMultiResult(finalResult);
+			} else {
+				updateMultiResult(undefined);
+			}
+		},
 			scopeToHunk: props.scopeMultiSelectToHunk
 		};
 
@@ -212,23 +220,14 @@
 			isWrapModeInitial = false;
 			return;
 		}
-		multiResult = undefined;
+		updateMultiResult(undefined);
 	});
 
 	$effect(initManager);
 
-	$effect(() => {
-		if (managerRef) {
-			if (multiResult) {
-				managerRef.setPreselectedLines(multiResult);
-			} else {
-				managerRef.setPreselectedLines({ old: [], new: [] });
-			}
-		}
-	});
-
 	const handleAddWidgetClick = (lineNum: number, side: SplitSide) => {
 		managerRef?.clearSelection();
+		const multiResult = multiResultRef;
 		if (multiResult) {
 			const currentSide = SplitSide[side] as unknown as 'new' | 'old';
 			const currentMultiResult = multiResult[currentSide] as number[];
@@ -238,7 +237,7 @@
 				const max = Math.max(...currentMultiResult);
 				if (max === lineNum) {
 					const finalResult = { [currentSide]: currentMultiResult };
-					multiResult = finalResult as typeof multiResult;
+					updateMultiResult(finalResult as MultiResult);
 					props.onAddWidgetClick?.({
 						lineNumber: max,
 						fromLineNumber: Math.min(...currentMultiResult),
@@ -256,7 +255,7 @@
 					side === SplitSide.old ? unifiedItem?.newLineNumber : unifiedItem?.oldLineNumber;
 				if (max === otherSideLineNum) {
 					const finalResult = { [otherSide]: otherMultiResult };
-					multiResult = finalResult as typeof multiResult;
+					updateMultiResult(finalResult as MultiResult);
 					props.onAddWidgetClick?.({
 						lineNumber: max,
 						fromLineNumber: Math.min(...otherMultiResult),
@@ -265,9 +264,10 @@
 					return;
 				}
 			}
-			multiResult = { old: [], new: [] };
+			updateMultiResult(undefined);
 			props.onAddWidgetClick?.({ lineNumber: lineNum, fromLineNumber: lineNum, side });
 		} else {
+			updateMultiResult(undefined);
 			props.onAddWidgetClick?.({ lineNumber: lineNum, fromLineNumber: lineNum, side });
 		}
 	};
@@ -290,9 +290,7 @@
 		managerRef?.clearSelection();
 	};
 
-	const setPreselectedLines = (lines: { old: number[]; new: number[] }) => {
-		multiResult = lines;
-	};
+	const setPreselectedLines = updateMultiResult;
 
 	$effect(() => {
 		props.onInstanceCreated?.({
@@ -309,6 +307,32 @@
 		managerRef = null;
 	});
 </script>
+
+{#snippet internalRenderWidgetLine({
+	lineNumber,
+	side,
+	diffFile,
+	onClose
+}: {
+	lineNumber: number;
+	side: SplitSide;
+	diffFile: DiffFile;
+	onClose: () => void;
+})}
+	{#if props.renderWidgetLine}
+		{@const sideKey = side === SplitSide.old ? 'old' : 'new'}
+		{@const multiResultItem = multiResultRef?.[sideKey] as number[]}
+		{@const fromLineNumber = multiResultItem ? Math.min(...multiResultItem) : lineNumber}
+		{@const toLineNumber = multiResultItem ? Math.max(...multiResultItem) : lineNumber}
+		{@render props.renderWidgetLine({
+			lineNumber: toLineNumber,
+			fromLineNumber,
+			side,
+			diffFile,
+			onClose
+		})}
+	{/if}
+{/snippet}
 
 {#snippet internalRenderExtendLine({
 	lineNumber,
@@ -355,7 +379,7 @@
 		extendData={convertedExtendData}
 		onAddWidgetClick={handleAddWidgetClick}
 		onDiffFileCreated={handleDiffFileCreated}
-		renderWidgetLine={props.renderWidgetLine}
+		renderWidgetLine={props.renderWidgetLine ? internalRenderWidgetLine : undefined}
 		renderExtendLine={props.renderExtendLine ? internalRenderExtendLine : undefined}
 	/>
 </div>

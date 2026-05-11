@@ -35,10 +35,12 @@ function MyDiffView({ diffFile }) {
     // Open your comment input widget here
   }, []);
 
-  const renderWidgetLine = useCallback(({ lineNumber, side, onClose }) => {
+  const renderWidgetLine = useCallback(({ lineNumber, fromLineNumber, side, onClose }) => {
     // Render inline comment input form
+    // fromLineNumber: start of multi-line selection, lineNumber: end of selection
     return (
       <div>
+        {fromLineNumber !== lineNumber && <span>Lines {fromLineNumber}-{lineNumber}</span>}
         <textarea placeholder="Add a comment..." />
         <button onClick={onClose}>Cancel</button>
         <button>Submit</button>

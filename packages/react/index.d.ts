@@ -1233,7 +1233,7 @@ export type MultiSelectExtendData<T = unknown> = {
 	oldFile?: Record<string, MultiSelectExtendDataItem<T>>;
 	newFile?: Record<string, MultiSelectExtendDataItem<T>>;
 };
-export interface DiffViewWithMultiSelectProps<T = unknown> extends Omit<DiffViewProps<T>, "extendData" | "renderExtendLine" | "onAddWidgetClick"> {
+export interface DiffViewWithMultiSelectProps<T = unknown> extends Omit<DiffViewProps<T>, "extendData" | "renderExtendLine" | "renderWidgetLine" | "onAddWidgetClick"> {
 	/**
 	 * Enable multi-select feature
 	 * @default true
@@ -1262,10 +1262,13 @@ export interface DiffViewWithMultiSelectProps<T = unknown> extends Omit<DiffView
 		fromLineNumber?: number;
 		side: SplitSide;
 	}) => void;
-	/**
-	 * Render function for extended lines (comments)
-	 * Similar to DiffView's renderExtendLine but with fromLine info
-	 */
+	renderWidgetLine?: (props: {
+		lineNumber: number;
+		fromLineNumber: number;
+		side: SplitSide;
+		diffFile: DiffFile;
+		onClose: () => void;
+	}) => ReactNode;
 	renderExtendLine?: (props: {
 		lineNumber: number;
 		fromLineNumber: number;

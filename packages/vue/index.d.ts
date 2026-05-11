@@ -1104,6 +1104,7 @@ export type DiffViewWithMultiSelectProps<T> = Omit<DiffViewProps<T>, "extendData
 export type multiSelectTypeSlots = SlotsType<{
 	widget: {
 		lineNumber: number;
+		fromLineNumber: number;
 		side: SplitSide;
 		diffFile: DiffFile;
 		onClose: () => void;

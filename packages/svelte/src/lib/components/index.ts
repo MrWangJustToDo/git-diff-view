@@ -124,6 +124,7 @@ export interface DiffViewWithMultiSelectProps<T> {
 		[
 			{
 				lineNumber: number;
+				fromLineNumber: number;
 				side: SplitSide;
 				diffFile: DiffFile;
 				onClose: () => void;
