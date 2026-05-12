@@ -18,37 +18,12 @@ import type { CSSProperties, SlotsType, VNode } from "vue";
 
 type MultiResult = ReturnType<typeof extendDataToPreselectedLines>;
 
-/**
- * Extended data item with fromLine support for multi-line comments
- */
-export interface MultiSelectExtendDataItem<T = unknown> {
-  data: T;
-  /**
-   * Starting line number for multi-line selection
-   * If not provided, defaults to the key (end line number)
-   */
-  fromLine?: number;
-}
-
-/**
- * Extended data format for multi-select diff view
- */
-export type MultiSelectExtendData<T = unknown> = {
-  oldFile?: Record<string, MultiSelectExtendDataItem<T>>;
-  newFile?: Record<string, MultiSelectExtendDataItem<T>>;
-};
-
-export type DiffViewWithMultiSelectProps<T> = Omit<DiffViewProps<T>, "extendData"> & {
+export type DiffViewWithMultiSelectProps<T> = Omit<DiffViewProps<T>, "onAddWidgetClick"> & {
   /**
    * Enable multi-select feature
    * @default true
    */
   enableMultiSelect?: boolean;
-
-  /**
-   * Extended data with fromLine support for multi-line comments
-   */
-  extendData?: MultiSelectExtendData<T>;
 
   /**
    * Callback when multi-line selection is complete
@@ -68,14 +43,7 @@ export type DiffViewWithMultiSelectProps<T> = Omit<DiffViewProps<T>, "extendData
 
 type multiSelectTypeSlots = SlotsType<{
   widget: { lineNumber: number; fromLineNumber: number; side: SplitSide; diffFile: DiffFile; onClose: () => void };
-  extend: {
-    lineNumber: number;
-    fromLineNumber: number;
-    side: SplitSide;
-    data: any;
-    diffFile: DiffFile;
-    onUpdate: () => void;
-  };
+  extend: { lineNumber: number; side: SplitSide; data: any; diffFile: DiffFile; onUpdate: () => void };
 }>;
 
 export const DiffViewWithMultiSelect = defineComponent<
@@ -166,28 +134,6 @@ export const DiffViewWithMultiSelect = defineComponent<
 
     watchEffect((onClean) => initManager(onClean));
 
-    const convertedExtendData = computed(() => {
-      if (!props.extendData) return undefined;
-
-      const result: { oldFile?: Record<string, { data: any }>; newFile?: Record<string, { data: any }> } = {};
-
-      if (props.extendData.oldFile) {
-        result.oldFile = {};
-        for (const [key, value] of Object.entries(props.extendData.oldFile)) {
-          result.oldFile[key] = { data: value.data };
-        }
-      }
-
-      if (props.extendData.newFile) {
-        result.newFile = {};
-        for (const [key, value] of Object.entries(props.extendData.newFile)) {
-          result.newFile[key] = { data: value.data };
-        }
-      }
-
-      return result;
-    });
-
     const handleAddWidgetClick = (lineNum: number, side: SplitSide) => {
       managerRef.value?.clearSelection();
       const multiResult = multiResultRef;
@@ -268,37 +214,6 @@ export const DiffViewWithMultiSelect = defineComponent<
     });
 
     return () => {
-      const extendSlot = options.slots.extend;
-
-      const internalExtendSlot = extendSlot
-        ? ({
-            lineNumber,
-            side,
-            data,
-            diffFile,
-            onUpdate,
-          }: {
-            lineNumber: number;
-            side: SplitSide;
-            data: any;
-            diffFile: DiffFile;
-            onUpdate: () => void;
-          }): VNode[] => {
-            const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
-            const extendItem = props.extendData?.[sideKey]?.[lineNumber];
-            const fromLineNumber = extendItem?.fromLine ?? lineNumber;
-
-            return extendSlot({
-              lineNumber,
-              fromLineNumber,
-              side,
-              data,
-              diffFile,
-              onUpdate,
-            });
-          }
-        : undefined;
-
       const widgetSlot = options.slots.widget;
 
       const internalWidgetSlot = widgetSlot
@@ -344,11 +259,11 @@ export const DiffViewWithMultiSelect = defineComponent<
             diffViewHighlight={props.diffViewHighlight}
             diffViewAddWidget={props.diffViewAddWidget}
             initialWidgetState={props.initialWidgetState}
-            extendData={convertedExtendData.value}
+            extendData={props.extendData}
             onOnAddWidgetClick={handleAddWidgetClick}
             v-slots={{
               widget: internalWidgetSlot,
-              extend: internalExtendSlot,
+              extend: options.slots.extend,
             }}
           />
         </div>

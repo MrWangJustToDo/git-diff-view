@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 import { SplitSide, createDiffMultiSelectManager, multiSelectClassNames } from "@git-diff-view/core";
 import { DiffModeEnum } from "@git-diff-view/utils";
-import { type JSXElement, type JSX, createSignal, createEffect, createMemo, onCleanup, on } from "solid-js";
+import { type JSXElement, type JSX, createSignal, createEffect, onCleanup, on } from "solid-js";
 
 import { DiffView } from "./DiffView";
 
@@ -19,36 +19,13 @@ import type {
 
 type MultiResult = ReturnType<typeof extendDataToPreselectedLines>;
 
-/**
- * Extended data item with fromLine support for multi-line comments
- */
-export interface MultiSelectExtendDataItem<T = unknown> {
-  data: T;
-  /**
-   * Starting line number for multi-line selection
-   * If not provided, defaults to the key (end line number)
-   */
-  fromLine?: number;
-}
-
-/**
- * Extended data format for multi-select diff view
- */
-export type MultiSelectExtendData<T = unknown> = {
-  oldFile?: Record<string, MultiSelectExtendDataItem<T>>;
-  newFile?: Record<string, MultiSelectExtendDataItem<T>>;
-};
-
 export type DiffViewWithMultiSelectProps<T> = {
   data?: {
     oldFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
     newFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
     hunks: string[];
   };
-  /**
-   * Extended data with fromLine support for multi-line comments
-   */
-  extendData?: MultiSelectExtendData<T>;
+  extendData?: { oldFile?: Record<string, { data: T }>; newFile?: Record<string, { data: T }> };
   initialWidgetState?: { side: SplitSide; lineNumber: number };
   diffFile?: DiffFile;
   class?: string;
@@ -96,11 +73,9 @@ export type DiffViewWithMultiSelectProps<T> = {
     side,
     data,
     lineNumber,
-    fromLineNumber,
     onUpdate,
   }: {
     lineNumber: number;
-    fromLineNumber: number;
     side: SplitSide;
     data: T;
     diffFile: DiffFile;
@@ -192,32 +167,6 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
       managerRef?.destroy();
       managerRef = null;
     });
-  });
-
-  const convertedExtendData = createMemo(() => {
-    const extendData = props.extendData;
-    if (!extendData) return undefined;
-
-    const result: {
-      oldFile?: Record<string, { data: T } | undefined>;
-      newFile?: Record<string, { data: T } | undefined>;
-    } = {};
-
-    if (extendData.oldFile) {
-      result.oldFile = {};
-      for (const [key, value] of Object.entries(extendData.oldFile)) {
-        result.oldFile[key] = { data: value.data };
-      }
-    }
-
-    if (extendData.newFile) {
-      result.newFile = {};
-      for (const [key, value] of Object.entries(extendData.newFile)) {
-        result.newFile[key] = { data: value.data };
-      }
-    }
-
-    return result;
   });
 
   const handleAddWidgetClick = (lineNum: number, side: SplitSide) => {
@@ -326,38 +275,6 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
     };
   };
 
-  const getInternalRenderExtendLine = () => {
-    const renderExtendLine = props.renderExtendLine;
-    if (!renderExtendLine) return undefined;
-
-    return ({
-      lineNumber,
-      side,
-      data,
-      diffFile,
-      onUpdate,
-    }: {
-      lineNumber: number;
-      side: SplitSide;
-      data: T;
-      diffFile: DiffFile;
-      onUpdate: () => void;
-    }) => {
-      const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
-      const extendItem = props.extendData?.[sideKey]?.[lineNumber];
-      const fromLineNumber = extendItem?.fromLine ?? lineNumber;
-
-      return renderExtendLine({
-        lineNumber,
-        fromLineNumber,
-        side,
-        data,
-        diffFile,
-        onUpdate,
-      });
-    };
-  };
-
   return (
     <div ref={setContainerRef} class="diff-multiselect-wrapper">
       <DiffView
@@ -373,11 +290,11 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(props: DiffViewWithM
         diffViewHighlight={props.diffViewHighlight}
         diffViewAddWidget={props.diffViewAddWidget}
         initialWidgetState={props.initialWidgetState}
-        extendData={convertedExtendData()}
+        extendData={props.extendData}
         onAddWidgetClick={handleAddWidgetClick}
         onDiffFileCreated={setInnerDiffFile}
         renderWidgetLine={getInternalRenderWidgetLine()}
-        renderExtendLine={getInternalRenderExtendLine()}
+        renderExtendLine={props.renderExtendLine}
       />
     </div>
   );

@@ -248,8 +248,10 @@ function App() {
                                 const sideData = { ...(prev as any)[_side] };
                                 const existing = sideData[w.lineNumber]?.data || [];
                                 sideData[w.lineNumber] = {
-                                  data: [...existing, val.trim()],
-                                  fromLine: w.fromLineNumber,
+                                  data: [
+                                    ...existing,
+                                    { text: val.trim(), fromLine: w.fromLineNumber, toLine: w.lineNumber },
+                                  ],
                                 };
                                 return { ...prev, [_side]: sideData };
                               });
@@ -265,15 +267,15 @@ function App() {
                     </div>
                   );
                 }}
-                renderExtendLine={({ data, lineNumber, fromLineNumber }) => (
+                renderExtendLine={({ data }) => (
                   <div class="flex flex-col border bg-slate-100 px-[10px] py-[8px]">
-                    {fromLineNumber !== lineNumber && (
-                      <p class="mb-[4px] text-xs text-gray-500">
-                        Lines {fromLineNumber} - {lineNumber}
-                      </p>
-                    )}
-                    {(data as string[]).map((d, i) => (
-                      <div class="mb-[4px] rounded border bg-white p-[6px]">{d}</div>
+                    {(data as Array<{ text: string; fromLine?: number; toLine?: number }>).map((d) => (
+                      <div class="mb-[4px]">
+                        <p class="text-xs text-gray-500">
+                          Lines {d.fromLine} - {d.toLine}
+                        </p>
+                        <div class="rounded border bg-white p-[6px]">{d.text}</div>
+                      </div>
                     ))}
                   </div>
                 )}

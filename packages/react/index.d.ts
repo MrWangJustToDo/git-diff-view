@@ -1215,34 +1215,12 @@ declare function ReactDiffView<T>(props: DiffViewProps_2<T> & {
 }): JSX.Element;
 export declare const DiffView: typeof ReactDiffView;
 export declare const version: string;
-/**
- * Extended data item with fromLine support for multi-line comments
- */
-export interface MultiSelectExtendDataItem<T = unknown> {
-	data: T;
-	/**
-	 * Starting line number for multi-line selection
-	 * If not provided, defaults to the key (end line number)
-	 */
-	fromLine?: number;
-}
-/**
- * Extended data format for multi-select diff view
- */
-export type MultiSelectExtendData<T = unknown> = {
-	oldFile?: Record<string, MultiSelectExtendDataItem<T>>;
-	newFile?: Record<string, MultiSelectExtendDataItem<T>>;
-};
-export interface DiffViewWithMultiSelectProps<T = unknown> extends Omit<DiffViewProps<T>, "extendData" | "renderExtendLine" | "renderWidgetLine" | "onAddWidgetClick"> {
+export interface DiffViewWithMultiSelectProps<T = unknown> extends Omit<DiffViewProps<T>, "renderWidgetLine" | "onAddWidgetClick"> {
 	/**
 	 * Enable multi-select feature
 	 * @default true
 	 */
 	enableMultiSelect?: boolean;
-	/**
-	 * Extended data with fromLine support for multi-line comments
-	 */
-	extendData?: MultiSelectExtendData<T>;
 	/**
 	 * Callback when multi-line selection is complete
 	 * Use this to open a comment dialog or handle the selection
@@ -1268,14 +1246,6 @@ export interface DiffViewWithMultiSelectProps<T = unknown> extends Omit<DiffView
 		side: SplitSide;
 		diffFile: DiffFile;
 		onClose: () => void;
-	}) => ReactNode;
-	renderExtendLine?: (props: {
-		lineNumber: number;
-		fromLineNumber: number;
-		side: SplitSide;
-		data: T;
-		diffFile: DiffFile;
-		onUpdate: () => void;
 	}) => ReactNode;
 }
 export interface DiffViewWithMultiSelectRef {

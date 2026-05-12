@@ -1,14 +1,17 @@
 import { DiffModeEnum, DiffViewWithMultiSelect as DiffViewMultiSelect, SplitSide } from "@git-diff-view/react";
 import { Box, Button, Card, CloseButton, Group, Stack, Text, useMantineColorScheme } from "@mantine/core";
-import { memo, useCallback, useRef, useState } from "react";
+import { Fragment, memo, useCallback, useRef, useState } from "react";
 
 import { Textarea } from "./TextArea";
 
 import type { DiffFile, DiffViewWithMultiSelectProps, DiffViewWithMultiSelectRef } from "@git-diff-view/react";
 
 interface ExtendDataItem {
-  data: string[];
-  fromLine?: number;
+  data: Array<{
+    text: string;
+    fromLine?: number;
+    toLine?: number;
+  }>;
 }
 
 type ExtendData = {
@@ -70,8 +73,10 @@ export const DiffViewWithMultiSelect = memo(
         res[sideKey] = {
           ...res[sideKey],
           [lineNumber]: {
-            data: [...(res[sideKey]?.[lineNumber]?.data || []), commentText.trim()],
-            fromLine: fromLineNumber,
+            data: [
+              ...(res[sideKey]?.[lineNumber]?.data || []),
+              { text: commentText.trim(), fromLine: fromLineNumber, toLine: lineNumber },
+            ],
           },
         };
         return res;
@@ -140,13 +145,15 @@ export const DiffViewWithMultiSelect = memo(
       ({
         data,
         lineNumber,
-        fromLineNumber,
         side,
       }: {
-        data: string[];
+        data: Array<{
+          text: string;
+          fromLine?: number;
+          toLine?: number;
+        }>;
         side: SplitSide;
         lineNumber: number;
-        fromLineNumber: number;
         diffFile: DiffFile;
         onUpdate: () => void;
       }) => {
@@ -157,39 +164,39 @@ export const DiffViewWithMultiSelect = memo(
         return (
           <Box className="border-color border-b border-t border-solid" p="sm">
             <Stack>
-              {fromLineNumber !== lineNumber && (
-                <Text size="xs" c="dimmed">
-                  Lines {fromLineNumber} - {lineNumber}
-                </Text>
-              )}
               {data.map((d, i) => (
-                <Card key={i} withBorder className="relative">
-                  <Text>{d}</Text>
-                  <CloseButton
-                    className="absolute right-1 top-1"
-                    size="xs"
-                    onClick={() => {
-                      setExtend((prev) => {
-                        const res = { ...prev };
-                        const nData = res[sideKey]?.[lineNumber]?.data?.filter((_, index) => index !== i);
-                        if (nData?.length) {
-                          res[sideKey] = {
-                            ...res[sideKey],
-                            [lineNumber]: {
-                              ...res[sideKey]?.[lineNumber],
-                              data: nData,
-                            },
-                          };
-                        } else {
-                          const newSideData = { ...res[sideKey] };
-                          delete newSideData[lineNumber];
-                          res[sideKey] = newSideData;
-                        }
-                        return res;
-                      });
-                    }}
-                  />
-                </Card>
+                <Fragment>
+                  <Text size="xs" c="dimmed">
+                    Lines {d.fromLine} - {d.toLine}
+                  </Text>
+                  <Card key={i} withBorder className="relative">
+                    <Text>{d.text}</Text>
+                    <CloseButton
+                      className="absolute right-1 top-1"
+                      size="xs"
+                      onClick={() => {
+                        setExtend((prev) => {
+                          const res = { ...prev };
+                          const nData = res[sideKey]?.[lineNumber]?.data?.filter((_, index) => index !== i);
+                          if (nData?.length) {
+                            res[sideKey] = {
+                              ...res[sideKey],
+                              [lineNumber]: {
+                                ...res[sideKey]?.[lineNumber],
+                                data: nData,
+                              },
+                            };
+                          } else {
+                            const newSideData = { ...res[sideKey] };
+                            delete newSideData[lineNumber];
+                            res[sideKey] = newSideData;
+                          }
+                          return res;
+                        });
+                      }}
+                    />
+                  </Card>
+                </Fragment>
               ))}
             </Stack>
           </Box>

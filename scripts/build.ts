@@ -130,6 +130,8 @@ start();
 
 // buildCore();
 
+// buildReact();
+
 // buildUtils();
 
 // buildShiki();

@@ -18,36 +18,13 @@
 
 	import DiffView from './DiffView.svelte';
 
-	/**
-	 * Extended data item with fromLine support for multi-line comments
-	 */
-	interface MultiSelectExtendDataItem<U = unknown> {
-		data: U;
-		/**
-		 * Starting line number for multi-line selection
-		 * If not provided, defaults to the key (end line number)
-		 */
-		fromLine?: number;
-	}
-
-	/**
-	 * Extended data format for multi-select diff view
-	 */
-	type MultiSelectExtendData<U = unknown> = {
-		oldFile?: Record<string, MultiSelectExtendDataItem<U>>;
-		newFile?: Record<string, MultiSelectExtendDataItem<U>>;
-	};
-
 	interface Props {
 		data?: {
 			oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
 			newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
 			hunks: string[];
 		};
-		/**
-		 * Extended data with fromLine support for multi-line comments
-		 */
-		extendData?: MultiSelectExtendData<T>;
+		extendData?: { oldFile?: Record<string, { data: T }>; newFile?: Record<string, { data: T }> };
 		initialWidgetState?: { side: SplitSide; lineNumber: number };
 		diffFile?: DiffFile;
 		class?: string;
@@ -96,7 +73,6 @@
 			[
 				{
 					lineNumber: number;
-					fromLineNumber: number;
 					side: SplitSide;
 					data: T;
 					diffFile: DiffFile;
@@ -137,29 +113,6 @@
 	const handleDiffFileCreated = (diffFile: DiffFile | null) => {
 		innerDiffFile = diffFile;
 	};
-
-	const convertedExtendData = $derived.by(() => {
-		if (!props.extendData) return undefined;
-
-		const result: { oldFile?: Record<string, { data: T }>; newFile?: Record<string, { data: T }> } =
-			{};
-
-		if (props.extendData.oldFile) {
-			result.oldFile = {};
-			for (const [key, value] of Object.entries(props.extendData.oldFile)) {
-				result.oldFile[key] = { data: value.data };
-			}
-		}
-
-		if (props.extendData.newFile) {
-			result.newFile = {};
-			for (const [key, value] of Object.entries(props.extendData.newFile)) {
-				result.newFile[key] = { data: value.data };
-			}
-		}
-
-		return result;
-	});
 
 	const initManager = () => {
 		const container = containerRef;
@@ -334,34 +287,6 @@
 	{/if}
 {/snippet}
 
-{#snippet internalRenderExtendLine({
-	lineNumber,
-	side,
-	data,
-	diffFile,
-	onUpdate
-}: {
-	lineNumber: number;
-	side: SplitSide;
-	data: T;
-	diffFile: DiffFile;
-	onUpdate: () => void;
-})}
-	{#if props.renderExtendLine}
-		{@const sideKey = side === SplitSide.old ? 'oldFile' : 'newFile'}
-		{@const extendItem = props.extendData?.[sideKey]?.[lineNumber]}
-		{@const fromLineNumber = extendItem?.fromLine ?? lineNumber}
-		{@render props.renderExtendLine({
-			lineNumber,
-			fromLineNumber,
-			side,
-			data,
-			diffFile,
-			onUpdate
-		})}
-	{/if}
-{/snippet}
-
 <div class="diff-multiselect-wrapper" bind:this={containerRef}>
 	<DiffView
 		data={props.data}
@@ -376,10 +301,10 @@
 		diffViewHighlight={props.diffViewHighlight}
 		diffViewAddWidget={props.diffViewAddWidget}
 		initialWidgetState={props.initialWidgetState}
-		extendData={convertedExtendData}
+		extendData={props.extendData}
 		onAddWidgetClick={handleAddWidgetClick}
 		onDiffFileCreated={handleDiffFileCreated}
 		renderWidgetLine={props.renderWidgetLine ? internalRenderWidgetLine : undefined}
-		renderExtendLine={props.renderExtendLine ? internalRenderExtendLine : undefined}
+		renderExtendLine={props.renderExtendLine}
 	/>
 </div>

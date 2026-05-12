@@ -18,40 +18,15 @@ import type {
 import type { DiffViewProps } from "./DiffView";
 import type { ForwardedRef, ReactNode } from "react";
 
-/**
- * Extended data item with fromLine support for multi-line comments
- */
-export interface MultiSelectExtendDataItem<T = unknown> {
-  data: T;
-  /**
-   * Starting line number for multi-line selection
-   * If not provided, defaults to the key (end line number)
-   */
-  fromLine?: number;
-}
-
-/**
- * Extended data format for multi-select diff view
- */
-export type MultiSelectExtendData<T = unknown> = {
-  oldFile?: Record<string, MultiSelectExtendDataItem<T>>;
-  newFile?: Record<string, MultiSelectExtendDataItem<T>>;
-};
-
 export interface DiffViewWithMultiSelectProps<T = unknown> extends Omit<
   DiffViewProps<T>,
-  "extendData" | "renderExtendLine" | "renderWidgetLine" | "onAddWidgetClick"
+  "renderWidgetLine" | "onAddWidgetClick"
 > {
   /**
    * Enable multi-select feature
    * @default true
    */
   enableMultiSelect?: boolean;
-
-  /**
-   * Extended data with fromLine support for multi-line comments
-   */
-  extendData?: MultiSelectExtendData<T>;
 
   /**
    * Callback when multi-line selection is complete
@@ -79,15 +54,6 @@ export interface DiffViewWithMultiSelectProps<T = unknown> extends Omit<
     diffFile: DiffFile;
     onClose: () => void;
   }) => ReactNode;
-
-  renderExtendLine?: (props: {
-    lineNumber: number;
-    fromLineNumber: number;
-    side: SplitSide;
-    data: T;
-    diffFile: DiffFile;
-    onUpdate: () => void;
-  }) => ReactNode;
 }
 
 export interface DiffViewWithMultiSelectRef {
@@ -112,7 +78,6 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(
     onMultiSelectChange,
     scopeMultiSelectToHunk,
     renderWidgetLine,
-    renderExtendLine,
     onAddWidgetClick,
     diffViewMode = DiffModeEnum.SplitGitHub,
     ...restProps
@@ -226,38 +191,6 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(
     return result;
   }, [extendData]);
 
-  const internalRenderExtendLine = useCallback(
-    ({
-      lineNumber,
-      side,
-      data,
-      diffFile,
-      onUpdate,
-    }: {
-      lineNumber: number;
-      side: SplitSide;
-      data: T;
-      diffFile: DiffFile;
-      onUpdate: () => void;
-    }) => {
-      if (!renderExtendLine) return null;
-
-      const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
-      const extendItem = extendData?.[sideKey]?.[lineNumber];
-      const fromLineNumber = extendItem?.fromLine ?? lineNumber;
-
-      return renderExtendLine({
-        lineNumber,
-        fromLineNumber,
-        side,
-        data,
-        diffFile,
-        onUpdate,
-      });
-    },
-    [renderExtendLine, extendData]
-  );
-
   const internalRenderWidgetLine = useCallback(
     ({
       lineNumber,
@@ -369,7 +302,6 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(
           }
         }}
         renderWidgetLine={renderWidgetLine ? internalRenderWidgetLine : undefined}
-        renderExtendLine={renderExtendLine ? internalRenderExtendLine : undefined}
       />
     </div>
   );

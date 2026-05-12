@@ -4,7 +4,6 @@ import * as data from "./data";
 import { DiffModeEnum, DiffView, DiffViewProps, SplitSide, DiffFile, DiffViewWithMultiSelect } from "@git-diff-view/vue";
 import { MessageData } from "./worker";
 
-import type { MultiSelectExtendData } from "@git-diff-view/vue";
 
 const worker = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
 
@@ -71,7 +70,13 @@ const resetV = () => (v.value = "");
 const showMultiSelect = ref(false);
 const toggleMultiSelect = () => (showMultiSelect.value = !showMultiSelect.value);
 
-const multiSelectExtend = ref<MultiSelectExtendData<string[]>>({ oldFile: {}, newFile: {} });
+interface CommentItem {
+  text: string;
+  fromLine?: number;
+  toLine?: number;
+}
+
+const multiSelectExtend = ref<{ oldFile?: Record<string, { data: CommentItem[] }>; newFile?: Record<string, { data: CommentItem[] }> }>({ oldFile: {}, newFile: {} });
 const multiSelectV = ref("");
 const multiSelectWidget = ref<{ lineNumber: number; fromLineNumber: number; side: SplitSide } | null>(null);
 
@@ -104,8 +109,7 @@ const handleMultiSelectSubmit = (onClose: () => void) => {
   const sideData = { ...prev[_side] };
   const existing = sideData[lineNumber]?.data || [];
   sideData[lineNumber] = {
-    data: [...existing, multiSelectV.value.trim()],
-    fromLine: fromLineNumber,
+    data: [...existing, { text: multiSelectV.value.trim(), fromLine: fromLineNumber, toLine: lineNumber }],
   };
   multiSelectExtend.value = { ...prev, [_side]: sideData };
   multiSelectV.value = "";
@@ -242,13 +246,11 @@ const handleMultiSelectSubmit = (onClose: () => void) => {
             </div>
           </div>
         </template>
-        <template #extend="{ data, lineNumber, fromLineNumber }">
+        <template #extend="{ data }">
           <div class="flex flex-col border bg-slate-100 px-[10px] py-[8px]">
-            <p v-if="fromLineNumber !== lineNumber" class="mb-[4px] text-xs text-gray-500">
-              Lines {{ fromLineNumber }} - {{ lineNumber }}
-            </p>
-            <div v-for="(d, i) in (data as string[])" :key="i" class="mb-[4px] rounded border bg-white p-[6px]">
-              {{ d }}
+            <div v-for="(d, i) in (data as CommentItem[])" :key="i" class="mb-[4px]">
+              <p class="text-xs text-gray-500">Lines {{ d.fromLine }} - {{ d.toLine }}</p>
+              <div class="rounded border bg-white p-[6px]">{{ d.text }}</div>
             </div>
           </div>
         </template>

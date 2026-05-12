@@ -61,36 +61,13 @@ export interface DiffViewProps<T> {
 	onDiffFileCreated?: (diffFile: DiffFile | null) => void;
 }
 
-/**
- * Extended data item with fromLine support for multi-line comments
- */
-export interface MultiSelectExtendDataItem<T = unknown> {
-	data: T;
-	/**
-	 * Starting line number for multi-line selection
-	 * If not provided, defaults to the key (end line number)
-	 */
-	fromLine?: number;
-}
-
-/**
- * Extended data format for multi-select diff view
- */
-export type MultiSelectExtendData<T = unknown> = {
-	oldFile?: Record<string, MultiSelectExtendDataItem<T>>;
-	newFile?: Record<string, MultiSelectExtendDataItem<T>>;
-};
-
 export interface DiffViewWithMultiSelectProps<T> {
 	data?: {
 		oldFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
 		newFile?: { fileName?: string | null; fileLang?: string | null; content?: string | null };
 		hunks: string[];
 	};
-	/**
-	 * Extended data with fromLine support for multi-line comments
-	 */
-	extendData?: MultiSelectExtendData<T>;
+	extendData?: { oldFile?: Record<string, { data: T }>; newFile?: Record<string, { data: T }> };
 	initialWidgetState?: { side: SplitSide; lineNumber: number };
 	diffFile?: DiffFile;
 	class?: string;
@@ -135,7 +112,6 @@ export interface DiffViewWithMultiSelectProps<T> {
 		[
 			{
 				lineNumber: number;
-				fromLineNumber: number;
 				side: SplitSide;
 				data: T;
 				diffFile: DiffFile;

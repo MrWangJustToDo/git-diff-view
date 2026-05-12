@@ -3,7 +3,6 @@
 
 	import * as data from '../data.js';
 	import type { MessageData } from '../worker.js';
-	import type { MultiSelectExtendData } from '@git-diff-view/svelte';
 
 	const worker =
 		typeof Worker !== 'undefined'
@@ -59,7 +58,15 @@
 	});
 
 	let showMultiSelect = $state(false);
-	let multiSelectExtend = $state<MultiSelectExtendData<string[]>>({ oldFile: {}, newFile: {} });
+	interface CommentItem {
+		text: string;
+		fromLine?: number;
+		toLine?: number;
+	}
+	let multiSelectExtend = $state<{
+		oldFile?: Record<string, { data: CommentItem[] }>;
+		newFile?: Record<string, { data: CommentItem[] }>;
+	}>({ oldFile: {}, newFile: {} });
 	let multiSelectV = $state('');
 	let multiSelectWidget = $state<{
 		lineNumber: number;
@@ -229,16 +236,22 @@
 										onClose();
 										return;
 									}
-									const _side =
-										multiSelectWidget.side === SplitSide.old ? 'oldFile' : 'newFile';
-									const prev = multiSelectExtend;
-									const sideData = { ...prev[_side] };
-									const existing = sideData?.[multiSelectWidget.lineNumber]?.data || [];
-									sideData[multiSelectWidget.lineNumber] = {
-										data: [...existing, multiSelectV.trim()],
-										fromLine: multiSelectWidget.fromLineNumber
-									};
-									multiSelectExtend = { ...prev, [_side]: sideData };
+								const _side =
+									multiSelectWidget.side === SplitSide.old ? 'oldFile' : 'newFile';
+								const prev = multiSelectExtend;
+								const sideData = { ...prev[_side] };
+								const existing = sideData?.[multiSelectWidget.lineNumber]?.data || [];
+								sideData[multiSelectWidget.lineNumber] = {
+									data: [
+										...existing,
+										{
+											text: multiSelectV.trim(),
+											fromLine: multiSelectWidget.fromLineNumber,
+											toLine: multiSelectWidget.lineNumber
+										}
+									]
+								};
+								multiSelectExtend = { ...prev, [_side]: sideData };
 									multiSelectV = '';
 									multiSelectWidget = null;
 									onClose();
@@ -249,23 +262,18 @@
 				</div>
 			{/snippet}
 			{#snippet multiSelectRenderExtendLine({
-				data,
-				lineNumber,
-				fromLineNumber
+				data
 			}: {
-				data: string[];
+				data: CommentItem[];
 				lineNumber: number;
-				fromLineNumber: number;
 				side: SplitSide;
 			})}
 				<div class="flex flex-col border bg-slate-100 px-[10px] py-[8px]">
-					{#if fromLineNumber !== lineNumber}
-						<p class="mb-[4px] text-xs text-gray-500">
-							Lines {fromLineNumber} - {lineNumber}
-						</p>
-					{/if}
 					{#each data as d, i (i)}
-						<div class="mb-[4px] rounded border bg-white p-[6px]">{d}</div>
+						<div class="mb-[4px]">
+							<p class="text-xs text-gray-500">Lines {d.fromLine} - {d.toLine}</p>
+							<div class="rounded border bg-white p-[6px]">{d.text}</div>
+						</div>
 					{/each}
 				</div>
 			{/snippet}

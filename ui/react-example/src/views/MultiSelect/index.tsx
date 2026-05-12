@@ -1,3 +1,4 @@
+import { SandpackCodeEditor, SandpackLayout, SandpackProvider } from "@codesandbox/sandpack-react";
 import { generateDiffFile } from "@git-diff-view/file";
 import {
   Box,
@@ -7,7 +8,6 @@ import {
   Code,
   Space,
   useMantineColorScheme,
-  Card,
   Accordion,
   Group,
   Badge,
@@ -25,6 +25,8 @@ import { useRef, useState, useCallback } from "react";
 
 function MyDiffView({ diffFile }) {
   const diffViewRef = useRef(null);
+  // extendData uses standard DiffView format: { oldFile: { [lineNumber]: { data } }, newFile: ... }
+  // Store line range info in the data itself
   const [comments, setComments] = useState({ oldFile: {}, newFile: {} });
 
   const handleAddWidgetClick = useCallback(({ lineNumber, fromLineNumber, side }) => {
@@ -32,11 +34,24 @@ function MyDiffView({ diffFile }) {
     // fromLineNumber: start line of selection (same as lineNumber for single line)
     // side: SplitSide.old or SplitSide.new
     console.log("Add comment:", { lineNumber, fromLineNumber, side });
-    // Open your comment input widget here
+
+    // Example: save a comment with range info
+    const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
+    setComments((prev) => ({
+      ...prev,
+      [sideKey]: {
+        ...prev[sideKey],
+        [lineNumber]: {
+          data: [
+            ...(prev[sideKey]?.[lineNumber]?.data || []),
+            { text: "My comment", fromLine: fromLineNumber, toLine: lineNumber },
+          ],
+        },
+      },
+    }));
   }, []);
 
-  const renderWidgetLine = useCallback(({ lineNumber, fromLineNumber, side, onClose }) => {
-    // Render inline comment input form
+  const renderWidgetLine = useCallback(({ lineNumber, fromLineNumber, side, diffFile, onClose }) => {
     // fromLineNumber: start of multi-line selection, lineNumber: end of selection
     return (
       <div>
@@ -48,13 +63,18 @@ function MyDiffView({ diffFile }) {
     );
   }, []);
 
-  const renderExtendLine = useCallback(({ data, lineNumber, fromLineNumber, side }) => {
-    // Render saved comments
-    // fromLineNumber is the start of multi-line selection
+  const renderExtendLine = useCallback(({ data, lineNumber, side, diffFile, onUpdate }) => {
+    // Standard DiffView renderExtendLine signature
+    // data is whatever you stored in extendData[side][lineNumber].data
+    if (!data || !data.length) return null;
     return (
       <div>
-        {fromLineNumber !== lineNumber && <span>Lines {fromLineNumber}-{lineNumber}</span>}
-        {data.map((comment, i) => <div key={i}>{comment}</div>)}
+        {data.map((comment, i) => (
+          <div key={i}>
+            <span>Lines {comment.fromLine}-{comment.toLine}</span>
+            <p>{comment.text}</p>
+          </div>
+        ))}
       </div>
     );
   }, []);
@@ -122,11 +142,17 @@ export const MultiSelectView = () => {
               <Text fw={500}>How to Use</Text>
             </Accordion.Control>
             <Accordion.Panel>
-              <Card withBorder>
-                <Code block className="text-sm">
-                  {usageCode}
-                </Code>
-              </Card>
+              <SandpackProvider
+                files={{ "/App.tsx": { code: usageCode, active: true } }}
+                theme={colorScheme === "dark" ? "dark" : "light"}
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                style={{ ["--sp-layout-height"]: "auto" }}
+              >
+                <SandpackLayout className="!rounded-[6px] border-none">
+                  <SandpackCodeEditor showLineNumbers readOnly showReadOnly={false} />
+                </SandpackLayout>
+              </SandpackProvider>
             </Accordion.Panel>
           </Accordion.Item>
 
@@ -158,8 +184,8 @@ export const MultiSelectView = () => {
                 </li>
                 <li>
                   <Text>
-                    <strong>fromLine support:</strong> ExtendData supports <Code>fromLine</Code> for multi-line comment
-                    ranges
+                    <strong>Standard extendData:</strong> Uses the same <Code>extendData</Code> format as{" "}
+                    <Code>DiffView</Code> — store line range info in your data
                   </Text>
                 </li>
                 <li>
@@ -169,7 +195,7 @@ export const MultiSelectView = () => {
                 </li>
                 <li>
                   <Text>
-                    <strong>Low-level hook:</strong> Use <Code>useMultiSelect</Code> hook for custom implementations
+                    <strong>Multi-framework:</strong> Available for React, Vue, Solid, and Svelte
                   </Text>
                 </li>
               </Box>
