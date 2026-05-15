@@ -1,7 +1,7 @@
 import { Container, Space, Title, Text, Box, Badge, Tabs, rem, useMantineColorScheme } from "@mantine/core";
-import { IconBrandReact, IconBrandVue, IconCode } from "@tabler/icons-react";
+import { IconBrandReact, IconBrandVue, IconCode, IconTerminal2 } from "@tabler/icons-react";
 
-import { ReactPlayGround, VuePlayGround } from "../../components/PlayGround";
+import { ReactPlayGround, VuePlayGround, CliPlayGround } from "../../components/PlayGround";
 
 export const StartContent = () => {
   const iconStyle = { width: rem(16), height: rem(16) };
@@ -38,6 +38,9 @@ export const StartContent = () => {
               </Tabs.Tab>
               <Tabs.Tab value="vue" leftSection={<IconBrandVue style={iconStyle} />} className="text-base">
                 Vue
+              </Tabs.Tab>
+              <Tabs.Tab value="cli" leftSection={<IconTerminal2 style={iconStyle} />} className="text-base">
+                Ink (Terminal)
               </Tabs.Tab>
             </Tabs.List>
 
@@ -80,6 +83,27 @@ export const StartContent = () => {
                   Seamless integration with Vue 3 Composition API. Reactive and performant.
                 </Text>
                 <VuePlayGround />
+              </Box>
+            </Tabs.Panel>
+
+            <Tabs.Panel value="cli">
+              <Box
+                className="rounded-xl border border-solid p-6"
+                style={{
+                  borderColor: colorScheme === "light" ? "#f1f3f5" : "var(--mantine-color-dark-5)",
+                  backgroundColor: colorScheme === "light" ? "#f8f9fa" : "var(--mantine-color-dark-6)",
+                }}
+              >
+                <Box className="mb-4 flex items-center gap-3">
+                  <IconTerminal2 size={24} className="text-green-500" />
+                  <Title order={3} size="h4">
+                    Ink (Terminal) Example
+                  </Title>
+                </Box>
+                <Text c="dimmed" mb="lg" className="text-base">
+                  Render beautiful diffs directly in your terminal using Ink and React. Powered by @git-diff-view/cli.
+                </Text>
+                <CliPlayGround />
               </Box>
             </Tabs.Panel>
           </Tabs>

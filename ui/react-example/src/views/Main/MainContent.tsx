@@ -25,6 +25,7 @@ import {
   IconSparkles,
   IconStar,
   IconDownload,
+  IconTerminal2,
 } from "@tabler/icons-react";
 import { useMemo, useState, useEffect } from "react";
 
@@ -164,6 +165,12 @@ export const MainContent = () => {
                 />
                 <Text span className="text-lg font-semibold">
                   Svelte
+                </Text>
+              </Group>
+              <Group gap="xs" className="inline-flex">
+                <IconTerminal2 className="animate-float" color="#22c55e" size={24} style={{ animationDelay: "2s" }} />
+                <Text span className="text-lg font-semibold">
+                  Ink (Terminal)
                 </Text>
               </Group>
             </Group>
