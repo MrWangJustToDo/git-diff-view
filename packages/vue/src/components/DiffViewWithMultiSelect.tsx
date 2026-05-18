@@ -94,6 +94,9 @@ export const DiffViewWithMultiSelect = defineComponent<
           } else {
             containerRef.value?.classList.remove(multiSelectClassNames.selecting);
           }
+          if (state.isSelecting && multiResultRef) {
+            updateMultiResult(undefined);
+          }
           options.emit("onMultiSelectChange", range, state);
         },
         onSelectionComplete: (result) => {

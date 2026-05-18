@@ -134,6 +134,9 @@
 				} else {
 					containerRef?.classList.remove(multiSelectClassNames.selecting);
 				}
+				if (state.isSelecting && multiResultRef) {
+          updateMultiResult(undefined);
+        }
 				props.onMultiSelectChange?.(range, state);
 			},
 		onSelectionComplete: (result) => {

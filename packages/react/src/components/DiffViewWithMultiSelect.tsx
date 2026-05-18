@@ -130,6 +130,9 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(
         } else {
           containerRef.current?.classList.remove(multiSelectClassNames.selecting);
         }
+        if (state.isSelecting && multiResultRef.current) {
+          updateMultiResult(undefined);
+        }
         memoSelectChange?.(range, state);
       },
       onSelectionComplete: (result) => {
