@@ -6,6 +6,7 @@
 **/.svelte-kit
 **/*.md
 **/*.d.ts
+**/*.svelte
 package.json
 tsconfig.json
 pnpm-lock.yaml

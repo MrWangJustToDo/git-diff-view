@@ -1,9 +1,15 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from "vue";
 import * as data from "./data";
-import { DiffModeEnum, DiffView, DiffViewProps, SplitSide, DiffFile, DiffViewWithMultiSelect } from "@git-diff-view/vue";
+import {
+  DiffModeEnum,
+  DiffView,
+  DiffViewProps,
+  SplitSide,
+  DiffFile,
+  DiffViewWithMultiSelect,
+} from "@git-diff-view/vue";
 import { MessageData } from "./worker";
-
 
 const worker = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
 
@@ -76,7 +82,10 @@ interface CommentItem {
   toLine?: number;
 }
 
-const multiSelectExtend = ref<{ oldFile?: Record<string, { data: CommentItem[] }>; newFile?: Record<string, { data: CommentItem[] }> }>({ oldFile: {}, newFile: {} });
+const multiSelectExtend = ref<{
+  oldFile?: Record<string, { data: CommentItem[] }>;
+  newFile?: Record<string, { data: CommentItem[] }>;
+}>({ oldFile: {}, newFile: {} });
 const multiSelectV = ref("");
 const multiSelectWidget = ref<{ lineNumber: number; fromLineNumber: number; side: SplitSide } | null>(null);
 
@@ -212,7 +221,7 @@ const handleMultiSelectSubmit = (onClose: () => void) => {
       class="rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold leading-5 text-white hover:bg-orange-700"
       @click="toggleMultiSelect"
     >
-      {{ showMultiSelect ? 'Hide MultiSelect Example' : 'Show MultiSelect Example' }}
+      {{ showMultiSelect ? "Hide MultiSelect Example" : "Show MultiSelect Example" }}
     </button>
   </div>
   <div v-if="showMultiSelect" class="m-auto mb-[5em] w-[90%]">
@@ -233,22 +242,37 @@ const handleMultiSelectSubmit = (onClose: () => void) => {
         <template #widget="{ onClose, lineNumber, side }">
           <div class="flex w-full flex-col border px-[4px] py-[8px]">
             <p v-if="multiSelectWidget" class="mb-[4px] text-sm text-gray-500">
-              {{ multiSelectWidget.fromLineNumber === multiSelectWidget.lineNumber
-                ? `Add comment on line ${multiSelectWidget.lineNumber}`
-                : `Add comment on lines ${multiSelectWidget.fromLineNumber} - ${multiSelectWidget.lineNumber}` }}
+              {{
+                multiSelectWidget.fromLineNumber === multiSelectWidget.lineNumber
+                  ? `Add comment on line ${multiSelectWidget.lineNumber}`
+                  : `Add comment on lines ${multiSelectWidget.fromLineNumber} - ${multiSelectWidget.lineNumber}`
+              }}
             </p>
             <textarea class="min-h-[80px] w-full border p-[2px]" v-model="multiSelectV" />
             <div class="m-[5px] mt-[0.8em] text-right">
               <div class="inline-flex justify-end gap-x-[12px]">
-                <button class="rounded-[4px] border px-[12px] py-[6px]" @click="() => { multiSelectWidget = null; multiSelectV = ''; onClose(); }">cancel</button>
-                <button class="rounded-[4px] border px-[12px] py-[6px]" @click="() => handleMultiSelectSubmit(onClose)">submit</button>
+                <button
+                  class="rounded-[4px] border px-[12px] py-[6px]"
+                  @click="
+                    () => {
+                      multiSelectWidget = null;
+                      multiSelectV = '';
+                      onClose();
+                    }
+                  "
+                >
+                  cancel
+                </button>
+                <button class="rounded-[4px] border px-[12px] py-[6px]" @click="() => handleMultiSelectSubmit(onClose)">
+                  submit
+                </button>
               </div>
             </div>
           </div>
         </template>
         <template #extend="{ data }">
           <div class="flex flex-col border bg-slate-100 px-[10px] py-[8px]">
-            <div v-for="(d, i) in (data as CommentItem[])" :key="i" class="mb-[4px]">
+            <div v-for="(d, i) in data as CommentItem[]" :key="i" class="mb-[4px]">
               <p class="text-xs text-gray-500">Lines {{ d.fromLine }} - {{ d.toLine }}</p>
               <div class="rounded border bg-white p-[6px]">{{ d.text }}</div>
             </div>

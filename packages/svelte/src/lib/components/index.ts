@@ -96,7 +96,11 @@ export interface DiffViewWithMultiSelectProps<T> {
 	 * Custom function to scope selection to one hunk
 	 */
 	scopeMultiSelectToHunk?: (range: LineRange) => LineRange | null;
-	onAddWidgetClick?: (props: { lineNumber: number; fromLineNumber?: number; side: SplitSide }) => void;
+	onAddWidgetClick?: (props: {
+		lineNumber: number;
+		fromLineNumber?: number;
+		side: SplitSide;
+	}) => void;
 	renderWidgetLine?: Snippet<
 		[
 			{
