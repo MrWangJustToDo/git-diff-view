@@ -30,6 +30,7 @@ Try it online: [Git Mode](https://mrwangjusttodo.github.io/git-diff-view/?type=t
 <details>
 <summary>📸 More Screenshots</summary>
 
+![full feature](fullfeature.png)
 ![file mode](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/fileMode.png)
 ![theme support](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/theme.png)
 ![unified view](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/69c801e5eb5fcabc9c9655825eb1228f18dc1e0c/5.png)
