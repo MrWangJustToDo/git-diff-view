@@ -13,8 +13,8 @@ import { CodeExtendLine } from "./CodeExtendLine";
 import { CodeLineNumberArea } from "./CodeLineNumber";
 import { createCodeConfigStore, getCurrentLineRow } from "./codeTools";
 import { CodeViewContext, useCodeViewContext } from "./CodeViewContext";
-import { diffPlainLineNumber, diffPlainLineNumberColor } from "./color";
 
+import type { DiffViewColorTheme, ResolvedDiffViewColorTheme } from "./color";
 import type { DiffHighlighter, DiffHighlighterLang, File } from "@git-diff-view/core";
 import type { DOMElement } from "ink";
 import type { ForwardedRef, JSX, ReactNode, RefObject } from "react";
@@ -38,6 +38,8 @@ export type CodeViewProps<T> = {
   codeViewHighlight?: boolean;
   // disable background colors for transparent terminal rendering
   codeViewNoBG?: boolean;
+  // custom theme colors to override defaults
+  codeViewThemeColors?: DiffViewColorTheme;
   renderExtendLine?: ({ file, data, lineNumber }: { file: File; lineNumber: number; data: T }) => ReactNode;
 };
 
@@ -69,6 +71,7 @@ const CodeLine = memo(
     lineNumWidth,
     enableHighlight,
     noBG,
+    themeColors,
   }: {
     lineNumber: number;
     theme: "light" | "dark";
@@ -77,6 +80,7 @@ const CodeLine = memo(
     lineNumWidth: number;
     enableHighlight: boolean;
     noBG: boolean;
+    themeColors: ResolvedDiffViewColorTheme;
   }) => {
     const rawLine = file.rawFile[lineNumber] || "";
     const syntaxLine = file.syntaxFile[lineNumber];
@@ -87,8 +91,12 @@ const CodeLine = memo(
     // Calculate row height based on actual text width (content width minus 2 char padding on both sides)
     const row = getCurrentLineRow({ content: rawLine, width: contentWidth - 2 });
 
-    const bg = noBG ? undefined : theme === "light" ? diffPlainLineNumber.light : diffPlainLineNumber.dark;
-    const color = theme === "light" ? diffPlainLineNumberColor.light : diffPlainLineNumberColor.dark;
+    const bg = noBG
+      ? undefined
+      : theme === "light"
+        ? themeColors.plainLineNumber.light
+        : themeColors.plainLineNumber.dark;
+    const color = theme === "light" ? themeColors.plainLineNumberColor.light : themeColors.plainLineNumberColor.dark;
 
     return (
       <Box data-line={lineNumber} height={row} width={columns}>
@@ -109,6 +117,7 @@ const CodeLine = memo(
           syntaxLine={syntaxLine}
           enableHighlight={enableHighlight}
           noBG={noBG}
+          themeColors={themeColors}
         />
       </Box>
     );
@@ -123,9 +132,10 @@ CodeLine.displayName = "CodeLine";
 const CodeViewContent = memo(({ file, theme, width }: { file: File; theme: "light" | "dark"; width?: number }) => {
   const { useCodeContext } = useCodeViewContext();
 
-  const { enableHighlight, noBG } = useCodeContext((s) => ({
+  const { enableHighlight, noBG, themeColors } = useCodeContext((s) => ({
     enableHighlight: s.enableHighlight,
     noBG: s.noBG,
+    themeColors: s.themeColors,
   }));
 
   const { columns: _columns } = useCodeTerminalSize();
@@ -158,6 +168,7 @@ const CodeViewContent = memo(({ file, theme, width }: { file: File; theme: "ligh
             lineNumWidth={lineNumWidth}
             enableHighlight={enableHighlight ?? false}
             noBG={noBG ?? false}
+            themeColors={themeColors}
           />
           <CodeExtendLine columns={columns} lineNumber={lineNumber} file={file} />
         </Fragment>
@@ -188,6 +199,7 @@ const InternalCodeView = <T,>(
     codeViewTabWidth,
     codeViewTheme,
     codeViewNoBG,
+    codeViewThemeColors,
   } = props;
 
   const fileId = file.getId();
@@ -213,6 +225,7 @@ const InternalCodeView = <T,>(
       setTabWidth,
       noBG,
       setNoBG,
+      setThemeColors,
     } = useCodeContext.getReadonlyState();
 
     if (fileId && fileId !== id) {
@@ -246,6 +259,8 @@ const InternalCodeView = <T,>(
     if (codeViewNoBG !== noBG) {
       setNoBG(!!codeViewNoBG);
     }
+
+    setThemeColors(codeViewThemeColors);
   }, [
     _width,
     useCodeContext,
@@ -256,6 +271,7 @@ const InternalCodeView = <T,>(
     codeViewTabSpace,
     codeViewTabWidth,
     codeViewNoBG,
+    codeViewThemeColors,
     props.extendData,
     props.renderExtendLine,
   ]);

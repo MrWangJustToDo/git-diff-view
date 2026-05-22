@@ -3,8 +3,9 @@ import { Box, Text } from "ink";
 
 import { DiffModeEnum } from "..";
 
-import { diffHunkLineNumber, diffHunkContent, diffHunkContentColor } from "./color";
 import { useDiffViewContext } from "./DiffViewContext";
+
+import type { ResolvedDiffViewColorTheme } from "./color";
 
 const DiffSplitHunkLineGitHub = ({
   index,
@@ -14,6 +15,7 @@ const DiffSplitHunkLineGitHub = ({
   lineNumber,
   lineNumWidth,
   noBG,
+  themeColors,
 }: {
   index: number;
   theme: "light" | "dark";
@@ -22,14 +24,23 @@ const DiffSplitHunkLineGitHub = ({
   lineNumber: number;
   lineNumWidth: number;
   noBG?: boolean;
+  themeColors: ResolvedDiffViewColorTheme;
 }) => {
   const currentHunk = diffFile.getSplitHunkLine(index);
 
-  const hunkLineNumberBG = noBG ? undefined : theme === "light" ? diffHunkLineNumber.light : diffHunkLineNumber.dark;
+  const hunkLineNumberBG = noBG
+    ? undefined
+    : theme === "light"
+      ? themeColors.hunkLineNumber.light
+      : themeColors.hunkLineNumber.dark;
 
-  const hunkContentBG = noBG ? undefined : theme === "light" ? diffHunkContent.light : diffHunkContent.dark;
+  const hunkContentBG = noBG
+    ? undefined
+    : theme === "light"
+      ? themeColors.hunkContent.light
+      : themeColors.hunkContent.dark;
 
-  const hunkContentColor = theme === "light" ? diffHunkContentColor.light : diffHunkContentColor.dark;
+  const hunkContentColor = theme === "light" ? themeColors.hunkContentColor.light : themeColors.hunkContentColor.dark;
 
   const contentWidth = columns - lineNumWidth - 2;
 
@@ -55,6 +66,7 @@ const DiffSplitHunkLineGitLab = ({
   lineNumber,
   lineNumWidth,
   noBG,
+  themeColors,
 }: {
   index: number;
   theme: "light" | "dark";
@@ -63,14 +75,23 @@ const DiffSplitHunkLineGitLab = ({
   lineNumber: number;
   lineNumWidth: number;
   noBG?: boolean;
+  themeColors: ResolvedDiffViewColorTheme;
 }) => {
   const currentHunk = diffFile.getSplitHunkLine(index);
 
-  const hunkLineNumberBG = noBG ? undefined : theme === "light" ? diffHunkLineNumber.light : diffHunkLineNumber.dark;
+  const hunkLineNumberBG = noBG
+    ? undefined
+    : theme === "light"
+      ? themeColors.hunkLineNumber.light
+      : themeColors.hunkLineNumber.dark;
 
-  const hunkContentBG = noBG ? undefined : theme === "light" ? diffHunkContent.light : diffHunkContent.dark;
+  const hunkContentBG = noBG
+    ? undefined
+    : theme === "light"
+      ? themeColors.hunkContent.light
+      : themeColors.hunkContent.dark;
 
-  const hunkContentColor = theme === "light" ? diffHunkContentColor.light : diffHunkContentColor.dark;
+  const hunkContentColor = theme === "light" ? themeColors.hunkContentColor.light : themeColors.hunkContentColor.dark;
 
   const contentWidth = columns / 2 - lineNumWidth - 2;
 
@@ -104,6 +125,7 @@ const InternalDiffSplitHunkLine = ({
   lineNumber,
   lineNumWidth,
   noBG,
+  themeColors,
 }: {
   index: number;
   theme: "light" | "dark";
@@ -112,6 +134,7 @@ const InternalDiffSplitHunkLine = ({
   lineNumber: number;
   lineNumWidth: number;
   noBG?: boolean;
+  themeColors: ResolvedDiffViewColorTheme;
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
@@ -131,6 +154,7 @@ const InternalDiffSplitHunkLine = ({
         lineNumber={lineNumber}
         lineNumWidth={lineNumWidth}
         noBG={noBG}
+        themeColors={themeColors}
       />
     );
   } else {
@@ -143,6 +167,7 @@ const InternalDiffSplitHunkLine = ({
         lineNumber={lineNumber}
         lineNumWidth={lineNumWidth}
         noBG={noBG}
+        themeColors={themeColors}
       />
     );
   }
@@ -156,6 +181,7 @@ export const DiffSplitHunkLine = ({
   lineNumber,
   lineNumWidth,
   noBG,
+  themeColors,
 }: {
   index: number;
   theme: "light" | "dark";
@@ -164,6 +190,7 @@ export const DiffSplitHunkLine = ({
   lineNumber: number;
   lineNumWidth: number;
   noBG?: boolean;
+  themeColors: ResolvedDiffViewColorTheme;
 }) => {
   const currentHunk = diffFile.getSplitHunkLine(index);
 
@@ -185,6 +212,7 @@ export const DiffSplitHunkLine = ({
       lineNumber={lineNumber}
       lineNumWidth={lineNumWidth}
       noBG={noBG}
+      themeColors={themeColors}
     />
   );
 };

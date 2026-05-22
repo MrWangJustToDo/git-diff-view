@@ -1,7 +1,10 @@
 import { createStore, markRaw, ref, configureEnv } from "reactivity-store";
 import stringWidth from "string-width";
 
+import { buildTheme } from "./color";
+
 import type { DiffModeEnum, DiffViewProps } from "./DiffView";
+import type { ResolvedDiffViewColorTheme, DiffViewColorTheme } from "./color";
 import type { DiffLine } from "@git-diff-view/core";
 import type { DOMElement } from "ink";
 import type { Ref, UseSelectorWithStore } from "reactivity-store";
@@ -80,6 +83,10 @@ export const createDiffConfigStore = <T = any>(props: DiffViewProps<T>, diffFile
 
     const setNoBG = (_noBG: boolean) => (noBG.value = _noBG);
 
+    const themeColors = ref(buildTheme(props.diffViewThemeColors));
+
+    const setThemeColors = (_themeColors?: DiffViewColorTheme) => (themeColors.value = buildTheme(_themeColors));
+
     return {
       id,
       setId,
@@ -103,6 +110,8 @@ export const createDiffConfigStore = <T = any>(props: DiffViewProps<T>, diffFile
       setHideOperator,
       noBG,
       setNoBG,
+      themeColors,
+      setThemeColors,
     };
     // fix rollup type error
   }) as UseSelectorWithStore<{
@@ -131,6 +140,8 @@ export const createDiffConfigStore = <T = any>(props: DiffViewProps<T>, diffFile
     setHideOperator: (hideOperator: boolean) => void;
     noBG: Ref<boolean>;
     setNoBG: (noBG: boolean) => void;
+    themeColors: Ref<ResolvedDiffViewColorTheme>;
+    setThemeColors: (themeColors?: DiffViewColorTheme) => void;
   }>;
 };
 

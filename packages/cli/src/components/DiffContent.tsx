@@ -5,22 +5,10 @@ import { Box, Text } from "ink";
 import * as React from "react";
 
 import { buildAnsiStringWithLineBreaks, buildStyledBlock, type CharStyle } from "./ansiString";
-import {
-  diffAddContent,
-  diffAddContentHighlight,
-  diffDelContent,
-  diffDelContentHighlight,
-  diffExpandContent,
-  diffPlainContent,
-  noBGDiffAddContent,
-  noBGDiffAddContentHighlight,
-  noBGDiffDelContent,
-  noBGDiffDelContentHighlight,
-  GitHubDark,
-  GitHubLight,
-} from "./color";
+import { GitHubDark, GitHubLight } from "./color";
 import { useDiffViewContext } from "./DiffViewContext";
 
+import type { ResolvedDiffViewColorTheme } from "./color";
 import type { DiffFile, DiffLine, File } from "@git-diff-view/core";
 
 // Helper to get tab width value
@@ -115,6 +103,7 @@ const DiffString = React.memo(
     diffLine,
     operator,
     noBG,
+    themeColors,
   }: {
     bg?: string;
     width: number;
@@ -125,6 +114,7 @@ const DiffString = React.memo(
     operator?: "add" | "del";
     plainLine?: File["plainFile"][number];
     noBG?: boolean;
+    themeColors: ResolvedDiffViewColorTheme;
   }) => {
     const changes = diffLine?.changes;
 
@@ -145,8 +135,8 @@ const DiffString = React.memo(
         const str2 = rawLine.slice(range.location, range.location + range.length);
         const str3 = rawLine.slice(range.location + range.length);
 
-        const addHighlight = noBG ? noBGDiffAddContentHighlight : diffAddContentHighlight;
-        const delHighlight = noBG ? noBGDiffDelContentHighlight : diffDelContentHighlight;
+        const addHighlight = noBG ? themeColors.noBGAddContentHighlight : themeColors.addContentHighlight;
+        const delHighlight = noBG ? themeColors.noBGDelContentHighlight : themeColors.delContentHighlight;
         const highlightBG =
           operator === "add"
             ? theme === "light"
@@ -176,7 +166,7 @@ const DiffString = React.memo(
 
       // Use width - 2 because the operator column takes 1 character and end padding takes 1 character
       return buildAnsiStringWithLineBreaks(chars, width - 2);
-    }, [bg, width, theme, rawLine, changes, operator, enableTabSpace, tabWidth, noBG]);
+    }, [bg, width, theme, rawLine, changes, operator, enableTabSpace, tabWidth, noBG, themeColors]);
 
     return (
       <Box width={width - 2} backgroundColor={bg}>
@@ -246,6 +236,7 @@ const DiffSyntax = React.memo(
     operator,
     syntaxLine,
     noBG,
+    themeColors,
   }: {
     bg?: string;
     width: number;
@@ -256,6 +247,7 @@ const DiffSyntax = React.memo(
     syntaxLine?: File["syntaxFile"][number];
     operator?: "add" | "del";
     noBG?: boolean;
+    themeColors: ResolvedDiffViewColorTheme;
   }) => {
     const { useDiffContext } = useDiffViewContext();
 
@@ -273,8 +265,8 @@ const DiffSyntax = React.memo(
       const chars: Array<{ char: string; style?: CharStyle }> = [];
       const baseStyle: CharStyle = { backgroundColor: bg };
 
-      const addHighlight = noBG ? noBGDiffAddContentHighlight : diffAddContentHighlight;
-      const delHighlight = noBG ? noBGDiffDelContentHighlight : diffDelContentHighlight;
+      const addHighlight = noBG ? themeColors.noBGAddContentHighlight : themeColors.addContentHighlight;
+      const delHighlight = noBG ? themeColors.noBGDelContentHighlight : themeColors.delContentHighlight;
       const highlightBG =
         operator === "add"
           ? theme === "light"
@@ -355,7 +347,7 @@ const DiffSyntax = React.memo(
 
       // Use width - 2 because the operator column takes 1 character and end padding takes 1 character
       return buildAnsiStringWithLineBreaks(chars, width - 2);
-    }, [bg, width, theme, diffLine, operator, syntaxLine, enableTabSpace, tabWidth, noBG]);
+    }, [bg, width, theme, diffLine, operator, syntaxLine, enableTabSpace, tabWidth, noBG, themeColors]);
 
     // Fallback to DiffString if no syntax line
     if (!syntaxLine) {
@@ -369,6 +361,7 @@ const DiffSyntax = React.memo(
           diffLine={diffLine}
           operator={operator}
           noBG={noBG}
+          themeColors={themeColors}
         />
       );
     }
@@ -448,6 +441,7 @@ export const DiffContent = React.memo(
     syntaxLine,
     enableHighlight,
     noBG,
+    themeColors,
   }: {
     width: number;
     height: number;
@@ -459,6 +453,7 @@ export const DiffContent = React.memo(
     diffFile: DiffFile;
     enableHighlight: boolean;
     noBG?: boolean;
+    themeColors: ResolvedDiffViewColorTheme;
   }) => {
     const { useDiffContext } = useDiffViewContext();
 
@@ -469,19 +464,19 @@ export const DiffContent = React.memo(
     const isMaxLineLengthToIgnoreSyntax = syntaxLine && syntaxLine?.nodeList?.length > 150;
 
     const bg = React.useMemo(() => {
-      const addColors = noBG ? noBGDiffAddContent : diffAddContent;
-      const delColors = noBG ? noBGDiffDelContent : diffDelContent;
+      const addColors = noBG ? themeColors.noBGAddContent : themeColors.addContent;
+      const delColors = noBG ? themeColors.noBGDelContent : themeColors.delContent;
       if (isAdded) return theme === "light" ? addColors.light : addColors.dark;
       if (isDelete) return theme === "light" ? delColors.light : delColors.dark;
       if (noBG) return undefined;
       return theme === "light"
         ? diffLine
-          ? diffPlainContent.light
-          : diffExpandContent.light
+          ? themeColors.plainContent.light
+          : themeColors.expandContent.light
         : diffLine
-          ? diffPlainContent.dark
-          : diffExpandContent.dark;
-    }, [theme, diffLine, isAdded, isDelete, noBG]);
+          ? themeColors.plainContent.dark
+          : themeColors.expandContent.dark;
+    }, [theme, diffLine, isAdded, isDelete, noBG, themeColors]);
 
     const operatorChar = isAdded ? "+" : isDelete ? "-" : " ";
 
@@ -503,6 +498,7 @@ export const DiffContent = React.memo(
             diffLine={diffLine}
             syntaxLine={syntaxLine}
             noBG={noBG}
+            themeColors={themeColors}
           />
         ) : (
           <DiffString
@@ -515,6 +511,7 @@ export const DiffContent = React.memo(
             diffLine={diffLine}
             plainLine={plainLine}
             noBG={noBG}
+            themeColors={themeColors}
           />
         )}
         <DiffPadding height={height} backgroundColor={bg} />

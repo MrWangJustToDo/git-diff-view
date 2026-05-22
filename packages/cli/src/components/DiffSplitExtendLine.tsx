@@ -3,9 +3,9 @@ import * as React from "react";
 
 import { SplitSide } from "..";
 
-import { diffEmptyContent } from "./color";
 import { useDiffViewContext } from "./DiffViewContext";
 
+import type { ResolvedDiffViewColorTheme } from "./color";
 import type { DiffFile } from "@git-diff-view/core";
 
 const InternalDiffSplitExtendLine = ({
@@ -17,6 +17,7 @@ const InternalDiffSplitExtendLine = ({
   oldLineExtend,
   newLineExtend,
   noBG,
+  themeColors,
 }: {
   index: number;
   columns: number;
@@ -26,6 +27,7 @@ const InternalDiffSplitExtendLine = ({
   oldLineExtend: { data: any };
   newLineExtend: { data: any };
   noBG?: boolean;
+  themeColors: ResolvedDiffViewColorTheme;
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
@@ -58,7 +60,7 @@ const InternalDiffSplitExtendLine = ({
       onUpdate: diffFile.notifyAll,
     });
 
-  const bgColor = noBG ? undefined : theme === "light" ? diffEmptyContent.light : diffEmptyContent.dark;
+  const bgColor = noBG ? undefined : theme === "light" ? themeColors.emptyContent.light : themeColors.emptyContent.dark;
 
   return (
     <Box data-line={`${lineNumber}-extend`} data-state="extend">
@@ -79,6 +81,7 @@ export const DiffSplitExtendLine = ({
   diffFile,
   lineNumber,
   noBG,
+  themeColors,
 }: {
   index: number;
   columns: number;
@@ -86,6 +89,7 @@ export const DiffSplitExtendLine = ({
   diffFile: DiffFile;
   lineNumber: number;
   noBG?: boolean;
+  themeColors: ResolvedDiffViewColorTheme;
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
@@ -122,6 +126,7 @@ export const DiffSplitExtendLine = ({
       lineNumber={lineNumber}
       oldLineExtend={oldLineExtend}
       newLineExtend={newLineExtend}
+      themeColors={themeColors}
     />
   );
 };

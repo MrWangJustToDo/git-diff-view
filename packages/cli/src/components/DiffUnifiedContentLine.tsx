@@ -2,19 +2,11 @@ import { type DiffFile, type DiffLine, checkDiffLineIncludeChange, type File } f
 import { NewLineSymbol } from "@git-diff-view/utils";
 import { Box } from "ink";
 
-import {
-  diffAddLineNumber,
-  diffDelLineNumber,
-  diffExpandLineNumber,
-  diffExpandLineNumberColor,
-  diffPlainLineNumber,
-  diffPlainLineNumberColor,
-  noBGDiffAddLineNumber,
-  noBGDiffDelLineNumber,
-} from "./color";
 import { DiffContent } from "./DiffContent";
 import { DiffUnifiedLineNumberArea } from "./DiffLineNumber";
 import { getCurrentLineRow } from "./tools";
+
+import type { ResolvedDiffViewColorTheme } from "./color";
 
 /**
  * Unified view line component for deleted lines (old side only)
@@ -34,6 +26,7 @@ const DiffUnifiedOldLine = ({
   contentWidth,
   enableHighlight,
   noBG,
+  themeColors,
 }: {
   index: number;
   height: number;
@@ -49,10 +42,12 @@ const DiffUnifiedOldLine = ({
   contentWidth: number;
   enableHighlight: boolean;
   noBG?: boolean;
+  themeColors: ResolvedDiffViewColorTheme;
 }) => {
-  const color = theme === "light" ? diffPlainLineNumberColor.light : diffPlainLineNumberColor.dark;
+  const color = theme === "light" ? themeColors.plainLineNumberColor.light : themeColors.plainLineNumberColor.dark;
 
-  const delLnColors = noBG ? noBGDiffDelLineNumber : diffDelLineNumber;
+  const delLnColors = noBG ? themeColors.noBGDelLineNumber : themeColors.delLineNumber;
+
   const bg = theme === "light" ? delLnColors.light : delLnColors.dark;
 
   return (
@@ -77,6 +72,7 @@ const DiffUnifiedOldLine = ({
         syntaxLine={syntaxLine}
         enableHighlight={enableHighlight}
         noBG={noBG}
+        themeColors={themeColors}
       />
     </Box>
   );
@@ -100,6 +96,7 @@ const DiffUnifiedNewLine = ({
   contentWidth,
   enableHighlight,
   noBG,
+  themeColors,
 }: {
   index: number;
   height: number;
@@ -115,10 +112,12 @@ const DiffUnifiedNewLine = ({
   contentWidth: number;
   enableHighlight: boolean;
   noBG?: boolean;
+  themeColors: ResolvedDiffViewColorTheme;
 }) => {
-  const color = theme === "light" ? diffPlainLineNumberColor.light : diffPlainLineNumberColor.dark;
+  const color = theme === "light" ? themeColors.plainLineNumberColor.light : themeColors.plainLineNumberColor.dark;
 
-  const addLnColors = noBG ? noBGDiffAddLineNumber : diffAddLineNumber;
+  const addLnColors = noBG ? themeColors.noBGAddLineNumber : themeColors.addLineNumber;
+
   const bg = theme === "light" ? addLnColors.light : addLnColors.dark;
 
   return (
@@ -143,6 +142,7 @@ const DiffUnifiedNewLine = ({
         syntaxLine={syntaxLine}
         enableHighlight={enableHighlight}
         noBG={noBG}
+        themeColors={themeColors}
       />
     </Box>
   );
@@ -157,6 +157,7 @@ const InternalDiffUnifiedLine = ({
   lineNumWidth,
   enableHighlight,
   noBG,
+  themeColors,
 }: {
   index: number;
   theme: "light" | "dark";
@@ -166,6 +167,7 @@ const InternalDiffUnifiedLine = ({
   lineNumWidth: number;
   enableHighlight: boolean;
   noBG?: boolean;
+  themeColors: ResolvedDiffViewColorTheme;
 }) => {
   const unifiedLine = diffFile.getUnifiedLine(index);
 
@@ -204,21 +206,21 @@ const InternalDiffUnifiedLine = ({
 
   const color = hasDiff
     ? theme === "light"
-      ? diffPlainLineNumberColor.light
-      : diffPlainLineNumberColor.dark
+      ? themeColors.plainLineNumberColor.light
+      : themeColors.plainLineNumberColor.dark
     : theme === "light"
-      ? diffExpandLineNumberColor.light
-      : diffExpandLineNumberColor.dark;
+      ? themeColors.expandLineNumberColor.light
+      : themeColors.expandLineNumberColor.dark;
 
   const bg = noBG
     ? undefined
     : hasDiff
       ? theme === "light"
-        ? diffPlainLineNumber.light
-        : diffPlainLineNumber.dark
+        ? themeColors.plainLineNumber.light
+        : themeColors.plainLineNumber.dark
       : theme === "light"
-        ? diffExpandLineNumber.light
-        : diffExpandLineNumber.dark;
+        ? themeColors.expandLineNumber.light
+        : themeColors.expandLineNumber.dark;
 
   // Handle changed lines (additions or deletions)
   if (hasChange) {
@@ -239,6 +241,7 @@ const InternalDiffUnifiedLine = ({
           enableHighlight={enableHighlight}
           lineNumber={unifiedLine.oldLineNumber}
           noBG={noBG}
+          themeColors={themeColors}
         />
       );
     } else {
@@ -258,6 +261,7 @@ const InternalDiffUnifiedLine = ({
           enableHighlight={enableHighlight}
           lineNumber={unifiedLine.newLineNumber!}
           noBG={noBG}
+          themeColors={themeColors}
         />
       );
     }
@@ -286,6 +290,7 @@ const InternalDiffUnifiedLine = ({
         syntaxLine={syntaxLine}
         enableHighlight={enableHighlight}
         noBG={noBG}
+        themeColors={themeColors}
       />
     </Box>
   );
@@ -300,6 +305,7 @@ export const DiffUnifiedContentLine = ({
   lineNumWidth,
   enableHighlight,
   noBG,
+  themeColors,
 }: {
   index: number;
   columns: number;
@@ -309,6 +315,7 @@ export const DiffUnifiedContentLine = ({
   lineNumWidth: number;
   enableHighlight: boolean;
   noBG?: boolean;
+  themeColors: ResolvedDiffViewColorTheme;
 }) => {
   const unifiedLine = diffFile.getUnifiedLine(index);
 
@@ -324,6 +331,7 @@ export const DiffUnifiedContentLine = ({
       lineNumWidth={lineNumWidth}
       enableHighlight={enableHighlight}
       noBG={noBG}
+      themeColors={themeColors}
     />
   );
 };

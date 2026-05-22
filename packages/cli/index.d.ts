@@ -1005,6 +1005,37 @@ export declare enum DiffModeEnum {
 	Split = 3,
 	Unified = 4
 }
+export type ThemeColor = {
+	light: string;
+	dark: string;
+};
+export interface DiffViewColorTheme {
+	addContent?: ThemeColor;
+	delContent?: ThemeColor;
+	plainContent?: ThemeColor;
+	expandContent?: ThemeColor;
+	emptyContent?: ThemeColor;
+	addLineNumber?: ThemeColor;
+	delLineNumber?: ThemeColor;
+	plainLineNumber?: ThemeColor;
+	expandLineNumber?: ThemeColor;
+	hunkLineNumber?: ThemeColor;
+	plainLineNumberColor?: ThemeColor;
+	expandLineNumberColor?: ThemeColor;
+	hunkContentColor?: ThemeColor;
+	addContentHighlight?: ThemeColor;
+	delContentHighlight?: ThemeColor;
+	hunkContent?: ThemeColor;
+	border?: ThemeColor;
+	noBGAddContent?: ThemeColor;
+	noBGDelContent?: ThemeColor;
+	noBGAddLineNumber?: ThemeColor;
+	noBGDelLineNumber?: ThemeColor;
+	noBGAddContentHighlight?: ThemeColor;
+	noBGDelContentHighlight?: ThemeColor;
+}
+export type ResolvedDiffViewColorTheme = Required<DiffViewColorTheme>;
+export declare const buildTheme: (overrides?: DiffViewColorTheme) => ResolvedDiffViewColorTheme;
 export type DiffViewProps<T> = {
 	data?: {
 		oldFile?: {
@@ -1037,6 +1068,7 @@ export type DiffViewProps<T> = {
 	diffViewHighlight?: boolean;
 	diffViewHideOperator?: boolean;
 	diffViewNoBG?: boolean;
+	diffViewThemeColors?: DiffViewColorTheme;
 	renderExtendLine?: ({ diffFile, side, data, lineNumber, onUpdate, }: {
 		lineNumber: number;
 		side: SplitSide;
@@ -1104,6 +1136,7 @@ export type CodeViewProps<T> = {
 	registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
 	codeViewHighlight?: boolean;
 	codeViewNoBG?: boolean;
+	codeViewThemeColors?: DiffViewColorTheme;
 	renderExtendLine?: ({ file, data, lineNumber }: {
 		file: File$1;
 		lineNumber: number;

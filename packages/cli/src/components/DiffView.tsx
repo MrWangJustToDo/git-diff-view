@@ -12,6 +12,7 @@ import { DiffUnifiedView } from "./DiffUnifiedView";
 import { DiffViewContext } from "./DiffViewContext";
 import { createDiffConfigStore } from "./tools";
 
+import type { DiffViewColorTheme } from "./color";
 import type { DiffHighlighter, DiffHighlighterLang } from "@git-diff-view/core";
 import type { DOMElement } from "ink";
 import type { ForwardedRef, JSX, ReactNode, RefObject } from "react";
@@ -42,6 +43,8 @@ export type DiffViewProps<T> = {
   diffViewHideOperator?: boolean;
   // disable background colors for transparent terminal rendering
   diffViewNoBG?: boolean;
+  // custom theme colors to override defaults
+  diffViewThemeColors?: DiffViewColorTheme;
   renderExtendLine?: ({
     diffFile,
     side,
@@ -90,6 +93,7 @@ const InternalDiffView = <T extends unknown>(
     diffViewTabWidth,
     diffViewHideOperator,
     diffViewNoBG,
+    diffViewThemeColors,
   } = props;
 
   const diffFileId = useMemo(() => diffFile!.getId(), [diffFile]);
@@ -117,6 +121,7 @@ const InternalDiffView = <T extends unknown>(
       setHideOperator,
       noBG,
       setNoBG,
+      setThemeColors,
       width,
       setWidth,
     } = useDiffContext.getReadonlyState();
@@ -157,6 +162,8 @@ const InternalDiffView = <T extends unknown>(
       setNoBG(!!diffViewNoBG);
     }
 
+    setThemeColors(diffViewThemeColors);
+
     if (_width && _width !== width) {
       setWidth(_width);
     }
@@ -172,6 +179,7 @@ const InternalDiffView = <T extends unknown>(
     diffViewTabWidth,
     diffViewHideOperator,
     diffViewNoBG,
+    diffViewThemeColors,
     props.extendData,
     props.renderExtendLine,
   ]);

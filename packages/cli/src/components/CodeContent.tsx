@@ -7,9 +7,9 @@ import * as React from "react";
 
 import { buildAnsiStringWithLineBreaks, buildStyledBlock, type CharStyle } from "./ansiString";
 import { useCodeViewContext } from "./CodeViewContext";
-import { diffPlainContent } from "./color";
 import { getStyleObjectFromString, getStyleFromClassName } from "./DiffContent";
 
+import type { ResolvedDiffViewColorTheme } from "./color";
 import type { File } from "@git-diff-view/core";
 
 // Helper to get tab width value
@@ -212,6 +212,7 @@ CodePadding.displayName = "CodePadding";
 export const CodeContent = React.memo(
   ({
     theme,
+    themeColors,
     width,
     height,
     rawLine,
@@ -222,6 +223,7 @@ export const CodeContent = React.memo(
     width: number;
     height: number;
     theme: "light" | "dark";
+    themeColors: ResolvedDiffViewColorTheme;
     rawLine: string;
     plainLine?: File["plainFile"][number];
     syntaxLine?: File["syntaxFile"][number];
@@ -232,8 +234,8 @@ export const CodeContent = React.memo(
 
     const bg = React.useMemo(() => {
       if (noBG) return undefined;
-      return theme === "light" ? diffPlainContent.light : diffPlainContent.dark;
-    }, [theme, noBG]);
+      return theme === "light" ? themeColors.plainContent.light : themeColors.plainContent.dark;
+    }, [theme, noBG, themeColors]);
 
     // Content width is total width minus 2 char padding (1 on each side)
     const contentWidth = width - 2;
