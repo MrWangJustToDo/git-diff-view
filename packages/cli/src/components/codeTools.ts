@@ -1,7 +1,7 @@
 import { createStore, markRaw, ref } from "reactivity-store";
 import stringWidth from "string-width";
 
-import { buildTheme } from "./color";
+import { buildTheme, isThemeEqual } from "./color";
 
 import type { CodeViewProps } from "./CodeView";
 import type { ResolvedDiffViewColorTheme, DiffViewColorTheme } from "./color";
@@ -62,7 +62,12 @@ export const createCodeConfigStore = <T = any>(props: CodeViewProps<T>, fileId: 
 
     const themeColors = ref(buildTheme(props.codeViewThemeColors));
 
-    const setThemeColors = (_themeColors?: DiffViewColorTheme) => (themeColors.value = buildTheme(_themeColors));
+    const setThemeColors = (_themeColors?: DiffViewColorTheme) => {
+      const next = buildTheme(_themeColors);
+      if (!isThemeEqual(themeColors.value, next)) {
+        themeColors.value = next;
+      }
+    };
 
     return {
       id,

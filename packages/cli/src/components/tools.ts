@@ -1,10 +1,10 @@
 import { createStore, markRaw, ref, configureEnv } from "reactivity-store";
 import stringWidth from "string-width";
 
-import { buildTheme } from "./color";
+import { buildTheme, isThemeEqual } from "./color";
 
-import type { DiffModeEnum, DiffViewProps } from "./DiffView";
 import type { ResolvedDiffViewColorTheme, DiffViewColorTheme } from "./color";
+import type { DiffModeEnum, DiffViewProps } from "./DiffView";
 import type { DiffLine } from "@git-diff-view/core";
 import type { DOMElement } from "ink";
 import type { Ref, UseSelectorWithStore } from "reactivity-store";
@@ -85,7 +85,12 @@ export const createDiffConfigStore = <T = any>(props: DiffViewProps<T>, diffFile
 
     const themeColors = ref(buildTheme(props.diffViewThemeColors));
 
-    const setThemeColors = (_themeColors?: DiffViewColorTheme) => (themeColors.value = buildTheme(_themeColors));
+    const setThemeColors = (_themeColors?: DiffViewColorTheme) => {
+      const next = buildTheme(_themeColors);
+      if (!isThemeEqual(themeColors.value, next)) {
+        themeColors.value = next;
+      }
+    };
 
     return {
       id,

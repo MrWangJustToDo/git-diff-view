@@ -67,3 +67,12 @@ export const buildTheme = (overrides?: DiffViewColorTheme): ResolvedDiffViewColo
   }
   return result;
 };
+
+export const isThemeEqual = (a: ResolvedDiffViewColorTheme, b: ResolvedDiffViewColorTheme): boolean => {
+  if (a === b) return true;
+  const keys = Object.keys(a) as (keyof ResolvedDiffViewColorTheme)[];
+  for (const key of keys) {
+    if (a[key].light !== b[key].light || a[key].dark !== b[key].dark) return false;
+  }
+  return true;
+};
