@@ -1,7 +1,7 @@
 import { highlighter } from "@git-diff-view/lowlight";
 
 import { Cache } from "./cache";
-import { getPlainLineTemplate, getSyntaxLineTemplate, processTransformForFile } from "./parse";
+import { getEnableBuildTemplate, getPlainLineTemplate, getSyntaxLineTemplate, processTransformForFile } from "./parse";
 
 import type { DiffAST, DiffHighlighter, DiffHighlighterLang, SyntaxLine } from "@git-diff-view/lowlight";
 
@@ -174,10 +174,11 @@ export class File {
 
     const { syntaxFileObject, syntaxFileLineNumber } = supportEngin.processAST(this.ast);
 
-    // get syntax template
-    Object.values(syntaxFileObject).forEach((line: SyntaxLineWithTemplate) => {
-      line.template = getSyntaxLineTemplate(line);
-    });
+    if (getEnableBuildTemplate()) {
+      Object.values(syntaxFileObject).forEach((line: SyntaxLineWithTemplate) => {
+        line.template = getSyntaxLineTemplate(line);
+      });
+    }
 
     this.syntaxFile = syntaxFileObject;
 
@@ -209,11 +210,13 @@ export class File {
 
     this.plainFile = {};
 
+    const buildTemplate = getEnableBuildTemplate();
+
     for (let i = 0; i < rawArray.length; i++) {
       this.rawFile[i + 1] = i < rawArray.length - 1 ? rawArray[i] + "\n" : rawArray[i];
       this.plainFile[i + 1] = {
         value: this.rawFile[i + 1],
-        template: getPlainLineTemplate(this.rawFile[i + 1]),
+        template: buildTemplate ? getPlainLineTemplate(this.rawFile[i + 1]) : undefined,
       };
     }
 

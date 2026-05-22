@@ -71,6 +71,7 @@ const buildCli = async () => {
     packageScope: "packages",
     external: external,
   });
+  await buildType("cli");
 };
 
 const buildSolid = async () => {
@@ -107,7 +108,7 @@ const buildVue = async () => {
     ls.on("error", (e) => j(e));
   });
   await buildCss("vue");
-  // await buildType("vue");
+  await buildType("vue");
   await copyCss("vue", "diff-view.css");
   await copyCss("vue", "diff-view-pure.css");
 };

@@ -20,7 +20,7 @@ export const DiffSplitLineNumberArea: React.FC<{
   lineNumber?: number;
   lineNumWidth: number;
   height: number;
-  backgroundColor: string;
+  backgroundColor?: string;
   color: string;
   dim?: boolean;
 }> = React.memo(({ lineNumber, lineNumWidth, height, backgroundColor, color, dim = false }) => {
@@ -60,7 +60,7 @@ export const DiffUnifiedLineNumberArea: React.FC<{
   newLineNumber?: number;
   lineNumWidth: number;
   height: number;
-  backgroundColor: string;
+  backgroundColor?: string;
   color: string;
   dim?: boolean;
 }> = React.memo(({ oldLineNumber, newLineNumber, lineNumWidth, height, backgroundColor, color, dim = false }) => {
@@ -103,7 +103,7 @@ DiffUnifiedLineNumberArea.displayName = "DiffUnifiedLineNumberArea";
 export const DiffEmptyArea: React.FC<{
   width: number;
   height: number;
-  backgroundColor: string;
+  backgroundColor?: string;
 }> = React.memo(({ width, height, backgroundColor }) => {
   const content = React.useMemo(() => {
     const style: CharStyle = { backgroundColor };

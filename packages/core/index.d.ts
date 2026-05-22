@@ -527,6 +527,7 @@ export declare const checkDiffLineIncludeChange: (diffLine?: DiffLine) => boolea
 export declare const defaultTransform: (content: string) => string;
 export declare const disableCache: () => void;
 export declare const getCurrentComposeLength: () => number;
+export declare const getEnableBuildTemplate: () => boolean;
 export declare const getEnableFastDiffTemplate: () => boolean;
 export declare const getLang: (fileName: string) => string;
 export declare const getMaxLengthToIgnoreLineDiff: () => number;
@@ -609,6 +610,7 @@ export declare const processTransformForFile: (content: string) => string;
  */
 export declare const processTransformTemplateContent: (content: string) => string;
 export declare const resetDefaultComposeLength: () => void;
+export declare const resetEnableBuildTemplate: () => void;
 export declare const resetEnableFastDiffTemplate: () => void;
 export declare const resetMaxLengthToIgnoreLineDiff: () => void;
 /**
@@ -620,6 +622,7 @@ export declare const resetMaxLengthToIgnoreLineDiff: () => void;
  * ```
  */
 export declare const resetTransform: () => void;
+export declare const setEnableBuildTemplate: (enable: boolean) => void;
 export declare const setEnableFastDiffTemplate: (enable: boolean) => void;
 /**
  * ⚠️ **WARNING: DANGEROUS OPERATION** ⚠️

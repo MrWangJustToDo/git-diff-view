@@ -55,7 +55,7 @@ const processCharsForAnsi = (
 /**
  * CodeString component using ANSI escape codes for proper character-level wrapping.
  */
-const CodeString = React.memo(({ bg, width, rawLine }: { bg: string; width: number; rawLine: string }) => {
+const CodeString = React.memo(({ bg, width, rawLine }: { bg?: string; width: number; rawLine: string }) => {
   const { useCodeContext } = useCodeViewContext();
 
   const { enableTabSpace, tabWidth } = useCodeContext((s) => ({ enableTabSpace: s.tabSpace, tabWidth: s.tabWidth }));
@@ -132,7 +132,7 @@ const CodeSyntax = React.memo(
     rawLine,
     syntaxLine,
   }: {
-    bg: string;
+    bg?: string;
     width: number;
     theme: "light" | "dark";
     rawLine: string;
@@ -188,7 +188,7 @@ CodeSyntax.displayName = "CodeSyntax";
  * CodePadding component - Renders a 1-char padding column
  * using chalk for proper multi-row support.
  */
-const CodePadding = React.memo(({ height, backgroundColor }: { height: number; backgroundColor: string }) => {
+const CodePadding = React.memo(({ height, backgroundColor }: { height: number; backgroundColor?: string }) => {
   const content = React.useMemo(() => {
     const lines: string[] = [];
     const style: CharStyle = { backgroundColor };
@@ -217,6 +217,7 @@ export const CodeContent = React.memo(
     rawLine,
     syntaxLine,
     enableHighlight,
+    noBG,
   }: {
     width: number;
     height: number;
@@ -225,13 +226,14 @@ export const CodeContent = React.memo(
     plainLine?: File["plainFile"][number];
     syntaxLine?: File["syntaxFile"][number];
     enableHighlight: boolean;
+    noBG?: boolean;
   }) => {
     const isMaxLineLengthToIgnoreSyntax = syntaxLine && syntaxLine?.nodeList?.length > 150;
 
-    // Background color for normal code
     const bg = React.useMemo(() => {
+      if (noBG) return undefined;
       return theme === "light" ? diffPlainContent.light : diffPlainContent.dark;
-    }, [theme]);
+    }, [theme, noBG]);
 
     // Content width is total width minus 2 char padding (1 on each side)
     const contentWidth = width - 2;

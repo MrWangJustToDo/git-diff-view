@@ -20,6 +20,18 @@ export const resetEnableFastDiffTemplate = () => {
   enableFastDiffTemplate = false;
 };
 
+let enableBuildTemplate = true;
+
+export const getEnableBuildTemplate = () => enableBuildTemplate;
+
+export const setEnableBuildTemplate = (enable: boolean) => {
+  enableBuildTemplate = enable;
+};
+
+export const resetEnableBuildTemplate = () => {
+  enableBuildTemplate = true;
+};
+
 export const defaultTransform = (content: string) => escapeHtml(content).replace(/\n/g, "").replace(/\r/g, "");
 
 export const getPlainDiffTemplate = ({

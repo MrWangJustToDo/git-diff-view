@@ -2,6 +2,11 @@ packages:
   - "packages/*"
   - "ui/*"
 
+allowBuilds:
+  "esbuild": true
+  "@swc/core": true
+  "sharp": true
+
 catalog:
   "@rollup/plugin-alias": ^5.1.1
   "@swc/core": ^1.15.18

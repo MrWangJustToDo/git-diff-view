@@ -16,7 +16,10 @@ import type { DiffFile } from "@git-diff-view/core";
 export const DiffUnifiedView = memo(({ diffFile, width }: { diffFile: DiffFile; width?: number }) => {
   const { useDiffContext } = useDiffViewContext();
 
-  const enableHighlight = useDiffContext.useShallowStableSelector((s) => s.enableHighlight);
+  const { enableHighlight, noBG } = useDiffContext.useShallowStableSelector((s) => ({
+    enableHighlight: s.enableHighlight,
+    noBG: s.noBG,
+  }));
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
 
@@ -45,6 +48,7 @@ export const DiffUnifiedView = memo(({ diffFile, width }: { diffFile: DiffFile; 
             columns={columns}
             diffFile={diffFile}
             lineNumber={item.lineNumber}
+            noBG={noBG}
           />
           <DiffUnifiedContentLine
             index={item.index}
@@ -54,6 +58,7 @@ export const DiffUnifiedView = memo(({ diffFile, width }: { diffFile: DiffFile; 
             lineNumWidth={lineNumWidth}
             lineNumber={item.lineNumber}
             enableHighlight={enableHighlight}
+            noBG={noBG}
           />
           <DiffUnifiedExtendLine
             index={item.index}
@@ -71,6 +76,7 @@ export const DiffUnifiedView = memo(({ diffFile, width }: { diffFile: DiffFile; 
         index={diffFile.unifiedLineLength}
         lineNumber={diffFile.unifiedLineLength}
         lineNumWidth={lineNumWidth}
+        noBG={noBG}
       />
     </>
   );

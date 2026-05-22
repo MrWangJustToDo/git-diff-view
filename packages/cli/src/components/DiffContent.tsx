@@ -12,6 +12,10 @@ import {
   diffDelContentHighlight,
   diffExpandContent,
   diffPlainContent,
+  noBGDiffAddContent,
+  noBGDiffAddContentHighlight,
+  noBGDiffDelContent,
+  noBGDiffDelContentHighlight,
   GitHubDark,
   GitHubLight,
 } from "./color";
@@ -110,8 +114,9 @@ const DiffString = React.memo(
     rawLine,
     diffLine,
     operator,
+    noBG,
   }: {
-    bg: string;
+    bg?: string;
     width: number;
     theme: "light" | "dark";
     height: number;
@@ -119,6 +124,7 @@ const DiffString = React.memo(
     diffLine?: DiffLine;
     operator?: "add" | "del";
     plainLine?: File["plainFile"][number];
+    noBG?: boolean;
   }) => {
     const changes = diffLine?.changes;
 
@@ -129,7 +135,6 @@ const DiffString = React.memo(
       tabWidth: s.tabWidth,
     }));
 
-    // Memoize the ANSI content to avoid rebuilding on every render
     const ansiContent = React.useMemo(() => {
       const chars: Array<{ char: string; style?: CharStyle }> = [];
       const baseStyle: CharStyle = { backgroundColor: bg };
@@ -140,22 +145,21 @@ const DiffString = React.memo(
         const str2 = rawLine.slice(range.location, range.location + range.length);
         const str3 = rawLine.slice(range.location + range.length);
 
+        const addHighlight = noBG ? noBGDiffAddContentHighlight : diffAddContentHighlight;
+        const delHighlight = noBG ? noBGDiffDelContentHighlight : diffDelContentHighlight;
         const highlightBG =
           operator === "add"
             ? theme === "light"
-              ? diffAddContentHighlight.light
-              : diffAddContentHighlight.dark
+              ? addHighlight.light
+              : addHighlight.dark
             : theme === "light"
-              ? diffDelContentHighlight.light
-              : diffDelContentHighlight.dark;
+              ? delHighlight.light
+              : delHighlight.dark;
 
         const highlightStyle: CharStyle = { backgroundColor: highlightBG };
 
-        // Process str1 (before change)
         chars.push(...processCharsForAnsi(str1, enableTabSpace, tabWidth, baseStyle));
-        // Process str2 (the changed part with highlight)
         chars.push(...processCharsForAnsi(str2, enableTabSpace, tabWidth, baseStyle, highlightStyle));
-        // Process str3 (after change)
         chars.push(...processCharsForAnsi(str3, enableTabSpace, tabWidth, baseStyle));
 
         // Add newline symbol indicator if needed
@@ -172,7 +176,7 @@ const DiffString = React.memo(
 
       // Use width - 2 because the operator column takes 1 character and end padding takes 1 character
       return buildAnsiStringWithLineBreaks(chars, width - 2);
-    }, [bg, width, theme, rawLine, changes, operator, enableTabSpace, tabWidth]);
+    }, [bg, width, theme, rawLine, changes, operator, enableTabSpace, tabWidth, noBG]);
 
     return (
       <Box width={width - 2} backgroundColor={bg}>
@@ -241,8 +245,9 @@ const DiffSyntax = React.memo(
     diffLine,
     operator,
     syntaxLine,
+    noBG,
   }: {
-    bg: string;
+    bg?: string;
     width: number;
     theme: "light" | "dark";
     height: number;
@@ -250,6 +255,7 @@ const DiffSyntax = React.memo(
     diffLine?: DiffLine;
     syntaxLine?: File["syntaxFile"][number];
     operator?: "add" | "del";
+    noBG?: boolean;
   }) => {
     const { useDiffContext } = useDiffViewContext();
 
@@ -258,24 +264,25 @@ const DiffSyntax = React.memo(
       tabWidth: s.tabWidth,
     }));
 
-    // Memoize the ANSI content with syntax highlighting
     const ansiContent = React.useMemo(() => {
       if (!syntaxLine) {
-        return null; // Will render DiffString instead
+        return null;
       }
 
       const changes = diffLine?.changes;
       const chars: Array<{ char: string; style?: CharStyle }> = [];
       const baseStyle: CharStyle = { backgroundColor: bg };
 
+      const addHighlight = noBG ? noBGDiffAddContentHighlight : diffAddContentHighlight;
+      const delHighlight = noBG ? noBGDiffDelContentHighlight : diffDelContentHighlight;
       const highlightBG =
         operator === "add"
           ? theme === "light"
-            ? diffAddContentHighlight.light
-            : diffAddContentHighlight.dark
+            ? addHighlight.light
+            : addHighlight.dark
           : theme === "light"
-            ? diffDelContentHighlight.light
-            : diffDelContentHighlight.dark;
+            ? delHighlight.light
+            : delHighlight.dark;
 
       const range = changes?.hasLineChange ? changes.range : null;
 
@@ -348,7 +355,7 @@ const DiffSyntax = React.memo(
 
       // Use width - 2 because the operator column takes 1 character and end padding takes 1 character
       return buildAnsiStringWithLineBreaks(chars, width - 2);
-    }, [bg, width, theme, diffLine, operator, syntaxLine, enableTabSpace, tabWidth]);
+    }, [bg, width, theme, diffLine, operator, syntaxLine, enableTabSpace, tabWidth, noBG]);
 
     // Fallback to DiffString if no syntax line
     if (!syntaxLine) {
@@ -361,6 +368,7 @@ const DiffSyntax = React.memo(
           rawLine={rawLine}
           diffLine={diffLine}
           operator={operator}
+          noBG={noBG}
         />
       );
     }
@@ -380,7 +388,7 @@ DiffSyntax.displayName = "DiffSyntax";
  * using chalk for proper multi-row support.
  */
 const DiffOperator = React.memo(
-  ({ operatorChar, height, backgroundColor }: { operatorChar: string; height: number; backgroundColor: string }) => {
+  ({ operatorChar, height, backgroundColor }: { operatorChar: string; height: number; backgroundColor?: string }) => {
     const content = React.useMemo(() => {
       const lines: string[] = [];
       const style: CharStyle = { backgroundColor };
@@ -408,7 +416,7 @@ DiffOperator.displayName = "DiffOperator";
  * DiffPadding component - Renders a 1-char padding column
  * using chalk for proper multi-row support.
  */
-const DiffPadding = React.memo(({ height, backgroundColor }: { height: number; backgroundColor: string }) => {
+const DiffPadding = React.memo(({ height, backgroundColor }: { height: number; backgroundColor?: string }) => {
   const content = React.useMemo(() => {
     const lines: string[] = [];
     const style: CharStyle = { backgroundColor };
@@ -439,6 +447,7 @@ export const DiffContent = React.memo(
     plainLine,
     syntaxLine,
     enableHighlight,
+    noBG,
   }: {
     width: number;
     height: number;
@@ -449,6 +458,7 @@ export const DiffContent = React.memo(
     diffLine?: DiffLine;
     diffFile: DiffFile;
     enableHighlight: boolean;
+    noBG?: boolean;
   }) => {
     const { useDiffContext } = useDiffViewContext();
 
@@ -458,21 +468,20 @@ export const DiffContent = React.memo(
     const isDelete = diffLine?.type === DiffLineType.Delete;
     const isMaxLineLengthToIgnoreSyntax = syntaxLine && syntaxLine?.nodeList?.length > 150;
 
-    // Memoize background color calculation
     const bg = React.useMemo(() => {
-      const addBG = theme === "light" ? diffAddContent.light : diffAddContent.dark;
-      const delBG = theme === "light" ? diffDelContent.light : diffDelContent.dark;
-      const normalBG =
-        theme === "light"
-          ? diffLine
-            ? diffPlainContent.light
-            : diffExpandContent.light
-          : diffLine
-            ? diffPlainContent.dark
-            : diffExpandContent.dark;
-
-      return isAdded ? addBG : isDelete ? delBG : normalBG;
-    }, [theme, diffLine, isAdded, isDelete]);
+      const addColors = noBG ? noBGDiffAddContent : diffAddContent;
+      const delColors = noBG ? noBGDiffDelContent : diffDelContent;
+      if (isAdded) return theme === "light" ? addColors.light : addColors.dark;
+      if (isDelete) return theme === "light" ? delColors.light : delColors.dark;
+      if (noBG) return undefined;
+      return theme === "light"
+        ? diffLine
+          ? diffPlainContent.light
+          : diffExpandContent.light
+        : diffLine
+          ? diffPlainContent.dark
+          : diffExpandContent.dark;
+    }, [theme, diffLine, isAdded, isDelete, noBG]);
 
     const operatorChar = isAdded ? "+" : isDelete ? "-" : " ";
 
@@ -493,6 +502,7 @@ export const DiffContent = React.memo(
             rawLine={rawLine}
             diffLine={diffLine}
             syntaxLine={syntaxLine}
+            noBG={noBG}
           />
         ) : (
           <DiffString
@@ -504,6 +514,7 @@ export const DiffContent = React.memo(
             rawLine={rawLine}
             diffLine={diffLine}
             plainLine={plainLine}
+            noBG={noBG}
           />
         )}
         <DiffPadding height={height} backgroundColor={bg} />

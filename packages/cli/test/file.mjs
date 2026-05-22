@@ -419,7 +419,7 @@ getDiffViewHighlighter().then((highlighter) => {
       diffViewTheme: "dark",
       diffViewHideOperator: true,
       // diffViewTabWidth: 'small',
-      // diffViewTabSpace: true,
+      diffViewTabSpace: true,
       extendData: {
         newFile: { 97: { data: "test extend data" } },
       },
@@ -430,9 +430,10 @@ getDiffViewHighlighter().then((highlighter) => {
           createElement(Text, null, data)
         );
       },
+      // diffViewNoBG: true,
       diffViewHighlight: true,
       registerHighlighter: highlighter,
-      diffViewMode: DiffModeEnum.SplitGitLab,
+      diffViewMode: DiffModeEnum.Split,
     })
   );
 });

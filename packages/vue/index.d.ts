@@ -524,6 +524,7 @@ export declare const checkDiffLineIncludeChange: (diffLine?: DiffLine) => boolea
 export declare const defaultTransform: (content: string) => string;
 export declare const disableCache: () => void;
 export declare const getCurrentComposeLength: () => number;
+export declare const getEnableBuildTemplate: () => boolean;
 export declare const getEnableFastDiffTemplate: () => boolean;
 export declare const getLang: (fileName: string) => string;
 export declare const getMaxLengthToIgnoreLineDiff: () => number;
@@ -606,6 +607,7 @@ export declare const processTransformForFile: (content: string) => string;
  */
 export declare const processTransformTemplateContent: (content: string) => string;
 export declare const resetDefaultComposeLength: () => void;
+export declare const resetEnableBuildTemplate: () => void;
 export declare const resetEnableFastDiffTemplate: () => void;
 export declare const resetMaxLengthToIgnoreLineDiff: () => void;
 /**
@@ -617,6 +619,7 @@ export declare const resetMaxLengthToIgnoreLineDiff: () => void;
  * ```
  */
 export declare const resetTransform: () => void;
+export declare const setEnableBuildTemplate: (enable: boolean) => void;
 export declare const setEnableFastDiffTemplate: (enable: boolean) => void;
 /**
  * ⚠️ **WARNING: DANGEROUS OPERATION** ⚠️
@@ -1060,34 +1063,12 @@ export declare const DiffView: import("vue").DefineSetupFnComponent<DiffViewProp
 	onOnAddWidgetClick?: (lineNumber: number, side: SplitSide) => any;
 }, import("vue").PublicProps>;
 export declare const version: string;
-/**
- * Extended data item with fromLine support for multi-line comments
- */
-export interface MultiSelectExtendDataItem<T = unknown> {
-	data: T;
-	/**
-	 * Starting line number for multi-line selection
-	 * If not provided, defaults to the key (end line number)
-	 */
-	fromLine?: number;
-}
-/**
- * Extended data format for multi-select diff view
- */
-export type MultiSelectExtendData<T = unknown> = {
-	oldFile?: Record<string, MultiSelectExtendDataItem<T>>;
-	newFile?: Record<string, MultiSelectExtendDataItem<T>>;
-};
-export type DiffViewWithMultiSelectProps<T> = Omit<DiffViewProps<T>, "extendData"> & {
+export type DiffViewWithMultiSelectProps<T> = Omit<DiffViewProps<T>, "onAddWidgetClick"> & {
 	/**
 	 * Enable multi-select feature
 	 * @default true
 	 */
 	enableMultiSelect?: boolean;
-	/**
-	 * Extended data with fromLine support for multi-line comments
-	 */
-	extendData?: MultiSelectExtendData<T>;
 	/**
 	 * Callback when multi-line selection is complete
 	 */
@@ -1111,7 +1092,6 @@ export type multiSelectTypeSlots = SlotsType<{
 	};
 	extend: {
 		lineNumber: number;
-		fromLineNumber: number;
 		side: SplitSide;
 		data: any;
 		diffFile: DiffFile;
@@ -1126,16 +1106,12 @@ export declare const DiffViewWithMultiSelect: import("vue").DefineSetupFnCompone
 	}) => void;
 	onMultiSelectComplete: (result: MultiSelectResult) => void;
 	onMultiSelectChange: (range: LineRange | null, state: MultiSelectState) => void;
-}, multiSelectTypeSlots, Omit<DiffViewProps<any>, "extendData"> & {
+}, multiSelectTypeSlots, Omit<DiffViewProps<any>, "onAddWidgetClick"> & {
 	/**
 	 * Enable multi-select feature
 	 * @default true
 	 */
 	enableMultiSelect?: boolean;
-	/**
-	 * Extended data with fromLine support for multi-line comments
-	 */
-	extendData?: MultiSelectExtendData<any>;
 	/**
 	 * Callback when multi-line selection is complete
 	 */

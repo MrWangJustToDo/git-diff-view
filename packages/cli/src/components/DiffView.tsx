@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/refs */
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
-import { DiffFile, _cacheMap, SplitSide } from "@git-diff-view/core";
+import { DiffFile, _cacheMap, SplitSide, setEnableBuildTemplate } from "@git-diff-view/core";
 import { DiffModeEnum } from "@git-diff-view/utils";
 import { Box } from "ink";
 import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from "react";
@@ -17,6 +17,8 @@ import type { DOMElement } from "ink";
 import type { ForwardedRef, JSX, ReactNode, RefObject } from "react";
 
 _cacheMap.name = "@git-diff-view/cli";
+
+setEnableBuildTemplate(false);
 
 export { SplitSide, DiffModeEnum };
 
@@ -38,6 +40,8 @@ export type DiffViewProps<T> = {
   diffViewHighlight?: boolean;
   // hide the diff operator (+/-/space) and show padding instead
   diffViewHideOperator?: boolean;
+  // disable background colors for transparent terminal rendering
+  diffViewNoBG?: boolean;
   renderExtendLine?: ({
     diffFile,
     side,
@@ -85,6 +89,7 @@ const InternalDiffView = <T extends unknown>(
     diffViewTabSpace,
     diffViewTabWidth,
     diffViewHideOperator,
+    diffViewNoBG,
   } = props;
 
   const diffFileId = useMemo(() => diffFile!.getId(), [diffFile]);
@@ -110,6 +115,8 @@ const InternalDiffView = <T extends unknown>(
       setTabWidth,
       hideOperator,
       setHideOperator,
+      noBG,
+      setNoBG,
       width,
       setWidth,
     } = useDiffContext.getReadonlyState();
@@ -146,6 +153,10 @@ const InternalDiffView = <T extends unknown>(
       setHideOperator(!!diffViewHideOperator);
     }
 
+    if (diffViewNoBG !== noBG) {
+      setNoBG(!!diffViewNoBG);
+    }
+
     if (_width && _width !== width) {
       setWidth(_width);
     }
@@ -160,6 +171,7 @@ const InternalDiffView = <T extends unknown>(
     diffViewTabSpace,
     diffViewTabWidth,
     diffViewHideOperator,
+    diffViewNoBG,
     props.extendData,
     props.renderExtendLine,
   ]);

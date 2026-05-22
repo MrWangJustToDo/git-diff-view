@@ -36,6 +36,8 @@ export type CodeViewProps<T> = {
   codeViewTabWidth?: "small" | "medium" | "large";
   registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
   codeViewHighlight?: boolean;
+  // disable background colors for transparent terminal rendering
+  codeViewNoBG?: boolean;
   renderExtendLine?: ({ file, data, lineNumber }: { file: File; lineNumber: number; data: T }) => ReactNode;
 };
 
@@ -66,6 +68,7 @@ const CodeLine = memo(
     file,
     lineNumWidth,
     enableHighlight,
+    noBG,
   }: {
     lineNumber: number;
     theme: "light" | "dark";
@@ -73,6 +76,7 @@ const CodeLine = memo(
     file: File;
     lineNumWidth: number;
     enableHighlight: boolean;
+    noBG: boolean;
   }) => {
     const rawLine = file.rawFile[lineNumber] || "";
     const syntaxLine = file.syntaxFile[lineNumber];
@@ -83,7 +87,7 @@ const CodeLine = memo(
     // Calculate row height based on actual text width (content width minus 2 char padding on both sides)
     const row = getCurrentLineRow({ content: rawLine, width: contentWidth - 2 });
 
-    const bg = theme === "light" ? diffPlainLineNumber.light : diffPlainLineNumber.dark;
+    const bg = noBG ? undefined : theme === "light" ? diffPlainLineNumber.light : diffPlainLineNumber.dark;
     const color = theme === "light" ? diffPlainLineNumberColor.light : diffPlainLineNumberColor.dark;
 
     return (
@@ -104,6 +108,7 @@ const CodeLine = memo(
           plainLine={plainLine}
           syntaxLine={syntaxLine}
           enableHighlight={enableHighlight}
+          noBG={noBG}
         />
       </Box>
     );
@@ -118,7 +123,10 @@ CodeLine.displayName = "CodeLine";
 const CodeViewContent = memo(({ file, theme, width }: { file: File; theme: "light" | "dark"; width?: number }) => {
   const { useCodeContext } = useCodeViewContext();
 
-  const enableHighlight = useCodeContext((s) => s.enableHighlight);
+  const { enableHighlight, noBG } = useCodeContext((s) => ({
+    enableHighlight: s.enableHighlight,
+    noBG: s.noBG,
+  }));
 
   const { columns: _columns } = useCodeTerminalSize();
 
@@ -149,6 +157,7 @@ const CodeViewContent = memo(({ file, theme, width }: { file: File; theme: "ligh
             file={file}
             lineNumWidth={lineNumWidth}
             enableHighlight={enableHighlight ?? false}
+            noBG={noBG ?? false}
           />
           <CodeExtendLine columns={columns} lineNumber={lineNumber} file={file} />
         </Fragment>
@@ -178,6 +187,7 @@ const InternalCodeView = <T,>(
     codeViewTabSpace,
     codeViewTabWidth,
     codeViewTheme,
+    codeViewNoBG,
   } = props;
 
   const fileId = file.getId();
@@ -201,6 +211,8 @@ const InternalCodeView = <T,>(
       setTabSpace,
       tabWidth,
       setTabWidth,
+      noBG,
+      setNoBG,
     } = useCodeContext.getReadonlyState();
 
     if (fileId && fileId !== id) {
@@ -230,6 +242,10 @@ const InternalCodeView = <T,>(
     if (codeViewTabWidth && codeViewTabWidth !== tabWidth) {
       setTabWidth(codeViewTabWidth);
     }
+
+    if (codeViewNoBG !== noBG) {
+      setNoBG(!!codeViewNoBG);
+    }
   }, [
     _width,
     useCodeContext,
@@ -239,6 +255,7 @@ const InternalCodeView = <T,>(
     renderExtendLine,
     codeViewTabSpace,
     codeViewTabWidth,
+    codeViewNoBG,
     props.extendData,
     props.renderExtendLine,
   ]);

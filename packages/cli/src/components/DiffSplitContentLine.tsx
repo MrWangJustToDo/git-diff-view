@@ -10,6 +10,8 @@ import {
   diffExpandLineNumberColor,
   diffPlainLineNumber,
   diffPlainLineNumberColor,
+  noBGDiffAddLineNumber,
+  noBGDiffDelLineNumber,
 } from "./color";
 import { DiffContent } from "./DiffContent";
 import { DiffSplitLineNumberArea, DiffEmptyArea } from "./DiffLineNumber";
@@ -23,6 +25,7 @@ const InternalDiffSplitLine = ({
   lineNumber,
   lineNumWidth,
   enableHighlight,
+  noBG,
 }: {
   index: number;
   columns: number;
@@ -31,6 +34,7 @@ const InternalDiffSplitLine = ({
   lineNumber: number;
   lineNumWidth: number;
   enableHighlight: boolean;
+  noBG?: boolean;
 }) => {
   const oldLine = diffFile.getSplitLeftLine(index);
   const newLine = diffFile.getSplitRightLine(index);
@@ -49,7 +53,7 @@ const InternalDiffSplitLine = ({
   const hasOldLine = !!oldLine.lineNumber;
   const hasNewLine = !!newLine.lineNumber;
 
-  const emptyBG = theme === "light" ? diffEmptyContent.light : diffEmptyContent.dark;
+  const emptyBG = noBG ? undefined : theme === "light" ? diffEmptyContent.light : diffEmptyContent.dark;
   const halfColumns = columns / 2;
   const contentWidth = columns / 2 - lineNumWidth - 2;
 
@@ -73,30 +77,36 @@ const InternalDiffSplitLine = ({
 
   const row = Math.max(oldRow, newRow);
 
-  // Determine background colors for line numbers
+  const delLnColors = noBG ? noBGDiffDelLineNumber : diffDelLineNumber;
+  const addLnColors = noBG ? noBGDiffAddLineNumber : diffAddLineNumber;
+
   const oldLineNumberBG = oldLineIsDelete
     ? theme === "light"
-      ? diffDelLineNumber.light
-      : diffDelLineNumber.dark
-    : hasDiff
-      ? theme === "light"
-        ? diffPlainLineNumber.light
-        : diffPlainLineNumber.dark
-      : theme === "light"
-        ? diffExpandLineNumber.light
-        : diffExpandLineNumber.dark;
+      ? delLnColors.light
+      : delLnColors.dark
+    : noBG
+      ? undefined
+      : hasDiff
+        ? theme === "light"
+          ? diffPlainLineNumber.light
+          : diffPlainLineNumber.dark
+        : theme === "light"
+          ? diffExpandLineNumber.light
+          : diffExpandLineNumber.dark;
 
   const newLineNumberBG = newLineIsAdded
     ? theme === "light"
-      ? diffAddLineNumber.light
-      : diffAddLineNumber.dark
-    : hasDiff
-      ? theme === "light"
-        ? diffPlainLineNumber.light
-        : diffPlainLineNumber.dark
-      : theme === "light"
-        ? diffExpandLineNumber.light
-        : diffExpandLineNumber.dark;
+      ? addLnColors.light
+      : addLnColors.dark
+    : noBG
+      ? undefined
+      : hasDiff
+        ? theme === "light"
+          ? diffPlainLineNumber.light
+          : diffPlainLineNumber.dark
+        : theme === "light"
+          ? diffExpandLineNumber.light
+          : diffExpandLineNumber.dark;
 
   const color = hasDiff
     ? theme === "light"
@@ -129,6 +139,7 @@ const InternalDiffSplitLine = ({
             plainLine={oldPlainLine}
             syntaxLine={oldSyntaxLine}
             enableHighlight={enableHighlight}
+            noBG={noBG}
           />
         </>
       ) : (
@@ -156,6 +167,7 @@ const InternalDiffSplitLine = ({
             plainLine={newPlainLine}
             syntaxLine={newSyntaxLine}
             enableHighlight={enableHighlight}
+            noBG={noBG}
           />
         </>
       ) : (
@@ -173,6 +185,7 @@ export const DiffSplitContentLine = ({
   lineNumber,
   lineNumWidth,
   enableHighlight,
+  noBG,
 }: {
   index: number;
   columns: number;
@@ -181,6 +194,7 @@ export const DiffSplitContentLine = ({
   lineNumber: number;
   lineNumWidth: number;
   enableHighlight: boolean;
+  noBG?: boolean;
 }) => {
   const oldLine = diffFile.getSplitLeftLine(index);
   const newLine = diffFile.getSplitRightLine(index);
@@ -196,6 +210,7 @@ export const DiffSplitContentLine = ({
       lineNumber={lineNumber}
       lineNumWidth={lineNumWidth}
       enableHighlight={enableHighlight}
+      noBG={noBG}
     />
   );
 };

@@ -60,12 +60,5 @@
     "ts-node": "catalog:",
     "tslib": "catalog:",
     "typescript": "catalog:"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "@swc/core",
-      "sharp"
-    ]
   }
 }

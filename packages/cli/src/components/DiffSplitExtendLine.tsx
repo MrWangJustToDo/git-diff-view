@@ -16,6 +16,7 @@ const InternalDiffSplitExtendLine = ({
   lineNumber,
   oldLineExtend,
   newLineExtend,
+  noBG,
 }: {
   index: number;
   columns: number;
@@ -24,6 +25,7 @@ const InternalDiffSplitExtendLine = ({
   lineNumber: number;
   oldLineExtend: { data: any };
   newLineExtend: { data: any };
+  noBG?: boolean;
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
@@ -56,7 +58,7 @@ const InternalDiffSplitExtendLine = ({
       onUpdate: diffFile.notifyAll,
     });
 
-  const bgColor = theme === "light" ? diffEmptyContent.light : diffEmptyContent.dark;
+  const bgColor = noBG ? undefined : theme === "light" ? diffEmptyContent.light : diffEmptyContent.dark;
 
   return (
     <Box data-line={`${lineNumber}-extend`} data-state="extend">
@@ -76,12 +78,14 @@ export const DiffSplitExtendLine = ({
   theme,
   diffFile,
   lineNumber,
+  noBG,
 }: {
   index: number;
   columns: number;
   theme: "light" | "dark";
   diffFile: DiffFile;
   lineNumber: number;
+  noBG?: boolean;
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
@@ -112,6 +116,7 @@ export const DiffSplitExtendLine = ({
     <InternalDiffSplitExtendLine
       index={index}
       theme={theme}
+      noBG={noBG}
       columns={columns}
       diffFile={diffFile}
       lineNumber={lineNumber}

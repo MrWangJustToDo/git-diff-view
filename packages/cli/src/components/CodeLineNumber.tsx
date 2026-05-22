@@ -17,7 +17,7 @@ export const CodeLineNumberArea: React.FC<{
   lineNumber: number;
   lineNumWidth: number;
   height: number;
-  backgroundColor: string;
+  backgroundColor?: string;
   color: string;
   dim?: boolean;
 }> = React.memo(({ lineNumber, lineNumWidth, height, backgroundColor, color, dim = false }) => {

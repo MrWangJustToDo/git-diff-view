@@ -13,6 +13,7 @@ const DiffSplitHunkLineGitHub = ({
   diffFile,
   lineNumber,
   lineNumWidth,
+  noBG,
 }: {
   index: number;
   theme: "light" | "dark";
@@ -20,12 +21,13 @@ const DiffSplitHunkLineGitHub = ({
   diffFile: DiffFile;
   lineNumber: number;
   lineNumWidth: number;
+  noBG?: boolean;
 }) => {
   const currentHunk = diffFile.getSplitHunkLine(index);
 
-  const hunkLineNumberBG = theme === "light" ? diffHunkLineNumber.light : diffHunkLineNumber.dark;
+  const hunkLineNumberBG = noBG ? undefined : theme === "light" ? diffHunkLineNumber.light : diffHunkLineNumber.dark;
 
-  const hunkContentBG = theme === "light" ? diffHunkContent.light : diffHunkContent.dark;
+  const hunkContentBG = noBG ? undefined : theme === "light" ? diffHunkContent.light : diffHunkContent.dark;
 
   const hunkContentColor = theme === "light" ? diffHunkContentColor.light : diffHunkContentColor.dark;
 
@@ -52,6 +54,7 @@ const DiffSplitHunkLineGitLab = ({
   diffFile,
   lineNumber,
   lineNumWidth,
+  noBG,
 }: {
   index: number;
   theme: "light" | "dark";
@@ -59,12 +62,13 @@ const DiffSplitHunkLineGitLab = ({
   diffFile: DiffFile;
   lineNumber: number;
   lineNumWidth: number;
+  noBG?: boolean;
 }) => {
   const currentHunk = diffFile.getSplitHunkLine(index);
 
-  const hunkLineNumberBG = theme === "light" ? diffHunkLineNumber.light : diffHunkLineNumber.dark;
+  const hunkLineNumberBG = noBG ? undefined : theme === "light" ? diffHunkLineNumber.light : diffHunkLineNumber.dark;
 
-  const hunkContentBG = theme === "light" ? diffHunkContent.light : diffHunkContent.dark;
+  const hunkContentBG = noBG ? undefined : theme === "light" ? diffHunkContent.light : diffHunkContent.dark;
 
   const hunkContentColor = theme === "light" ? diffHunkContentColor.light : diffHunkContentColor.dark;
 
@@ -99,6 +103,7 @@ const InternalDiffSplitHunkLine = ({
   diffFile,
   lineNumber,
   lineNumWidth,
+  noBG,
 }: {
   index: number;
   theme: "light" | "dark";
@@ -106,6 +111,7 @@ const InternalDiffSplitHunkLine = ({
   diffFile: DiffFile;
   lineNumber: number;
   lineNumWidth: number;
+  noBG?: boolean;
 }) => {
   const { useDiffContext } = useDiffViewContext();
 
@@ -124,6 +130,7 @@ const InternalDiffSplitHunkLine = ({
         diffFile={diffFile}
         lineNumber={lineNumber}
         lineNumWidth={lineNumWidth}
+        noBG={noBG}
       />
     );
   } else {
@@ -135,6 +142,7 @@ const InternalDiffSplitHunkLine = ({
         diffFile={diffFile}
         lineNumber={lineNumber}
         lineNumWidth={lineNumWidth}
+        noBG={noBG}
       />
     );
   }
@@ -147,6 +155,7 @@ export const DiffSplitHunkLine = ({
   diffFile,
   lineNumber,
   lineNumWidth,
+  noBG,
 }: {
   index: number;
   theme: "light" | "dark";
@@ -154,6 +163,7 @@ export const DiffSplitHunkLine = ({
   diffFile: DiffFile;
   lineNumber: number;
   lineNumWidth: number;
+  noBG?: boolean;
 }) => {
   const currentHunk = diffFile.getSplitHunkLine(index);
 
@@ -174,6 +184,7 @@ export const DiffSplitHunkLine = ({
       diffFile={diffFile}
       lineNumber={lineNumber}
       lineNumWidth={lineNumWidth}
+      noBG={noBG}
     />
   );
 };

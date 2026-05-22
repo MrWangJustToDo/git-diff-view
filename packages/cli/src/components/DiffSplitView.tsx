@@ -14,7 +14,10 @@ import { useDiffViewContext } from "./DiffViewContext";
 export const DiffSplitView = memo(({ diffFile, width }: { diffFile: DiffFile; width?: number }) => {
   const { useDiffContext } = useDiffViewContext();
 
-  const enableHighlight = useDiffContext.useShallowStableSelector((s) => s.enableHighlight);
+  const { enableHighlight, noBG } = useDiffContext.useShallowStableSelector((s) => ({
+    enableHighlight: s.enableHighlight,
+    noBG: s.noBG,
+  }));
 
   useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
 
@@ -43,6 +46,7 @@ export const DiffSplitView = memo(({ diffFile, width }: { diffFile: DiffFile; wi
             diffFile={diffFile}
             lineNumber={line.lineNumber}
             lineNumWidth={lineNumWidth}
+            noBG={noBG}
           />
           <DiffSplitContentLine
             theme={theme}
@@ -52,6 +56,7 @@ export const DiffSplitView = memo(({ diffFile, width }: { diffFile: DiffFile; wi
             diffFile={diffFile}
             lineNumber={line.lineNumber}
             enableHighlight={enableHighlight}
+            noBG={noBG}
           />
           <DiffSplitExtendLine
             theme={theme}
@@ -59,6 +64,7 @@ export const DiffSplitView = memo(({ diffFile, width }: { diffFile: DiffFile; wi
             index={line.index}
             diffFile={diffFile}
             lineNumber={line.lineNumber}
+            noBG={noBG}
           />
         </Fragment>
       ))}
@@ -69,6 +75,7 @@ export const DiffSplitView = memo(({ diffFile, width }: { diffFile: DiffFile; wi
         index={diffFile.splitLineLength}
         lineNumber={diffFile.splitLineLength}
         lineNumWidth={lineNumWidth}
+        noBG={noBG}
       />
     </>
   );

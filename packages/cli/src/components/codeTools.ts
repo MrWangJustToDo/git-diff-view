@@ -53,6 +53,10 @@ export const createCodeConfigStore = <T = any>(props: CodeViewProps<T>, fileId: 
     const setRenderExtendLine = (_renderExtendLine: typeof renderExtendLine.value) =>
       (renderExtendLine.value = _renderExtendLine);
 
+    const noBG = ref(props.codeViewNoBG);
+
+    const setNoBG = (_noBG: boolean) => (noBG.value = _noBG);
+
     return {
       id,
       setId,
@@ -70,6 +74,8 @@ export const createCodeConfigStore = <T = any>(props: CodeViewProps<T>, fileId: 
       setExtendData,
       renderExtendLine,
       setRenderExtendLine,
+      noBG,
+      setNoBG,
     };
     // fix rollup type error
   }) as UseSelectorWithStore<{
@@ -89,6 +95,8 @@ export const createCodeConfigStore = <T = any>(props: CodeViewProps<T>, fileId: 
     setExtendData: (extendData: CodeViewProps<any>["extendData"]) => void;
     renderExtendLine: Ref<typeof props.renderExtendLine>;
     setRenderExtendLine: (renderExtendLine: typeof props.renderExtendLine) => void;
+    noBG: Ref<boolean>;
+    setNoBG: (noBG: boolean) => void;
   }>;
 };
 

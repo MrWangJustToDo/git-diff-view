@@ -76,6 +76,10 @@ export const createDiffConfigStore = <T = any>(props: DiffViewProps<T>, diffFile
 
     const setHideOperator = (_hideOperator: boolean) => (hideOperator.value = _hideOperator);
 
+    const noBG = ref(props.diffViewNoBG);
+
+    const setNoBG = (_noBG: boolean) => (noBG.value = _noBG);
+
     return {
       id,
       setId,
@@ -97,6 +101,8 @@ export const createDiffConfigStore = <T = any>(props: DiffViewProps<T>, diffFile
       setRenderExtendLine,
       hideOperator,
       setHideOperator,
+      noBG,
+      setNoBG,
     };
     // fix rollup type error
   }) as UseSelectorWithStore<{
@@ -123,6 +129,8 @@ export const createDiffConfigStore = <T = any>(props: DiffViewProps<T>, diffFile
     setRenderExtendLine: (renderExtendLine: typeof props.renderExtendLine) => void;
     hideOperator: Ref<boolean>;
     setHideOperator: (hideOperator: boolean) => void;
+    noBG: Ref<boolean>;
+    setNoBG: (noBG: boolean) => void;
   }>;
 };
 

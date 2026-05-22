@@ -84,3 +84,33 @@ export const diffHunkContentColor = {
   light: "#777777",
   dark: "#9298a0",
 };
+
+export const noBGDiffAddContent = {
+  light: "#b7f0c4",
+  dark: "#1a3a24",
+};
+
+export const noBGDiffDelContent = {
+  light: "#f5c2bf",
+  dark: "#3f2022",
+};
+
+export const noBGDiffAddLineNumber = {
+  light: "#8ae09d",
+  dark: "#27522f",
+};
+
+export const noBGDiffDelLineNumber = {
+  light: "#f0a9a5",
+  dark: "#6d2d2f",
+};
+
+export const noBGDiffAddContentHighlight = {
+  light: "#5fce78",
+  dark: "#286e38",
+};
+
+export const noBGDiffDelContentHighlight = {
+  light: "#f07e78",
+  dark: "#a33e3b",
+};

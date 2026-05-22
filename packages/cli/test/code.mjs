@@ -211,6 +211,7 @@ getDiffViewHighlighter().then((highlighter) => {
     createElement(CodeView, {
       data: { content: temp1, fileLang: "ts" },
       // width: 80,
+      codeViewNoBG: true,
       codeViewTheme: "dark",
       extendData: {
         107: { data: "test extend data" },

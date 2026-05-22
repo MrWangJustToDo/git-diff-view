@@ -11,6 +11,7 @@ const InternalDiffUnifiedHunkLine = ({
   diffFile,
   lineNumber,
   lineNumWidth,
+  noBG,
 }: {
   index: number;
   theme: "light" | "dark";
@@ -18,12 +19,14 @@ const InternalDiffUnifiedHunkLine = ({
   diffFile: DiffFile;
   lineNumber: number;
   lineNumWidth: number;
+  noBG?: boolean;
 }) => {
+
   const currentHunk = diffFile.getUnifiedHunkLine(index);
 
-  const hunkLineNumberBG = theme === "light" ? diffHunkLineNumber.light : diffHunkLineNumber.dark;
+  const hunkLineNumberBG = noBG ? undefined : theme === "light" ? diffHunkLineNumber.light : diffHunkLineNumber.dark;
 
-  const hunkContentBG = theme === "light" ? diffHunkContent.light : diffHunkContent.dark;
+  const hunkContentBG = noBG ? undefined : theme === "light" ? diffHunkContent.light : diffHunkContent.dark;
 
   const hunkContentColor = theme === "light" ? diffHunkContentColor.light : diffHunkContentColor.dark;
 
@@ -50,6 +53,7 @@ export const DiffUnifiedHunkLine = ({
   diffFile,
   lineNumber,
   lineNumWidth,
+  noBG,
 }: {
   index: number;
   theme: "light" | "dark";
@@ -57,6 +61,7 @@ export const DiffUnifiedHunkLine = ({
   diffFile: DiffFile;
   lineNumber: number;
   lineNumWidth: number;
+  noBG?: boolean;
 }) => {
   const currentHunk = diffFile.getUnifiedHunkLine(index);
 
@@ -77,6 +82,7 @@ export const DiffUnifiedHunkLine = ({
       diffFile={diffFile}
       lineNumber={lineNumber}
       lineNumWidth={lineNumWidth}
+      noBG={noBG}
     />
   );
 };
