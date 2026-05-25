@@ -5,6 +5,8 @@
 [![npm version](https://img.shields.io/npm/v/@git-diff-view/cli)](https://www.npmjs.com/package/@git-diff-view/cli)
 [![npm downloads](https://img.shields.io/npm/dm/@git-diff-view/cli)](https://www.npmjs.com/package/@git-diff-view/cli)
 
+![CLI Diff View](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/main/cli-diff.png)
+
 ## Features
 
 - ✅ Terminal-friendly diff rendering
