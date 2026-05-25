@@ -15,7 +15,7 @@ export const CliPlayGround = () => {
         template="vite-react-ts"
         theme={colorScheme === "dark" ? "dark" : "light"}
         files={{
-          "/app.tsx": `import { render } from "ink";
+          "/App.tsx": `import { render } from "ink";
 import { DiffView, DiffFile, DiffModeEnum } from "@git-diff-view/cli";
 
 const diffString = \`--- a/file.ts
@@ -38,7 +38,7 @@ diffFile.buildUnifiedDiffLines();
 render(
   <DiffView
     diffFile={diffFile}
-    diffViewMode={DiffModeEnum.Unified}
+    diffViewMode={DiffModeEnum.Split}
     diffViewHighlight={true}
     diffViewTheme="dark"
   />
@@ -51,7 +51,7 @@ render(
           <SandpackCodeEditor showTabs />
           <Box className="flex flex-1 items-center justify-center overflow-hidden">
             <img
-              src="https://raw.githubusercontent.com/MrWangJustToDo/MyAgent/main/edit-diff-view.png"
+              src="https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/main/cli-diff.png"
               alt="@git-diff-view/cli terminal rendering"
               className="block w-full object-cover object-top"
             />
