@@ -9,7 +9,6 @@ type DiffConfig = {
   engine: "lowlight" | "shiki";
   tabSpace: boolean;
   fastDiff: boolean;
-  shadowDOM: boolean;
   autoExpandCommentLine: boolean;
   rangeMode: boolean;
   rangeStart: number;
@@ -26,7 +25,6 @@ export const useDiffConfig = createState(
       engine: "lowlight",
       tabSpace: false,
       fastDiff: false,
-      shadowDOM: false,
       autoExpandCommentLine: false,
       rangeMode: false,
       rangeStart: 0,
@@ -68,11 +66,6 @@ export const useDiffConfig = createState(
         setFastDiff: (v: boolean) => {
           if (v !== state.fastDiff) {
             state.fastDiff = v;
-          }
-        },
-        setShadowDOM: (v: boolean) => {
-          if (v !== state.shadowDOM) {
-            state.shadowDOM = v;
           }
         },
         setAutoExpandCommentLine: (v: boolean) => {

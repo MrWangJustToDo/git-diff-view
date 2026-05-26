@@ -16,25 +16,15 @@ const transform = (str: string) =>
     .replace(/\t/g, '<span class="diff-symbol diff-symbol-tab">\t</span>');
 
 export const MainContentDiffAdvance = () => {
-  const {
-    tabSpace,
-    setFastDiff,
-    setTabSpace,
-    fastDiff,
-    shadowDOM,
-    setShadowDOM,
-    autoExpandCommentLine,
-    setAutoExpandCommentLine,
-  } = useDiffConfig((s) => ({
-    tabSpace: s.tabSpace,
-    setTabSpace: s.setTabSpace,
-    fastDiff: s.fastDiff,
-    setFastDiff: s.setFastDiff,
-    shadowDOM: s.shadowDOM,
-    setShadowDOM: s.setShadowDOM,
-    autoExpandCommentLine: s.autoExpandCommentLine,
-    setAutoExpandCommentLine: s.setAutoExpandCommentLine,
-  }));
+  const { tabSpace, setFastDiff, setTabSpace, fastDiff, autoExpandCommentLine, setAutoExpandCommentLine } =
+    useDiffConfig((s) => ({
+      tabSpace: s.tabSpace,
+      setTabSpace: s.setTabSpace,
+      fastDiff: s.fastDiff,
+      setFastDiff: s.setFastDiff,
+      autoExpandCommentLine: s.autoExpandCommentLine,
+      setAutoExpandCommentLine: s.setAutoExpandCommentLine,
+    }));
 
   useEffect(() => {
     if (tabSpace) {
@@ -67,7 +57,6 @@ export const MainContentDiffAdvance = () => {
       <Button onClick={() => setFastDiff(!fastDiff)}>
         {fastDiff ? "disable fast diff template" : "enable fast diff template"}
       </Button>
-      <Button onClick={() => setShadowDOM(!shadowDOM)}>{shadowDOM ? "disable shadow DOM" : "enable shadow DOM"}</Button>
       <Button onClick={() => setAutoExpandCommentLine(!autoExpandCommentLine)}>
         {autoExpandCommentLine ? "disable auto expand comment line" : "enable auto expand comment line"}
       </Button>

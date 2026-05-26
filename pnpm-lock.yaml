@@ -219,11 +219,11 @@ importers:
         version: 1.6.0(react@19.2.0)
     devDependencies:
       '@my-react/react':
-        specifier: ^0.3.23
-        version: 0.3.23(react@19.2.0)
+        specifier: ^0.3.27
+        version: 0.3.27(react@19.2.0)
       '@my-react/react-terminal':
-        specifier: ^0.0.20
-        version: 0.0.20(@my-react/react@0.3.23(react@19.2.0))
+        specifier: ^0.0.26
+        version: 0.0.26(@my-react/react@0.3.27(react@19.2.0))
       '@types/react':
         specifier: ^19.2.2
         version: 19.2.2
@@ -622,11 +622,11 @@ importers:
         specifier: ^8.3.4
         version: 8.3.4(react@19.2.0)
       '@my-react/react':
-        specifier: ^0.3.23
-        version: 0.3.23(react@19.2.0)
+        specifier: ^0.3.27
+        version: 0.3.27(react@19.2.0)
       '@my-react/react-dom':
-        specifier: ^0.3.23
-        version: 0.3.23(@my-react/react@0.3.23(react@19.2.0))
+        specifier: ^0.3.27
+        version: 0.3.27(@my-react/react@0.3.27(react@19.2.0))(react-dom@19.2.0(react@19.2.0))
       '@tabler/icons-react':
         specifier: ^3.35.0
         version: 3.35.0(react@19.2.0)
@@ -650,11 +650,11 @@ importers:
         version: 0.4.0(react@19.2.0)
     devDependencies:
       '@my-react/react-refresh':
-        specifier: ^0.3.23
-        version: 0.3.23(@my-react/react@0.3.23(react@19.2.0))
+        specifier: ^0.3.27
+        version: 0.3.27(@my-react/react@0.3.27(react@19.2.0))
       '@my-react/react-vite':
-        specifier: ^0.0.28
-        version: 0.0.28(@my-react/react-refresh@0.3.23(@my-react/react@0.3.23(react@19.2.0)))(vite@5.4.20(@types/node@22.19.17)(sugarss@5.0.1(postcss@8.5.10))(terser@5.44.0))
+        specifier: ^0.0.33
+        version: 0.0.33(@my-react/react-refresh@0.3.27(@my-react/react@0.3.27(react@19.2.0)))(vite@5.4.20(@types/node@22.19.17)(sugarss@5.0.1(postcss@8.5.10))(terser@5.44.0))
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.2
@@ -1694,38 +1694,39 @@ packages:
   '@microsoft/tsdoc@0.15.1':
     resolution: {integrity: sha512-4aErSrCR/On/e5G2hDP0wjooqDdauzEbIq8hIkIe5pXV0rtWJZvdCEKL0ykZxex+IxIwBp0eGeV48hQN07dXtw==}
 
-  '@my-react/react-dom@0.3.23':
-    resolution: {integrity: sha512-QV7doaeirspCME2Kba4i2IsE1+gaTgQINMvpI87fOeSUlDxzEWjn1g8obAFJlMonRQDGGllAzMv1eK8nwh6/+Q==}
+  '@my-react/react-dom@0.3.27':
+    resolution: {integrity: sha512-LeGXcvBrX2f1iUk8XLzKLOwEy12qglvn2QFOXLQKMnXHDhpwqK78M6ySV2+QtwRa08c5S/PpvSLqudnvhWIItQ==}
     peerDependencies:
-      '@my-react/react': '>=0.3.23'
+      '@my-react/react': '>=0.3.27'
+      react-dom: ^17 || ^18 || ^19
 
-  '@my-react/react-jsx@0.3.23':
-    resolution: {integrity: sha512-fYeKYdlA6wVjuJlvFeXM5LaMyWRJvRmIG8yL3rhD4t1HAKE+rvgyhb1xx+Gb4c1swCTJwI/USlMhaJs0sDhQuw==}
+  '@my-react/react-jsx@0.3.27':
+    resolution: {integrity: sha512-8TNFD8+KpPOc8ZgRWSBavTIgXNRSg39+rEtS6oGv+BZzvMTKiColtOvqES+kxi6Rb8PGc/KipWScPnTTorlEHA==}
     peerDependencies:
-      '@my-react/react': '>=0.3.23'
+      '@my-react/react': '>=0.3.27'
 
-  '@my-react/react-refresh@0.3.23':
-    resolution: {integrity: sha512-hzjLAXILCbLi70acwagREvMFLrk5Sc3cGZYucCDJNsDZj8SXXW2bsT/FvqfmuSqEKmXM4fYL2LmKI96iwYT9wQ==}
+  '@my-react/react-refresh@0.3.27':
+    resolution: {integrity: sha512-vh4x4GPj0jrXBZpFsoLWYZ5qzX/hvlZOGKbEkVIxmuNdQX8Zmk8pXKNADrDL/Z/sm1ocdBvXttSvUoSNQn+KWg==}
     peerDependencies:
-      '@my-react/react': '>=0.3.23'
+      '@my-react/react': '>=0.3.27'
 
-  '@my-react/react-terminal@0.0.20':
-    resolution: {integrity: sha512-3ALCKNKiqWMa/W9FXjpNxCeArbjmzqJnutBWmC6ogFRb23x/UjwGEWYjxeQBNOLO2v5qHK5Jqi/1PdLNCuylUg==}
+  '@my-react/react-terminal@0.0.26':
+    resolution: {integrity: sha512-63OTFH4wLNS9axstyKF69wGfQPccEIRowi+gYN7XwH6ZY4+wgtN70phKsy4U14texpQArbYkYkK+xcJD6xJGyA==}
     peerDependencies:
-      '@my-react/react': '>=0.3.23'
+      '@my-react/react': '>=0.3.27'
 
-  '@my-react/react-vite@0.0.28':
-    resolution: {integrity: sha512-e8NhvxCice6FA6nmjlplG8C8XJJaWhxggVpIgjEPPT3sJNCqnuPceq1XkxUEAN1LRdkXJsbvF0RTZ6mlBP5ygA==}
+  '@my-react/react-vite@0.0.33':
+    resolution: {integrity: sha512-+Qh19XwKbPxXGleHQ2LpbipMsCXxDMpgEybuxqAwyqlU1Si0kZY68pX0VALJQyOzU9Ti9OaGy3wv1mKQIHCRug==}
     peerDependencies:
       '@lazarv/rsc': ^0.0.0-experimental
-      '@my-react/react-refresh': '>=0.3.23'
+      '@my-react/react-refresh': '>=0.3.27'
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
     peerDependenciesMeta:
       '@lazarv/rsc':
         optional: true
 
-  '@my-react/react@0.3.23':
-    resolution: {integrity: sha512-FwprqYWuCf7atVFLTZQOFGVqdcMU08IRCeAuiByMhE8zu3dyxxw/7x1ViNq7WtwNS3phIOaPHDF8KAq11p/Q4A==}
+  '@my-react/react@0.3.27':
+    resolution: {integrity: sha512-d0UirX8PE1G1i8aQ1lDAZ9HX+K7bxaLs49IP7e8jwu7UDRp49Deh0wRR+nEfvvsI1eY5OOWCq+axz3lGgWHlnQ==}
     peerDependencies:
       react: ^17 || ^18 || ^19
 
@@ -2213,9 +2214,6 @@ packages:
   '@sindresorhus/merge-streams@4.0.0':
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
-
-  '@socket.io/component-emitter@3.1.2':
-    resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
 
   '@standard-schema/spec@1.0.0':
     resolution: {integrity: sha512-m2bOd0f2RT9k8QJx1JN85cZYyH1RqFBdlwtkSlf4tBDYLCiiZnv1fIIwacK6cqwXavOydf0NPToMQgpKq+dVlA==}
@@ -3350,15 +3348,6 @@ packages:
       supports-color:
         optional: true
 
-  debug@4.3.7:
-    resolution: {integrity: sha512-Er2nc/H7RrMXZBFCEim6TCmMk02Z8vLC2Rbi1KEBggpo0fS6l0S1nnapwmIi3yW/+GOJap1Krg4w0Hg80oCqgQ==}
-    engines: {node: '>=6.0'}
-    peerDependencies:
-      supports-color: '*'
-    peerDependenciesMeta:
-      supports-color:
-        optional: true
-
   debug@4.4.3:
     resolution: {integrity: sha512-RGwwWnwQvkVfavKVt22FGLw+xYSdzARwm0ru6DhTVA3umU5hZc28V3kO4stgYryrTlLpuvgI9GiijltAjNbcqA==}
     engines: {node: '>=6.0'}
@@ -3486,13 +3475,6 @@ packages:
 
   end-of-stream@1.4.5:
     resolution: {integrity: sha512-ooEGc6HP26xXq/N+GCGOT0JKCLDGrq2bQUZrQ7gyrJiZANJ/8YDTxTpQBXGMn+WbIQXNVpyWymm7KYVICQnyOg==}
-
-  engine.io-client@6.6.3:
-    resolution: {integrity: sha512-T0iLjnyNWahNyv/lcjS2y4oE358tVS/SYQNxYXGAJ9/GLgH4VCvOQ/mhTjqU88mLZCQgiG8RIegFHYCdVC+j5w==}
-
-  engine.io-parser@5.2.3:
-    resolution: {integrity: sha512-HqD3yTBfnBxIrbnM1DoD6Pcq8NECnh8d4As1Qgh0z5Gg3jRRIqijury0CL3ghu/edArpUYiYqQiDUQBIs4np3Q==}
-    engines: {node: '>=10.0.0'}
 
   entities@2.2.0:
     resolution: {integrity: sha512-p92if5Nz619I0w+akJrLZH0MX0Pb5DX39XOwQTtXSdQQOaYH03S1uIQp4mhOZtAXrxq4ViO67YTiLBo2638o9A==}
@@ -5784,14 +5766,6 @@ packages:
   smob@1.5.0:
     resolution: {integrity: sha512-g6T+p7QO8npa+/hNx9ohv1E5pVCmWrVCUzUXJyLdMmftX6ER0oiWY/w9knEonLpnOp6b6FenKnMfR8gqwWdwig==}
 
-  socket.io-client@4.8.3:
-    resolution: {integrity: sha512-uP0bpjWrjQmUt5DTHq9RuoCBdFJF10cdX9X+a368j/Ft0wmaVgxlrjvK3kjvgCODOMMOz9lcaRzxmso0bTWZ/g==}
-    engines: {node: '>=10.0.0'}
-
-  socket.io-parser@4.2.4:
-    resolution: {integrity: sha512-/GbIKmo8ioc+NIWIhwdecY0ge+qVBSMdgxGygevmdHj24bsfgtCmcUUcQ5ZzcylGFHsN3k4HB4Cgkl96KVnuew==}
-    engines: {node: '>=10.0.0'}
-
   solid-js@1.9.9:
     resolution: {integrity: sha512-A0ZBPJQldAeGCTW0YRYJmt7RCeh5rbFfPZ2aOttgYnctHE7HgKeHCBB/PVc2P7eOfmNXqMFFFoYYdm3S4dcbkA==}
 
@@ -6547,18 +6521,6 @@ packages:
     resolution: {integrity: sha512-OTIk8iR8/aCRWBqvxrzxR0hgxWpnYBblY1S5hDWBQfk/VFmJwzmJgQFN3WsoUKHISv2eAwe+PpbUzyL1CKTLXg==}
     engines: {node: ^20.17.0 || >=22.9.0}
 
-  ws@8.17.1:
-    resolution: {integrity: sha512-6XQFvXTkbfUOZOKKILFG1PDK2NDQs4azKQl26T0YS5CxqWLgXajbPZ+h4gZekJyRqFU8pvnbAbbs/3TgRPy+GQ==}
-    engines: {node: '>=10.0.0'}
-    peerDependencies:
-      bufferutil: ^4.0.1
-      utf-8-validate: '>=5.0.2'
-    peerDependenciesMeta:
-      bufferutil:
-        optional: true
-      utf-8-validate:
-        optional: true
-
   ws@8.18.3:
     resolution: {integrity: sha512-PEIGCY5tSlUt50cqyMXfCzX+oOPqN0vuGqWzbcJ2xvnkzkq46oOpz7dQaTDBdfICb4N14+GARUDw2XV2N4tvzg==}
     engines: {node: '>=10.0.0'}
@@ -6570,10 +6532,6 @@ packages:
         optional: true
       utf-8-validate:
         optional: true
-
-  xmlhttprequest-ssl@2.1.2:
-    resolution: {integrity: sha512-TEU+nJVUUnA4CYJFLvK5X9AOeH4KvDvhIfm0vV1GaQRtchnG0hgK5p8hw/xjv8cunWYCsiPCSDzObPyhEwq3KQ==}
-    engines: {node: '>=0.4.0'}
 
   y18n@5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}
@@ -6845,19 +6803,9 @@ snapshots:
       '@babel/core': 7.28.4
       '@babel/helper-plugin-utils': 7.27.1
 
-  '@babel/plugin-transform-react-jsx-self@7.27.1(@babel/core@7.28.4)':
-    dependencies:
-      '@babel/core': 7.28.4
-      '@babel/helper-plugin-utils': 7.27.1
-
   '@babel/plugin-transform-react-jsx-self@7.27.1(@babel/core@7.29.0)':
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/helper-plugin-utils': 7.27.1
-
-  '@babel/plugin-transform-react-jsx-source@7.27.1(@babel/core@7.28.4)':
-    dependencies:
-      '@babel/core': 7.28.4
       '@babel/helper-plugin-utils': 7.27.1
 
   '@babel/plugin-transform-react-jsx-source@7.27.1(@babel/core@7.29.0)':
@@ -7573,21 +7521,22 @@ snapshots:
 
   '@microsoft/tsdoc@0.15.1': {}
 
-  '@my-react/react-dom@0.3.23(@my-react/react@0.3.23(react@19.2.0))':
+  '@my-react/react-dom@0.3.27(@my-react/react@0.3.27(react@19.2.0))(react-dom@19.2.0(react@19.2.0))':
     dependencies:
-      '@my-react/react': 0.3.23(react@19.2.0)
+      '@my-react/react': 0.3.27(react@19.2.0)
+      react-dom: 19.2.0(react@19.2.0)
 
-  '@my-react/react-jsx@0.3.23(@my-react/react@0.3.23(react@19.2.0))':
+  '@my-react/react-jsx@0.3.27(@my-react/react@0.3.27(react@19.2.0))':
     dependencies:
-      '@my-react/react': 0.3.23(react@19.2.0)
+      '@my-react/react': 0.3.27(react@19.2.0)
 
-  '@my-react/react-refresh@0.3.23(@my-react/react@0.3.23(react@19.2.0))':
+  '@my-react/react-refresh@0.3.27(@my-react/react@0.3.27(react@19.2.0))':
     dependencies:
-      '@my-react/react': 0.3.23(react@19.2.0)
+      '@my-react/react': 0.3.27(react@19.2.0)
 
-  '@my-react/react-terminal@0.0.20(@my-react/react@0.3.23(react@19.2.0))':
+  '@my-react/react-terminal@0.0.26(@my-react/react@0.3.27(react@19.2.0))':
     dependencies:
-      '@my-react/react': 0.3.23(react@19.2.0)
+      '@my-react/react': 0.3.27(react@19.2.0)
       ansi-escapes: 7.3.0
       ansi-styles: 6.2.3
       auto-bind: 5.0.1
@@ -7604,24 +7553,19 @@ snapshots:
       patch-console: 2.0.0
       signal-exit: 4.1.0
       slice-ansi: 7.1.2
-      socket.io-client: 4.8.3
       stack-utils: 2.0.6
       string-width: 7.2.0
       type-fest: 4.41.0
       widest-line: 5.0.0
       wrap-ansi: 9.0.2
       yoga-layout: 3.2.1
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
 
-  '@my-react/react-vite@0.0.28(@my-react/react-refresh@0.3.23(@my-react/react@0.3.23(react@19.2.0)))(vite@5.4.20(@types/node@22.19.17)(sugarss@5.0.1(postcss@8.5.10))(terser@5.44.0))':
+  '@my-react/react-vite@0.0.33(@my-react/react-refresh@0.3.27(@my-react/react@0.3.27(react@19.2.0)))(vite@5.4.20(@types/node@22.19.17)(sugarss@5.0.1(postcss@8.5.10))(terser@5.44.0))':
     dependencies:
-      '@babel/core': 7.28.4
-      '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.28.4)
-      '@babel/plugin-transform-react-jsx-source': 7.27.1(@babel/core@7.28.4)
-      '@my-react/react-refresh': 0.3.23(@my-react/react@0.3.23(react@19.2.0))
+      '@babel/core': 7.29.0
+      '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.29.0)
+      '@babel/plugin-transform-react-jsx-source': 7.27.1(@babel/core@7.29.0)
+      '@my-react/react-refresh': 0.3.27(@my-react/react@0.3.27(react@19.2.0))
       '@rolldown/pluginutils': 1.0.0-rc.6
       es-module-lexer: 1.7.0
       estree-walker: 3.0.3
@@ -7632,9 +7576,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@my-react/react@0.3.23(react@19.2.0)':
+  '@my-react/react@0.3.27(react@19.2.0)':
     dependencies:
-      '@my-react/react-jsx': 0.3.23(@my-react/react@0.3.23(react@19.2.0))
+      '@my-react/react-jsx': 0.3.27(@my-react/react@0.3.27(react@19.2.0))
       react: 19.2.0
       react-compiler-runtime: 1.0.0(react@19.2.0)
 
@@ -8000,8 +7944,6 @@ snapshots:
   '@shikijs/vscode-textmate@10.0.2': {}
 
   '@sindresorhus/merge-streams@4.0.0': {}
-
-  '@socket.io/component-emitter@3.1.2': {}
 
   '@standard-schema/spec@1.0.0': {}
 
@@ -9274,10 +9216,6 @@ snapshots:
     dependencies:
       ms: 2.1.3
 
-  debug@4.3.7:
-    dependencies:
-      ms: 2.1.3
-
   debug@4.4.3:
     dependencies:
       ms: 2.1.3
@@ -9381,20 +9319,6 @@ snapshots:
   end-of-stream@1.4.5:
     dependencies:
       once: 1.4.0
-
-  engine.io-client@6.6.3:
-    dependencies:
-      '@socket.io/component-emitter': 3.1.2
-      debug: 4.3.7
-      engine.io-parser: 5.2.3
-      ws: 8.17.1
-      xmlhttprequest-ssl: 2.1.2
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-
-  engine.io-parser@5.2.3: {}
 
   entities@2.2.0: {}
 
@@ -10442,7 +10366,7 @@ snapshots:
 
   is-fullwidth-code-point@5.1.0:
     dependencies:
-      get-east-asian-width: 1.4.0
+      get-east-asian-width: 1.5.0
 
   is-generator-function@1.1.2:
     dependencies:
@@ -12036,24 +11960,6 @@ snapshots:
 
   smob@1.5.0: {}
 
-  socket.io-client@4.8.3:
-    dependencies:
-      '@socket.io/component-emitter': 3.1.2
-      debug: 4.4.3
-      engine.io-client: 6.6.3
-      socket.io-parser: 4.2.4
-    transitivePeerDependencies:
-      - bufferutil
-      - supports-color
-      - utf-8-validate
-
-  socket.io-parser@4.2.4:
-    dependencies:
-      '@socket.io/component-emitter': 3.1.2
-      debug: 4.3.7
-    transitivePeerDependencies:
-      - supports-color
-
   solid-js@1.9.9:
     dependencies:
       csstype: 3.1.3
@@ -12988,11 +12894,7 @@ snapshots:
     dependencies:
       signal-exit: 4.1.0
 
-  ws@8.17.1: {}
-
   ws@8.18.3: {}
-
-  xmlhttprequest-ssl@2.1.2: {}
 
   y18n@5.0.8: {}
 

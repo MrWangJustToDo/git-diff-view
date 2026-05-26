@@ -17,8 +17,8 @@
     "@git-diff-view/vue": "workspace:*",
     "@mantine/core": "^8.3.4",
     "@mantine/hooks": "^8.3.4",
-    "@my-react/react": "^0.3.23",
-    "@my-react/react-dom": "^0.3.23",
+    "@my-react/react": "^0.3.27",
+    "@my-react/react-dom": "^0.3.27",
     "@tabler/icons-react": "^3.35.0",
     "lodash": "catalog:",
     "lz-string": "^1.5.0",
@@ -28,8 +28,8 @@
     "reactivity-store": "catalog:"
   },
   "devDependencies": {
-    "@my-react/react-refresh": "^0.3.23",
-    "@my-react/react-vite": "^0.0.28",
+    "@my-react/react-refresh": "^0.3.27",
+    "@my-react/react-vite": "^0.0.33",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "catalog:",
