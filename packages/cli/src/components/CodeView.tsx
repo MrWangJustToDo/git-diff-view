@@ -1,49 +1,44 @@
-/**
- * CodeView component - renders source code with syntax highlighting and line numbers.
- * Simplified version of DiffView without diff-related features.
- */
 import { _cacheMap, getFile } from "@git-diff-view/core";
-import { Box } from "ink";
-import { Fragment, forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+import { Box, Text } from "ink";
+import { forwardRef, memo, useImperativeHandle, useMemo, useRef } from "react";
 
-import { useCodeTerminalSize } from "../hooks/useCodeTerminalSize";
+import { getValidColumns, TERMINAL_PADDING_X } from "../hooks/useTerminalSize";
 
-import { CodeContent } from "./CodeContent";
-import { CodeExtendLine } from "./CodeExtendLine";
-import { CodeLineNumberArea } from "./CodeLineNumber";
-import { createCodeConfigStore, getCurrentLineRow } from "./codeTools";
-import { CodeViewContext, useCodeViewContext } from "./CodeViewContext";
+import { buildAnsiStringOptimized, splitCharsIntoRows, styleText } from "./ansiString";
+import { buildTheme } from "./color";
+import {
+  getStyleFromClassName,
+  getStyleObjectFromString,
+  processCharsForAnsi,
+  processSyntaxCharsForAnsi,
+} from "./DiffContent";
 
+import type { CharStyle, StyledChar } from "./ansiString";
 import type { DiffViewColorTheme, ResolvedDiffViewColorTheme } from "./color";
 import type { DiffHighlighter, DiffHighlighterLang, File } from "@git-diff-view/core";
 import type { DOMElement } from "ink";
-import type { ForwardedRef, JSX, ReactNode, RefObject } from "react";
+import type { ForwardedRef, JSX } from "react";
 
 _cacheMap.name = "@git-diff-view/cli";
 
-export type CodeViewProps<T> = {
+export type CodeViewProps = {
   data?: {
     content: string;
     fileName?: string | null;
     fileLang?: DiffHighlighterLang | string | null;
   };
   file?: File;
-  extendData?: Record<string, { data: T }>;
   width?: number;
   codeViewTheme?: "light" | "dark";
   codeViewTabSpace?: boolean;
-  // tabWidth in the code view, small: 1, medium: 2, large: 4, default: medium
   codeViewTabWidth?: "small" | "medium" | "large";
   registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
   codeViewHighlight?: boolean;
-  // disable background colors for transparent terminal rendering
   codeViewNoBG?: boolean;
-  // custom theme colors to override defaults
   codeViewThemeColors?: DiffViewColorTheme;
-  renderExtendLine?: ({ file, data, lineNumber }: { file: File; lineNumber: number; data: T }) => ReactNode;
 };
 
-type CodeViewProps_1<T> = Omit<CodeViewProps<T>, "data"> & {
+type CodeViewProps_1 = Omit<CodeViewProps, "data"> & {
   data?: {
     content: string;
     fileName?: string | null;
@@ -51,7 +46,7 @@ type CodeViewProps_1<T> = Omit<CodeViewProps<T>, "data"> & {
   };
 };
 
-type CodeViewProps_2<T> = Omit<CodeViewProps<T>, "data"> & {
+type CodeViewProps_2 = Omit<CodeViewProps, "data"> & {
   data?: {
     content: string;
     fileName?: string | null;
@@ -59,278 +54,179 @@ type CodeViewProps_2<T> = Omit<CodeViewProps<T>, "data"> & {
   };
 };
 
-/**
- * Single line component for CodeView
- */
-const CodeLine = memo(
-  ({
-    lineNumber,
-    theme,
-    columns,
-    file,
-    lineNumWidth,
-    enableHighlight,
-    noBG,
-    themeColors,
-  }: {
-    lineNumber: number;
-    theme: "light" | "dark";
-    columns: number;
-    file: File;
-    lineNumWidth: number;
-    enableHighlight: boolean;
-    noBG: boolean;
-    themeColors: ResolvedDiffViewColorTheme;
-  }) => {
-    const rawLine = file.rawFile[lineNumber] || "";
+interface BuildOptions {
+  enableHighlight: boolean;
+  noBG: boolean;
+  tabSpace: boolean;
+  tabWidth: "small" | "medium" | "large";
+  themeColors: ResolvedDiffViewColorTheme;
+}
+
+function buildCodeViewString(file: File, theme: "light" | "dark", columns: number, options: BuildOptions): string {
+  const { enableHighlight, noBG, tabSpace, tabWidth, themeColors } = options;
+
+  const maxLineNumber = file.maxLineNumber || 1;
+  const lineNumWidth = Math.max(String(maxLineNumber).length, 2);
+  const lineNumTotalWidth = lineNumWidth + 2;
+  const contentWidth = columns - lineNumTotalWidth - 2;
+
+  if (contentWidth <= 0) return "";
+
+  const lineNumBg = noBG
+    ? undefined
+    : theme === "light"
+      ? themeColors.plainLineNumber.light
+      : themeColors.plainLineNumber.dark;
+  const lineNumColor =
+    theme === "light" ? themeColors.plainLineNumberColor.light : themeColors.plainLineNumberColor.dark;
+  const contentBg = noBG
+    ? undefined
+    : theme === "light"
+      ? themeColors.plainContent.light
+      : themeColors.plainContent.dark;
+
+  const lineNumStyle: CharStyle = { backgroundColor: lineNumBg, color: lineNumColor, dim: true };
+  const padStyle: CharStyle = { backgroundColor: contentBg };
+
+  const totalLines = file.rawLength || 0;
+  const outputLines: string[] = [];
+
+  for (let lineNumber = 1; lineNumber <= totalLines; lineNumber++) {
+    const rawLine = (file.rawFile[lineNumber] || "").replace(/\n$/, "");
     const syntaxLine = file.syntaxFile[lineNumber];
-    const plainLine = file.plainFile[lineNumber];
 
-    const contentWidth = columns - lineNumWidth - 2;
+    const baseStyle: CharStyle = { backgroundColor: contentBg };
+    let contentChars: StyledChar[];
 
-    // Calculate row height based on actual text width (content width minus 2 char padding on both sides)
-    const row = getCurrentLineRow({ content: rawLine, width: contentWidth - 2 });
+    const useSyntax = enableHighlight && syntaxLine && syntaxLine.nodeList?.length <= 150;
 
-    const bg = noBG
-      ? undefined
-      : theme === "light"
-        ? themeColors.plainLineNumber.light
-        : themeColors.plainLineNumber.dark;
-    const color = theme === "light" ? themeColors.plainLineNumberColor.light : themeColors.plainLineNumberColor.dark;
+    if (useSyntax) {
+      contentChars = [];
+      for (const { node, wrapper } of syntaxLine!.nodeList || []) {
+        const lowlightStyles = getStyleFromClassName(wrapper?.properties?.className?.join(" ") || "");
+        const lowlightStyle = theme === "dark" ? lowlightStyles.dark : lowlightStyles.light;
+        const shikiStyles = getStyleObjectFromString(wrapper?.properties?.style || "");
+        const shikiStyle = theme === "dark" ? shikiStyles.dark : shikiStyles.light;
+        const syntaxColor = (shikiStyle as { color?: string })?.color || (lowlightStyle as { color?: string })?.color;
+        contentChars.push(
+          ...processSyntaxCharsForAnsi(node.value.replace(/\n$/, ""), tabSpace, tabWidth, baseStyle, syntaxColor)
+        );
+      }
+    } else {
+      contentChars = processCharsForAnsi(rawLine, tabSpace, tabWidth, baseStyle);
+    }
+
+    const contentRows = splitCharsIntoRows(contentChars, contentWidth, padStyle);
+    const pad = styleText(" ", padStyle);
+
+    for (let row = 0; row < contentRows.length; row++) {
+      const numText = row === 0 ? ` ${String(lineNumber).padStart(lineNumWidth)} ` : ` ${" ".repeat(lineNumWidth)} `;
+      const lineNumStr = styleText(numText, lineNumStyle);
+      const contentStr = buildAnsiStringOptimized(contentRows[row]);
+
+      outputLines.push(`${lineNumStr}${pad}${contentStr}${pad}`);
+    }
+  }
+
+  return outputLines.join("\n");
+}
+
+export function buildCodeViewAnsiString(props: CodeViewProps): string {
+  const theme = props.codeViewTheme || "light";
+
+  let resolvedFile: File | null = null;
+  if (props.file) {
+    resolvedFile = props.file;
+  } else if (props.data) {
+    resolvedFile = getFile(props.data.content || "", props.data.fileLang || "", theme, props.data.fileName || "");
+  }
+  if (!resolvedFile) return "";
+
+  resolvedFile.doRaw();
+
+  if (props.codeViewHighlight && props.registerHighlighter) {
+    resolvedFile.doSyntax({ registerHighlighter: props.registerHighlighter, theme });
+  }
+
+  const columns =
+    typeof props.width === "number"
+      ? props.width
+      : getValidColumns((process.stdout.columns || 60) - TERMINAL_PADDING_X);
+
+  return buildCodeViewString(resolvedFile, theme, columns, {
+    enableHighlight: !!props.codeViewHighlight,
+    noBG: !!props.codeViewNoBG,
+    tabSpace: !!props.codeViewTabSpace,
+    tabWidth: props.codeViewTabWidth || "medium",
+    themeColors: buildTheme(props.codeViewThemeColors),
+  });
+}
+
+const InternalCodeView = memo(
+  ({ file, theme, width, options }: { file: File; theme: "light" | "dark"; width?: number; options: BuildOptions }) => {
+    const columns = useMemo(() => {
+      if (typeof width === "number") return width;
+      return getValidColumns((process.stdout.columns || 60) - TERMINAL_PADDING_X);
+    }, [width]);
+
+    const output = useMemo(() => buildCodeViewString(file, theme, columns, options), [file, theme, columns, options]);
+
+    if (!columns) return null;
 
     return (
-      <Box data-line={lineNumber} height={row} width={columns}>
-        <CodeLineNumberArea
-          lineNumber={lineNumber}
-          lineNumWidth={lineNumWidth}
-          height={row}
-          backgroundColor={bg}
-          color={color}
-          dim={true}
-        />
-        <CodeContent
-          theme={theme}
-          height={row}
-          width={contentWidth}
-          rawLine={rawLine}
-          plainLine={plainLine}
-          syntaxLine={syntaxLine}
-          enableHighlight={enableHighlight}
-          noBG={noBG}
-          themeColors={themeColors}
-        />
+      <Box data-component="git-code-view" data-theme={theme} data-version={__VERSION__} flexDirection="column">
+        <Text wrap="truncate">{output}</Text>
       </Box>
     );
   }
 );
 
-CodeLine.displayName = "CodeLine";
+InternalCodeView.displayName = "InternalCodeView";
 
-/**
- * CodeViewContent - renders all code lines using terminal size from context
- */
-const CodeViewContent = memo(({ file, theme, width }: { file: File; theme: "light" | "dark"; width?: number }) => {
-  const { useCodeContext } = useCodeViewContext();
-
-  const { enableHighlight, noBG, themeColors } = useCodeContext((s) => ({
-    enableHighlight: s.enableHighlight,
-    noBG: s.noBG,
-    themeColors: s.themeColors,
-  }));
-
-  const { columns: _columns } = useCodeTerminalSize();
-
-  // Calculate line number width based on max line number
-  const lineNumWidth = useMemo(() => {
-    const maxLineNumber = file.maxLineNumber || 1;
-    return Math.max(String(maxLineNumber).length, 2);
-  }, [file.maxLineNumber]);
-
-  // Generate line numbers
-  const lines = useMemo(() => {
-    const totalLines = file.rawLength || 0;
-    return Array.from({ length: totalLines }, (_, i) => i + 1);
-  }, [file.rawLength]);
-
-  const columns = width || _columns;
-
-  if (!columns) return null;
-
-  return (
-    <>
-      {lines.map((lineNumber) => (
-        <Fragment key={lineNumber}>
-          <CodeLine
-            lineNumber={lineNumber}
-            theme={theme}
-            columns={columns}
-            file={file}
-            lineNumWidth={lineNumWidth}
-            enableHighlight={enableHighlight ?? false}
-            noBG={noBG ?? false}
-            themeColors={themeColors}
-          />
-          <CodeExtendLine columns={columns} lineNumber={lineNumber} file={file} />
-        </Fragment>
-      ))}
-    </>
-  );
-});
-
-CodeViewContent.displayName = "CodeViewContent";
-
-/**
- * Internal CodeView component that sets up context and renders content
- */
-const InternalCodeView = <T,>(
-  props: Omit<CodeViewProps<T>, "data"> & {
-    file: File;
-    wrapperRef: RefObject<DOMElement | null>;
-  }
-) => {
-  const {
-    file,
-    width: _width,
-    codeViewHighlight,
-    wrapperRef,
-    extendData,
-    renderExtendLine,
-    codeViewTabSpace,
-    codeViewTabWidth,
-    codeViewTheme,
-    codeViewNoBG,
-    codeViewThemeColors,
-  } = props;
-
-  const fileId = file.getId();
-
-  // Performance optimization using store
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const useCodeContext = useMemo(() => createCodeConfigStore<any>(props, fileId), []);
-
-  useEffect(() => {
-    const {
-      id,
-      setId,
-      width,
-      setWidth,
-      enableHighlight,
-      setEnableHighlight,
-      setExtendData,
-      renderExtendLine,
-      setRenderExtendLine,
-      tabSpace,
-      setTabSpace,
-      tabWidth,
-      setTabWidth,
-      noBG,
-      setNoBG,
-      setThemeColors,
-    } = useCodeContext.getReadonlyState();
-
-    if (fileId && fileId !== id) {
-      setId(fileId);
-    }
-
-    if (_width && _width !== width) {
-      setWidth(_width);
-    }
-
-    if (codeViewHighlight !== enableHighlight) {
-      setEnableHighlight(!!codeViewHighlight);
-    }
-
-    if (props.extendData) {
-      setExtendData(props.extendData);
-    }
-
-    if (renderExtendLine !== props.renderExtendLine) {
-      setRenderExtendLine(props.renderExtendLine);
-    }
-
-    if (codeViewTabSpace !== tabSpace) {
-      setTabSpace(!!codeViewTabSpace);
-    }
-
-    if (codeViewTabWidth && codeViewTabWidth !== tabWidth) {
-      setTabWidth(codeViewTabWidth);
-    }
-
-    if (codeViewNoBG !== noBG) {
-      setNoBG(!!codeViewNoBG);
-    }
-
-    setThemeColors(codeViewThemeColors);
-  }, [
-    _width,
-    useCodeContext,
-    codeViewHighlight,
-    fileId,
-    extendData,
-    renderExtendLine,
-    codeViewTabSpace,
-    codeViewTabWidth,
-    codeViewNoBG,
-    codeViewThemeColors,
-    props.extendData,
-    props.renderExtendLine,
-  ]);
-
-  useEffect(() => {
-    const { wrapper, setWrapper } = useCodeContext.getReadonlyState();
-    if (wrapperRef.current && wrapperRef.current !== wrapper.current) {
-      setWrapper(wrapperRef.current);
-    }
-  });
-
-  const value = useMemo(() => ({ useCodeContext }), [useCodeContext]);
-
-  const theme = codeViewTheme || "light";
-
-  return (
-    <CodeViewContext.Provider value={value}>
-      <Box data-component="git-code-view" data-theme={theme} data-version={__VERSION__} flexDirection="column">
-        <CodeViewContent file={file} theme={theme} width={_width} />
-      </Box>
-    </CodeViewContext.Provider>
-  );
-};
-
-const MemoedInternalCodeView = memo(InternalCodeView) as typeof InternalCodeView;
-
-const CodeViewContainerWithRef = <T,>(
-  props: CodeViewProps<T>,
-  ref: ForwardedRef<{ getFileInstance: () => File | null }>
-) => {
-  const { registerHighlighter, data, codeViewTheme, file, ...restProps } = props;
+const CodeViewContainerWithRef = (props: CodeViewProps, ref: ForwardedRef<{ getFileInstance: () => File | null }>) => {
+  const { registerHighlighter, data, codeViewTheme, file, width, ...restProps } = props;
 
   const domRef = useRef<DOMElement>(null);
 
   const theme = codeViewTheme || "light";
 
-  const width = restProps.width;
-
   const finalFile = useMemo(() => {
-    if (file) return file;
+    if (file) {
+      file.doRaw();
+      if (props.codeViewHighlight) {
+        file.doSyntax({ registerHighlighter: registerHighlighter, theme });
+      }
+      return file;
+    }
     if (data) {
-      return getFile(data.content || "", data.fileLang || "", theme, data.fileName || "");
+      const f = getFile(data.content || "", data.fileLang || "", theme, data.fileName || "");
+      f.doRaw();
+      if (props.codeViewHighlight) {
+        f.doSyntax({ registerHighlighter: registerHighlighter, theme });
+      }
+      return f;
     }
     return null;
-  }, [data, theme, file]);
-
-  useEffect(() => {
-    if (!finalFile) return;
-    finalFile.doRaw();
-  }, [finalFile]);
-
-  useEffect(() => {
-    if (!finalFile) return;
-    if (props.codeViewHighlight) {
-      finalFile.doSyntax({ registerHighlighter: registerHighlighter, theme: codeViewTheme });
-    }
-  }, [finalFile, props.codeViewHighlight, codeViewTheme, registerHighlighter]);
+  }, [data, theme, file, props.codeViewHighlight, registerHighlighter]);
 
   useImperativeHandle(ref, () => ({ getFileInstance: () => finalFile }), [finalFile]);
+
+  const options: BuildOptions = useMemo(
+    () => ({
+      enableHighlight: !!restProps.codeViewHighlight,
+      noBG: !!restProps.codeViewNoBG,
+      tabSpace: !!restProps.codeViewTabSpace,
+      tabWidth: restProps.codeViewTabWidth || "medium",
+      themeColors: buildTheme(restProps.codeViewThemeColors),
+    }),
+    [
+      restProps.codeViewHighlight,
+      restProps.codeViewNoBG,
+      restProps.codeViewTabSpace,
+      restProps.codeViewTabWidth,
+      restProps.codeViewThemeColors,
+    ]
+  );
 
   if (!finalFile) return null;
 
@@ -341,27 +237,15 @@ const CodeViewContainerWithRef = <T,>(
       flexGrow={typeof width === "number" ? undefined : 1}
       flexShrink={typeof width === "number" ? 0 : undefined}
     >
-      <MemoedInternalCodeView
-        key={finalFile.getId()}
-        {...restProps}
-        wrapperRef={domRef}
-        file={finalFile}
-        codeViewTheme={codeViewTheme}
-        codeViewTabWidth={props.codeViewTabWidth || "medium"}
-      />
+      <InternalCodeView key={finalFile.getId()} file={finalFile} theme={theme} width={width} options={options} />
     </Box>
   );
 };
 
-// type helper function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function ReactCodeView<T>(
-  props: CodeViewProps_1<T> & { ref?: ForwardedRef<{ getFileInstance: () => File }> }
-): JSX.Element;
-function ReactCodeView<T>(
-  props: CodeViewProps_2<T> & { ref?: ForwardedRef<{ getFileInstance: () => File }> }
-): JSX.Element;
-function ReactCodeView<T>(_props: CodeViewProps<T> & { ref?: ForwardedRef<{ getFileInstance: () => File }> }) {
+function ReactCodeView(props: CodeViewProps_1 & { ref?: ForwardedRef<{ getFileInstance: () => File }> }): JSX.Element;
+function ReactCodeView(props: CodeViewProps_2 & { ref?: ForwardedRef<{ getFileInstance: () => File }> }): JSX.Element;
+function ReactCodeView(_props: CodeViewProps & { ref?: ForwardedRef<{ getFileInstance: () => File }> }) {
   return <></>;
 }
 

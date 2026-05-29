@@ -12,6 +12,7 @@ dist
 styles
 dist-ssr
 *.local
+.pnpm-store
 
 .eslintcache
 

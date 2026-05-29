@@ -22,10 +22,9 @@ export interface CharStyle {
   dim?: boolean;
 }
 
-/**
- * Style a string with the given CharStyle using chalk
- */
-function styleText(text: string, style?: CharStyle): string {
+export type StyledChar = { char: string; style?: CharStyle };
+
+export function styleText(text: string, style?: CharStyle): string {
   if (!style) return text;
 
   let styledChalk = chalk;
@@ -118,6 +117,38 @@ export function buildAnsiStringWithLineBreaks(
 
   // Build each line as an ANSI string and join with newlines
   return lines.map((line) => buildAnsiStringOptimized(line)).join("\n");
+}
+
+function padRow(row: StyledChar[], currentWidth: number, width: number, padStyle: CharStyle): StyledChar[] {
+  const remaining = width - currentWidth;
+  if (remaining > 0) {
+    return [...row, { char: " ".repeat(remaining), style: padStyle }];
+  }
+  return row;
+}
+
+/**
+ * Split styled chars into rows of at most `width` display-columns.
+ * Each row is padded with bg-styled spaces to exactly `width`.
+ */
+export function splitCharsIntoRows(chars: StyledChar[], width: number, padStyle: CharStyle): StyledChar[][] {
+  const rows: StyledChar[][] = [];
+  let currentRow: StyledChar[] = [];
+  let currentWidth = 0;
+
+  for (const ch of chars) {
+    const w = stringWidth(ch.char);
+    if (currentWidth + w > width && currentRow.length > 0) {
+      rows.push(padRow(currentRow, currentWidth, width, padStyle));
+      currentRow = [];
+      currentWidth = 0;
+    }
+    currentRow.push(ch);
+    currentWidth += w;
+  }
+
+  rows.push(padRow(currentRow, currentWidth, width, padStyle));
+  return rows;
 }
 
 /**

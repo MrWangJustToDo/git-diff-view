@@ -1119,16 +1119,13 @@ declare function ReactDiffView<T>(props: DiffViewProps_2<T> & {
 }): JSX.Element;
 export declare const DiffView: typeof ReactDiffView;
 export declare const version: string;
-export type CodeViewProps<T> = {
+export type CodeViewProps = {
 	data?: {
 		content: string;
 		fileName?: string | null;
 		fileLang?: DiffHighlighterLang | string | null;
 	};
 	file?: File$1;
-	extendData?: Record<string, {
-		data: T;
-	}>;
 	width?: number;
 	codeViewTheme?: "light" | "dark";
 	codeViewTabSpace?: boolean;
@@ -1137,32 +1134,28 @@ export type CodeViewProps<T> = {
 	codeViewHighlight?: boolean;
 	codeViewNoBG?: boolean;
 	codeViewThemeColors?: DiffViewColorTheme;
-	renderExtendLine?: ({ file, data, lineNumber }: {
-		file: File$1;
-		lineNumber: number;
-		data: T;
-	}) => ReactNode;
 };
-export type CodeViewProps_1<T> = Omit<CodeViewProps<T>, "data"> & {
+export type CodeViewProps_1 = Omit<CodeViewProps, "data"> & {
 	data?: {
 		content: string;
 		fileName?: string | null;
 		fileLang?: DiffHighlighterLang | null;
 	};
 };
-export type CodeViewProps_2<T> = Omit<CodeViewProps<T>, "data"> & {
+export type CodeViewProps_2 = Omit<CodeViewProps, "data"> & {
 	data?: {
 		content: string;
 		fileName?: string | null;
 		fileLang?: string | null;
 	};
 };
-declare function ReactCodeView<T>(props: CodeViewProps_1<T> & {
+export declare function buildCodeViewAnsiString(props: CodeViewProps): string;
+declare function ReactCodeView(props: CodeViewProps_1 & {
 	ref?: ForwardedRef<{
 		getFileInstance: () => File$1;
 	}>;
 }): JSX.Element;
-declare function ReactCodeView<T>(props: CodeViewProps_2<T> & {
+declare function ReactCodeView(props: CodeViewProps_2 & {
 	ref?: ForwardedRef<{
 		getFileInstance: () => File$1;
 	}>;

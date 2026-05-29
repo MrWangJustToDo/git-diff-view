@@ -1,6 +1,6 @@
 import { CodeView } from "@git-diff-view/cli";
 import { getDiffViewHighlighter } from "@git-diff-view/shiki";
-import { Box, render, Text } from "ink";
+import { render } from "ink";
 import { createElement } from "react";
 // import { createElement } from '@my-react/react';
 // import { Box, render, Text } from '@my-react/react-terminal'
@@ -210,19 +210,10 @@ getDiffViewHighlighter().then((highlighter) => {
   render(
     createElement(CodeView, {
       data: { content: temp1, fileLang: "ts" },
-      // width: 80,
-      codeViewNoBG: true,
+      width: 60,
+      // codeViewNoBG: true,
+      // codeViewTabSpace: true,
       codeViewTheme: "dark",
-      extendData: {
-        107: { data: "test extend data" },
-      },
-      renderExtendLine: ({ data }) => {
-        return createElement(
-          Box,
-          { backgroundColor: "red", width: "100%", padding: "1" },
-          createElement(Text, null, data)
-        );
-      },
       codeViewHighlight: true,
       registerHighlighter: highlighter,
     })

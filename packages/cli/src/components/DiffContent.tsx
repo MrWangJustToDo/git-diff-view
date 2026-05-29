@@ -11,13 +11,11 @@ import { useDiffViewContext } from "./DiffViewContext";
 import type { ResolvedDiffViewColorTheme } from "./color";
 import type { DiffFile, DiffLine, File } from "@git-diff-view/core";
 
-// Helper to get tab width value
-const getTabWidthValue = (tabWidth: "small" | "medium" | "large"): number => {
+export const getTabWidthValue = (tabWidth: "small" | "medium" | "large"): number => {
   return tabWidth === "small" ? 1 : tabWidth === "medium" ? 2 : 4;
 };
 
-// Process a string into styled characters for ANSI output
-const processCharsForAnsi = (
+export const processCharsForAnsi = (
   str: string,
   enableTabSpace: boolean,
   tabWidth: "small" | "medium" | "large",
@@ -178,11 +176,7 @@ const DiffString = React.memo(
 
 DiffString.displayName = "DiffString";
 
-/**
- * Helper function to process syntax-highlighted characters for ANSI output.
- * Handles both lowlight (class-based) and shiki (style-based) highlighting.
- */
-const processSyntaxCharsForAnsi = (
+export const processSyntaxCharsForAnsi = (
   str: string,
   enableTabSpace: boolean,
   tabWidth: "small" | "medium" | "large",
