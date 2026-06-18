@@ -29,9 +29,11 @@ export const DiffViewWithMultiSelect = memo(
   ({
     diffFile,
     highlighter,
+    height = 600,
   }: {
     diffFile: DiffFile;
     highlighter?: DiffViewWithMultiSelectProps<string[]>["registerHighlighter"];
+    height?: number;
   }) => {
     const { colorScheme } = useMantineColorScheme();
     const diffViewRef = useRef<DiffViewWithMultiSelectRef>(null);
@@ -206,8 +208,8 @@ export const DiffViewWithMultiSelect = memo(
     );
 
     return (
-      <>
-        <Group mb="md" justify="flex-start" className="p-1">
+      <Box>
+        <Group mb="md" justify="flex-start">
           <Button
             size="xs"
             variant={diffViewMode & DiffModeEnum.Split ? "filled" : "light"}
@@ -231,9 +233,10 @@ export const DiffViewWithMultiSelect = memo(
         </Group>
 
         <Box
-          className="h-full overflow-auto border-y"
+          className="overflow-auto rounded-lg border border-solid"
           style={{
-            borderColor: colorScheme === "light" ? "var(--mantine-color-gray-2)" : "var(--mantine-color-dark-4)",
+            height,
+            borderColor: colorScheme === "light" ? "#e9ecef" : "var(--mantine-color-dark-5)",
           }}
         >
           <DiffViewMultiSelect
@@ -253,7 +256,7 @@ export const DiffViewWithMultiSelect = memo(
             diffViewFontSize={13}
           />
         </Box>
-      </>
+      </Box>
     );
   }
 );

@@ -219,11 +219,11 @@ importers:
         version: 1.6.0(react@19.2.0)
     devDependencies:
       '@my-react/react':
-        specifier: ^0.3.27
-        version: 0.3.27(react@19.2.0)
+        specifier: ^0.3.28
+        version: 0.3.28(react@19.2.0)
       '@my-react/react-terminal':
-        specifier: ^0.0.26
-        version: 0.0.26(@my-react/react@0.3.27(react@19.2.0))
+        specifier: ^0.0.27
+        version: 0.0.27(@my-react/react@0.3.28(react@19.2.0))(@xterm/addon-fit@0.11.0)(@xterm/xterm@6.0.0)
       '@types/react':
         specifier: ^19.2.2
         version: 19.2.2
@@ -603,6 +603,9 @@ importers:
       '@codesandbox/sandpack-react':
         specifier: ^2.20.0
         version: 2.20.0(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      '@git-diff-view/cli':
+        specifier: workspace:*
+        version: link:../../packages/cli
       '@git-diff-view/file':
         specifier: workspace:*
         version: link:../../packages/file
@@ -622,11 +625,14 @@ importers:
         specifier: ^8.3.4
         version: 8.3.4(react@19.2.0)
       '@my-react/react':
-        specifier: ^0.3.27
-        version: 0.3.27(react@19.2.0)
+        specifier: ^0.3.28
+        version: 0.3.28(react@19.2.0)
       '@my-react/react-dom':
-        specifier: ^0.3.27
-        version: 0.3.27(@my-react/react@0.3.27(react@19.2.0))(react-dom@19.2.0(react@19.2.0))
+        specifier: ^0.3.28
+        version: 0.3.28(@my-react/react@0.3.28(react@19.2.0))(react-dom@19.2.0(react@19.2.0))
+      '@my-react/react-terminal':
+        specifier: ^0.0.27
+        version: 0.0.27(@my-react/react@0.3.28(react@19.2.0))(@xterm/addon-fit@0.11.0)(@xterm/xterm@6.0.0)
       '@tabler/icons-react':
         specifier: ^3.35.0
         version: 3.35.0(react@19.2.0)
@@ -650,11 +656,11 @@ importers:
         version: 0.4.0(react@19.2.0)
     devDependencies:
       '@my-react/react-refresh':
-        specifier: ^0.3.27
-        version: 0.3.27(@my-react/react@0.3.27(react@19.2.0))
+        specifier: ^0.3.28
+        version: 0.3.28(@my-react/react@0.3.28(react@19.2.0))
       '@my-react/react-vite':
-        specifier: ^0.0.33
-        version: 0.0.33(@my-react/react-refresh@0.3.27(@my-react/react@0.3.27(react@19.2.0)))(vite@5.4.20(@types/node@22.19.17)(sugarss@5.0.1(postcss@8.5.10))(terser@5.44.0))
+        specifier: ^0.0.34
+        version: 0.0.34(@my-react/react-refresh@0.3.28(@my-react/react@0.3.28(react@19.2.0)))(vite@5.4.20(@types/node@22.19.17)(sugarss@5.0.1(postcss@8.5.10))(terser@5.44.0))
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.2
@@ -664,6 +670,12 @@ importers:
       '@vitejs/plugin-react':
         specifier: 'catalog:'
         version: 5.2.0(vite@5.4.20(@types/node@22.19.17)(sugarss@5.0.1(postcss@8.5.10))(terser@5.44.0))
+      '@xterm/addon-fit':
+        specifier: 0.11.0
+        version: 0.11.0
+      '@xterm/xterm':
+        specifier: ^6.0.0
+        version: 6.0.0
       autoprefixer:
         specifier: 'catalog:'
         version: 10.5.0(postcss@8.5.10)
@@ -1694,39 +1706,46 @@ packages:
   '@microsoft/tsdoc@0.15.1':
     resolution: {integrity: sha512-4aErSrCR/On/e5G2hDP0wjooqDdauzEbIq8hIkIe5pXV0rtWJZvdCEKL0ykZxex+IxIwBp0eGeV48hQN07dXtw==}
 
-  '@my-react/react-dom@0.3.27':
-    resolution: {integrity: sha512-LeGXcvBrX2f1iUk8XLzKLOwEy12qglvn2QFOXLQKMnXHDhpwqK78M6ySV2+QtwRa08c5S/PpvSLqudnvhWIItQ==}
+  '@my-react/react-dom@0.3.28':
+    resolution: {integrity: sha512-fOJD49do/xBuAY5APijPSUmqKj+tUUDN+sv/e+hJFHo+PFDxQCdnRcS86+yqg7xom0Pygm0wCi0fk2ctWNF9Aw==}
     peerDependencies:
-      '@my-react/react': '>=0.3.27'
+      '@my-react/react': '>=0.3.28'
       react-dom: ^17 || ^18 || ^19
 
-  '@my-react/react-jsx@0.3.27':
-    resolution: {integrity: sha512-8TNFD8+KpPOc8ZgRWSBavTIgXNRSg39+rEtS6oGv+BZzvMTKiColtOvqES+kxi6Rb8PGc/KipWScPnTTorlEHA==}
+  '@my-react/react-jsx@0.3.28':
+    resolution: {integrity: sha512-4jSvyeQ6YFNjVkDRtrw0XHtzDPheQuaKjWlM/7XuIgyfefAYfS/wycotRzzpwL69PIyXPzTYh7eMtknX7YFiSg==}
     peerDependencies:
-      '@my-react/react': '>=0.3.27'
+      '@my-react/react': '>=0.3.28'
 
-  '@my-react/react-refresh@0.3.27':
-    resolution: {integrity: sha512-vh4x4GPj0jrXBZpFsoLWYZ5qzX/hvlZOGKbEkVIxmuNdQX8Zmk8pXKNADrDL/Z/sm1ocdBvXttSvUoSNQn+KWg==}
+  '@my-react/react-refresh@0.3.28':
+    resolution: {integrity: sha512-RTGNWAyftGDGT5supU4vCVcqa0vgrN5C2fuDuPqEiX1/NqxeZRAjoqyIYxVh9ox75hsoywUJCsJtkl9sLg58jw==}
     peerDependencies:
-      '@my-react/react': '>=0.3.27'
+      '@my-react/react': '>=0.3.28'
 
-  '@my-react/react-terminal@0.0.26':
-    resolution: {integrity: sha512-63OTFH4wLNS9axstyKF69wGfQPccEIRowi+gYN7XwH6ZY4+wgtN70phKsy4U14texpQArbYkYkK+xcJD6xJGyA==}
+  '@my-react/react-terminal@0.0.27':
+    resolution: {integrity: sha512-iy2Wt8MlEFPmcLEf7S5NWbjR6o+vVSh5ErK9aL+MuNrkcTa3dQG0UwXiBxJDALUw4x+qU3mQeDJDCq86h36F5A==}
     peerDependencies:
-      '@my-react/react': '>=0.3.27'
+      '@my-react/react': '>=0.3.28'
+      '@xterm/addon-fit': '>=0.11.0'
+      '@xterm/xterm': '>=5.0.0 || >=6.0.0'
+    peerDependenciesMeta:
+      '@xterm/addon-fit':
+        optional: true
+      '@xterm/xterm':
+        optional: true
 
-  '@my-react/react-vite@0.0.33':
-    resolution: {integrity: sha512-+Qh19XwKbPxXGleHQ2LpbipMsCXxDMpgEybuxqAwyqlU1Si0kZY68pX0VALJQyOzU9Ti9OaGy3wv1mKQIHCRug==}
+  '@my-react/react-vite@0.0.34':
+    resolution: {integrity: sha512-DP8rMefJlUI2GWNA4FJqnVkcfp6wNoqXq9a4JaWhxoMd52l+ryHBIp4Ga9tYhZGrcRZ4ej/SFe6EovDZ9mfNvA==}
     peerDependencies:
       '@lazarv/rsc': ^0.0.0-experimental
-      '@my-react/react-refresh': '>=0.3.27'
+      '@my-react/react-refresh': '>=0.3.28'
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
     peerDependenciesMeta:
       '@lazarv/rsc':
         optional: true
 
-  '@my-react/react@0.3.27':
-    resolution: {integrity: sha512-d0UirX8PE1G1i8aQ1lDAZ9HX+K7bxaLs49IP7e8jwu7UDRp49Deh0wRR+nEfvvsI1eY5OOWCq+axz3lGgWHlnQ==}
+  '@my-react/react@0.3.28':
+    resolution: {integrity: sha512-37iu+G8igDgEM40dx3i+hsndk6I5YnOgqBa9FivOYrSVRPk0bOO51q2ywg4HH0YAeouMzdKBn8Y4f2dRZyLPHQ==}
     peerDependencies:
       react: ^17 || ^18 || ^19
 
@@ -2789,6 +2808,12 @@ packages:
 
   '@vue/shared@3.5.30':
     resolution: {integrity: sha512-YXgQ7JjaO18NeK2K9VTbDHaFy62WrObMa6XERNfNOkAhD1F1oDSf3ZJ7K6GqabZ0BvSDHajp8qfS5Sa2I9n8uQ==}
+
+  '@xterm/addon-fit@0.11.0':
+    resolution: {integrity: sha512-jYcgT6xtVYhnhgxh3QgYDnnNMYTcf8ElbxxFzX0IZo+vabQqSPAjC3c1wJrKB5E19VwQei89QCiZZP86DCPF7g==}
+
+  '@xterm/xterm@6.0.0':
+    resolution: {integrity: sha512-TQwDdQGtwwDt+2cgKDLn0IRaSxYu1tSUjgKarSDkUM0ZNiSRXFpjxEsvc/Zgc5kq5omJ+V0a8/kIM2WD3sMOYg==}
 
   accepts@2.0.0:
     resolution: {integrity: sha512-5cvg6CtKwfgdmVqY1WIiXKc3Q1bkRqGLi+2W/6ao+6Y7gu/RCwRuAhGEzh5B4KlszSuTLgZYuqFqo5bImjNKng==}
@@ -7521,22 +7546,22 @@ snapshots:
 
   '@microsoft/tsdoc@0.15.1': {}
 
-  '@my-react/react-dom@0.3.27(@my-react/react@0.3.27(react@19.2.0))(react-dom@19.2.0(react@19.2.0))':
+  '@my-react/react-dom@0.3.28(@my-react/react@0.3.28(react@19.2.0))(react-dom@19.2.0(react@19.2.0))':
     dependencies:
-      '@my-react/react': 0.3.27(react@19.2.0)
+      '@my-react/react': 0.3.28(react@19.2.0)
       react-dom: 19.2.0(react@19.2.0)
 
-  '@my-react/react-jsx@0.3.27(@my-react/react@0.3.27(react@19.2.0))':
+  '@my-react/react-jsx@0.3.28(@my-react/react@0.3.28(react@19.2.0))':
     dependencies:
-      '@my-react/react': 0.3.27(react@19.2.0)
+      '@my-react/react': 0.3.28(react@19.2.0)
 
-  '@my-react/react-refresh@0.3.27(@my-react/react@0.3.27(react@19.2.0))':
+  '@my-react/react-refresh@0.3.28(@my-react/react@0.3.28(react@19.2.0))':
     dependencies:
-      '@my-react/react': 0.3.27(react@19.2.0)
+      '@my-react/react': 0.3.28(react@19.2.0)
 
-  '@my-react/react-terminal@0.0.26(@my-react/react@0.3.27(react@19.2.0))':
+  '@my-react/react-terminal@0.0.27(@my-react/react@0.3.28(react@19.2.0))(@xterm/addon-fit@0.11.0)(@xterm/xterm@6.0.0)':
     dependencies:
-      '@my-react/react': 0.3.27(react@19.2.0)
+      '@my-react/react': 0.3.28(react@19.2.0)
       ansi-escapes: 7.3.0
       ansi-styles: 6.2.3
       auto-bind: 5.0.1
@@ -7559,13 +7584,16 @@ snapshots:
       widest-line: 5.0.0
       wrap-ansi: 9.0.2
       yoga-layout: 3.2.1
+    optionalDependencies:
+      '@xterm/addon-fit': 0.11.0
+      '@xterm/xterm': 6.0.0
 
-  '@my-react/react-vite@0.0.33(@my-react/react-refresh@0.3.27(@my-react/react@0.3.27(react@19.2.0)))(vite@5.4.20(@types/node@22.19.17)(sugarss@5.0.1(postcss@8.5.10))(terser@5.44.0))':
+  '@my-react/react-vite@0.0.34(@my-react/react-refresh@0.3.28(@my-react/react@0.3.28(react@19.2.0)))(vite@5.4.20(@types/node@22.19.17)(sugarss@5.0.1(postcss@8.5.10))(terser@5.44.0))':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.29.0)
       '@babel/plugin-transform-react-jsx-source': 7.27.1(@babel/core@7.29.0)
-      '@my-react/react-refresh': 0.3.27(@my-react/react@0.3.27(react@19.2.0))
+      '@my-react/react-refresh': 0.3.28(@my-react/react@0.3.28(react@19.2.0))
       '@rolldown/pluginutils': 1.0.0-rc.6
       es-module-lexer: 1.7.0
       estree-walker: 3.0.3
@@ -7576,9 +7604,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@my-react/react@0.3.27(react@19.2.0)':
+  '@my-react/react@0.3.28(react@19.2.0)':
     dependencies:
-      '@my-react/react-jsx': 0.3.27(@my-react/react@0.3.27(react@19.2.0))
+      '@my-react/react-jsx': 0.3.28(@my-react/react@0.3.28(react@19.2.0))
       react: 19.2.0
       react-compiler-runtime: 1.0.0(react@19.2.0)
 
@@ -8612,6 +8640,10 @@ snapshots:
   '@vue/shared@3.5.22': {}
 
   '@vue/shared@3.5.30': {}
+
+  '@xterm/addon-fit@0.11.0': {}
+
+  '@xterm/xterm@6.0.0': {}
 
   accepts@2.0.0:
     dependencies:

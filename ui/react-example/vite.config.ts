@@ -10,8 +10,18 @@ export default defineConfig({
   worker: {
     format: "es",
   },
+  resolve: {
+    alias: {
+      ink: "@my-react/react-terminal/web",
+    },
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      target: "es2022",
+    },
+  },
   build: {
     sourcemap: true,
-    target: "es2015",
+    target: "es2022",
   },
 });

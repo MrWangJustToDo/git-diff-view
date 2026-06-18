@@ -4,19 +4,19 @@ import { useEffect, useState } from "react";
 import type { DiffHighlighter } from "@git-diff-view/react";
 import type { Dispatch, SetStateAction } from "react";
 
-export const useDiffHighlighter = ({ setLoading }: { setLoading: Dispatch<SetStateAction<boolean>> }) => {
+export const useDiffHighlighter = (props?: { setLoading: Dispatch<SetStateAction<boolean>> }) => {
   const [highlighter, setHighlighter] = useState<Omit<DiffHighlighter, "getHighlighterEngine">>();
 
   useEffect(() => {
     const init = async () => {
-      setLoading(true);
+      props?.setLoading?.(true);
       try {
         const shikiHighlighter = await getDiffViewHighlighter();
         if (shikiHighlighter) {
           setHighlighter(shikiHighlighter);
         }
       } finally {
-        setLoading(false);
+        props?.setLoading?.(false);
       }
     };
     init();

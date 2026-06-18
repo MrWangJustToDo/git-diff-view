@@ -1,10 +1,20 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { SandpackCodeEditor, SandpackLayout, SandpackProvider } from "@codesandbox/sandpack-react";
+import { DiffView } from "@git-diff-view/cli";
 import { Box, Card, useMantineColorScheme } from "@mantine/core";
+import { InkTerminalBox } from "@my-react/react-terminal/web";
 import { IconTerminal2 } from "@tabler/icons-react";
+import { useMemo } from "react";
+
+import { useDiffHighlighter } from "../../hooks/useDiffHighlighter";
+import { getNewDiffFile } from "../MainContent";
 
 export const CliPlayGround = () => {
   const { colorScheme } = useMantineColorScheme();
+
+  const highlighter = useDiffHighlighter();
+
+  const diffFile = useMemo(() => getNewDiffFile(), []);
 
   return (
     <Card className="p-0" withBorder>
@@ -50,11 +60,14 @@ render(
         <SandpackLayout style={{ ["--sp-layout-height"]: "450px" }}>
           <SandpackCodeEditor showTabs />
           <Box className="flex flex-1 items-center justify-center overflow-hidden">
-            <img
+            <InkTerminalBox padding={0}>
+              <DiffView diffFile={diffFile} registerHighlighter={highlighter} diffViewTheme="dark" diffViewHighlight />
+            </InkTerminalBox>
+            {/* <img
               src="https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/main/cli-diff.png"
               alt="@git-diff-view/cli terminal rendering"
               className="block w-full object-cover object-top"
-            />
+            /> */}
           </Box>
         </SandpackLayout>
       </SandpackProvider>

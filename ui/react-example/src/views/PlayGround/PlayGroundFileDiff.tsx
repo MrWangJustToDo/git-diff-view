@@ -6,18 +6,28 @@ import {
   getMaxLengthToIgnoreLineDiff,
   changeMaxLengthToIgnoreLineDiff,
 } from "@git-diff-view/react";
-import { useMantineColorScheme, Code, Button, Switch, NumberInput, Tooltip, Divider, Collapse } from "@mantine/core";
+import {
+  useMantineColorScheme,
+  Button,
+  NumberInput,
+  Tooltip,
+  Collapse,
+  Container,
+  Box,
+  Title,
+  Text,
+  Badge,
+  Group,
+  Stack,
+  TextInput,
+  Grid,
+} from "@mantine/core";
 import { useCallbackRef } from "@mantine/hooks";
+import { IconFileDiff, IconSettings } from "@tabler/icons-react";
 import { debounce } from "lodash";
-import { useState, useCallback, useEffect, useMemo } from "react";
+import { useState, useCallback, useEffect } from "react";
 
 import { CodeEditor } from "../../components/CodeEditor";
-import {
-  getShareDataFromUrl,
-  decodeFileDiffState,
-  copyToClipboard,
-  updateUrlWithFileDiffState,
-} from "../../utils/shareUrl";
 
 import type { DiffFile } from "@git-diff-view/react";
 
@@ -27,24 +37,10 @@ const defaultFile1 =
 const defaultFile2 =
   'import { getHighlighter } from "shiki";\n\nimport { processAST, type SyntaxLine } from "./processAST";\n\nimport type { codeToHast } from "shiki";\n\nexport type DiffAST = DePromise<ReturnType<typeof codeToHast>>;\n\nexport type DiffHighlighter = {\n  name: string;\n  maxLineToIgnoreSyntax: number;\n  setMaxLineToIgnoreSyntax: (v: number) => void;\n  ignoreSyntaxHighlightList: (string | RegExp)[];\n  setIgnoreSyntaxHighlightList: (v: (string | RegExp)[]) => void;\n  getAST: (raw: string, fileName?: string, lang?: string) => DiffAST;\n  processAST: (ast: DiffAST) => { syntaxFileObject: Record<number, SyntaxLine>; syntaxFileLineNumber: number };\n  hasRegisteredCurrentLang: (lang: string) => boolean;\n  getHighlighterEngine: () => DePromise<ReturnType<typeof getHighlighter>> | null;\n};\n\nlet internal: DePromise<ReturnType<typeof getHighlighter>> | null = null;\n\nconst getDefaultHighlighter = async () =>\n  await getHighlighter({\n    themes: ["github-light", "github-dark"],\n    langs: [\n      "cpp",\n      "java",\n      "javascript",\n      "css",\n      "c#",\n      "c",\n      "c++",\n      "vue",\n      "vue-html",\n      "astro",\n      "bash",\n      "make",\n      "markdown",\n      "makefile",\n      "bat",\n      "cmake",\n      "cmd",\n      "csv",\n      "docker",\n      "dockerfile",\n      "go",\n      "python",\n      "html",\n      "jsx",\n      "tsx",\n      "typescript",\n      "sql",\n      "xml",\n      "sass",\n      "ssh-config",\n      "kotlin",\n      "json",\n      "swift",\n      "txt",\n      "diff",\n    ],\n  });\n\nconst instance = { name: "shiki" };\n\nlet _maxLineToIgnoreSyntax = 2000;\n\nconst _ignoreSyntaxHighlightList: (string | RegExp)[] = [];\n\nObject.defineProperty(instance, "maxLineToIgnoreSyntax", {\n  get: () => _maxLineToIgnoreSyntax,\n});\n\nObject.defineProperty(instance, "setMaxLineToIgnoreSyntax", {\n  value: (v: number) => {\n    _maxLineToIgnoreSyntax = v;\n  },\n});';
 
-// Get initial state from URL or use defaults
-const getInitialState = () => {
-  const data = getShareDataFromUrl();
-  if (data) {
-    const state = decodeFileDiffState(data);
-    if (state && (state.file1 || state.file2)) {
-      return state;
-    }
-  }
-  return { lang1: "ts", lang2: "ts", file1: defaultFile1, file2: defaultFile2 };
-};
+export const PlayGroundFileDiff = () => {
+  const [lang1, setLang1] = useState("ts");
 
-export const PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
-  const initialState = getInitialState();
-
-  const [lang1, setLang1] = useState(initialState.lang1);
-
-  const [lang2, setLang2] = useState(initialState.lang2);
+  const [lang2, setLang2] = useState("ts");
 
   const [ignoreWhiteSpace, setIgnoreWhiteSpace] = useState(false);
 
@@ -58,27 +54,18 @@ export const PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
 
   const [fastDiffTemplate, setFastDiffTemplate] = useState(getEnableFastDiffTemplate());
 
-  const [file1, setFile1] = useState(initialState.file1);
+  const [file1, setFile1] = useState(defaultFile1);
 
-  const [file2, setFile2] = useState(initialState.file2);
+  const [file2, setFile2] = useState(defaultFile2);
 
-  const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "error">("idle");
-
-  // Debounced URL update
-  const updateUrl = useMemo(
-    () =>
-      debounce((lang1: string, lang2: string, file1: string, file2: string) => {
-        updateUrlWithFileDiffState({ lang1, lang2, file1, file2 });
-      }, 500),
-    []
-  );
+  const [showConfig, setShowConfig] = useState(true);
 
   const { colorScheme } = useMantineColorScheme();
 
   const [diffInstance, setDiffInstance] = useState<DiffFile>();
 
   const setDiffInstanceCb = useCallback(
-    debounce((lang1, lang2, file1, file2, ignoreWhiteSpace) => {
+    debounce((lang1: string, lang2: string, file1: string, file2: string, ignoreWhiteSpace: boolean) => {
       setRangeMode(false);
       setStart(0);
       setEnd(0);
@@ -107,7 +94,6 @@ export const PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
 
   useEffect(() => {
     setDiffInstanceCb(lang1, lang2, file1, file2, ignoreWhiteSpace);
-    updateUrl(lang1, lang2, file1, file2);
   }, [file1, file2, lang1, lang2, ignoreWhiteSpace]);
 
   useEffect(() => {
@@ -121,158 +107,213 @@ export const PlayGroundFileDiff = ({ onClick }: { onClick: () => void }) => {
     }
   }, [diffInstance, start, end]);
 
-  const handleShare = useCallback(async () => {
-    try {
-      const success = await copyToClipboard(window.location.href);
-      if (success) {
-        setShareStatus("copied");
-        setTimeout(() => setShareStatus("idle"), 2000);
-      } else {
-        setShareStatus("error");
-        setTimeout(() => setShareStatus("idle"), 2000);
-      }
-    } catch {
-      setShareStatus("error");
-      setTimeout(() => setShareStatus("idle"), 2000);
-    }
-  }, []);
+  const finalDiffInstance = rangeMode ? rangeDiffInstance : diffInstance;
 
   return (
-    <div className="m-auto mb-[1em] mt-[1em] w-[90%]">
-      <div className="flex items-center gap-x-6">
-        <Button onClick={onClick}>Go to `Git diff` mode</Button>
-        <Tooltip
-          label={
-            shareStatus === "copied"
-              ? "Copied!"
-              : shareStatus === "error"
-                ? "Failed to copy"
-                : "Copy share URL to clipboard"
-          }
-        >
-          <Button
-            variant={shareStatus === "copied" ? "filled" : "outline"}
-            color={shareStatus === "error" ? "red" : shareStatus === "copied" ? "green" : undefined}
-            onClick={handleShare}
-          >
-            {shareStatus === "copied" ? "Copied!" : shareStatus === "error" ? "Error" : "Share"}
-          </Button>
-        </Tooltip>
-      </div>
-      <Divider className="my-2" />
-      <h2 className="flex flex-wrap gap-x-8 gap-y-4 text-[24px]">
-        <span>
-          <Code className="text-[24px] font-medium">File diff</Code> mode
-        </span>
-        {/* <div className="inline-flex gap-x-2 text-[14px]">
-          <Button onClick={onClick}>Go to `Git diff` mode</Button>
-          <Tooltip
-            label={
-              shareStatus === "copied"
-                ? "Copied!"
-                : shareStatus === "error"
-                  ? "Failed to copy"
-                  : "Copy share URL to clipboard"
-            }
-          >
-            <Button
-              variant={shareStatus === "copied" ? "filled" : "outline"}
-              color={shareStatus === "error" ? "red" : shareStatus === "copied" ? "green" : undefined}
-              onClick={handleShare}
+    <Box className="min-h-screen">
+      <Container size="xl" py="xl">
+        {/* Header */}
+        <Box className="mb-8 text-center">
+          <Group justify="center" gap="xs" mb="md">
+            <Badge
+              size="lg"
+              variant="gradient"
+              gradient={{ from: "teal", to: "green", deg: 90 }}
+              leftSection={<IconFileDiff size={16} />}
             >
-              {shareStatus === "copied" ? "Copied!" : shareStatus === "error" ? "Error" : "Share"}
-            </Button>
-          </Tooltip>
-        </div> */}
-        <div className="inline-flex items-center gap-x-4">
-          <Switch
-            checked={ignoreWhiteSpace}
-            onChange={(e) => setIgnoreWhiteSpace(e.target.checked)}
-            label="Ignore WhiteSpace"
-          />
-          <Switch
-            checked={fastDiffTemplate}
-            onChange={(e) => setFastDiffTemplate(e.target.checked)}
-            label="Fast Diff Template (better line diff)"
-          />
-          <Switch
-            checked={rangeMode}
-            onChange={(e) => setRangeMode(e.target.checked)}
-            label="RangeMode (show part of diff)"
-          />
-          <Tooltip label="Ignore line diff when line length over this value">
-            <NumberInput
-              value={getMaxLengthToIgnoreLineDiff()}
-              min={100}
-              max={6000}
-              onChange={(n) => {
-                changeMaxLengthToIgnoreLineDiff(Number(n));
-                reloadDiffInstance();
-              }}
-            />
-          </Tooltip>
-        </div>
-      </h2>
-      <Collapse in={rangeMode}>
-        <div className="flex items-center gap-x-6 py-2">
-          <NumberInput
-            value={start}
-            min={0}
-            label="Range Start"
-            max={diffInstance?.splitLineLength}
-            onChange={(n) => {
-              setStart(Number(n));
-            }}
-          />
-          <NumberInput
-            value={end}
-            min={0}
-            label="Range End"
-            max={diffInstance?.splitLineLength}
-            onChange={(n) => {
-              setEnd(Number(n));
-            }}
-          />
-        </div>
-      </Collapse>
-      <div className="mt-[10px] flex gap-x-[10px]">
-        <div className="flex w-[50%] flex-col gap-y-[10px]">
-          <span className="border-color border-b p-[3px]">Lang: </span>
-          <input
-            className="font-reset border-color rounded-[4px] border-2 p-[4px] text-[14px]"
-            placeholder="input syntax lang"
-            value={lang1}
-            onChange={(e) => setLang1(e.target.value)}
-          />
-          <span className="border-color border-b p-[3px]">File 1: </span>
-          <CodeEditor code={file1} onChange={setFile1} lang={lang1} minHeight="200px" />
-        </div>
-        <div className="flex w-[50%] flex-col gap-y-[10px]">
-          <span className="border-color border-b p-[3px]">Lang: </span>
-          <input
-            className="border-color font-reset rounded-[4px] border-2 p-[4px] text-[14px]"
-            type=""
-            placeholder="input syntax lang"
-            value={lang2}
-            onChange={(e) => setLang2(e.target.value)}
-          />
-          <span className="border-color border-b p-[3px]">File 2: </span>
-          <CodeEditor code={file2} onChange={setFile2} lang={lang2} minHeight="200px" />
-        </div>
-      </div>
+              Playground
+            </Badge>
+          </Group>
 
-      {(rangeMode ? rangeDiffInstance : diffInstance) ? (
-        <DiffView<string>
-          className="border-color mt-[10px] overflow-hidden rounded-[4px] border"
-          diffFile={(rangeMode ? rangeDiffInstance : diffInstance)!}
-          diffViewFontSize={13}
-          diffViewTheme={colorScheme === "dark" ? "dark" : "light"}
-          diffViewHighlight={true}
-          diffViewWrap
-        />
-      ) : (
-        <div className="border-color mt-[10px] rounded-[4px] border p-[10px] text-[22px] text-orange-500">Empty</div>
-      )}
-    </div>
+          <Title
+            order={1}
+            className="mb-4 bg-gradient-to-r from-teal-600 to-green-600 bg-clip-text text-4xl font-bold text-transparent md:text-5xl dark:from-teal-400 dark:to-green-400"
+          >
+            File Diff Playground
+          </Title>
+
+          <Text size="lg" c="dimmed" className="mx-auto max-w-2xl">
+            Compare two files side by side and generate a diff view on the fly.
+          </Text>
+        </Box>
+
+        {/* Config Panel */}
+        <Box
+          className="mb-6 rounded-xl border border-solid p-5 shadow-sm"
+          style={{
+            borderColor: colorScheme === "light" ? "#e9ecef" : "var(--mantine-color-dark-4)",
+            backgroundColor: colorScheme === "light" ? "#ffffff" : "var(--mantine-color-dark-6)",
+          }}
+        >
+          <Group justify="space-between" mb="md">
+            <Title order={4} className="text-lg">
+              Configuration
+            </Title>
+            <Button
+              variant="subtle"
+              size="compact-sm"
+              color="gray"
+              onClick={() => setShowConfig(!showConfig)}
+              leftSection={<IconSettings size={16} />}
+            >
+              {showConfig ? "Hide" : "Show"}
+            </Button>
+          </Group>
+
+          <Collapse in={showConfig}>
+            <Stack gap="md">
+              <Group gap="sm">
+                <Tooltip label="Ignore whitespace differences">
+                  <Button
+                    variant="light"
+                    size="compact-sm"
+                    color={ignoreWhiteSpace ? "blue" : "gray"}
+                    onClick={() => setIgnoreWhiteSpace(!ignoreWhiteSpace)}
+                  >
+                    {ignoreWhiteSpace ? "Whitespace: Ignore" : "Whitespace: Compare"}
+                  </Button>
+                </Tooltip>
+                <Tooltip label="Fast Diff Template (better line diff)">
+                  <Button
+                    variant="light"
+                    size="compact-sm"
+                    color={fastDiffTemplate ? "blue" : "gray"}
+                    onClick={() => setFastDiffTemplate(!fastDiffTemplate)}
+                  >
+                    {fastDiffTemplate ? "Fast Diff: ON" : "Fast Diff: OFF"}
+                  </Button>
+                </Tooltip>
+                <Tooltip label="Show only a portion of the diff">
+                  <Button
+                    variant="light"
+                    size="compact-sm"
+                    color={rangeMode ? "blue" : "gray"}
+                    onClick={() => setRangeMode(!rangeMode)}
+                  >
+                    {rangeMode ? "Range: ON" : "Range: OFF"}
+                  </Button>
+                </Tooltip>
+                <Tooltip label="Ignore line diff when line length over this value">
+                  <NumberInput
+                    size="xs"
+                    value={getMaxLengthToIgnoreLineDiff()}
+                    min={100}
+                    max={6000}
+                    w={120}
+                    onChange={(n) => {
+                      changeMaxLengthToIgnoreLineDiff(Number(n));
+                      reloadDiffInstance();
+                    }}
+                  />
+                </Tooltip>
+              </Group>
+
+              <Collapse in={rangeMode}>
+                <Group gap="sm">
+                  <NumberInput
+                    size="xs"
+                    value={start}
+                    min={0}
+                    label="Range Start"
+                    max={diffInstance?.splitLineLength}
+                    onChange={(n) => setStart(Number(n))}
+                  />
+                  <NumberInput
+                    size="xs"
+                    value={end}
+                    min={0}
+                    label="Range End"
+                    max={diffInstance?.splitLineLength}
+                    onChange={(n) => setEnd(Number(n))}
+                  />
+                </Group>
+              </Collapse>
+            </Stack>
+          </Collapse>
+        </Box>
+
+        {/* Editor Panels */}
+        <Grid gutter="md" className="mb-6">
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Box
+              className="h-full rounded-xl border border-solid p-4 shadow-sm"
+              style={{
+                borderColor: colorScheme === "light" ? "#e9ecef" : "var(--mantine-color-dark-4)",
+                backgroundColor: colorScheme === "light" ? "#ffffff" : "var(--mantine-color-dark-6)",
+              }}
+            >
+              <Group justify="space-between" mb="sm">
+                <Text fw={500}>File 1</Text>
+                <TextInput
+                  size="xs"
+                  placeholder="lang"
+                  value={lang1}
+                  onChange={(e) => setLang1(e.target.value)}
+                  w={80}
+                />
+              </Group>
+              <CodeEditor code={file1} onChange={setFile1} lang={lang1} minHeight="200px" />
+            </Box>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Box
+              className="h-full rounded-xl border border-solid p-4 shadow-sm"
+              style={{
+                borderColor: colorScheme === "light" ? "#e9ecef" : "var(--mantine-color-dark-4)",
+                backgroundColor: colorScheme === "light" ? "#ffffff" : "var(--mantine-color-dark-6)",
+              }}
+            >
+              <Group justify="space-between" mb="sm">
+                <Text fw={500}>File 2</Text>
+                <TextInput
+                  size="xs"
+                  placeholder="lang"
+                  value={lang2}
+                  onChange={(e) => setLang2(e.target.value)}
+                  w={80}
+                />
+              </Group>
+              <CodeEditor code={file2} onChange={setFile2} lang={lang2} minHeight="200px" />
+            </Box>
+          </Grid.Col>
+        </Grid>
+
+        {/* Diff Preview */}
+        <Box
+          className="overflow-hidden rounded-xl border-2 border-solid"
+          style={{
+            borderColor: colorScheme === "light" ? "var(--mantine-color-gray-2)" : "var(--mantine-color-dark-4)",
+            backgroundColor: colorScheme === "light" ? "white" : "var(--mantine-color-dark-7)",
+          }}
+        >
+          <Group p="md" pb={0}>
+            <IconFileDiff size={20} />
+            <Title order={4}>Preview</Title>
+          </Group>
+
+          {finalDiffInstance ? (
+            <Box p="md">
+              <DiffView<string>
+                className="overflow-hidden rounded-lg border border-solid"
+                style={{
+                  borderColor: colorScheme === "light" ? "#e9ecef" : "var(--mantine-color-dark-5)",
+                }}
+                diffFile={finalDiffInstance}
+                diffViewFontSize={13}
+                diffViewTheme={colorScheme === "dark" ? "dark" : "light"}
+                diffViewHighlight={true}
+                diffViewWrap
+              />
+            </Box>
+          ) : (
+            <Box p="xl" className="text-center">
+              <Text c="dimmed" size="lg">
+                No diff to preview. Provide file contents above.
+              </Text>
+            </Box>
+          )}
+        </Box>
+      </Container>
+    </Box>
   );
 };

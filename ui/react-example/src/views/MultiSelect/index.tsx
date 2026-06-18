@@ -224,14 +224,7 @@ export const MultiSelectView = () => {
             Click and drag on the line numbers (left column) to select multiple lines, then add a comment.
           </Text>
 
-          <Box
-            className="h-[600px] overflow-auto rounded-lg border border-solid"
-            style={{
-              borderColor: colorScheme === "light" ? "#e9ecef" : "var(--mantine-color-dark-5)",
-            }}
-          >
-            <DiffViewWithMultiSelect diffFile={diffFile} />
-          </Box>
+          <DiffViewWithMultiSelect diffFile={diffFile} height={600} />
         </Box>
       </Container>
     </Box>

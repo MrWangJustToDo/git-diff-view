@@ -1,4 +1,4 @@
-import { measureElement } from "ink";
+import { measureElement, useStdout } from "ink";
 import { useLayoutEffect, useState } from "react";
 
 import { useDiffViewContext } from "../components/DiffViewContext";
@@ -6,6 +6,14 @@ import { useDiffViewContext } from "../components/DiffViewContext";
 import type { DOMElement } from "ink";
 
 export const TERMINAL_PADDING_X = 4;
+
+const safeGetProcessColumn = () => {
+  if (typeof process === "object") {
+    return process.stdout.columns;
+  }
+
+  return 0;
+};
 
 export const getValidColumns = (columns: number): number => {
   if (columns % 2 === 0) {
@@ -27,9 +35,13 @@ export const debounce = <T extends Function>(action: T, time: number): T => {
 export function useTerminalSize(): { columns: number } {
   const { useDiffContext } = useDiffViewContext();
 
+  const { stdout } = useStdout();
+
   const wrapper = useDiffContext((s) => s.wrapper);
 
-  const [size, setSize] = useState(() => getValidColumns((process?.stdout?.columns || 60) - TERMINAL_PADDING_X));
+  const [size, setSize] = useState(() =>
+    getValidColumns((safeGetProcessColumn() || stdout.columns || 60) - TERMINAL_PADDING_X)
+  );
 
   useDiffContext.useShallowStableSelector(
     (s) => s.width,
@@ -42,7 +54,7 @@ export function useTerminalSize(): { columns: number } {
     if (hasWidth) return;
 
     function updateSize() {
-      const terminalWidth = getValidColumns((process.stdout.columns || 60) - TERMINAL_PADDING_X);
+      const terminalWidth = getValidColumns((safeGetProcessColumn() || stdout.columns || 60) - TERMINAL_PADDING_X);
 
       let width = terminalWidth;
 
@@ -57,11 +69,11 @@ export function useTerminalSize(): { columns: number } {
 
     const debounceUpdate = debounce(updateSize, 200);
 
-    process.stdout.on("resize", debounceUpdate);
+    stdout.on("resize", debounceUpdate);
     return () => {
-      process.stdout.off("resize", debounceUpdate);
+      stdout.off("resize", debounceUpdate);
     };
-  }, [wrapper, hasWidth]);
+  }, [wrapper, hasWidth, stdout]);
 
   return { columns: size };
 }

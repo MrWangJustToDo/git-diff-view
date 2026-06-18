@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { createState } from "reactivity-store";
 
-type PreviewType = "main" | "example" | "try" | "worker" | "multiselect";
+type PreviewType = "main" | "example" | "git-playground" | "file-playground" | "worker" | "multiselect";
 
 export const usePreviewType = createState(() => ({ type: "main" as PreviewType }), {
   withActions: (s) => ({ set: (type: PreviewType) => (s.type = type) }),
@@ -12,7 +12,8 @@ const { set: setType } = usePreviewType.getActions();
 
 const parseType = (type: string | null): PreviewType => {
   if (type === "example") return "example";
-  if (type === "try") return "try";
+  if (type === "git-playground") return "git-playground";
+  if (type === "file-playground") return "file-playground";
   if (type === "worker") return "worker";
   if (type === "multiselect") return "multiselect";
   return "main";

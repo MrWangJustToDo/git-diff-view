@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "ES2015",
+    "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable", "WebWorker"],
     "module": "ESNext",

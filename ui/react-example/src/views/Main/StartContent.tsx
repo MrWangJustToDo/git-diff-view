@@ -1,16 +1,11 @@
-import { Container, Space, Title, Text, Box, Badge, Tabs, rem, useMantineColorScheme } from "@mantine/core";
-import { IconBrandReact, IconBrandVue, IconCode, IconTerminal2 } from "@tabler/icons-react";
+import { Container, Space, Title, Text, Box, Badge, Stack } from "@mantine/core";
 
 import { ReactPlayGround, VuePlayGround, CliPlayGround } from "../../components/PlayGround";
 
 export const StartContent = () => {
-  const iconStyle = { width: rem(16), height: rem(16) };
-  const { colorScheme } = useMantineColorScheme();
-
   return (
     <Container className="mb-12 mt-16" size="xl">
-      {/* Section Header */}
-      <Box className="mb-12 text-center">
+      <Box className="mb-10 text-center">
         <Badge size="lg" variant="light" color="blue" mb="md">
           Quick Start
         </Badge>
@@ -22,93 +17,11 @@ export const StartContent = () => {
         </Text>
       </Box>
 
-      {/* Tabs for Framework Examples */}
-      <Box
-        className="rounded-xl border border-solid shadow-sm"
-        style={{
-          borderColor: colorScheme === "light" ? "#e9ecef" : "var(--mantine-color-dark-4)",
-          backgroundColor: colorScheme === "light" ? "#ffffff" : "var(--mantine-color-dark-7)",
-        }}
-      >
-        <Box className="p-6">
-          <Tabs defaultValue="react" variant="pills">
-            <Tabs.List className="mb-6">
-              <Tabs.Tab value="react" leftSection={<IconBrandReact style={iconStyle} />} className="text-base">
-                React
-              </Tabs.Tab>
-              <Tabs.Tab value="vue" leftSection={<IconBrandVue style={iconStyle} />} className="text-base">
-                Vue
-              </Tabs.Tab>
-              <Tabs.Tab value="cli" leftSection={<IconTerminal2 style={iconStyle} />} className="text-base">
-                Ink (Terminal)
-              </Tabs.Tab>
-            </Tabs.List>
-
-            <Tabs.Panel value="react">
-              <Box
-                className="rounded-xl border border-solid p-6"
-                style={{
-                  borderColor: colorScheme === "light" ? "#f1f3f5" : "var(--mantine-color-dark-5)",
-                  backgroundColor: colorScheme === "light" ? "#f8f9fa" : "var(--mantine-color-dark-6)",
-                }}
-              >
-                <Box className="mb-4 flex items-center gap-3">
-                  <IconCode size={24} className="text-blue-500" />
-                  <Title order={3} size="h4">
-                    React Example
-                  </Title>
-                </Box>
-                <Text c="dimmed" mb="lg" className="text-base">
-                  Simple and intuitive API for React applications. Supports SSR and RSC out of the box.
-                </Text>
-                <ReactPlayGround />
-              </Box>
-            </Tabs.Panel>
-
-            <Tabs.Panel value="vue">
-              <Box
-                className="rounded-xl border border-solid p-6"
-                style={{
-                  borderColor: colorScheme === "light" ? "#f1f3f5" : "var(--mantine-color-dark-5)",
-                  backgroundColor: colorScheme === "light" ? "#f8f9fa" : "var(--mantine-color-dark-6)",
-                }}
-              >
-                <Box className="mb-4 flex items-center gap-3">
-                  <IconCode size={24} className="text-green-500" />
-                  <Title order={3} size="h4">
-                    Vue Example
-                  </Title>
-                </Box>
-                <Text c="dimmed" mb="lg" className="text-base">
-                  Seamless integration with Vue 3 Composition API. Reactive and performant.
-                </Text>
-                <VuePlayGround />
-              </Box>
-            </Tabs.Panel>
-
-            <Tabs.Panel value="cli">
-              <Box
-                className="rounded-xl border border-solid p-6"
-                style={{
-                  borderColor: colorScheme === "light" ? "#f1f3f5" : "var(--mantine-color-dark-5)",
-                  backgroundColor: colorScheme === "light" ? "#f8f9fa" : "var(--mantine-color-dark-6)",
-                }}
-              >
-                <Box className="mb-4 flex items-center gap-3">
-                  <IconTerminal2 size={24} className="text-green-500" />
-                  <Title order={3} size="h4">
-                    Ink (Terminal) Example
-                  </Title>
-                </Box>
-                <Text c="dimmed" mb="lg" className="text-base">
-                  Render beautiful diffs directly in your terminal using Ink and React. Powered by @git-diff-view/cli.
-                </Text>
-                <CliPlayGround />
-              </Box>
-            </Tabs.Panel>
-          </Tabs>
-        </Box>
-      </Box>
+      <Stack gap="xl">
+        <ReactPlayGround />
+        <VuePlayGround />
+        <CliPlayGround />
+      </Stack>
 
       <Space h="xl" />
     </Container>

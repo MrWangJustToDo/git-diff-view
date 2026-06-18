@@ -1,33 +1,43 @@
-import { version } from "@git-diff-view/react";
 import {
   Box,
-  Code,
-  Divider,
-  Space,
   Stack,
   Text,
   Title,
   useMantineColorScheme,
-  Highlight,
-  useMantineTheme,
-  alpha,
-  getThemeColor,
   Container,
   Badge,
   Group,
   Grid,
+  SimpleGrid,
+  UnstyledButton,
+  Button,
+  CopyButton,
+  Tooltip,
+  ActionIcon,
 } from "@mantine/core";
 import {
   IconBrandReact,
   IconBrandSolidjs,
   IconBrandSvelte,
   IconBrandVue,
-  IconSparkles,
+  IconBrandGithub,
+  IconTerminal2,
+  IconGitCompare,
+  IconFileDiff,
+  IconCpu,
+  IconSelect,
+  IconExternalLink,
+  IconArrowRight,
+  IconCopy,
+  IconCheck,
+  IconColumns,
+  IconHighlight,
+  IconTextWrap,
+  IconBraces,
   IconStar,
   IconDownload,
-  IconTerminal2,
 } from "@tabler/icons-react";
-import { useMemo, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 
 import { MainContentDiffAdvance, MainContentDiffConfig, MainContentDiffExample } from "../../components/MainContent";
 
@@ -45,152 +55,228 @@ const formatNumber = (num: number): string => {
   return num.toString();
 };
 
-export const MainContent = () => {
-  const theme = useMantineTheme();
+const goto = (type: string) => {
+  const url = new URL(window.location.href);
+  url.searchParams.set("type", type);
+  window.history.pushState({}, "", url.toString());
+  window.dispatchEvent(new PopStateEvent("popstate"));
+};
 
+const installCmd = "npm install @git-diff-view/react";
+
+const frameworkPills = [
+  { icon: IconBrandReact, label: "React", color: "#61dafb" },
+  { icon: IconBrandVue, label: "Vue", color: "#42b883" },
+  { icon: IconBrandSolidjs, label: "Solid", color: "#5176b7" },
+  { icon: IconBrandSvelte, label: "Svelte", color: "#eb5027" },
+  { icon: IconTerminal2, label: "Ink (Terminal)", color: "#22c55e" },
+];
+
+const capabilities = [
+  { icon: IconColumns, label: "Split & Unified", description: "Both diff view modes with full feature parity" },
+  { icon: IconHighlight, label: "Syntax Highlighting", description: "Shiki or Lowlight powered, theme-aware" },
+  { icon: IconTextWrap, label: "Line Wrap", description: "Long lines wrap gracefully with proper alignment" },
+  { icon: IconBraces, label: "Extensible API", description: "Widgets, extend lines, custom renderers and more" },
+];
+
+const demoCards = [
+  {
+    key: "example",
+    icon: IconExternalLink,
+    color: "violet",
+    title: "Live Example",
+    description: "Real-world usage with an external application.",
+  },
+  {
+    key: "git-playground",
+    icon: IconGitCompare,
+    color: "blue",
+    title: "Git Playground",
+    description: "Paste git diff output and preview instantly.",
+  },
+  {
+    key: "file-playground",
+    icon: IconFileDiff,
+    color: "teal",
+    title: "File Playground",
+    description: "Compare two files side by side.",
+  },
+  {
+    key: "worker",
+    icon: IconCpu,
+    color: "orange",
+    title: "Worker",
+    description: "Off-thread parsing for large diffs.",
+  },
+  {
+    key: "multiselect",
+    icon: IconSelect,
+    color: "yellow",
+    title: "Multi-Select",
+    description: "Drag to select lines for comments.",
+  },
+];
+
+export const MainContent = () => {
   const [d, setD] = useState<DiffFile>();
   const [stats, setStats] = useState<StatsData>({ stars: 0, downloads: 0, loading: true });
 
   const { colorScheme } = useMantineColorScheme();
 
-  const color = useMemo(() => alpha(getThemeColor("yellow", theme), 0.5), [theme]);
-
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        // Fetch GitHub stars
-        const githubRes = await fetch("https://api.github.com/repos/MrWangJustToDo/git-diff-view");
-        const githubData = await githubRes.json();
-
-        // Fetch NPM downloads (last month)
-        const npmRes = await fetch("https://api.npmjs.org/downloads/point/last-month/@git-diff-view/core");
-        const npmData = await npmRes.json();
-
+        const [githubRes, npmRes] = await Promise.all([
+          fetch("https://api.github.com/repos/MrWangJustToDo/git-diff-view"),
+          fetch("https://api.npmjs.org/downloads/point/last-month/@git-diff-view/core"),
+        ]);
+        const [githubData, npmData] = await Promise.all([githubRes.json(), npmRes.json()]);
         setStats({
           stars: githubData.stargazers_count || 0,
           downloads: npmData.downloads || 0,
           loading: false,
         });
-      } catch (error) {
-        console.error("Failed to fetch stats:", error);
+      } catch {
         setStats({ stars: 0, downloads: 0, loading: false });
       }
     };
-
     fetchStats();
   }, []);
 
   return (
     <Box className="min-h-screen">
       <Container size="xl">
-        {/* Hero Section */}
-        <Box className="py-12 text-center">
-          <Box className="relative inline-block">
-            {colorScheme === "dark" && (
-              <div className="absolute -inset-8 rounded-full bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 blur-3xl" />
-            )}
-            <div className="relative">
-              <Group justify="center" gap="xs" className="mb-4">
+        {/* ── Hero: compact centered ── */}
+        <Box className="py-10 text-center md:py-14">
+          <Title order={1} className="mx-auto mb-4 max-w-2xl text-4xl font-extrabold leading-tight md:text-5xl">
+            A{" "}
+            <Text
+              span
+              inherit
+              className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent dark:from-blue-400 dark:to-purple-400"
+            >
+              Diff View
+            </Text>{" "}
+            component library
+          </Title>
+
+          <Text size="lg" c="dimmed" className="mx-auto mb-5 max-w-xl leading-relaxed">
+            High-performance, GitHub-style diff viewer with split & unified modes, syntax highlighting, and
+            multi-framework support.
+          </Text>
+
+          {/* Framework pills */}
+          <Group gap={6} justify="center" className="mb-5">
+            {frameworkPills.map((fw) => {
+              const Icon = fw.icon;
+              return (
                 <Badge
-                  size="lg"
-                  variant="gradient"
-                  gradient={{ from: "blue", to: "cyan", deg: 90 }}
-                  leftSection={<IconSparkles size={16} />}
-                >
-                  Open Source
-                </Badge>
-                <Badge
-                  size="lg"
+                  key={fw.label}
+                  size="md"
                   variant="light"
-                  color="yellow"
-                  leftSection={<IconStar size={16} fill="currentColor" />}
+                  color="gray"
+                  leftSection={<Icon size={14} color={fw.color} />}
                 >
-                  {stats.loading ? "..." : formatNumber(stats.stars)}
+                  {fw.label}
                 </Badge>
-                <Badge size="lg" variant="light" color="blue" leftSection={<IconDownload size={16} />}>
-                  {stats.loading ? "..." : formatNumber(stats.downloads)}
-                </Badge>
-              </Group>
+              );
+            })}
+          </Group>
 
-              <Title
-                order={1}
-                className="mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-5xl font-bold text-transparent md:text-6xl dark:from-blue-400 dark:to-purple-400"
-              >
-                Git Diff View
-              </Title>
-
-              <Text size="lg" c="dimmed" className="mb-2 font-mono">
-                @git-diff-view/react · v{version}
+          {/* Install command */}
+          <Group justify="center" className="mb-5">
+            <Box
+              className="inline-flex items-center gap-2 rounded-lg border border-solid px-4 py-2 font-mono text-sm"
+              style={{
+                borderColor: colorScheme === "light" ? "#dee2e6" : "var(--mantine-color-dark-4)",
+                backgroundColor: colorScheme === "light" ? "#f8f9fa" : "var(--mantine-color-dark-6)",
+              }}
+            >
+              <Text span c="dimmed" className="select-none">
+                $
               </Text>
-            </div>
-          </Box>
+              <Text span className="font-mono">
+                {installCmd}
+              </Text>
+              <CopyButton value={installCmd} timeout={2000}>
+                {({ copied, copy }) => (
+                  <Tooltip label={copied ? "Copied" : "Copy"} withArrow>
+                    <ActionIcon variant="subtle" color={copied ? "teal" : "gray"} size="sm" onClick={copy}>
+                      {copied ? <IconCheck size={14} /> : <IconCopy size={14} />}
+                    </ActionIcon>
+                  </Tooltip>
+                )}
+              </CopyButton>
+            </Box>
+          </Group>
 
-          <Space h="xl" />
-
-          <Box className="mx-auto max-w-3xl">
-            <Text size="xl" className="mb-4 leading-relaxed">
-              A high-performance <Code className="text-lg font-semibold">Diff View</Code> component for
-            </Text>
-
-            <Group justify="center" gap="lg" className="mb-4">
-              <Group gap="xs" className="inline-flex">
-                <IconBrandReact className="animate-float" color="#75c3d9" size={24} />
-                <Text span className="text-lg font-semibold">
-                  React
-                </Text>
-              </Group>
-              <Group gap="xs" className="inline-flex">
-                <IconBrandVue className="animate-float" color="#42b883" size={24} style={{ animationDelay: "0.5s" }} />
-                <Text span className="text-lg font-semibold">
-                  Vue
-                </Text>
-              </Group>
-              <Group gap="xs" className="inline-flex">
-                <IconBrandSolidjs
-                  className="animate-float"
-                  color="#5176b7"
-                  size={24}
-                  style={{ animationDelay: "1s" }}
-                />
-                <Text span className="text-lg font-semibold">
-                  Solid
-                </Text>
-              </Group>
-              <Group gap="xs" className="inline-flex">
-                <IconBrandSvelte
-                  className="animate-float"
-                  color="#eb5027"
-                  size={24}
-                  style={{ animationDelay: "1.5s" }}
-                />
-                <Text span className="text-lg font-semibold">
-                  Svelte
-                </Text>
-              </Group>
-              <Group gap="xs" className="inline-flex">
-                <IconTerminal2 className="animate-float" color="#22c55e" size={24} style={{ animationDelay: "2s" }} />
-                <Text span className="text-lg font-semibold">
-                  Ink (Terminal)
-                </Text>
-              </Group>
-            </Group>
-
-            <Highlight highlight={["feature-rich", "GitHub-style"]} color={color} className="text-lg">
-              Feature-rich diff viewer with GitHub-style UI, easy to integrate and highly customizable.
-            </Highlight>
-          </Box>
-
-          <Space h="xl" />
+          {/* CTAs + stats */}
+          <Group justify="center" gap="sm">
+            <Button size="md" onClick={() => goto("git-playground")}>
+              Try Playground
+            </Button>
+            <Button
+              size="md"
+              variant="default"
+              component="a"
+              href="https://github.com/MrWangJustToDo/git-diff-view"
+              target="_blank"
+              leftSection={<IconBrandGithub size={18} />}
+            >
+              GitHub
+            </Button>
+            {!stats.loading && (
+              <>
+                <Badge size="lg" variant="light" color="yellow">
+                  <Group gap={4}>
+                    <IconStar size={12} fill="currentColor" />
+                    {formatNumber(stats.stars)}
+                  </Group>
+                </Badge>
+                <Badge size="lg" variant="light" color="blue" className="hidden sm:inline-flex">
+                  <Group gap={4}>
+                    <IconDownload size={14} />
+                    {formatNumber(stats.downloads)}/mo
+                  </Group>
+                </Badge>
+              </>
+            )}
+          </Group>
         </Box>
 
-        <Divider my="xl" className="opacity-30" />
+        {/* ── Capabilities strip ── */}
+        <SimpleGrid cols={{ base: 2, sm: 4 }} spacing="lg" className="mb-10">
+          {capabilities.map((cap) => {
+            const Icon = cap.icon;
+            return (
+              <Box
+                key={cap.label}
+                className="rounded-lg border border-solid p-4 text-center"
+                style={{
+                  borderColor: colorScheme === "light" ? "#e9ecef" : "var(--mantine-color-dark-4)",
+                  backgroundColor: colorScheme === "light" ? "#ffffff" : "var(--mantine-color-dark-6)",
+                }}
+              >
+                <Icon
+                  size={24}
+                  className="mx-auto mb-2"
+                  color={colorScheme === "light" ? "var(--mantine-color-blue-6)" : "var(--mantine-color-blue-4)"}
+                />
+                <Text fw={600} size="sm" className="mb-0.5">
+                  {cap.label}
+                </Text>
+                <Text size="xs" c="dimmed">
+                  {cap.description}
+                </Text>
+              </Box>
+            );
+          })}
+        </SimpleGrid>
 
-        {/* Main Content Area */}
+        {/* ── Interactive Demo: Config + Diff preview ── */}
         <Grid gutter="xl" className="mb-12">
-          {/* Left Sidebar - Controls */}
           <Grid.Col span={{ base: 12, md: 4 }}>
             <Stack gap="lg">
-              {/* Diff Config Section */}
               <Box
                 className="rounded-xl border border-solid p-5 shadow-sm"
                 style={{
@@ -217,7 +303,6 @@ export const MainContent = () => {
                 <MainContentDiffConfig diffFile={d} />
               </Box>
 
-              {/* Advanced Usage Section */}
               <Box
                 className="rounded-xl border border-solid p-5 shadow-sm"
                 style={{
@@ -233,7 +318,6 @@ export const MainContent = () => {
             </Stack>
           </Grid.Col>
 
-          {/* Right Side - Diff Preview */}
           <Grid.Col span={{ base: 12, md: 8 }}>
             <Box
               className="sticky top-4 h-[calc(100vh-120px)] transform-gpu overflow-hidden rounded-xl border-2 border-solid transition-all"
@@ -242,15 +326,48 @@ export const MainContent = () => {
                 backgroundColor: colorScheme === "light" ? "white" : "var(--mantine-color-dark-7)",
               }}
             >
-              {/* Decorative gradient overlay */}
               {colorScheme === "dark" && (
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5" />
               )}
-
               <MainContentDiffExample onUpdate={setD} />
             </Box>
           </Grid.Col>
         </Grid>
+
+        {/* ── Explore More ── */}
+        <Box className="mb-12">
+          <Title order={2} className="mb-6 text-2xl font-bold">
+            Explore More
+          </Title>
+
+          <SimpleGrid cols={{ base: 1, sm: 2, lg: 5 }} spacing="md">
+            {demoCards.map((card) => {
+              const Icon = card.icon;
+              return (
+                <UnstyledButton
+                  key={card.key}
+                  onClick={() => goto(card.key)}
+                  className="group rounded-xl border border-solid p-4 transition-all hover:shadow-md"
+                  style={{
+                    borderColor: colorScheme === "light" ? "#e9ecef" : "var(--mantine-color-dark-4)",
+                    backgroundColor: colorScheme === "light" ? "#ffffff" : "var(--mantine-color-dark-6)",
+                  }}
+                >
+                  <Group gap="sm" mb="xs">
+                    <Icon size={18} color={`var(--mantine-color-${card.color}-6)`} />
+                    <Text fw={600} size="sm">
+                      {card.title}
+                    </Text>
+                    <IconArrowRight size={14} className="ml-auto opacity-0 transition-opacity group-hover:opacity-60" />
+                  </Group>
+                  <Text size="xs" c="dimmed" lineClamp={2}>
+                    {card.description}
+                  </Text>
+                </UnstyledButton>
+              );
+            })}
+          </SimpleGrid>
+        </Box>
       </Container>
     </Box>
   );

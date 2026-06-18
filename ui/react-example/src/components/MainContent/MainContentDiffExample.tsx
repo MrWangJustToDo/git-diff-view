@@ -23,7 +23,7 @@ export const defaultComment: DiffViewProps<string[]>["extendData"] = {
   newFile: {},
 };
 
-const getNewDiffFile = () => {
+export const getNewDiffFile = () => {
   const isEnableAutoExpandCommentLine = useDiffConfig.getReadonlyState().autoExpandCommentLine;
 
   const instance = DiffFile.createInstance({

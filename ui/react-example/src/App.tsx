@@ -21,7 +21,8 @@ import { usePreviewTypeWithRouter } from "./hooks/usePreviewType";
 import { Example } from "./views/Example";
 import { Main } from "./views/Main";
 import { MultiSelectView } from "./views/MultiSelect";
-import { PlayGround } from "./views/PlayGround";
+import { PlayGroundFileDiff } from "./views/PlayGround/PlayGroundFileDiff";
+import { PlayGroundGitDiff } from "./views/PlayGround/PlayGroundGitDiff";
 import { WorkerExample } from "./views/Worker";
 
 function App() {
@@ -33,13 +34,20 @@ function App() {
 
   const [opened, { toggle, close }] = useDisclosure();
 
-  const goto = (type: "main" | "example" | "try" | "worker" | "multiselect") => {
+  const goto = (type: "main" | "example" | "git-playground" | "file-playground" | "worker" | "multiselect") => {
     const url = new URL(window.location.href);
     url.searchParams.set("type", type);
-    url.searchParams.delete("tab");
     window.history.pushState({}, "", url.toString());
     window.dispatchEvent(new PopStateEvent("popstate"));
   };
+
+  const navItems = [
+    { key: "main" as const, label: "Main" },
+    { key: "git-playground" as const, label: "Git Playground" },
+    { key: "file-playground" as const, label: "File Playground" },
+    { key: "worker" as const, label: "Worker" },
+    { key: "multiselect" as const, label: "MultiSelect" },
+  ];
 
   return (
     <AppShell
@@ -48,13 +56,14 @@ function App() {
       padding="md"
     >
       <AppShell.Header>
-        <Group h="100%" px="lg" justify="space-between">
+        <Group h="100%" px="lg" justify="space-between" align="center">
+          {/* Left: logo */}
           <Flex align="center">
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" className="mr-2" />
-            <Title order={1} className="text-xl">
+            <Title order={1} className="text-xl font-bold">
               Git Diff View
             </Title>
-            {width > 900 && (
+            {width > 1000 && (
               <>
                 <small className="ml-4 mr-1">power by</small>
                 <Tooltip label={<span>Go to @my-react project, version: {version}</span>} withArrow position="top">
@@ -65,88 +74,68 @@ function App() {
               </>
             )}
           </Flex>
-          <Flex columnGap="16" visibleFrom="sm">
-            <Button variant="light" color={type === "main" ? "blue" : "gray"} onClick={() => goto("main")}>
-              Main
-            </Button>
-            <Button variant="light" color={type === "example" ? "blue" : "gray"} onClick={() => goto("example")}>
-              Example
-            </Button>
-            <Button variant="light" color={type === "try" ? "blue" : "gray"} onClick={() => goto("try")}>
-              Playground
-            </Button>
-            <Button variant="light" color={type === "worker" ? "blue" : "gray"} onClick={() => goto("worker")}>
-              Worker
-            </Button>
+
+          {/* Right: nav + actions */}
+          <Flex gap="8" align="center" visibleFrom="sm">
+            {navItems.map((item) => (
+              <Button
+                key={item.key}
+                variant={type === item.key ? "outline" : "subtle"}
+                color={type === item.key ? "blue" : "gray"}
+                size="compact-sm"
+                onClick={() => goto(item.key)}
+              >
+                {item.label}
+              </Button>
+            ))}
             <Button
-              variant="light"
-              color={type === "multiselect" ? "blue" : "gray"}
-              onClick={() => goto("multiselect")}
-            >
-              MultiSelect
-            </Button>
-            <Button
-              variant="default"
+              variant="subtle"
               color="gray"
+              size="compact-sm"
               component="a"
               href="https://github.com/MrWangJustToDo/git-diff-view"
               target="_blank"
             >
-              <IconBrandGithub className="text-gray-400" />
+              <IconBrandGithub size={18} />
             </Button>
-            <Button variant="light" className="text-sm" onClick={toggleColorScheme} color="violet">
+            <Button variant="subtle" size="compact-sm" onClick={toggleColorScheme} color="violet">
               {colorScheme === "light" ? (
-                <IconSun style={{ width: em(20), height: em(20) }} />
+                <IconSun style={{ width: em(18), height: em(18) }} />
               ) : (
-                <IconMoon style={{ width: em(20), height: em(20) }} />
+                <IconMoon style={{ width: em(18), height: em(18) }} />
               )}
             </Button>
           </Flex>
-          <Button variant="light" className="text-sm" hiddenFrom="sm" onClick={toggleColorScheme} color="violet">
-            {colorScheme === "light" ? <IconSun /> : <IconMoon />}
+          <Button variant="subtle" hiddenFrom="sm" onClick={toggleColorScheme} color="violet">
+            {colorScheme === "light" ? <IconSun size={18} /> : <IconMoon size={18} />}
           </Button>
         </Group>
       </AppShell.Header>
       <AppShell.Navbar py="md" px={4}>
+        {navItems.map((item, i) => (
+          <div key={item.key}>
+            {i > 0 && <Space h="10" />}
+            <Button
+              variant={type === item.key ? "outline" : "subtle"}
+              color={type === item.key ? "blue" : "gray"}
+              fullWidth
+              onClick={() => {
+                close();
+                goto(item.key);
+              }}
+            >
+              {item.label}
+            </Button>
+          </div>
+        ))}
+        <Space h="10" />
         <Button
-          variant="light"
-          color={type === "main" ? "blue" : "gray"}
-          onClick={() => {
-            close();
-            goto("main");
-          }}
-        >
-          Main
-        </Button>
-        <Space h="14" />
-        <Button
-          variant="light"
-          color={type === "example" ? "blue" : "gray"}
-          onClick={() => {
-            close();
-            goto("example");
-          }}
-        >
-          Example
-        </Button>
-        <Space h="14" />
-        <Button
-          variant="light"
-          color={type === "try" ? "blue" : "gray"}
-          onClick={() => {
-            close();
-            goto("try");
-          }}
-        >
-          Playground
-        </Button>
-        <Space h="14" />
-        <Button
-          variant="light"
+          variant="subtle"
           color="gray"
           component="a"
           href="https://github.com/MrWangJustToDo/git-diff-view"
           target="_blank"
+          fullWidth
         >
           <Github className="!w-[1.45em] text-gray-400" />
         </Button>
@@ -156,7 +145,8 @@ function App() {
         {type === "example" && (
           <Example className="border-color h-[calc(100vh-60px-32px)] w-full overflow-hidden rounded-md border" />
         )}
-        {type === "try" && <PlayGround />}
+        {type === "git-playground" && <PlayGroundGitDiff />}
+        {type === "file-playground" && <PlayGroundFileDiff />}
         {type === "worker" && <WorkerExample />}
         {type === "multiselect" && <MultiSelectView />}
         <DevTool />
