@@ -2,6 +2,7 @@ import {
   escapeHtml,
   setTransformForTemplateContent,
   resetTransform,
+  setEnableBuildTemplate,
   setEnableFastDiffTemplate,
   resetEnableFastDiffTemplate,
 } from "@git-diff-view/core";
@@ -35,6 +36,8 @@ export const MainContentDiffAdvance = () => {
   }, [tabSpace]);
 
   useEffect(() => {
+    // 因为我们引入了 cli 组件，默认会禁用这个选项，此处开启
+    setEnableBuildTemplate(true);
     if (fastDiff) {
       setEnableFastDiffTemplate(true);
     } else {

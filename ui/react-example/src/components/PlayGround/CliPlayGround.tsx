@@ -61,7 +61,13 @@ render(
           <SandpackCodeEditor showTabs />
           <Box className="flex flex-1 items-center justify-center overflow-hidden">
             <InkTerminalBox padding={0}>
-              <DiffView diffFile={diffFile} registerHighlighter={highlighter} diffViewTheme="dark" diffViewHighlight />
+              <DiffView
+                diffFile={diffFile}
+                registerHighlighter={highlighter}
+                diffViewTheme="dark"
+                diffViewHighlight
+                diffViewHideOperator
+              />
             </InkTerminalBox>
             {/* <img
               src="https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/main/cli-diff.png"
