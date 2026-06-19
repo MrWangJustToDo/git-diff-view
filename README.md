@@ -23,7 +23,7 @@
 
 ## 🎮 Live Demo
 
-Try it online: [Git Mode](https://mrwangjusttodo.github.io/git-diff-view/?type=try&tab=git) · [File Mode](https://mrwangjusttodo.github.io/git-diff-view/?type=try&tab=file) · [GitHub Style](https://mrwangjusttodo.github.io/MrWangJustToDo.io?overlay=open&playGround=GitHub)
+Try it online: [Git Playground](https://mrwangjusttodo.github.io/git-diff-view/?type=git-playground) · [File Playground](https://mrwangjusttodo.github.io/git-diff-view/?type=file-playground) · [GitHub Style](https://mrwangjusttodo.github.io/MrWangJustToDo.io?overlay=open&playGround=GitHub)
 
 ![git mode](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/aa2e918498270f737d28e7531eab08fa3f1b8831/gitMode.png)
 
