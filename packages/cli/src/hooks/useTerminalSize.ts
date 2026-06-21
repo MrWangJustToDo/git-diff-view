@@ -7,7 +7,7 @@ import type { DOMElement } from "ink";
 
 export const TERMINAL_PADDING_X = 4;
 
-const safeGetProcessColumn = () => {
+export const safeGetProcessColumn = () => {
   if (typeof process === "object") {
     return process.stdout.columns;
   }

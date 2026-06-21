@@ -1,8 +1,8 @@
 import { _cacheMap, getFile } from "@git-diff-view/core";
-import { Box, Text } from "ink";
-import { forwardRef, memo, useImperativeHandle, useMemo, useRef } from "react";
+import { Box, Text, useStdout } from "ink";
+import { forwardRef, memo, useImperativeHandle, useMemo } from "react";
 
-import { getValidColumns, TERMINAL_PADDING_X } from "../hooks/useTerminalSize";
+import { getValidColumns, safeGetProcessColumn, TERMINAL_PADDING_X } from "../hooks/useTerminalSize";
 
 import { buildAnsiStringOptimized, splitCharsIntoRows, styleText } from "./ansiString";
 import { buildTheme } from "./color";
@@ -16,7 +16,6 @@ import {
 import type { CharStyle, StyledChar } from "./ansiString";
 import type { DiffViewColorTheme, ResolvedDiffViewColorTheme } from "./color";
 import type { DiffHighlighter, DiffHighlighterLang, File } from "@git-diff-view/core";
-import type { DOMElement } from "ink";
 import type { ForwardedRef, JSX } from "react";
 
 _cacheMap.name = "@git-diff-view/cli";
@@ -151,7 +150,7 @@ export function buildCodeViewAnsiString(props: CodeViewProps): string {
   const columns =
     typeof props.width === "number"
       ? props.width
-      : getValidColumns((process.stdout.columns || 60) - TERMINAL_PADDING_X);
+      : getValidColumns((safeGetProcessColumn() || 60) - TERMINAL_PADDING_X);
 
   return buildCodeViewString(resolvedFile, theme, columns, {
     enableHighlight: !!props.codeViewHighlight,
@@ -164,10 +163,12 @@ export function buildCodeViewAnsiString(props: CodeViewProps): string {
 
 const InternalCodeView = memo(
   ({ file, theme, width, options }: { file: File; theme: "light" | "dark"; width?: number; options: BuildOptions }) => {
+    const { stdout } = useStdout();
+
     const columns = useMemo(() => {
       if (typeof width === "number") return width;
-      return getValidColumns((process.stdout.columns || 60) - TERMINAL_PADDING_X);
-    }, [width]);
+      return getValidColumns((safeGetProcessColumn() || stdout.columns || 60) - TERMINAL_PADDING_X);
+    }, [stdout, width]);
 
     const output = useMemo(() => buildCodeViewString(file, theme, columns, options), [file, theme, columns, options]);
 
@@ -185,8 +186,6 @@ InternalCodeView.displayName = "InternalCodeView";
 
 const CodeViewContainerWithRef = (props: CodeViewProps, ref: ForwardedRef<{ getFileInstance: () => File | null }>) => {
   const { registerHighlighter, data, codeViewTheme, file, width, ...restProps } = props;
-
-  const domRef = useRef<DOMElement>(null);
 
   const theme = codeViewTheme || "light";
 
@@ -232,7 +231,6 @@ const CodeViewContainerWithRef = (props: CodeViewProps, ref: ForwardedRef<{ getF
 
   return (
     <Box
-      ref={domRef}
       width={width}
       flexGrow={typeof width === "number" ? undefined : 1}
       flexShrink={typeof width === "number" ? 0 : undefined}
