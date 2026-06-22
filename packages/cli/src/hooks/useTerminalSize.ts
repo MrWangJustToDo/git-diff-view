@@ -9,7 +9,7 @@ export const TERMINAL_PADDING_X = 4;
 
 export const safeGetProcessColumn = () => {
   if (typeof process === "object") {
-    return process.stdout.columns;
+    return process?.stdout?.columns;
   }
 
   return 0;
