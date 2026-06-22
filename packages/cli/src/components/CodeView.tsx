@@ -167,7 +167,7 @@ const InternalCodeView = memo(
 
     const columns = useMemo(() => {
       if (typeof width === "number") return width;
-      return getValidColumns((safeGetProcessColumn() || stdout.columns || 60) - TERMINAL_PADDING_X);
+      return getValidColumns((safeGetProcessColumn() || stdout?.columns || 60) - TERMINAL_PADDING_X);
     }, [stdout, width]);
 
     const output = useMemo(() => buildCodeViewString(file, theme, columns, options), [file, theme, columns, options]);
