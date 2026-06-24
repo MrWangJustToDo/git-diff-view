@@ -631,8 +631,8 @@ importers:
         specifier: ^0.3.28
         version: 0.3.28(@my-react/react@0.3.28(react@19.2.0))(react-dom@19.2.0(react@19.2.0))
       '@my-react/react-terminal':
-        specifier: ^0.0.27
-        version: 0.0.27(@my-react/react@0.3.28(react@19.2.0))(@xterm/addon-fit@0.11.0)(@xterm/xterm@6.0.0)
+        specifier: ^0.0.28
+        version: 0.0.28(@my-react/react@0.3.28(react@19.2.0))(@xterm/addon-fit@0.11.0)(@xterm/xterm@6.0.0)
       '@tabler/icons-react':
         specifier: ^3.35.0
         version: 3.35.0(react@19.2.0)
@@ -1724,6 +1724,18 @@ packages:
 
   '@my-react/react-terminal@0.0.27':
     resolution: {integrity: sha512-iy2Wt8MlEFPmcLEf7S5NWbjR6o+vVSh5ErK9aL+MuNrkcTa3dQG0UwXiBxJDALUw4x+qU3mQeDJDCq86h36F5A==}
+    peerDependencies:
+      '@my-react/react': '>=0.3.28'
+      '@xterm/addon-fit': '>=0.11.0'
+      '@xterm/xterm': '>=5.0.0 || >=6.0.0'
+    peerDependenciesMeta:
+      '@xterm/addon-fit':
+        optional: true
+      '@xterm/xterm':
+        optional: true
+
+  '@my-react/react-terminal@0.0.28':
+    resolution: {integrity: sha512-w4hww66GyiB+ajz6DtWHEQeNnHMA8vQjaGPCehdpugWjKkL4o23l9n/yWXwgfzDgORh8qZDs9pIAH6kyVmnaGA==}
     peerDependencies:
       '@my-react/react': '>=0.3.28'
       '@xterm/addon-fit': '>=0.11.0'
@@ -7570,6 +7582,36 @@ snapshots:
       cli-cursor: 4.0.0
       cli-truncate: 4.0.0
       code-excerpt: 4.0.0
+      es-toolkit: 1.45.1
+      indent-string: 5.0.0
+      is-fullwidth-code-point: 5.1.0
+      is-in-ci: 2.0.0
+      mnemonist: 0.40.3
+      patch-console: 2.0.0
+      signal-exit: 4.1.0
+      slice-ansi: 7.1.2
+      stack-utils: 2.0.6
+      string-width: 7.2.0
+      type-fest: 4.41.0
+      widest-line: 5.0.0
+      wrap-ansi: 9.0.2
+      yoga-layout: 3.2.1
+    optionalDependencies:
+      '@xterm/addon-fit': 0.11.0
+      '@xterm/xterm': 6.0.0
+
+  '@my-react/react-terminal@0.0.28(@my-react/react@0.3.28(react@19.2.0))(@xterm/addon-fit@0.11.0)(@xterm/xterm@6.0.0)':
+    dependencies:
+      '@my-react/react': 0.3.28(react@19.2.0)
+      ansi-escapes: 7.3.0
+      ansi-styles: 6.2.3
+      auto-bind: 5.0.1
+      chalk: 5.6.2
+      cli-boxes: 3.0.0
+      cli-cursor: 4.0.0
+      cli-truncate: 4.0.0
+      code-excerpt: 4.0.0
+      environment: 1.1.0
       es-toolkit: 1.45.1
       indent-string: 5.0.0
       is-fullwidth-code-point: 5.1.0

@@ -20,7 +20,7 @@
     "@mantine/hooks": "^8.3.4",
     "@my-react/react": "^0.3.28",
     "@my-react/react-dom": "^0.3.28",
-    "@my-react/react-terminal": "^0.0.27",
+    "@my-react/react-terminal": "^0.0.28",
     "@tabler/icons-react": "^3.35.0",
     "lodash": "catalog:",
     "lz-string": "^1.5.0",
