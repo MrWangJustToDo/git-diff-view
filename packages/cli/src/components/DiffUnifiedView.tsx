@@ -40,18 +40,20 @@ export const DiffUnifiedView = memo(({ diffFile, width }: { diffFile: DiffFile; 
 
   return (
     <>
-      {lines.map((item) => (
+      {lines.map((item, index) => (
         <Fragment key={item.index}>
-          <DiffUnifiedHunkLine
-            index={item.index}
-            theme={theme}
-            lineNumWidth={lineNumWidth}
-            columns={columns}
-            diffFile={diffFile}
-            lineNumber={item.lineNumber}
-            noBG={noBG}
-            themeColors={themeColors}
-          />
+          {index !== 0 && (
+            <DiffUnifiedHunkLine
+              index={item.index}
+              theme={theme}
+              lineNumWidth={lineNumWidth}
+              columns={columns}
+              diffFile={diffFile}
+              lineNumber={item.lineNumber}
+              noBG={noBG}
+              themeColors={themeColors}
+            />
+          )}
           <DiffUnifiedContentLine
             index={item.index}
             theme={theme}
@@ -72,16 +74,6 @@ export const DiffUnifiedView = memo(({ diffFile, width }: { diffFile: DiffFile; 
           />
         </Fragment>
       ))}
-      <DiffUnifiedHunkLine
-        theme={theme}
-        columns={columns}
-        diffFile={diffFile}
-        index={diffFile.unifiedLineLength}
-        lineNumber={diffFile.unifiedLineLength}
-        lineNumWidth={lineNumWidth}
-        noBG={noBG}
-        themeColors={themeColors}
-      />
     </>
   );
 });

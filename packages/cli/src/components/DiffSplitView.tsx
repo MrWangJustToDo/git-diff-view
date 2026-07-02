@@ -38,18 +38,20 @@ export const DiffSplitView = memo(({ diffFile, width }: { diffFile: DiffFile; wi
 
   return (
     <>
-      {lines.map((line) => (
+      {lines.map((line, index) => (
         <Fragment key={line.index}>
-          <DiffSplitHunkLine
-            theme={theme}
-            columns={columns}
-            index={line.index}
-            diffFile={diffFile}
-            lineNumber={line.lineNumber}
-            lineNumWidth={lineNumWidth}
-            noBG={noBG}
-            themeColors={themeColors}
-          />
+          {index !== 0 && (
+            <DiffSplitHunkLine
+              theme={theme}
+              columns={columns}
+              index={line.index}
+              diffFile={diffFile}
+              lineNumber={line.lineNumber}
+              lineNumWidth={lineNumWidth}
+              noBG={noBG}
+              themeColors={themeColors}
+            />
+          )}
           <DiffSplitContentLine
             theme={theme}
             lineNumWidth={lineNumWidth}
@@ -72,16 +74,6 @@ export const DiffSplitView = memo(({ diffFile, width }: { diffFile: DiffFile; wi
           />
         </Fragment>
       ))}
-      <DiffSplitHunkLine
-        theme={theme}
-        columns={columns}
-        diffFile={diffFile}
-        index={diffFile.splitLineLength}
-        lineNumber={diffFile.splitLineLength}
-        lineNumWidth={lineNumWidth}
-        noBG={noBG}
-        themeColors={themeColors}
-      />
     </>
   );
 });
