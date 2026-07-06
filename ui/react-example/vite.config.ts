@@ -14,6 +14,7 @@ export default defineConfig({
     alias: {
       ink: "@my-react/react-terminal/web",
     },
+    dedupe: ["@my-react/react-terminal/web", "ink", "@my-react/react-terminal", "ink/web"],
   },
   optimizeDeps: {
     esbuildOptions: {
