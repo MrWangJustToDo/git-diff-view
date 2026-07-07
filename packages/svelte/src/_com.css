@@ -23,8 +23,6 @@
 	--diff-add-widget-color--: #ffffff;
 	--diff-empty-content--: #fafafa;
 	--diff-hunk-content-color--: #777777;
-
-	color: black;
 }
 
 .diff-style-root .diff-line-syntax-raw *,
@@ -54,8 +52,18 @@
 	--diff-add-widget-color--: #ffffff;
 	--diff-empty-content--: #161b22;
 	--diff-hunk-content-color--: #9298a0;
+}
 
+[data-theme='dark'] [data-state='diff'],
+[data-theme='dark'] [data-state='plain'],
+[data-theme='dark'] [data-state='hunk'] {
 	color: white;
+}
+
+[data-theme='light'] [data-state='diff'],
+[data-theme='light'] [data-state='plain'],
+[data-theme='light'] [data-state='hunk'] {
+	color: black;
 }
 
 [data-theme='dark'] .diff-line-syntax-raw * {
@@ -170,14 +178,6 @@ td {
 .diff-line-extend-wrapper,
 .diff-line-widget-wrapper {
 	display: flow-root;
-}
-
-.diff-line-extend-wrapper * {
-	color: initial;
-}
-
-.diff-line-widget-wrapper * {
-	color: initial;
 }
 
 /* Multi-select styles for line range selection */
