@@ -12,6 +12,7 @@ import {
   processCharsForAnsi,
   processSyntaxCharsForAnsi,
 } from "./DiffContent";
+import { useScrollView, type ScrollLayout, type ScrollViewProps, type ScrollViewRef } from "./scroll";
 
 import type { CharStyle, StyledChar } from "./ansiString";
 import type { DiffViewColorTheme, ResolvedDiffViewColorTheme } from "./color";
@@ -20,7 +21,11 @@ import type { ForwardedRef, JSX } from "react";
 
 _cacheMap.name = "@git-diff-view/cli";
 
-export type CodeViewProps = {
+export type CodeViewRef = ScrollViewRef & {
+  getFileInstance: () => File | null;
+};
+
+export type CodeViewProps = ScrollViewProps & {
   data?: {
     content: string;
     fileName?: string | null;
@@ -61,7 +66,12 @@ interface BuildOptions {
   themeColors: ResolvedDiffViewColorTheme;
 }
 
-function buildCodeViewString(file: File, theme: "light" | "dark", columns: number, options: BuildOptions): string {
+export function buildCodeViewLayout(
+  file: File,
+  theme: "light" | "dark",
+  columns: number,
+  options: BuildOptions
+): ScrollLayout {
   const { enableHighlight, noBG, tabSpace, tabWidth, themeColors } = options;
 
   const maxLineNumber = file.maxLineNumber || 1;
@@ -69,7 +79,9 @@ function buildCodeViewString(file: File, theme: "light" | "dark", columns: numbe
   const lineNumTotalWidth = lineNumWidth + 2;
   const contentWidth = columns - lineNumTotalWidth - 2;
 
-  if (contentWidth <= 0) return "";
+  if (contentWidth <= 0) {
+    return { rows: [], lines: [], totalRows: 0, totalLines: 0 };
+  }
 
   const lineNumBg = noBG
     ? undefined
@@ -88,7 +100,8 @@ function buildCodeViewString(file: File, theme: "light" | "dark", columns: numbe
   const padStyle: CharStyle = { backgroundColor: contentBg };
 
   const totalLines = file.rawLength || 0;
-  const outputLines: string[] = [];
+  const rows: string[] = [];
+  const lines: ScrollLayout["lines"] = [];
 
   for (let lineNumber = 1; lineNumber <= totalLines; lineNumber++) {
     const rawLine = (file.rawFile[lineNumber] || "").replace(/\n$/, "");
@@ -117,17 +130,33 @@ function buildCodeViewString(file: File, theme: "light" | "dark", columns: numbe
 
     const contentRows = splitCharsIntoRows(contentChars, contentWidth, padStyle);
     const pad = styleText(" ", padStyle);
+    const startRow = rows.length;
 
     for (let row = 0; row < contentRows.length; row++) {
       const numText = row === 0 ? ` ${String(lineNumber).padStart(lineNumWidth)} ` : ` ${" ".repeat(lineNumWidth)} `;
       const lineNumStr = styleText(numText, lineNumStyle);
       const contentStr = buildAnsiStringOptimized(contentRows[row]);
 
-      outputLines.push(`${lineNumStr}${pad}${contentStr}${pad}`);
+      rows.push(`${lineNumStr}${pad}${contentStr}${pad}`);
     }
+
+    lines.push({
+      lineNumber,
+      startRow,
+      endRow: rows.length,
+    });
   }
 
-  return outputLines.join("\n");
+  return {
+    rows,
+    lines,
+    totalRows: rows.length,
+    totalLines,
+  };
+}
+
+function buildCodeViewString(file: File, theme: "light" | "dark", columns: number, options: BuildOptions): string {
+  return buildCodeViewLayout(file, theme, columns, options).rows.join("\n");
 }
 
 export function buildCodeViewAnsiString(props: CodeViewProps): string {
@@ -162,20 +191,26 @@ export function buildCodeViewAnsiString(props: CodeViewProps): string {
 }
 
 const InternalCodeView = memo(
-  ({ file, theme, width, options }: { file: File; theme: "light" | "dark"; width?: number; options: BuildOptions }) => {
-    const { stdout } = useStdout();
-
-    const columns = useMemo(() => {
-      if (typeof width === "number") return width;
-      return getValidColumns((safeGetProcessColumn() || stdout?.columns || 60) - TERMINAL_PADDING_X);
-    }, [stdout, width]);
-
-    const output = useMemo(() => buildCodeViewString(file, theme, columns, options), [file, theme, columns, options]);
-
-    if (!columns) return null;
-
+  ({
+    output,
+    theme,
+    hasFixedHeight,
+    viewportHeight,
+  }: {
+    output: string;
+    theme: "light" | "dark";
+    hasFixedHeight: boolean;
+    viewportHeight: number;
+  }) => {
     return (
-      <Box data-component="git-code-view" data-theme={theme} data-version={__VERSION__} flexDirection="column">
+      <Box
+        data-component="git-code-view"
+        data-theme={theme}
+        data-version={__VERSION__}
+        flexDirection="column"
+        height={hasFixedHeight ? viewportHeight : undefined}
+        overflow={hasFixedHeight ? "hidden" : undefined}
+      >
         <Text wrap="truncate">{output}</Text>
       </Box>
     );
@@ -184,10 +219,11 @@ const InternalCodeView = memo(
 
 InternalCodeView.displayName = "InternalCodeView";
 
-const CodeViewContainerWithRef = (props: CodeViewProps, ref: ForwardedRef<{ getFileInstance: () => File | null }>) => {
-  const { registerHighlighter, data, codeViewTheme, file, width, ...restProps } = props;
+const CodeViewContainerWithRef = (props: CodeViewProps, ref: ForwardedRef<CodeViewRef>) => {
+  const { registerHighlighter, data, codeViewTheme, file, width, height, onScrollChange, ...restProps } = props;
 
   const theme = codeViewTheme || "light";
+  const { stdout } = useStdout();
 
   const finalFile = useMemo(() => {
     if (file) {
@@ -208,7 +244,10 @@ const CodeViewContainerWithRef = (props: CodeViewProps, ref: ForwardedRef<{ getF
     return null;
   }, [data, theme, file, props.codeViewHighlight, registerHighlighter]);
 
-  useImperativeHandle(ref, () => ({ getFileInstance: () => finalFile }), [finalFile]);
+  const columns = useMemo(() => {
+    if (typeof width === "number") return width;
+    return getValidColumns((safeGetProcessColumn() || stdout?.columns || 60) - TERMINAL_PADDING_X);
+  }, [stdout, width]);
 
   const options: BuildOptions = useMemo(
     () => ({
@@ -227,7 +266,32 @@ const CodeViewContainerWithRef = (props: CodeViewProps, ref: ForwardedRef<{ getF
     ]
   );
 
-  if (!finalFile) return null;
+  const layout = useMemo(() => {
+    if (!finalFile || !columns) {
+      return { rows: [], lines: [], totalRows: 0, totalLines: 0 };
+    }
+    return buildCodeViewLayout(finalFile, theme, columns, options);
+  }, [finalFile, theme, columns, options]);
+
+  const { visibleOutput, scrollRef, hasFixedHeight, viewportHeight } = useScrollView({
+    layout,
+    height,
+    onScrollChange,
+    resetKey: columns,
+  });
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      getFileInstance: () => finalFile,
+      ...scrollRef,
+    }),
+    [finalFile, scrollRef]
+  );
+
+  if (!finalFile || !columns) return null;
+
+  const output = hasFixedHeight ? visibleOutput : layout.rows.join("\n");
 
   return (
     <Box
@@ -235,15 +299,21 @@ const CodeViewContainerWithRef = (props: CodeViewProps, ref: ForwardedRef<{ getF
       flexGrow={typeof width === "number" ? undefined : 1}
       flexShrink={typeof width === "number" ? 0 : undefined}
     >
-      <InternalCodeView key={finalFile.getId()} file={finalFile} theme={theme} width={width} options={options} />
+      <InternalCodeView
+        key={finalFile.getId()}
+        output={output}
+        theme={theme}
+        hasFixedHeight={hasFixedHeight}
+        viewportHeight={viewportHeight}
+      />
     </Box>
   );
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function ReactCodeView(props: CodeViewProps_1 & { ref?: ForwardedRef<{ getFileInstance: () => File }> }): JSX.Element;
-function ReactCodeView(props: CodeViewProps_2 & { ref?: ForwardedRef<{ getFileInstance: () => File }> }): JSX.Element;
-function ReactCodeView(_props: CodeViewProps & { ref?: ForwardedRef<{ getFileInstance: () => File }> }) {
+function ReactCodeView(props: CodeViewProps_1 & { ref?: ForwardedRef<CodeViewRef> }): JSX.Element;
+function ReactCodeView(props: CodeViewProps_2 & { ref?: ForwardedRef<CodeViewRef> }): JSX.Element;
+function ReactCodeView(_props: CodeViewProps & { ref?: ForwardedRef<CodeViewRef> }) {
   return <></>;
 }
 

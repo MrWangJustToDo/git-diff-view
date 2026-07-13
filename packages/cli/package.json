@@ -20,6 +20,9 @@
   },
   "scripts": {
     "dev": "DEV=true node ./test/file.mjs",
+    "test:scroll": "node ./test/scroll/run-all.mjs",
+    "test:scroll:interactive": "node ./test/scroll/codeview-interactive.mjs",
+    "test:scroll:interactive:diffview": "node ./test/scroll/diffview-interactive.mjs",
     "gen:color": "node ./gen.mjs",
     "gen:type": "dts-bundle-generator -o index.d.ts dist/types/index.d.ts"
   },

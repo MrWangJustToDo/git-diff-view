@@ -20,10 +20,11 @@ export const DiffSplitLineNumberArea: React.FC<{
   lineNumber?: number;
   lineNumWidth: number;
   height: number;
+  rowOffset?: number;
   backgroundColor?: string;
   color: string;
   dim?: boolean;
-}> = React.memo(({ lineNumber, lineNumWidth, height, backgroundColor, color, dim = false }) => {
+}> = React.memo(({ lineNumber, lineNumWidth, height, rowOffset = 0, backgroundColor, color, dim = false }) => {
   // Total width: leftPad + num + rightPad = 1 + lineNumWidth + 1
   const totalWidth = lineNumWidth + 2;
 
@@ -32,15 +33,18 @@ export const DiffSplitLineNumberArea: React.FC<{
     const lines: string[] = [];
 
     for (let row = 0; row < height; row++) {
+      const absoluteRow = rowOffset + row;
       // Left padding + line number (right-aligned) + right padding
       const numPart =
-        row === 0 && lineNumber !== undefined ? lineNumber.toString().padStart(lineNumWidth) : " ".repeat(lineNumWidth);
+        absoluteRow === 0 && lineNumber !== undefined
+          ? lineNumber.toString().padStart(lineNumWidth)
+          : " ".repeat(lineNumWidth);
       const lineText = ` ${numPart} `;
       lines.push(buildStyledBlock(lineText, totalWidth, 1, style, "left"));
     }
 
     return lines.join("\n");
-  }, [lineNumber, lineNumWidth, height, backgroundColor, color, dim, totalWidth]);
+  }, [lineNumber, lineNumWidth, height, rowOffset, backgroundColor, color, dim, totalWidth]);
 
   return (
     <Box width={totalWidth} flexShrink={0}>
@@ -60,40 +64,44 @@ export const DiffUnifiedLineNumberArea: React.FC<{
   newLineNumber?: number;
   lineNumWidth: number;
   height: number;
+  rowOffset?: number;
   backgroundColor?: string;
   color: string;
   dim?: boolean;
-}> = React.memo(({ oldLineNumber, newLineNumber, lineNumWidth, height, backgroundColor, color, dim = false }) => {
-  // Total width: oldNum + separator + newNum + separator = lineNumWidth + 1 + lineNumWidth + 1
-  const totalWidth = lineNumWidth * 2 + 3;
+}> = React.memo(
+  ({ oldLineNumber, newLineNumber, lineNumWidth, height, rowOffset = 0, backgroundColor, color, dim = false }) => {
+    // Total width: oldNum + separator + newNum + separator = lineNumWidth + 1 + lineNumWidth + 1
+    const totalWidth = lineNumWidth * 2 + 3;
 
-  const content = React.useMemo(() => {
-    const style: CharStyle = { backgroundColor, color, dim };
-    const lines: string[] = [];
+    const content = React.useMemo(() => {
+      const style: CharStyle = { backgroundColor, color, dim };
+      const lines: string[] = [];
 
-    for (let row = 0; row < height; row++) {
-      // Old number (right-aligned) + separator + new number (right-aligned) + separator
-      const oldPart =
-        row === 0 && oldLineNumber !== undefined
-          ? oldLineNumber.toString().padStart(lineNumWidth)
-          : " ".repeat(lineNumWidth);
-      const newPart =
-        row === 0 && newLineNumber !== undefined
-          ? newLineNumber.toString().padStart(lineNumWidth)
-          : " ".repeat(lineNumWidth);
-      const lineText = ` ${oldPart} ${newPart} `;
-      lines.push(buildStyledBlock(lineText, totalWidth, 1, style, "left"));
-    }
+      for (let row = 0; row < height; row++) {
+        const absoluteRow = rowOffset + row;
+        // Old number (right-aligned) + separator + new number (right-aligned) + separator
+        const oldPart =
+          absoluteRow === 0 && oldLineNumber !== undefined
+            ? oldLineNumber.toString().padStart(lineNumWidth)
+            : " ".repeat(lineNumWidth);
+        const newPart =
+          absoluteRow === 0 && newLineNumber !== undefined
+            ? newLineNumber.toString().padStart(lineNumWidth)
+            : " ".repeat(lineNumWidth);
+        const lineText = ` ${oldPart} ${newPart} `;
+        lines.push(buildStyledBlock(lineText, totalWidth, 1, style, "left"));
+      }
 
-    return lines.join("\n");
-  }, [oldLineNumber, newLineNumber, lineNumWidth, height, backgroundColor, color, dim, totalWidth]);
+      return lines.join("\n");
+    }, [oldLineNumber, newLineNumber, lineNumWidth, height, rowOffset, backgroundColor, color, dim, totalWidth]);
 
-  return (
-    <Box width={totalWidth} flexShrink={0}>
-      <Text wrap="truncate">{content}</Text>
-    </Box>
-  );
-});
+    return (
+      <Box width={totalWidth} flexShrink={0}>
+        <Text wrap="truncate">{content}</Text>
+      </Box>
+    );
+  }
+);
 
 DiffUnifiedLineNumberArea.displayName = "DiffUnifiedLineNumberArea";
 

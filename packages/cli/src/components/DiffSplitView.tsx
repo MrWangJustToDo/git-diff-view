@@ -1,4 +1,5 @@
 import { getSplitContentLines, type DiffFile } from "@git-diff-view/core";
+import { Box } from "ink";
 import { Fragment, memo } from "react";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -6,76 +7,114 @@ import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
 import { useTerminalSize } from "../hooks/useTerminalSize";
 
+import { DiffScrollEntryList } from "./DiffScrollEntryView";
 import { DiffSplitContentLine } from "./DiffSplitContentLine";
 import { DiffSplitExtendLine } from "./DiffSplitExtendLine";
 import { DiffSplitHunkLine } from "./DiffSplitHunkLine";
 import { useDiffViewContext } from "./DiffViewContext";
 
-export const DiffSplitView = memo(({ diffFile, width }: { diffFile: DiffFile; width?: number }) => {
-  const { useDiffContext } = useDiffViewContext();
+import type { VisibleDiffScrollLine } from "./diffViewScroll";
+import type { DiffModeEnum } from "@git-diff-view/utils";
 
-  const { enableHighlight, noBG, themeColors } = useDiffContext.useShallowStableSelector((s) => ({
-    enableHighlight: s.enableHighlight,
-    noBG: s.noBG,
-    themeColors: s.themeColors,
-  }));
+export const DiffSplitView = memo(
+  ({
+    diffFile,
+    width,
+    visibleEntries,
+    hasFixedHeight,
+    viewportHeight,
+    mode,
+  }: {
+    diffFile: DiffFile;
+    width?: number;
+    visibleEntries?: VisibleDiffScrollLine[];
+    hasFixedHeight?: boolean;
+    viewportHeight?: number;
+    mode: DiffModeEnum;
+  }) => {
+    const { useDiffContext } = useDiffViewContext();
 
-  useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
+    const { enableHighlight, noBG, themeColors } = useDiffContext.useShallowStableSelector((s) => ({
+      enableHighlight: s.enableHighlight,
+      noBG: s.noBG,
+      themeColors: s.themeColors,
+    }));
 
-  const theme = diffFile._getTheme();
+    useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
 
-  const { columns: _columns } = useTerminalSize();
+    const theme = diffFile._getTheme();
 
-  const splitLineLength = Math.max(diffFile.splitLineLength, diffFile.fileLineLength);
+    const { columns: _columns } = useTerminalSize();
 
-  const lineNumWidth = splitLineLength.toString().length;
+    const splitLineLength = Math.max(diffFile.splitLineLength, diffFile.fileLineLength);
 
-  const lines = getSplitContentLines(diffFile);
+    const lineNumWidth = splitLineLength.toString().length;
 
-  const columns = width || _columns;
+    const lines = getSplitContentLines(diffFile);
 
-  if (!columns) return null;
+    const columns = width || _columns;
 
-  return (
-    <>
-      {lines.map((line, index) => (
-        <Fragment key={line.index}>
-          {index !== 0 && (
-            <DiffSplitHunkLine
+    if (!columns) return null;
+
+    if (hasFixedHeight && visibleEntries) {
+      return (
+        <Box height={viewportHeight} overflow="hidden" flexDirection="column">
+          <DiffScrollEntryList
+            entries={visibleEntries}
+            diffFile={diffFile}
+            mode={mode}
+            theme={theme}
+            columns={columns}
+            lineNumWidth={lineNumWidth}
+            enableHighlight={enableHighlight}
+            noBG={noBG}
+            themeColors={themeColors}
+          />
+        </Box>
+      );
+    }
+
+    return (
+      <>
+        {lines.map((line, index) => (
+          <Fragment key={line.index}>
+            {index !== 0 && (
+              <DiffSplitHunkLine
+                theme={theme}
+                columns={columns}
+                index={line.index}
+                diffFile={diffFile}
+                lineNumber={line.lineNumber}
+                lineNumWidth={lineNumWidth}
+                noBG={noBG}
+                themeColors={themeColors}
+              />
+            )}
+            <DiffSplitContentLine
+              theme={theme}
+              lineNumWidth={lineNumWidth}
+              columns={columns}
+              index={line.index}
+              diffFile={diffFile}
+              lineNumber={line.lineNumber}
+              enableHighlight={enableHighlight}
+              noBG={noBG}
+              themeColors={themeColors}
+            />
+            <DiffSplitExtendLine
               theme={theme}
               columns={columns}
               index={line.index}
               diffFile={diffFile}
               lineNumber={line.lineNumber}
-              lineNumWidth={lineNumWidth}
               noBG={noBG}
               themeColors={themeColors}
             />
-          )}
-          <DiffSplitContentLine
-            theme={theme}
-            lineNumWidth={lineNumWidth}
-            columns={columns}
-            index={line.index}
-            diffFile={diffFile}
-            lineNumber={line.lineNumber}
-            enableHighlight={enableHighlight}
-            noBG={noBG}
-            themeColors={themeColors}
-          />
-          <DiffSplitExtendLine
-            theme={theme}
-            columns={columns}
-            index={line.index}
-            diffFile={diffFile}
-            lineNumber={line.lineNumber}
-            noBG={noBG}
-            themeColors={themeColors}
-          />
-        </Fragment>
-      ))}
-    </>
-  );
-});
+          </Fragment>
+        ))}
+      </>
+    );
+  }
+);
 
 DiffSplitView.displayName = "DiffSplitView";

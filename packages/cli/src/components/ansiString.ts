@@ -179,3 +179,12 @@ export function buildStyledBlock(
 
   return lines.join("\n");
 }
+
+/**
+ * Slice a multiline ANSI string by visual row indices.
+ */
+export function sliceMultilineAnsi(text: string, rowOffset: number, rowCount: number): string {
+  if (!text || rowCount <= 0) return "";
+  const lines = text.split("\n");
+  return lines.slice(rowOffset, rowOffset + rowCount).join("\n");
+}

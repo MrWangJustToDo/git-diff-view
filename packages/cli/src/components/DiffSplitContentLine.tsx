@@ -7,6 +7,7 @@ import { DiffSplitLineNumberArea, DiffEmptyArea } from "./DiffLineNumber";
 import { getCurrentLineRow } from "./tools";
 
 import type { ResolvedDiffViewColorTheme } from "./color";
+import type { ScrollSlice } from "./scroll";
 
 const InternalDiffSplitLine = ({
   index,
@@ -18,6 +19,7 @@ const InternalDiffSplitLine = ({
   enableHighlight,
   noBG,
   themeColors,
+  scrollSlice,
 }: {
   index: number;
   columns: number;
@@ -28,6 +30,7 @@ const InternalDiffSplitLine = ({
   enableHighlight: boolean;
   noBG?: boolean;
   themeColors: ResolvedDiffViewColorTheme;
+  scrollSlice?: ScrollSlice;
 }) => {
   const oldLine = diffFile.getSplitLeftLine(index);
   const newLine = diffFile.getSplitRightLine(index);
@@ -69,6 +72,7 @@ const InternalDiffSplitLine = ({
   const newRow = getCurrentLineRow({ content: newContent, width: contentWidth - 2 });
 
   const row = Math.max(oldRow, newRow);
+  const visibleHeight = scrollSlice?.rowCount ?? row;
 
   const delLnColors = noBG ? themeColors.noBGDelLineNumber : themeColors.delLineNumber;
   const addLnColors = noBG ? themeColors.noBGAddLineNumber : themeColors.addLineNumber;
@@ -110,21 +114,22 @@ const InternalDiffSplitLine = ({
       : themeColors.expandLineNumberColor.dark;
 
   return (
-    <Box data-line={lineNumber} data-state={hasDiff ? "diff" : "plain"} height={row} width={columns}>
+    <Box data-line={lineNumber} data-state={hasDiff ? "diff" : "plain"} height={visibleHeight} width={columns}>
       {/* Left side (old line) */}
       {hasOldLine ? (
         <>
           <DiffSplitLineNumberArea
             lineNumber={oldLine.lineNumber}
             lineNumWidth={lineNumWidth}
-            height={row}
+            height={visibleHeight}
+            rowOffset={scrollSlice?.rowOffset}
             backgroundColor={oldLineNumberBG}
             color={color}
             dim={!hasChange}
           />
           <DiffContent
             theme={theme}
-            height={row}
+            height={visibleHeight}
             diffFile={diffFile}
             width={contentWidth}
             rawLine={oldLine.value || ""}
@@ -134,10 +139,11 @@ const InternalDiffSplitLine = ({
             enableHighlight={enableHighlight}
             noBG={noBG}
             themeColors={themeColors}
+            scrollSlice={scrollSlice}
           />
         </>
       ) : (
-        <DiffEmptyArea width={halfColumns} height={row} backgroundColor={emptyBG} />
+        <DiffEmptyArea width={halfColumns} height={visibleHeight} backgroundColor={emptyBG} />
       )}
 
       {/* Right side (new line) */}
@@ -146,14 +152,15 @@ const InternalDiffSplitLine = ({
           <DiffSplitLineNumberArea
             lineNumber={newLine.lineNumber}
             lineNumWidth={lineNumWidth}
-            height={row}
+            height={visibleHeight}
+            rowOffset={scrollSlice?.rowOffset}
             backgroundColor={newLineNumberBG}
             color={color}
             dim={!hasChange}
           />
           <DiffContent
             theme={theme}
-            height={row}
+            height={visibleHeight}
             width={contentWidth}
             diffFile={diffFile}
             rawLine={newLine.value || ""}
@@ -163,10 +170,11 @@ const InternalDiffSplitLine = ({
             enableHighlight={enableHighlight}
             noBG={noBG}
             themeColors={themeColors}
+            scrollSlice={scrollSlice}
           />
         </>
       ) : (
-        <DiffEmptyArea width={halfColumns} height={row} backgroundColor={emptyBG} />
+        <DiffEmptyArea width={halfColumns} height={visibleHeight} backgroundColor={emptyBG} />
       )}
     </Box>
   );
@@ -182,6 +190,7 @@ export const DiffSplitContentLine = ({
   enableHighlight,
   noBG,
   themeColors,
+  scrollSlice,
 }: {
   index: number;
   columns: number;
@@ -192,6 +201,7 @@ export const DiffSplitContentLine = ({
   enableHighlight: boolean;
   noBG?: boolean;
   themeColors: ResolvedDiffViewColorTheme;
+  scrollSlice?: ScrollSlice;
 }) => {
   const oldLine = diffFile.getSplitLeftLine(index);
   const newLine = diffFile.getSplitRightLine(index);
@@ -209,6 +219,7 @@ export const DiffSplitContentLine = ({
       enableHighlight={enableHighlight}
       noBG={noBG}
       themeColors={themeColors}
+      scrollSlice={scrollSlice}
     />
   );
 };
