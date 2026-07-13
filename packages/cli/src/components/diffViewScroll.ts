@@ -7,6 +7,12 @@ import type { ScrollLayout, ScrollSlice } from "./scroll";
 
 export type DiffScrollEntryKind = "hunk" | "content" | "extend";
 
+export type DiffDisplayEntryDescriptor = {
+  kind: DiffScrollEntryKind;
+  diffIndex: number;
+  displayLineNumber: number;
+};
+
 export type DiffScrollLine = {
   lineNumber: number;
   startRow: number;
@@ -30,16 +36,19 @@ export type VisibleDiffScrollLine = DiffScrollLine & {
   clip?: ScrollSlice;
 };
 
-export type BuildDiffViewScrollLayoutOptions = {
+export type DiffDisplayIterateOptions = {
   diffFile: DiffFile;
-  columns: number;
   mode: DiffModeEnum;
   extendData?: {
     oldFile?: Record<string, { data: unknown }>;
     newFile?: Record<string, { data: unknown }>;
   };
-  extendLineHeight?: number;
   hasRenderExtendLine?: boolean;
+};
+
+export type BuildDiffViewScrollLayoutOptions = DiffDisplayIterateOptions & {
+  columns: number;
+  extendLineHeight?: number;
 };
 
 const noNewlineText = "\\ No newline at end of file";
@@ -85,6 +94,83 @@ export function shouldShowSplitHunk(diffFile: DiffFile, index: number): boolean 
     currentHunk.splitInfo.startHiddenIndex < currentHunk.splitInfo.endHiddenIndex;
   const currentIsPureHunk = !!currentHunk && diffFile._getIsPureDiffRender() && !currentHunk.splitInfo;
   return currentIsShow || currentIsPureHunk;
+}
+
+export function shouldShowUnifiedExtend(
+  diffFile: DiffFile,
+  index: number,
+  extendData: DiffDisplayIterateOptions["extendData"],
+  hasRenderExtendLine?: boolean
+): boolean {
+  if (!hasRenderExtendLine) return false;
+
+  const unifiedItem = diffFile.getUnifiedLine(index);
+  if (!unifiedItem || unifiedItem.isHidden) return false;
+
+  const oldLineExtend = extendData?.oldFile?.[unifiedItem.oldLineNumber ?? -1];
+  const newLineExtend = extendData?.newFile?.[unifiedItem.newLineNumber ?? -1];
+
+  return !!(oldLineExtend?.data || newLineExtend?.data);
+}
+
+export function shouldShowSplitExtend(
+  diffFile: DiffFile,
+  index: number,
+  extendData: DiffDisplayIterateOptions["extendData"],
+  hasRenderExtendLine?: boolean
+): boolean {
+  if (!hasRenderExtendLine) return false;
+
+  const oldLine = diffFile.getSplitLeftLine(index);
+  const newLine = diffFile.getSplitRightLine(index);
+  const oldLineExtend = extendData?.oldFile?.[oldLine?.lineNumber ?? -1];
+  const newLineExtend = extendData?.newFile?.[newLine?.lineNumber ?? -1];
+  const hasExtend = !!(oldLineExtend?.data || newLineExtend?.data);
+  const enableExpand = diffFile.getExpandEnabled();
+
+  return hasExtend && ((!oldLine?.isHidden && !newLine?.isHidden) || !enableExpand);
+}
+
+function shouldShowHunk(diffFile: DiffFile, index: number, mode: DiffModeEnum): boolean {
+  return isSplitDiffMode(mode) ? shouldShowSplitHunk(diffFile, index) : shouldShowUnifiedHunk(diffFile, index);
+}
+
+function shouldShowExtend(diffFile: DiffFile, index: number, options: DiffDisplayIterateOptions): boolean {
+  return isSplitDiffMode(options.mode)
+    ? shouldShowSplitExtend(diffFile, index, options.extendData, options.hasRenderExtendLine)
+    : shouldShowUnifiedExtend(diffFile, index, options.extendData, options.hasRenderExtendLine);
+}
+
+/**
+ * Walk the flattened DiffView display sequence (hunk → content → extend per content block).
+ * Shared by scroll layout building and rendering.
+ */
+export function iterateDiffDisplayEntries(options: DiffDisplayIterateOptions): DiffDisplayEntryDescriptor[] {
+  const { diffFile, mode } = options;
+  const contentLines = isSplitDiffMode(mode) ? getSplitContentLines(diffFile) : getUnifiedContentLine(diffFile);
+  const entries: DiffDisplayEntryDescriptor[] = [];
+
+  contentLines.forEach((item, mapIndex) => {
+    if (mapIndex !== 0 && shouldShowHunk(diffFile, item.index, mode)) {
+      entries.push({ kind: "hunk", diffIndex: item.index, displayLineNumber: item.lineNumber });
+    }
+
+    entries.push({ kind: "content", diffIndex: item.index, displayLineNumber: item.lineNumber });
+
+    if (shouldShowExtend(diffFile, item.index, options)) {
+      entries.push({ kind: "extend", diffIndex: item.index, displayLineNumber: item.lineNumber });
+    }
+  });
+
+  return entries;
+}
+
+export function getDiffLineNumWidth(diffFile: DiffFile, mode: DiffModeEnum): number {
+  const lineLength = isSplitDiffMode(mode)
+    ? Math.max(diffFile.splitLineLength, diffFile.fileLineLength)
+    : Math.max(diffFile.unifiedLineLength, diffFile.fileLineLength);
+
+  return lineLength.toString().length;
 }
 
 export function getUnifiedContentRowCount(
@@ -136,99 +222,28 @@ export function getSplitContentRowCount(
   return Math.max(oldRow, newRow);
 }
 
-function shouldShowUnifiedExtend(
-  diffFile: DiffFile,
-  index: number,
-  extendData: BuildDiffViewScrollLayoutOptions["extendData"],
-  hasRenderExtendLine?: boolean
-): boolean {
-  if (!hasRenderExtendLine) return false;
+export function getDiffDisplayEntryRowCount(
+  entry: DiffDisplayEntryDescriptor,
+  options: {
+    diffFile: DiffFile;
+    mode: DiffModeEnum;
+    columns: number;
+    lineNumWidth: number;
+    extendLineHeight?: number;
+  }
+): number {
+  const { diffFile, mode, columns, lineNumWidth, extendLineHeight = 1 } = options;
 
-  const unifiedItem = diffFile.getUnifiedLine(index);
-  if (!unifiedItem || unifiedItem.isHidden) return false;
-
-  const oldLineExtend = extendData?.oldFile?.[unifiedItem.oldLineNumber ?? -1];
-  const newLineExtend = extendData?.newFile?.[unifiedItem.newLineNumber ?? -1];
-
-  return !!(oldLineExtend?.data || newLineExtend?.data);
-}
-
-function shouldShowSplitExtend(
-  diffFile: DiffFile,
-  index: number,
-  extendData: BuildDiffViewScrollLayoutOptions["extendData"],
-  hasRenderExtendLine?: boolean
-): boolean {
-  if (!hasRenderExtendLine) return false;
-
-  const oldLine = diffFile.getSplitLeftLine(index);
-  const newLine = diffFile.getSplitRightLine(index);
-  const oldLineExtend = extendData?.oldFile?.[oldLine?.lineNumber ?? -1];
-  const newLineExtend = extendData?.newFile?.[newLine?.lineNumber ?? -1];
-  const hasExtend = !!(oldLineExtend?.data || newLineExtend?.data);
-  const enableExpand = diffFile.getExpandEnabled();
-
-  return hasExtend && ((!oldLine?.isHidden && !newLine?.isHidden) || !enableExpand);
-}
-
-function buildUnifiedScrollLayout(options: BuildDiffViewScrollLayoutOptions): DiffViewScrollLayout {
-  const { diffFile, columns, extendData, extendLineHeight = 1, hasRenderExtendLine } = options;
-  const rows: string[] = [];
-  const lines: DiffScrollLine[] = [];
-
-  const unifiedLineLength = Math.max(diffFile.unifiedLineLength, diffFile.fileLineLength);
-  const lineNumWidth = unifiedLineLength.toString().length;
-  const contentLines = getUnifiedContentLine(diffFile);
-
-  contentLines.forEach((item, mapIndex) => {
-    if (mapIndex !== 0 && shouldShowUnifiedHunk(diffFile, item.index)) {
-      pushScrollEntry(rows, lines, "hunk", item.index, 1);
-    }
-
-    const contentRows = getUnifiedContentRowCount(diffFile, item.index, columns, lineNumWidth);
-    pushScrollEntry(rows, lines, "content", item.index, contentRows);
-
-    if (shouldShowUnifiedExtend(diffFile, item.index, extendData, hasRenderExtendLine)) {
-      pushScrollEntry(rows, lines, "extend", item.index, extendLineHeight);
-    }
-  });
-
-  return {
-    rows,
-    lines,
-    totalRows: rows.length,
-    totalLines: lines.length,
-  };
-}
-
-function buildSplitScrollLayout(options: BuildDiffViewScrollLayoutOptions): DiffViewScrollLayout {
-  const { diffFile, columns, extendData, extendLineHeight = 1, hasRenderExtendLine } = options;
-  const rows: string[] = [];
-  const lines: DiffScrollLine[] = [];
-
-  const splitLineLength = Math.max(diffFile.splitLineLength, diffFile.fileLineLength);
-  const lineNumWidth = splitLineLength.toString().length;
-  const contentLines = getSplitContentLines(diffFile);
-
-  contentLines.forEach((item, mapIndex) => {
-    if (mapIndex !== 0 && shouldShowSplitHunk(diffFile, item.index)) {
-      pushScrollEntry(rows, lines, "hunk", item.index, 1);
-    }
-
-    const contentRows = getSplitContentRowCount(diffFile, item.index, columns, lineNumWidth);
-    pushScrollEntry(rows, lines, "content", item.index, contentRows);
-
-    if (shouldShowSplitExtend(diffFile, item.index, extendData, hasRenderExtendLine)) {
-      pushScrollEntry(rows, lines, "extend", item.index, extendLineHeight);
-    }
-  });
-
-  return {
-    rows,
-    lines,
-    totalRows: rows.length,
-    totalLines: lines.length,
-  };
+  switch (entry.kind) {
+    case "hunk":
+      return 1;
+    case "content":
+      return isSplitDiffMode(mode)
+        ? getSplitContentRowCount(diffFile, entry.diffIndex, columns, lineNumWidth)
+        : getUnifiedContentRowCount(diffFile, entry.diffIndex, columns, lineNumWidth);
+    case "extend":
+      return extendLineHeight;
+  }
 }
 
 export function buildDiffViewScrollLayout(options: BuildDiffViewScrollLayoutOptions): DiffViewScrollLayout {
@@ -236,11 +251,22 @@ export function buildDiffViewScrollLayout(options: BuildDiffViewScrollLayoutOpti
     return { rows: [], lines: [], totalRows: 0, totalLines: 0 };
   }
 
-  if (options.mode & DiffModeEnum.Split) {
-    return buildSplitScrollLayout(options);
+  const { diffFile, mode, columns, extendLineHeight = 1 } = options;
+  const lineNumWidth = getDiffLineNumWidth(diffFile, mode);
+  const rows: string[] = [];
+  const lines: DiffScrollLine[] = [];
+
+  for (const entry of iterateDiffDisplayEntries(options)) {
+    const rowCount = getDiffDisplayEntryRowCount(entry, { diffFile, mode, columns, lineNumWidth, extendLineHeight });
+    pushScrollEntry(rows, lines, entry.kind, entry.diffIndex, rowCount);
   }
 
-  return buildUnifiedScrollLayout(options);
+  return {
+    rows,
+    lines,
+    totalRows: rows.length,
+    totalLines: lines.length,
+  };
 }
 
 export function getVisibleDiffScrollLines(

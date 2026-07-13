@@ -1247,6 +1247,11 @@ declare function ReactCodeView(props: CodeViewProps_2 & {
 }): JSX.Element;
 export declare const CodeView: typeof ReactCodeView;
 export type DiffScrollEntryKind = "hunk" | "content" | "extend";
+export type DiffDisplayEntryDescriptor = {
+	kind: DiffScrollEntryKind;
+	diffIndex: number;
+	displayLineNumber: number;
+};
 export type DiffScrollLine = {
 	lineNumber: number;
 	startRow: number;
@@ -1260,9 +1265,8 @@ export type DiffViewScrollLayout = ScrollLayout & {
 export type VisibleDiffScrollLine = DiffScrollLine & {
 	clip?: ScrollSlice;
 };
-export type BuildDiffViewScrollLayoutOptions = {
+export type DiffDisplayIterateOptions = {
 	diffFile: DiffFile;
-	columns: number;
 	mode: DiffModeEnum;
 	extendData?: {
 		oldFile?: Record<string, {
@@ -1272,11 +1276,27 @@ export type BuildDiffViewScrollLayoutOptions = {
 			data: unknown;
 		}>;
 	};
-	extendLineHeight?: number;
 	hasRenderExtendLine?: boolean;
 };
+export type BuildDiffViewScrollLayoutOptions = DiffDisplayIterateOptions & {
+	columns: number;
+	extendLineHeight?: number;
+};
+/**
+ * Walk the flattened DiffView display sequence (hunk → content → extend per content block).
+ * Shared by scroll layout building and rendering.
+ */
+export declare function iterateDiffDisplayEntries(options: DiffDisplayIterateOptions): DiffDisplayEntryDescriptor[];
+export declare function getDiffLineNumWidth(diffFile: DiffFile, mode: DiffModeEnum): number;
 export declare function getUnifiedContentRowCount(diffFile: DiffFile, index: number, columns: number, lineNumWidth: number): number;
 export declare function getSplitContentRowCount(diffFile: DiffFile, index: number, columns: number, lineNumWidth: number): number;
+export declare function getDiffDisplayEntryRowCount(entry: DiffDisplayEntryDescriptor, options: {
+	diffFile: DiffFile;
+	mode: DiffModeEnum;
+	columns: number;
+	lineNumWidth: number;
+	extendLineHeight?: number;
+}): number;
 export declare function buildDiffViewScrollLayout(options: BuildDiffViewScrollLayoutOptions): DiffViewScrollLayout;
 export declare function getVisibleDiffScrollLines(layout: DiffViewScrollLayout, scrollOffset: number, viewportHeight: number): VisibleDiffScrollLine[];
 

@@ -4,6 +4,7 @@ import {
   buildDiffViewScrollLayout,
   getVisibleDiffScrollLines,
   computeScrollState,
+  iterateDiffDisplayEntries,
 } from "@git-diff-view/cli";
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
@@ -113,6 +114,24 @@ describe("buildDiffViewScrollLayout", () => {
         (line) => line.kind === "hunk" && line.diffIndex === firstContentDiffIndex
       );
       assert.equal(hunkBeforeFirstContent, undefined, `${mode}: no hunk tied to first content index`);
+    }
+  });
+
+  it("iterateDiffDisplayEntries matches scroll layout entry sequence", () => {
+    const diffFile = createSampleDiffFile();
+
+    for (const mode of [DiffModeEnum.Unified, DiffModeEnum.Split]) {
+      const iterateOptions = { diffFile, mode };
+      const entries = iterateDiffDisplayEntries(iterateOptions);
+      const layout = buildDiffViewScrollLayout({ ...iterateOptions, columns: 80 });
+
+      assert.equal(entries.length, layout.totalLines, `${mode}: entry count matches layout lines`);
+
+      entries.forEach((entry, index) => {
+        const line = layout.lines[index];
+        assert.equal(line?.kind, entry.kind, `${mode}: kind at index ${index}`);
+        assert.equal(line?.diffIndex, entry.diffIndex, `${mode}: diffIndex at index ${index}`);
+      });
     }
   });
 });

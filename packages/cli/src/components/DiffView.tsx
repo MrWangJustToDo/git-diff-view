@@ -11,8 +11,7 @@ import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 import { useTerminalSize } from "../hooks/useTerminalSize";
 import { useUnmount } from "../hooks/useUnmount";
 
-import { DiffSplitView } from "./DiffSplitView";
-import { DiffUnifiedView } from "./DiffUnifiedView";
+import { DiffDisplayList } from "./DiffDisplayList";
 import { DiffViewContext } from "./DiffViewContext";
 import { buildDiffViewScrollLayout, EMPTY_DIFF_VIEW_SCROLL_LAYOUT, getVisibleDiffScrollLines } from "./diffViewScroll";
 import { useScrollView, type ScrollViewProps, type ScrollViewRef } from "./scroll";
@@ -290,8 +289,6 @@ const DiffViewScrollBody = <T extends unknown>({
     [diffFile, scrollRef]
   );
 
-  const isSplitMode = !!(mode & DiffModeEnum.Split);
-
   return (
     <Box
       data-component="git-diff-view"
@@ -300,24 +297,16 @@ const DiffViewScrollBody = <T extends unknown>({
       flexDirection="column"
       data-highlighter={diffFile._getHighlighterName()}
     >
-      {isSplitMode ? (
-        <DiffSplitView
-          diffFile={diffFile}
-          width={_width}
-          visibleEntries={visibleEntries}
-          hasFixedHeight={hasFixedHeight}
-          viewportHeight={viewportHeight}
-          mode={mode}
-        />
-      ) : (
-        <DiffUnifiedView
-          diffFile={diffFile}
-          width={_width}
-          visibleEntries={visibleEntries}
-          hasFixedHeight={hasFixedHeight}
-          viewportHeight={viewportHeight}
-        />
-      )}
+      <DiffDisplayList
+        diffFile={diffFile}
+        mode={mode}
+        width={_width}
+        extendData={extendData}
+        hasRenderExtendLine={!!renderExtendLine}
+        visibleEntries={visibleEntries}
+        hasFixedHeight={hasFixedHeight}
+        viewportHeight={viewportHeight}
+      />
     </Box>
   );
 };

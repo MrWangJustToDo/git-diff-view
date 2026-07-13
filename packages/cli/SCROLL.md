@@ -7,7 +7,7 @@ Shared scroll types and utilities live in `src/components/scroll.ts`.
 | Component | Scroll API | Layout builder | Viewport slice |
 |-----------|------------|----------------|----------------|
 | **CodeView** | ✅ Implemented | `buildCodeViewLayout` | ✅ |
-| **DiffView** | ✅ Implemented | `buildDiffViewScrollLayout` | ✅ Virtual slice |
+| **DiffView** | ✅ Implemented | `iterateDiffDisplayEntries` → `buildDiffViewScrollLayout` | ✅ `DiffDisplayList` virtual slice |
 
 ---
 

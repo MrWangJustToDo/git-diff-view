@@ -127,9 +127,9 @@ const start = async () => {
   process.exit(0);
 };
 
-// start();
+start();
 
-buildCore();
+// buildCore();
 
 // buildReact();
 
@@ -137,6 +137,6 @@ buildCore();
 
 // buildShiki();
 
-buildCli();
+// buildCli();
 
 // buildSvelte();

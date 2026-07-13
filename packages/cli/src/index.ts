@@ -9,6 +9,9 @@ export {
   getVisibleDiffScrollLines,
   getUnifiedContentRowCount,
   getSplitContentRowCount,
+  iterateDiffDisplayEntries,
+  getDiffDisplayEntryRowCount,
+  getDiffLineNumWidth,
 } from "./components/diffViewScroll";
 
 export type {
@@ -16,6 +19,8 @@ export type {
   DiffScrollLine,
   VisibleDiffScrollLine,
   DiffScrollEntryKind,
+  DiffDisplayEntryDescriptor,
+  DiffDisplayIterateOptions,
 } from "./components/diffViewScroll";
 
 export { buildTheme } from "./components/color";
