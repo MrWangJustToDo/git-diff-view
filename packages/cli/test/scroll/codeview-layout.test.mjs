@@ -13,10 +13,7 @@ import { describe, it } from "node:test";
 import {
   EMPTY,
   SINGLE_LINE,
-  SHORT_LINES,
-  LONG_ASCII_LINE,
   MIXED_LENGTH,
-  WITH_EMPTY_LINES,
   CJK_CONTENT,
   TAB_CONTENT,
   EMOJI_CONTENT,

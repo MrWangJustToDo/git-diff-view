@@ -300,8 +300,7 @@ export const WorkerExample = () => {
           </Group>
 
           <Text size="sm" c="dimmed" mb="md">
-            Click the button below to load a large diff file using a Web Worker. The UI stays responsive during
-            parsing.
+            Click the button below to load a large diff file using a Web Worker. The UI stays responsive during parsing.
           </Text>
 
           <Box className="mb-4">

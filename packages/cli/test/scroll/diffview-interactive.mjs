@@ -20,7 +20,7 @@ import { createElement, useCallback, useMemo, useRef, useState } from "react";
 import { DIFF_NEW_CONTENT, DIFF_OLD_CONTENT } from "./diff-fixtures.mjs";
 
 const VIEWPORT_HEIGHT = 14;
-const WIDTH = 88;
+// const WIDTH = 88;
 
 function createInteractiveDiffFile() {
   const diffFile = generateDiffFile(
@@ -38,7 +38,7 @@ function createInteractiveDiffFile() {
   return diffFile;
 }
 
-function findExtendLineNumber(diffFile) {
+function findExtendLineNumber() {
   const lines = DIFF_NEW_CONTENT.split("\n");
   for (let i = 0; i < lines.length; i++) {
     if (lines[i].includes("extend line target")) {

@@ -11,3 +11,4 @@ package.json
 tsconfig.json
 pnpm-lock.yaml
 deploy.yml
+.pnpm-store
