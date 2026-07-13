@@ -4,12 +4,17 @@ import { DiffFile, _cacheMap, SplitSide, setEnableBuildTemplate } from "@git-dif
 import { DiffModeEnum } from "@git-diff-view/utils";
 import { Box } from "ink";
 import { forwardRef, memo, useEffect, useImperativeHandle, useMemo, useRef } from "react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { useSyncExternalStore } from "use-sync-external-store/shim/index.js";
 
+import { useTerminalSize } from "../hooks/useTerminalSize";
 import { useUnmount } from "../hooks/useUnmount";
 
-import { DiffSplitView } from "./DiffSplitView";
-import { DiffUnifiedView } from "./DiffUnifiedView";
+import { DiffDisplayList } from "./DiffDisplayList";
 import { DiffViewContext } from "./DiffViewContext";
+import { buildDiffViewScrollLayout, EMPTY_DIFF_VIEW_SCROLL_LAYOUT, getVisibleDiffScrollLines } from "./diffViewScroll";
+import { useScrollView, type ScrollViewProps, type ScrollViewRef } from "./scroll";
 import { createDiffConfigStore } from "./tools";
 
 import type { DiffViewColorTheme } from "./color";
@@ -23,7 +28,11 @@ setEnableBuildTemplate(false);
 
 export { SplitSide, DiffModeEnum };
 
-export type DiffViewProps<T> = {
+export type DiffViewRef = ScrollViewRef & {
+  getDiffFileInstance: () => DiffFile | null;
+};
+
+export type DiffViewProps<T> = ScrollViewProps & {
   data?: {
     oldFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
     newFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
@@ -35,16 +44,14 @@ export type DiffViewProps<T> = {
   diffViewMode?: DiffModeEnum;
   diffViewTheme?: "light" | "dark";
   diffViewTabSpace?: boolean;
-  // tabWidth in the diff view, small: 1, medium: 2, large: 4, default: medium
   diffViewTabWidth?: "small" | "medium" | "large";
   registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
   diffViewHighlight?: boolean;
-  // hide the diff operator (+/-/space) and show padding instead
   diffViewHideOperator?: boolean;
-  // disable background colors for transparent terminal rendering
   diffViewNoBG?: boolean;
-  // custom theme colors to override defaults
   diffViewThemeColors?: DiffViewColorTheme;
+  /** Visual row height for extend lines in scroll layout (default: 1). */
+  diffViewExtendLineHeight?: number;
   renderExtendLine?: ({
     diffFile,
     side,
@@ -79,6 +86,9 @@ type DiffViewProps_2<T> = Omit<DiffViewProps<T>, "data"> & {
 const InternalDiffView = <T extends unknown>(
   props: Omit<DiffViewProps<T>, "data"> & {
     wrapperRef: RefObject<DOMElement | null>;
+    height?: number;
+    onScrollChange?: DiffViewProps<T>["onScrollChange"];
+    forwardedRef?: ForwardedRef<DiffViewRef>;
   }
 ) => {
   const {
@@ -94,9 +104,14 @@ const InternalDiffView = <T extends unknown>(
     diffViewHideOperator,
     diffViewNoBG,
     diffViewThemeColors,
+    diffViewExtendLineHeight,
+    height,
+    onScrollChange,
+    forwardedRef,
   } = props;
 
   const diffFileId = useMemo(() => diffFile!.getId(), [diffFile]);
+  const mode = diffViewMode || DiffModeEnum.SplitGitHub;
 
   // performance optimization
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -106,12 +121,12 @@ const InternalDiffView = <T extends unknown>(
     const {
       id,
       setId,
-      mode,
+      mode: storeMode,
       setMode,
       enableHighlight,
       setEnableHighlight,
       setExtendData,
-      renderExtendLine,
+      renderExtendLine: storeRenderExtendLine,
       setRenderExtendLine,
       tabSpace,
       setTabSpace,
@@ -130,8 +145,8 @@ const InternalDiffView = <T extends unknown>(
       setId(diffFileId);
     }
 
-    if (diffViewMode && diffViewMode !== mode) {
-      setMode(diffViewMode);
+    if (mode && mode !== storeMode) {
+      setMode(mode);
     }
 
     if (diffViewHighlight !== enableHighlight) {
@@ -142,7 +157,7 @@ const InternalDiffView = <T extends unknown>(
       setExtendData(props.extendData);
     }
 
-    if (renderExtendLine !== props.renderExtendLine) {
+    if (storeRenderExtendLine !== props.renderExtendLine) {
       setRenderExtendLine(props.renderExtendLine);
     }
 
@@ -171,7 +186,7 @@ const InternalDiffView = <T extends unknown>(
     _width,
     useDiffContext,
     diffViewHighlight,
-    diffViewMode,
+    mode,
     diffFileId,
     extendData,
     renderExtendLine,
@@ -195,30 +210,113 @@ const InternalDiffView = <T extends unknown>(
 
   return (
     <DiffViewContext.Provider value={value}>
-      <Box
-        data-component="git-diff-view"
-        data-theme={diffFile!._getTheme() || "light"}
-        data-version={__VERSION__}
-        flexDirection="column"
-        data-highlighter={diffFile!._getHighlighterName()}
-      >
-        {diffViewMode! & DiffModeEnum.Split ? (
-          <DiffSplitView diffFile={diffFile!} width={_width} />
-        ) : (
-          <DiffUnifiedView diffFile={diffFile!} width={_width} />
-        )}
-      </Box>
+      <MemoedDiffViewScrollBody
+        diffFile={diffFile!}
+        width={_width}
+        mode={mode}
+        height={height}
+        onScrollChange={onScrollChange}
+        forwardedRef={forwardedRef}
+        extendData={props.extendData}
+        diffViewExtendLineHeight={diffViewExtendLineHeight}
+        renderExtendLine={renderExtendLine}
+      />
     </DiffViewContext.Provider>
   );
 };
 
+const DiffViewScrollBody = <T extends unknown>({
+  diffFile,
+  width: _width,
+  mode,
+  height,
+  onScrollChange,
+  forwardedRef,
+  extendData,
+  diffViewExtendLineHeight,
+  renderExtendLine,
+}: {
+  diffFile: DiffFile;
+  width?: number;
+  mode: DiffModeEnum;
+  height?: number;
+  onScrollChange?: DiffViewProps<T>["onScrollChange"];
+  forwardedRef?: ForwardedRef<DiffViewRef>;
+  extendData?: DiffViewProps<T>["extendData"];
+  diffViewExtendLineHeight?: number;
+  renderExtendLine?: DiffViewProps<T>["renderExtendLine"];
+}) => {
+  const { columns: terminalColumns } = useTerminalSize();
+  const columns = _width || terminalColumns || 0;
+
+  const updateCount = useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
+
+  const scrollLayout = useMemo(() => {
+    if (typeof height !== "number") {
+      return EMPTY_DIFF_VIEW_SCROLL_LAYOUT;
+    }
+
+    return buildDiffViewScrollLayout({
+      diffFile,
+      columns,
+      mode,
+      extendData,
+      extendLineHeight: diffViewExtendLineHeight ?? 1,
+      hasRenderExtendLine: !!renderExtendLine,
+    });
+    // updateCount triggers layout rebuild when diff content changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [height, diffFile, columns, mode, extendData, diffViewExtendLineHeight, renderExtendLine, updateCount]);
+
+  const { scrollRef, hasFixedHeight, viewportHeight, scrollState } = useScrollView({
+    layout: scrollLayout,
+    height,
+    onScrollChange,
+    resetKey: typeof height === "number" ? `${columns}:${mode}` : undefined,
+  });
+
+  const visibleEntries = useMemo(() => {
+    if (!hasFixedHeight) return undefined;
+    return getVisibleDiffScrollLines(scrollLayout, scrollState.scrollOffset, viewportHeight);
+  }, [hasFixedHeight, scrollLayout, scrollState.scrollOffset, viewportHeight]);
+
+  useImperativeHandle(
+    forwardedRef,
+    () => ({
+      getDiffFileInstance: () => diffFile,
+      ...scrollRef,
+    }),
+    [diffFile, scrollRef]
+  );
+
+  return (
+    <Box
+      data-component="git-diff-view"
+      data-theme={diffFile._getTheme() || "light"}
+      data-version={__VERSION__}
+      flexDirection="column"
+      data-highlighter={diffFile._getHighlighterName()}
+    >
+      <DiffDisplayList
+        diffFile={diffFile}
+        mode={mode}
+        width={_width}
+        extendData={extendData}
+        hasRenderExtendLine={!!renderExtendLine}
+        visibleEntries={visibleEntries}
+        hasFixedHeight={hasFixedHeight}
+        viewportHeight={viewportHeight}
+      />
+    </Box>
+  );
+};
+
+const MemoedDiffViewScrollBody = memo(DiffViewScrollBody) as typeof DiffViewScrollBody;
+
 const MemoedInternalDiffView = memo(InternalDiffView) as typeof InternalDiffView;
 
-const DiffViewContainerWithRef = <T extends unknown>(
-  props: DiffViewProps<T>,
-  ref: ForwardedRef<{ getDiffFileInstance: () => DiffFile | null }>
-) => {
-  const { registerHighlighter, data, diffViewTheme, diffFile: _diffFile, ...restProps } = props;
+const DiffViewContainerWithRef = <T extends unknown>(props: DiffViewProps<T>, ref: ForwardedRef<DiffViewRef>) => {
+  const { registerHighlighter, data, diffViewTheme, diffFile: _diffFile, height, onScrollChange, ...restProps } = props;
 
   const width = restProps.width;
 
@@ -226,9 +324,6 @@ const DiffViewContainerWithRef = <T extends unknown>(
 
   const diffFile = useMemo(() => {
     if (_diffFile) {
-      // missing data for plain file render
-      // TODO next release update ?
-      // will cause more complex for diffFile flow control, keep current
       const diffFile = DiffFile.createInstance({});
       diffFile._mergeFullBundle(_diffFile._getFullBundle());
       return diffFile;
@@ -278,10 +373,7 @@ const DiffViewContainerWithRef = <T extends unknown>(
     diffFile.notifyAll();
   }, [diffFile, props.diffViewHighlight, props.diffViewTheme, registerHighlighter]);
 
-  // fix react strict mode error
   useUnmount(() => (__DEV__ ? diffFile?._destroy?.() : diffFile?.clear?.()), [diffFile]);
-
-  useImperativeHandle(ref, () => ({ getDiffFileInstance: () => diffFile }), [diffFile]);
 
   if (!diffFile) return null;
 
@@ -300,6 +392,9 @@ const DiffViewContainerWithRef = <T extends unknown>(
         diffViewTheme={diffViewTheme}
         diffViewTabWidth={props.diffViewTabWidth || "medium"}
         diffViewMode={restProps.diffViewMode || DiffModeEnum.SplitGitHub}
+        height={height}
+        onScrollChange={onScrollChange}
+        forwardedRef={ref}
       />
     </Box>
   );
@@ -307,13 +402,9 @@ const DiffViewContainerWithRef = <T extends unknown>(
 
 // type helper function
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function ReactDiffView<T>(
-  props: DiffViewProps_1<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
-): JSX.Element;
-function ReactDiffView<T>(
-  props: DiffViewProps_2<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }
-): JSX.Element;
-function ReactDiffView<T>(_props: DiffViewProps<T> & { ref?: ForwardedRef<{ getDiffFileInstance: () => DiffFile }> }) {
+function ReactDiffView<T>(props: DiffViewProps_1<T> & { ref?: ForwardedRef<DiffViewRef> }): JSX.Element;
+function ReactDiffView<T>(props: DiffViewProps_2<T> & { ref?: ForwardedRef<DiffViewRef> }): JSX.Element;
+function ReactDiffView<T>(_props: DiffViewProps<T> & { ref?: ForwardedRef<DiffViewRef> }) {
   return <></>;
 }
 

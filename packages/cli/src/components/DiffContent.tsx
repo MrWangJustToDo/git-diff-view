@@ -4,11 +4,12 @@ import { memoFunc, NewLineSymbol } from "@git-diff-view/utils";
 import { Box, Text } from "ink";
 import * as React from "react";
 
-import { buildAnsiStringWithLineBreaks, buildStyledBlock, type CharStyle } from "./ansiString";
+import { buildAnsiStringWithLineBreaks, buildStyledBlock, sliceMultilineAnsi, type CharStyle } from "./ansiString";
 import { GitHubDark, GitHubLight } from "./color";
 import { useDiffViewContext } from "./DiffViewContext";
 
 import type { ResolvedDiffViewColorTheme } from "./color";
+import type { ScrollSlice } from "./scroll";
 import type { DiffFile, DiffLine, File } from "@git-diff-view/core";
 
 export const getTabWidthValue = (tabWidth: "small" | "medium" | "large"): number => {
@@ -102,6 +103,7 @@ const DiffString = React.memo(
     operator,
     noBG,
     themeColors,
+    scrollSlice,
   }: {
     bg?: string;
     width: number;
@@ -113,6 +115,7 @@ const DiffString = React.memo(
     plainLine?: File["plainFile"][number];
     noBG?: boolean;
     themeColors: ResolvedDiffViewColorTheme;
+    scrollSlice?: ScrollSlice;
   }) => {
     const changes = diffLine?.changes;
 
@@ -163,8 +166,10 @@ const DiffString = React.memo(
       }
 
       // Use width - 2 because the operator column takes 1 character and end padding takes 1 character
-      return buildAnsiStringWithLineBreaks(chars, width - 2);
-    }, [bg, width, theme, rawLine, changes, operator, enableTabSpace, tabWidth, noBG, themeColors]);
+      const full = buildAnsiStringWithLineBreaks(chars, width - 2);
+      if (!scrollSlice) return full;
+      return sliceMultilineAnsi(full, scrollSlice.rowOffset, scrollSlice.rowCount);
+    }, [bg, width, theme, rawLine, changes, operator, enableTabSpace, tabWidth, noBG, themeColors, scrollSlice]);
 
     return (
       <Box width={width - 2} backgroundColor={bg}>
@@ -231,6 +236,7 @@ const DiffSyntax = React.memo(
     syntaxLine,
     noBG,
     themeColors,
+    scrollSlice,
   }: {
     bg?: string;
     width: number;
@@ -242,6 +248,7 @@ const DiffSyntax = React.memo(
     operator?: "add" | "del";
     noBG?: boolean;
     themeColors: ResolvedDiffViewColorTheme;
+    scrollSlice?: ScrollSlice;
   }) => {
     const { useDiffContext } = useDiffViewContext();
 
@@ -340,8 +347,10 @@ const DiffSyntax = React.memo(
       }
 
       // Use width - 2 because the operator column takes 1 character and end padding takes 1 character
-      return buildAnsiStringWithLineBreaks(chars, width - 2);
-    }, [bg, width, theme, diffLine, operator, syntaxLine, enableTabSpace, tabWidth, noBG, themeColors]);
+      const full = buildAnsiStringWithLineBreaks(chars, width - 2);
+      if (!scrollSlice) return full;
+      return sliceMultilineAnsi(full, scrollSlice.rowOffset, scrollSlice.rowCount);
+    }, [bg, width, theme, diffLine, operator, syntaxLine, enableTabSpace, tabWidth, noBG, themeColors, scrollSlice]);
 
     // Fallback to DiffString if no syntax line
     if (!syntaxLine) {
@@ -356,6 +365,7 @@ const DiffSyntax = React.memo(
           operator={operator}
           noBG={noBG}
           themeColors={themeColors}
+          scrollSlice={scrollSlice}
         />
       );
     }
@@ -375,19 +385,29 @@ DiffSyntax.displayName = "DiffSyntax";
  * using chalk for proper multi-row support.
  */
 const DiffOperator = React.memo(
-  ({ operatorChar, height, backgroundColor }: { operatorChar: string; height: number; backgroundColor?: string }) => {
+  ({
+    operatorChar,
+    height,
+    backgroundColor,
+    rowOffset = 0,
+  }: {
+    operatorChar: string;
+    height: number;
+    backgroundColor?: string;
+    rowOffset?: number;
+  }) => {
     const content = React.useMemo(() => {
       const lines: string[] = [];
       const style: CharStyle = { backgroundColor };
 
       for (let row = 0; row < height; row++) {
-        // Only show operator on first row, spaces on subsequent rows
-        const char = row === 0 ? operatorChar : " ";
+        const absoluteRow = rowOffset + row;
+        const char = absoluteRow === 0 ? operatorChar : " ";
         lines.push(buildStyledBlock(char, 1, 1, style, "left"));
       }
 
       return lines.join("\n");
-    }, [operatorChar, height, backgroundColor]);
+    }, [operatorChar, height, backgroundColor, rowOffset]);
 
     return (
       <Box width={1} flexShrink={0}>
@@ -436,6 +456,7 @@ export const DiffContent = React.memo(
     enableHighlight,
     noBG,
     themeColors,
+    scrollSlice,
   }: {
     width: number;
     height: number;
@@ -448,6 +469,7 @@ export const DiffContent = React.memo(
     enableHighlight: boolean;
     noBG?: boolean;
     themeColors: ResolvedDiffViewColorTheme;
+    scrollSlice?: ScrollSlice;
   }) => {
     const { useDiffContext } = useDiffViewContext();
 
@@ -479,7 +501,12 @@ export const DiffContent = React.memo(
         {hideOperator ? (
           <DiffPadding height={height} backgroundColor={bg} />
         ) : (
-          <DiffOperator operatorChar={operatorChar} height={height} backgroundColor={bg} />
+          <DiffOperator
+            operatorChar={operatorChar}
+            height={height}
+            backgroundColor={bg}
+            rowOffset={scrollSlice?.rowOffset}
+          />
         )}
         {enableHighlight && syntaxLine && !isMaxLineLengthToIgnoreSyntax ? (
           <DiffSyntax
@@ -493,6 +520,7 @@ export const DiffContent = React.memo(
             syntaxLine={syntaxLine}
             noBG={noBG}
             themeColors={themeColors}
+            scrollSlice={scrollSlice}
           />
         ) : (
           <DiffString
@@ -506,6 +534,7 @@ export const DiffContent = React.memo(
             plainLine={plainLine}
             noBG={noBG}
             themeColors={themeColors}
+            scrollSlice={scrollSlice}
           />
         )}
         <DiffPadding height={height} backgroundColor={bg} />

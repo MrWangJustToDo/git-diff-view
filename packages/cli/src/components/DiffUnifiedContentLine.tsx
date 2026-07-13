@@ -7,6 +7,7 @@ import { DiffUnifiedLineNumberArea } from "./DiffLineNumber";
 import { getCurrentLineRow } from "./tools";
 
 import type { ResolvedDiffViewColorTheme } from "./color";
+import type { ScrollSlice } from "./scroll";
 
 /**
  * Unified view line component for deleted lines (old side only)
@@ -27,6 +28,7 @@ const DiffUnifiedOldLine = ({
   enableHighlight,
   noBG,
   themeColors,
+  scrollSlice,
 }: {
   index: number;
   height: number;
@@ -43,6 +45,7 @@ const DiffUnifiedOldLine = ({
   enableHighlight: boolean;
   noBG?: boolean;
   themeColors: ResolvedDiffViewColorTheme;
+  scrollSlice?: ScrollSlice;
 }) => {
   const color = theme === "light" ? themeColors.plainLineNumberColor.light : themeColors.plainLineNumberColor.dark;
 
@@ -57,6 +60,7 @@ const DiffUnifiedOldLine = ({
         newLineNumber={undefined}
         lineNumWidth={lineNumWidth}
         height={height}
+        rowOffset={scrollSlice?.rowOffset}
         backgroundColor={bg}
         color={color}
         dim={false}
@@ -73,6 +77,7 @@ const DiffUnifiedOldLine = ({
         enableHighlight={enableHighlight}
         noBG={noBG}
         themeColors={themeColors}
+        scrollSlice={scrollSlice}
       />
     </Box>
   );
@@ -97,6 +102,7 @@ const DiffUnifiedNewLine = ({
   enableHighlight,
   noBG,
   themeColors,
+  scrollSlice,
 }: {
   index: number;
   height: number;
@@ -113,6 +119,7 @@ const DiffUnifiedNewLine = ({
   enableHighlight: boolean;
   noBG?: boolean;
   themeColors: ResolvedDiffViewColorTheme;
+  scrollSlice?: ScrollSlice;
 }) => {
   const color = theme === "light" ? themeColors.plainLineNumberColor.light : themeColors.plainLineNumberColor.dark;
 
@@ -127,6 +134,7 @@ const DiffUnifiedNewLine = ({
         newLineNumber={lineNumber}
         lineNumWidth={lineNumWidth}
         height={height}
+        rowOffset={scrollSlice?.rowOffset}
         backgroundColor={bg}
         color={color}
         dim={false}
@@ -143,6 +151,7 @@ const DiffUnifiedNewLine = ({
         enableHighlight={enableHighlight}
         noBG={noBG}
         themeColors={themeColors}
+        scrollSlice={scrollSlice}
       />
     </Box>
   );
@@ -158,6 +167,7 @@ const InternalDiffUnifiedLine = ({
   enableHighlight,
   noBG,
   themeColors,
+  scrollSlice,
 }: {
   index: number;
   theme: "light" | "dark";
@@ -168,6 +178,7 @@ const InternalDiffUnifiedLine = ({
   enableHighlight: boolean;
   noBG?: boolean;
   themeColors: ResolvedDiffViewColorTheme;
+  scrollSlice?: ScrollSlice;
 }) => {
   const unifiedLine = diffFile.getUnifiedLine(index);
 
@@ -203,6 +214,7 @@ const InternalDiffUnifiedLine = ({
 
   // Use contentWidth - 2 to match the actual wrap width in DiffContent (operator column takes 1 char, end padding takes 1 char)
   const row = getCurrentLineRow({ content: contentWithSymbol, width: contentWidth - 2 });
+  const visibleHeight = scrollSlice?.rowCount ?? row;
 
   const color = hasDiff
     ? theme === "light"
@@ -228,7 +240,7 @@ const InternalDiffUnifiedLine = ({
       return (
         <DiffUnifiedOldLine
           theme={theme}
-          height={row}
+          height={visibleHeight}
           columns={columns}
           rawLine={rawLine}
           diffFile={diffFile}
@@ -242,13 +254,14 @@ const InternalDiffUnifiedLine = ({
           lineNumber={unifiedLine.oldLineNumber}
           noBG={noBG}
           themeColors={themeColors}
+          scrollSlice={scrollSlice}
         />
       );
     } else {
       return (
         <DiffUnifiedNewLine
           theme={theme}
-          height={row}
+          height={visibleHeight}
           columns={columns}
           rawLine={rawLine}
           index={lineNumber}
@@ -262,6 +275,7 @@ const InternalDiffUnifiedLine = ({
           lineNumber={unifiedLine.newLineNumber!}
           noBG={noBG}
           themeColors={themeColors}
+          scrollSlice={scrollSlice}
         />
       );
     }
@@ -269,19 +283,20 @@ const InternalDiffUnifiedLine = ({
 
   // Handle unchanged lines (context lines)
   return (
-    <Box data-line={lineNumber} data-state={unifiedLine.diff ? "diff" : "plain"} height={row} width={columns}>
+    <Box data-line={lineNumber} data-state={unifiedLine.diff ? "diff" : "plain"} height={visibleHeight} width={columns}>
       <DiffUnifiedLineNumberArea
         oldLineNumber={unifiedLine.oldLineNumber}
         newLineNumber={unifiedLine.newLineNumber}
         lineNumWidth={lineNumWidth}
-        height={row}
+        height={visibleHeight}
+        rowOffset={scrollSlice?.rowOffset}
         backgroundColor={bg}
         color={color}
         dim={true}
       />
       <DiffContent
         theme={theme}
-        height={row}
+        height={visibleHeight}
         rawLine={rawLine}
         diffFile={diffFile}
         diffLine={diffLine}
@@ -291,6 +306,7 @@ const InternalDiffUnifiedLine = ({
         enableHighlight={enableHighlight}
         noBG={noBG}
         themeColors={themeColors}
+        scrollSlice={scrollSlice}
       />
     </Box>
   );
@@ -306,6 +322,7 @@ export const DiffUnifiedContentLine = ({
   enableHighlight,
   noBG,
   themeColors,
+  scrollSlice,
 }: {
   index: number;
   columns: number;
@@ -316,6 +333,7 @@ export const DiffUnifiedContentLine = ({
   enableHighlight: boolean;
   noBG?: boolean;
   themeColors: ResolvedDiffViewColorTheme;
+  scrollSlice?: ScrollSlice;
 }) => {
   const unifiedLine = diffFile.getUnifiedLine(index);
 
@@ -332,6 +350,7 @@ export const DiffUnifiedContentLine = ({
       enableHighlight={enableHighlight}
       noBG={noBG}
       themeColors={themeColors}
+      scrollSlice={scrollSlice}
     />
   );
 };

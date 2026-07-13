@@ -1005,6 +1005,83 @@ export declare enum DiffModeEnum {
 	Split = 3,
 	Unified = 4
 }
+/** Step granularity for scrollUp / scrollDown. */
+export type ScrollUnit = "logical" | "visual";
+/** Current scroll snapshot shared by CodeView and DiffView. */
+export type ScrollState = {
+	/** Logical line count (CodeView: source lines; DiffView: display sequence lines). */
+	totalLines: number;
+	/** Total visual rows after wrap. */
+	totalRows: number;
+	/** Viewport height in visual rows; equals totalRows when height prop is unset. */
+	viewportHeight: number;
+	/** Top visual row offset (0-based). */
+	scrollOffset: number;
+	/** First visible logical line, including partially clipped lines at the top. */
+	startLine: number;
+	/** Last visible logical line, including partially clipped lines at the bottom. */
+	endLine: number;
+	canScrollUp: boolean;
+	canScrollDown: boolean;
+};
+export type ScrollStepOptions = {
+	/** @default "visual" */
+	unit?: ScrollUnit;
+	/** @default 1 */
+	step?: number;
+};
+export type ScrollViewRef = {
+	getScrollState: () => ScrollState;
+	scrollToTop: (line: number) => void;
+	scrollToBottom: (line: number) => void;
+	scrollUp: (options?: ScrollStepOptions) => void;
+	scrollDown: (options?: ScrollStepOptions) => void;
+};
+export type ScrollViewProps = {
+	/** Fixed viewport height in visual rows. When unset, all content is rendered. */
+	height?: number;
+	onScrollChange?: (state: ScrollState) => void;
+};
+export type ScrollLineLayout = {
+	lineNumber: number;
+	startRow: number;
+	endRow: number;
+};
+export type ScrollLayout = {
+	rows: string[];
+	lines: ScrollLineLayout[];
+	totalRows: number;
+	totalLines: number;
+};
+/** Visible row window inside a multi-row scroll entry. */
+export type ScrollSlice = {
+	rowOffset: number;
+	rowCount: number;
+};
+export declare const EMPTY_SCROLL_LAYOUT: ScrollLayout;
+export declare function clampScrollOffset(scrollOffset: number, totalRows: number, viewportHeight: number): number;
+export declare function clampLineNumber(line: number, totalLines: number): number;
+export declare function findLineLayout(layout: ScrollLayout, line: number): ScrollLineLayout | undefined;
+export declare function computeScrollState(layout: ScrollLayout, scrollOffset: number, viewportHeight: number): ScrollState;
+export declare function scrollOffsetToTopLine(layout: ScrollLayout, line: number, viewportHeight: number): number;
+export declare function scrollOffsetToBottomLine(layout: ScrollLayout, line: number, viewportHeight: number): number;
+export declare function scrollOffsetUp(layout: ScrollLayout, scrollOffset: number, viewportHeight: number, options?: ScrollStepOptions): number;
+export declare function scrollOffsetDown(layout: ScrollLayout, scrollOffset: number, viewportHeight: number, options?: ScrollStepOptions): number;
+export declare function sliceVisibleRows(layout: ScrollLayout, scrollOffset: number, viewportHeight: number): string;
+export declare function createScrollViewRef(layout: ScrollLayout, scrollOffset: number, viewportHeight: number, setScrollOffset: (offset: number) => void): ScrollViewRef;
+export declare function useScrollView({ layout, height, onScrollChange, resetKey, }: {
+	layout: ScrollLayout;
+	height?: number;
+	onScrollChange?: (state: ScrollState) => void;
+	/** When this value changes (e.g. columns/width), scroll offset resets to 0. */
+	resetKey?: unknown;
+}): {
+	scrollState: ScrollState;
+	visibleOutput: string;
+	scrollRef: ScrollViewRef;
+	viewportHeight: number;
+	hasFixedHeight: boolean;
+};
 export type ThemeColor = {
 	light: string;
 	dark: string;
@@ -1036,7 +1113,10 @@ export interface DiffViewColorTheme {
 }
 export type ResolvedDiffViewColorTheme = Required<DiffViewColorTheme>;
 export declare const buildTheme: (overrides?: DiffViewColorTheme) => ResolvedDiffViewColorTheme;
-export type DiffViewProps<T> = {
+export type DiffViewRef = ScrollViewRef & {
+	getDiffFileInstance: () => DiffFile | null;
+};
+export type DiffViewProps<T> = ScrollViewProps & {
 	data?: {
 		oldFile?: {
 			fileName?: string | null;
@@ -1069,6 +1149,8 @@ export type DiffViewProps<T> = {
 	diffViewHideOperator?: boolean;
 	diffViewNoBG?: boolean;
 	diffViewThemeColors?: DiffViewColorTheme;
+	/** Visual row height for extend lines in scroll layout (default: 1). */
+	diffViewExtendLineHeight?: number;
 	renderExtendLine?: ({ diffFile, side, data, lineNumber, onUpdate, }: {
 		lineNumber: number;
 		side: SplitSide;
@@ -1108,18 +1190,17 @@ export type DiffViewProps_2<T> = Omit<DiffViewProps<T>, "data"> & {
 	};
 };
 declare function ReactDiffView<T>(props: DiffViewProps_1<T> & {
-	ref?: ForwardedRef<{
-		getDiffFileInstance: () => DiffFile;
-	}>;
+	ref?: ForwardedRef<DiffViewRef>;
 }): JSX.Element;
 declare function ReactDiffView<T>(props: DiffViewProps_2<T> & {
-	ref?: ForwardedRef<{
-		getDiffFileInstance: () => DiffFile;
-	}>;
+	ref?: ForwardedRef<DiffViewRef>;
 }): JSX.Element;
 export declare const DiffView: typeof ReactDiffView;
 export declare const version: string;
-export type CodeViewProps = {
+export type CodeViewRef = ScrollViewRef & {
+	getFileInstance: () => File$1 | null;
+};
+export type CodeViewProps = ScrollViewProps & {
 	data?: {
 		content: string;
 		fileName?: string | null;
@@ -1149,18 +1230,75 @@ export type CodeViewProps_2 = Omit<CodeViewProps, "data"> & {
 		fileLang?: string | null;
 	};
 };
+export interface BuildOptions {
+	enableHighlight: boolean;
+	noBG: boolean;
+	tabSpace: boolean;
+	tabWidth: "small" | "medium" | "large";
+	themeColors: ResolvedDiffViewColorTheme;
+}
+export declare function buildCodeViewLayout(file: File$1, theme: "light" | "dark", columns: number, options: BuildOptions): ScrollLayout;
 export declare function buildCodeViewAnsiString(props: CodeViewProps): string;
 declare function ReactCodeView(props: CodeViewProps_1 & {
-	ref?: ForwardedRef<{
-		getFileInstance: () => File$1;
-	}>;
+	ref?: ForwardedRef<CodeViewRef>;
 }): JSX.Element;
 declare function ReactCodeView(props: CodeViewProps_2 & {
-	ref?: ForwardedRef<{
-		getFileInstance: () => File$1;
-	}>;
+	ref?: ForwardedRef<CodeViewRef>;
 }): JSX.Element;
 export declare const CodeView: typeof ReactCodeView;
+export type DiffScrollEntryKind = "hunk" | "content" | "extend";
+export type DiffDisplayEntryDescriptor = {
+	kind: DiffScrollEntryKind;
+	diffIndex: number;
+	displayLineNumber: number;
+};
+export type DiffScrollLine = {
+	lineNumber: number;
+	startRow: number;
+	endRow: number;
+	kind: DiffScrollEntryKind;
+	diffIndex: number;
+};
+export type DiffViewScrollLayout = ScrollLayout & {
+	lines: DiffScrollLine[];
+};
+export type VisibleDiffScrollLine = DiffScrollLine & {
+	clip?: ScrollSlice;
+};
+export type DiffDisplayIterateOptions = {
+	diffFile: DiffFile;
+	mode: DiffModeEnum;
+	extendData?: {
+		oldFile?: Record<string, {
+			data: unknown;
+		}>;
+		newFile?: Record<string, {
+			data: unknown;
+		}>;
+	};
+	hasRenderExtendLine?: boolean;
+};
+export type BuildDiffViewScrollLayoutOptions = DiffDisplayIterateOptions & {
+	columns: number;
+	extendLineHeight?: number;
+};
+/**
+ * Walk the flattened DiffView display sequence (hunk → content → extend per content block).
+ * Shared by scroll layout building and rendering.
+ */
+export declare function iterateDiffDisplayEntries(options: DiffDisplayIterateOptions): DiffDisplayEntryDescriptor[];
+export declare function getDiffLineNumWidth(diffFile: DiffFile, mode: DiffModeEnum): number;
+export declare function getUnifiedContentRowCount(diffFile: DiffFile, index: number, columns: number, lineNumWidth: number): number;
+export declare function getSplitContentRowCount(diffFile: DiffFile, index: number, columns: number, lineNumWidth: number): number;
+export declare function getDiffDisplayEntryRowCount(entry: DiffDisplayEntryDescriptor, options: {
+	diffFile: DiffFile;
+	mode: DiffModeEnum;
+	columns: number;
+	lineNumWidth: number;
+	extendLineHeight?: number;
+}): number;
+export declare function buildDiffViewScrollLayout(options: BuildDiffViewScrollLayoutOptions): DiffViewScrollLayout;
+export declare function getVisibleDiffScrollLines(layout: DiffViewScrollLayout, scrollOffset: number, viewportHeight: number): VisibleDiffScrollLine[];
 
 export {
 	File$1 as File,
