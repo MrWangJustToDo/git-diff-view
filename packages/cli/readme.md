@@ -14,6 +14,7 @@
 - ✅ Syntax highlighting in CLI
 - ✅ Light & Dark themes
 - ✅ Configurable width and display options
+- ✅ Fixed-height viewport scrolling (`CodeView` & `DiffView`)
 - ✅ Works with @git-diff-view/core and @git-diff-view/file
 
 ## Installation
@@ -100,6 +101,9 @@ DiffView({ diffFile: file });
 | `diffViewNoBG` | `boolean` | Disable neutral background colors for transparent terminals |
 | `diffViewThemeColors` | `DiffViewColorTheme` | Custom color overrides (see [Theme Customization](#theme-customization)) |
 | `width` | `number` | Fixed terminal width for rendering |
+| `height` | `number` | Viewport height in visual rows; enables scroll mode (see [Scroll API](#scroll-api)) |
+| `onScrollChange` | `(state: ScrollState) => void` | Called when scroll state changes |
+| `diffViewExtendLineHeight` | `number` | Visual row height for extend lines in scroll layout (default: `1`) |
 | `extendData` | `ExtendData` | Additional data per line |
 | `renderExtendLine` | `Function` | Custom extend line renderer |
 
@@ -116,8 +120,8 @@ DiffView({ diffFile: file });
 | `codeViewNoBG` | `boolean` | Disable neutral background colors for transparent terminals |
 | `codeViewThemeColors` | `DiffViewColorTheme` | Custom color overrides (see [Theme Customization](#theme-customization)) |
 | `width` | `number` | Fixed terminal width for rendering |
-| `extendData` | `ExtendData` | Additional data per line |
-| `renderExtendLine` | `Function` | Custom extend line renderer |
+| `height` | `number` | Viewport height in visual rows; enables scroll mode (see [Scroll API](#scroll-api)) |
+| `onScrollChange` | `(state: ScrollState) => void` | Called when scroll state changes |
 
 ### DiffData Type
 
@@ -191,6 +195,86 @@ const myTheme: DiffViewColorTheme = {
 
 Each token is `{ light: string; dark: string }` — hex color strings for each theme variant.
 
+## Scroll API
+
+Both `CodeView` and `DiffView` support a fixed-height viewport with programmatic scrolling. Pass `height` (in **visual rows**, after line wrap) to enable scroll mode.
+
+Without `height`, the full content is rendered (backward compatible). `DiffView` skips scroll layout calculation in that case.
+
+### Shared types
+
+```typescript
+import type { ScrollState, ScrollViewRef } from "@git-diff-view/cli";
+
+type ScrollState = {
+  totalLines: number;      // logical line count
+  totalRows: number;       // visual row count after wrap
+  viewportHeight: number;
+  scrollOffset: number;    // top visual row (0-based)
+  startLine: number;       // first visible logical line (includes partial clips)
+  endLine: number;         // last visible logical line (includes partial clips)
+  canScrollUp: boolean;
+  canScrollDown: boolean;
+};
+```
+
+### Ref methods (`ScrollViewRef`)
+
+| Method | Description |
+|--------|-------------|
+| `getScrollState()` | Current scroll snapshot |
+| `scrollToTop(line)` | Align the target logical line's first visual row to the viewport top |
+| `scrollToBottom(line)` | Align the target logical line's last visual row to the viewport bottom |
+| `scrollUp({ unit?, step? })` | Scroll up (`unit`: `"visual"` \| `"logical"`, default `"visual"`) |
+| `scrollDown({ unit?, step? })` | Scroll down |
+
+`CodeViewRef` adds `getFileInstance()`. `DiffViewRef` adds `getDiffFileInstance()`.
+
+### Line semantics
+
+| Component | `line` meaning |
+|-----------|----------------|
+| **CodeView** | Source file line number (1-based, `File.rawFile`) |
+| **DiffView** | 1-based index in the flattened display sequence: hunk → content → extend per content block. The first content block has **no** leading hunk line. |
+
+### Example
+
+```tsx
+import { useRef } from "react";
+import { CodeView, DiffView, type CodeViewRef } from "@git-diff-view/cli";
+
+const ref = useRef<CodeViewRef>(null);
+
+<CodeView
+  ref={ref}
+  file={file}
+  height={20}
+  width={80}
+  onScrollChange={(state) => console.log(state.startLine, state.endLine)}
+/>;
+
+ref.current?.scrollToTop(100);
+ref.current?.scrollDown({ unit: "logical" });
+```
+
+### Width / mode changes
+
+When `width` changes, scroll offset resets to `0` (wrap counts change). `DiffView` also resets when switching split ↔ unified.
+
+### Extend lines (DiffView)
+
+Custom `renderExtendLine` content height is estimated via `diffViewExtendLineHeight` (default `1`) for scroll layout. Set it to match your extend UI when using `height`.
+
+### Implementation details
+
+See [SCROLL.md](./SCROLL.md) for architecture notes. Scroll tests:
+
+```bash
+pnpm --filter @git-diff-view/cli test:scroll
+pnpm --filter @git-diff-view/cli test:scroll:interactive        # CodeView
+pnpm --filter @git-diff-view/cli test:scroll:interactive:diffview
+```
+
 ## Use Cases
 
 - CLI diff tools
@@ -234,6 +318,14 @@ Each token is `{ light: string; dark: string }` — hex color strings for each t
   data={{ content: sourceCode, fileLang: "typescript" }}
   codeViewTheme="dark"
   codeViewHighlight={true}
+/>
+
+// Fixed-height scroll viewport
+<DiffView
+  diffFile={file}
+  height={18}
+  width={100}
+  onScrollChange={console.log}
 />
 ```
 

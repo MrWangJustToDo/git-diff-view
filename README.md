@@ -50,6 +50,9 @@ pnpm add @git-diff-view/vue
 # Solid / Svelte
 pnpm add @git-diff-view/solid
 pnpm add @git-diff-view/svelte
+
+# CLI (terminal / Ink)
+pnpm add @git-diff-view/cli
 ```
 
 **[View Examples](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui)** for React / Vue / Solid / Svelte
@@ -94,6 +97,32 @@ file.buildSplitDiffLines();
 
 **More examples:** [React](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/react-example) · [Vue](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/vue-example) · [Solid](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui/solid-example)
 
+### CLI (Terminal)
+
+Terminal-based diff viewer built with [Ink](https://github.com/vadimdemedes/ink). Supports Split/Unified views, syntax highlighting, and fixed-height viewport scrolling.
+
+```bash
+pnpm add @git-diff-view/cli
+```
+
+```tsx
+import { DiffView, DiffModeEnum } from "@git-diff-view/cli";
+
+<DiffView
+  data={{ oldFile, newFile, hunks }}
+  diffViewMode={DiffModeEnum.Split}
+  diffViewTheme="dark"
+  diffViewHighlight
+  width={120}
+  height={20}           // viewport height in visual rows (optional)
+  onScrollChange={console.log}
+/>
+```
+
+`CodeView` renders a single file; both components expose scroll ref methods (`scrollToTop`, `scrollDown`, `getScrollState`, etc.) when `height` is set.
+
+**Docs:** [`packages/cli/readme.md`](./packages/cli/readme.md) · [Scroll API](./packages/cli/readme.md#scroll-api) · [Implementation notes](./packages/cli/SCROLL.md)
+
 ## 📚 Packages
 
 **UI Frameworks**
@@ -101,7 +130,7 @@ file.buildSplitDiffLines();
 - [`@git-diff-view/vue`](https://www.npmjs.com/package/@git-diff-view/vue) - Vue component
 - [`@git-diff-view/solid`](https://www.npmjs.com/package/@git-diff-view/solid) - Solid component
 - [`@git-diff-view/svelte`](https://www.npmjs.com/package/@git-diff-view/svelte) - Svelte component
-- [`@git-diff-view/cli`](https://www.npmjs.com/package/@git-diff-view/cli) - CLI tool
+- [`@git-diff-view/cli`](https://www.npmjs.com/package/@git-diff-view/cli) - Terminal diff viewer (`DiffView`, `CodeView`, scroll API)
 
 **Core Libraries**
 - [`@git-diff-view/core`](https://www.npmjs.com/package/@git-diff-view/core) - Core diff engine (git diff)
@@ -123,6 +152,7 @@ file.buildSplitDiffLines();
 - ✅ **SSR & RSC** - Full server-side rendering support for React and Vue
 - ✅ **Diff Match Patch** - Enhanced line-level diff with FastDiff template
 - ✅ **Multiple Platforms** - React, Vue, Solid, Svelte, and CLI
+- ✅ **CLI Scroll Viewport** - Fixed-height terminal viewport with programmatic scroll (`@git-diff-view/cli`)
 
 ## ⚡ Advanced Features
 
@@ -230,7 +260,14 @@ git clone https://github.com/MrWangJustToDo/git-diff-view.git
 cd git-diff-view
 pnpm install
 pnpm run build:packages
-pnpm run dev:react  # or dev:vue, dev:solid, dev:svelte
+pnpm run dev:react  # or dev:vue, dev:solid, dev:svelte, dev:cli
+```
+
+**CLI scroll tests** (after `build:packages`):
+
+```bash
+pnpm --filter @git-diff-view/cli test:scroll
+pnpm --filter @git-diff-view/cli test:scroll:interactive:diffview
 ```
 
 ## 📄 License

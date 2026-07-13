@@ -1,6 +1,6 @@
 # Scroll Tests
 
-Manual and automated tests for the CodeView scroll API.
+Manual and automated tests for the CodeView and DiffView scroll APIs.
 
 ## Prerequisites
 
@@ -24,7 +24,7 @@ Runs:
 |------|----------|
 | `scroll-unit.test.mjs` | Pure scroll functions: clamp, computeScrollState, scrollToTop/Bottom, scrollUp/Down (visual + logical), slice |
 | `codeview-layout.test.mjs` | `buildCodeViewLayout`: empty file, narrow width, wrap, CJK, tabs, emoji, large files, scroll integration |
-| `diffview-layout.test.mjs` | `buildDiffViewScrollLayout`: unified/split, extend lines, visible slice + `ScrollState` |
+| `diffview-layout.test.mjs` | `iterateDiffDisplayEntries`, `buildDiffViewScrollLayout`: unified/split, first hunk skip, extend lines, iterator/layout alignment, visible slice + `ScrollState` |
 
 ### Edge cases covered
 
@@ -37,7 +37,10 @@ Runs:
 - 120-line file scroll targets
 - Boundary clamping (offset, line number)
 - Logical vs visual step scrolling
+- First hunk line skipped (matches rendering)
+- `iterateDiffDisplayEntries` sequence matches scroll layout
 - Line taller than viewport (`scrollToBottom`)
+- DiffView scroll without `height` (full render, no layout build)
 
 ## Interactive demo
 
