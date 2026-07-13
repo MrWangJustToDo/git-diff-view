@@ -7,6 +7,7 @@ import {
   scrollOffsetUp,
   scrollOffsetDown,
   sliceVisibleRows,
+  getEffectiveViewportHeight,
   EMPTY_SCROLL_LAYOUT,
 } from "@git-diff-view/cli";
 import assert from "node:assert/strict";
@@ -24,6 +25,18 @@ describe("scroll pure functions", () => {
 
     it("allows offset 0 when content fits viewport", () => {
       assert.equal(clampScrollOffset(5, 3, 10), 0);
+    });
+  });
+
+  describe("getEffectiveViewportHeight", () => {
+    it("returns content rows when max height is unset", () => {
+      assert.equal(getEffectiveViewportHeight(5), 5);
+      assert.equal(getEffectiveViewportHeight(0), 1);
+    });
+
+    it("shrinks to content when shorter than max height", () => {
+      assert.equal(getEffectiveViewportHeight(5, 20), 5);
+      assert.equal(getEffectiveViewportHeight(30, 20), 20);
     });
   });
 

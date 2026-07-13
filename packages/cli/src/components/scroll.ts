@@ -9,7 +9,7 @@ export type ScrollState = {
   totalLines: number;
   /** Total visual rows after wrap. */
   totalRows: number;
-  /** Viewport height in visual rows; equals totalRows when height prop is unset. */
+  /** Viewport height in visual rows; `min(height, totalRows)` when height is set. */
   viewportHeight: number;
   /** Top visual row offset (0-based). */
   scrollOffset: number;
@@ -71,6 +71,16 @@ export const EMPTY_SCROLL_LAYOUT: ScrollLayout = {
 export function clampScrollOffset(scrollOffset: number, totalRows: number, viewportHeight: number): number {
   const maxOffset = Math.max(0, totalRows - viewportHeight);
   return Math.max(0, Math.min(scrollOffset, maxOffset));
+}
+
+/**
+ * Effective viewport height in visual rows.
+ * When `maxHeight` is set, shrinks to content height if content is shorter (avoids trailing blank rows).
+ */
+export function getEffectiveViewportHeight(totalRows: number, maxHeight?: number): number {
+  const contentRows = Math.max(totalRows, 1);
+  if (maxHeight === undefined) return contentRows;
+  return Math.min(maxHeight, contentRows);
 }
 
 export function clampLineNumber(line: number, totalLines: number): number {
@@ -252,7 +262,8 @@ export function useScrollView({
     prevResetKeyRef.current = resetKey;
   }, [resetKey]);
 
-  const viewportHeight = height ?? Math.max(layout.totalRows, 1);
+  const hasFixedHeight = typeof height === "number";
+  const viewportHeight = getEffectiveViewportHeight(layout.totalRows, height);
   const effectiveOffset = clampScrollOffset(scrollOffset, layout.totalRows, viewportHeight);
 
   const setScrollOffset = useCallback((offset: number) => {
@@ -286,6 +297,6 @@ export function useScrollView({
     visibleOutput,
     scrollRef,
     viewportHeight,
-    hasFixedHeight: typeof height === "number",
+    hasFixedHeight,
   };
 }

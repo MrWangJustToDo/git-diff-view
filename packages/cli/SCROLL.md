@@ -128,6 +128,7 @@ Extend lines are custom React nodes. Scroll layout uses `diffViewExtendLineHeigh
 
 | Function | Purpose |
 |----------|---------|
+| `getEffectiveViewportHeight` | `min(height, totalRows)` for shrink-to-content viewport |
 | `computeScrollState` | Derive `ScrollState` from layout + offset |
 | `scrollOffsetToTopLine` | Target offset for `scrollToTop` |
 | `scrollOffsetToBottomLine` | Target offset for `scrollToBottom` |

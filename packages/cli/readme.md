@@ -201,6 +201,8 @@ Both `CodeView` and `DiffView` support a fixed-height viewport with programmatic
 
 Without `height`, the full content is rendered (backward compatible). `DiffView` skips scroll layout calculation in that case.
 
+When `height` is larger than the content, the viewport **shrinks to content height** (no trailing blank rows). `ScrollState.viewportHeight` reports the effective height.
+
 ### Shared types
 
 ```typescript
@@ -209,7 +211,7 @@ import type { ScrollState, ScrollViewRef } from "@git-diff-view/cli";
 type ScrollState = {
   totalLines: number;      // logical line count
   totalRows: number;       // visual row count after wrap
-  viewportHeight: number;
+  viewportHeight: number;  // min(height, totalRows) when height is set; else totalRows
   scrollOffset: number;    // top visual row (0-based)
   startLine: number;       // first visible logical line (includes partial clips)
   endLine: number;         // last visible logical line (includes partial clips)

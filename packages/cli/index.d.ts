@@ -1013,7 +1013,7 @@ export type ScrollState = {
 	totalLines: number;
 	/** Total visual rows after wrap. */
 	totalRows: number;
-	/** Viewport height in visual rows; equals totalRows when height prop is unset. */
+	/** Viewport height in visual rows; `min(height, totalRows)` when height is set. */
 	viewportHeight: number;
 	/** Top visual row offset (0-based). */
 	scrollOffset: number;
@@ -1060,6 +1060,11 @@ export type ScrollSlice = {
 };
 export declare const EMPTY_SCROLL_LAYOUT: ScrollLayout;
 export declare function clampScrollOffset(scrollOffset: number, totalRows: number, viewportHeight: number): number;
+/**
+ * Effective viewport height in visual rows.
+ * When `maxHeight` is set, shrinks to content height if content is shorter (avoids trailing blank rows).
+ */
+export declare function getEffectiveViewportHeight(totalRows: number, maxHeight?: number): number;
 export declare function clampLineNumber(line: number, totalLines: number): number;
 export declare function findLineLayout(layout: ScrollLayout, line: number): ScrollLineLayout | undefined;
 export declare function computeScrollState(layout: ScrollLayout, scrollOffset: number, viewportHeight: number): ScrollState;
