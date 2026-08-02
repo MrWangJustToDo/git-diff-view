@@ -219,11 +219,11 @@ importers:
         version: 1.6.0(react@19.2.0)
     devDependencies:
       '@my-react/react':
-        specifier: ^0.3.29
-        version: 0.3.29(react@19.2.0)
+        specifier: ^0.3.30
+        version: 0.3.30(react@19.2.0)
       '@my-react/react-terminal':
-        specifier: ^0.0.29
-        version: 0.0.29(@my-react/react@0.3.29(react@19.2.0))(@xterm/addon-fit@0.11.0)(@xterm/xterm@6.0.0)
+        specifier: ^0.0.30
+        version: 0.0.30(@my-react/react@0.3.30(react@19.2.0))(@xterm/addon-fit@0.11.0)(@xterm/xterm@6.0.0)
       '@types/react':
         specifier: ^19.2.2
         version: 19.2.2
@@ -625,14 +625,14 @@ importers:
         specifier: ^8.3.4
         version: 8.3.4(react@19.2.0)
       '@my-react/react':
-        specifier: ^0.3.29
-        version: 0.3.29(react@19.2.0)
+        specifier: ^0.3.30
+        version: 0.3.30(react@19.2.0)
       '@my-react/react-dom':
-        specifier: ^0.3.29
-        version: 0.3.29(@my-react/react@0.3.29(react@19.2.0))(react-dom@19.2.0(react@19.2.0))
+        specifier: ^0.3.30
+        version: 0.3.30(@my-react/react@0.3.30(react@19.2.0))(react-dom@19.2.0(react@19.2.0))
       '@my-react/react-terminal':
-        specifier: ^0.0.29
-        version: 0.0.29(@my-react/react@0.3.29(react@19.2.0))(@xterm/addon-fit@0.11.0)(@xterm/xterm@6.0.0)
+        specifier: ^0.0.30
+        version: 0.0.30(@my-react/react@0.3.30(react@19.2.0))(@xterm/addon-fit@0.11.0)(@xterm/xterm@6.0.0)
       '@tabler/icons-react':
         specifier: ^3.35.0
         version: 3.35.0(react@19.2.0)
@@ -656,11 +656,11 @@ importers:
         version: 0.4.0(react@19.2.0)
     devDependencies:
       '@my-react/react-refresh':
-        specifier: ^0.3.29
-        version: 0.3.29(@my-react/react@0.3.29(react@19.2.0))
+        specifier: ^0.3.30
+        version: 0.3.30(@my-react/react@0.3.30(react@19.2.0))
       '@my-react/react-vite':
-        specifier: ^0.0.35
-        version: 0.0.35(@my-react/react-refresh@0.3.29(@my-react/react@0.3.29(react@19.2.0)))(vite@5.4.20(@types/node@22.19.17)(sugarss@5.0.1(postcss@8.5.10))(terser@5.44.0))
+        specifier: ^0.0.36
+        version: 0.0.36(@my-react/react-refresh@0.3.30(@my-react/react@0.3.30(react@19.2.0)))(vite@5.4.20(@types/node@22.19.17)(sugarss@5.0.1(postcss@8.5.10))(terser@5.44.0))
       '@types/react':
         specifier: 'catalog:'
         version: 19.2.2
@@ -1706,26 +1706,26 @@ packages:
   '@microsoft/tsdoc@0.15.1':
     resolution: {integrity: sha512-4aErSrCR/On/e5G2hDP0wjooqDdauzEbIq8hIkIe5pXV0rtWJZvdCEKL0ykZxex+IxIwBp0eGeV48hQN07dXtw==}
 
-  '@my-react/react-dom@0.3.29':
-    resolution: {integrity: sha512-gKI3EWzV/BnTwf+ONkbn1VpXYMeawRWq3RGTUq2H/TigBfKF4oZNDcgVMUEo9Ery/T2EoopLIbTEIfcGtN9aPg==}
+  '@my-react/react-dom@0.3.30':
+    resolution: {integrity: sha512-1sdC2DQDVIWjRuMR2bnkA39EbBuzrTXROAx3ZWyMtKezSXKAYPYwlmvxO6j6uwTMfrmA9/HlC9n/tDqjKzFwFw==}
     peerDependencies:
-      '@my-react/react': '>=0.3.29'
+      '@my-react/react': '>=0.3.30'
       react-dom: ^17 || ^18 || ^19
 
-  '@my-react/react-jsx@0.3.29':
-    resolution: {integrity: sha512-lhvbYg0D5EtmKqy4EPymFKI3sQB7anEjOewMvxo3ySP6d2ZGMnySfWkTKBInHm8Rp1Ba9SNT/jxPlxR9e5lrlg==}
+  '@my-react/react-jsx@0.3.30':
+    resolution: {integrity: sha512-ubW1HIHs+qwdf3ib1P+S8i6Yj+iKclToTi2ImTFjnvTmBfi3utL0A+akvFg4I2W0i911tALVSahTiM6p9RCwHA==}
     peerDependencies:
-      '@my-react/react': '>=0.3.29'
+      '@my-react/react': '>=0.3.30'
 
-  '@my-react/react-refresh@0.3.29':
-    resolution: {integrity: sha512-wvFRih+JJ2aqlNGXLZo5/Go6hzXX5yu4TMRoQTCmHsrGCMQxdr3P/oz+21fKOaUb8Cvx1F+9H+BOvYo0CT5N7A==}
+  '@my-react/react-refresh@0.3.30':
+    resolution: {integrity: sha512-uUlCdwLg6D3/5ZM65Kcess57+XrOLXhx3T5K5XvLH4qw5+BMnnMRi7mGwhjQiV+ZSQw93pWXHKl/VEptLohw3g==}
     peerDependencies:
-      '@my-react/react': '>=0.3.29'
+      '@my-react/react': '>=0.3.30'
 
-  '@my-react/react-terminal@0.0.29':
-    resolution: {integrity: sha512-rt3DdKNth1pXf5F//sGyIep42aWJx8t3vEsaSRgXVJeoC+8eu02qJ+MRg4W4bTNstodIuhtRDJmUOgte4tgcNA==}
+  '@my-react/react-terminal@0.0.30':
+    resolution: {integrity: sha512-eevJjZcgMftw94KDjvu/UEqtkCWz366WN6+urcUClj7492tqQGK0vHJVozwRrIWiZ3LTXcoQ5CbCLoh4d6Zaiw==}
     peerDependencies:
-      '@my-react/react': '>=0.3.29'
+      '@my-react/react': '>=0.3.30'
       '@xterm/addon-fit': '>=0.11.0'
       '@xterm/xterm': '>=5.0.0 || >=6.0.0'
     peerDependenciesMeta:
@@ -1734,18 +1734,18 @@ packages:
       '@xterm/xterm':
         optional: true
 
-  '@my-react/react-vite@0.0.35':
-    resolution: {integrity: sha512-U1kUmFxefiyK2tgWCaa4WYGkMcSXOcXVDrocnM/zL7RvDayTCah8F6ihWsdmdhGqUfeUC3cSI3W8ugeLRQmGAQ==}
+  '@my-react/react-vite@0.0.36':
+    resolution: {integrity: sha512-HKmV/srDHQigBVX3w2xPvKSYE4uoRqdJ2SBqPGkN3PAiYAB8dpWzrvy9dr6Xm4+BQHgxP18/GIAt7T9xyHFxHw==}
     peerDependencies:
       '@lazarv/rsc': ^0.0.0-experimental
-      '@my-react/react-refresh': '>=0.3.29'
+      '@my-react/react-refresh': '>=0.3.30'
       vite: ^4.2.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
     peerDependenciesMeta:
       '@lazarv/rsc':
         optional: true
 
-  '@my-react/react@0.3.29':
-    resolution: {integrity: sha512-qX1ea0rHtShh1JuIzGX0DI5ZdJkuHS7IE72//5TXsBvjvrWX/rbWLpSd/F/Venp5uBmbAJFx9+px735veL8l0A==}
+  '@my-react/react@0.3.30':
+    resolution: {integrity: sha512-e8/D0UI6gB+Nm7ztB2EH0niokjNQgaf3JHf5klRi4CgBSncGl61JUW+oo7IzAyIsAb4bqlfaVYbZxZXPu5DvHw==}
     peerDependencies:
       react: ^17 || ^18 || ^19
 
@@ -7546,22 +7546,22 @@ snapshots:
 
   '@microsoft/tsdoc@0.15.1': {}
 
-  '@my-react/react-dom@0.3.29(@my-react/react@0.3.29(react@19.2.0))(react-dom@19.2.0(react@19.2.0))':
+  '@my-react/react-dom@0.3.30(@my-react/react@0.3.30(react@19.2.0))(react-dom@19.2.0(react@19.2.0))':
     dependencies:
-      '@my-react/react': 0.3.29(react@19.2.0)
+      '@my-react/react': 0.3.30(react@19.2.0)
       react-dom: 19.2.0(react@19.2.0)
 
-  '@my-react/react-jsx@0.3.29(@my-react/react@0.3.29(react@19.2.0))':
+  '@my-react/react-jsx@0.3.30(@my-react/react@0.3.30(react@19.2.0))':
     dependencies:
-      '@my-react/react': 0.3.29(react@19.2.0)
+      '@my-react/react': 0.3.30(react@19.2.0)
 
-  '@my-react/react-refresh@0.3.29(@my-react/react@0.3.29(react@19.2.0))':
+  '@my-react/react-refresh@0.3.30(@my-react/react@0.3.30(react@19.2.0))':
     dependencies:
-      '@my-react/react': 0.3.29(react@19.2.0)
+      '@my-react/react': 0.3.30(react@19.2.0)
 
-  '@my-react/react-terminal@0.0.29(@my-react/react@0.3.29(react@19.2.0))(@xterm/addon-fit@0.11.0)(@xterm/xterm@6.0.0)':
+  '@my-react/react-terminal@0.0.30(@my-react/react@0.3.30(react@19.2.0))(@xterm/addon-fit@0.11.0)(@xterm/xterm@6.0.0)':
     dependencies:
-      '@my-react/react': 0.3.29(react@19.2.0)
+      '@my-react/react': 0.3.30(react@19.2.0)
       ansi-escapes: 7.3.0
       ansi-styles: 6.2.3
       auto-bind: 5.0.1
@@ -7589,12 +7589,12 @@ snapshots:
       '@xterm/addon-fit': 0.11.0
       '@xterm/xterm': 6.0.0
 
-  '@my-react/react-vite@0.0.35(@my-react/react-refresh@0.3.29(@my-react/react@0.3.29(react@19.2.0)))(vite@5.4.20(@types/node@22.19.17)(sugarss@5.0.1(postcss@8.5.10))(terser@5.44.0))':
+  '@my-react/react-vite@0.0.36(@my-react/react-refresh@0.3.30(@my-react/react@0.3.30(react@19.2.0)))(vite@5.4.20(@types/node@22.19.17)(sugarss@5.0.1(postcss@8.5.10))(terser@5.44.0))':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.29.0)
       '@babel/plugin-transform-react-jsx-source': 7.27.1(@babel/core@7.29.0)
-      '@my-react/react-refresh': 0.3.29(@my-react/react@0.3.29(react@19.2.0))
+      '@my-react/react-refresh': 0.3.30(@my-react/react@0.3.30(react@19.2.0))
       '@rolldown/pluginutils': 1.0.0-rc.6
       es-module-lexer: 1.7.0
       estree-walker: 3.0.3
@@ -7605,9 +7605,9 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@my-react/react@0.3.29(react@19.2.0)':
+  '@my-react/react@0.3.30(react@19.2.0)':
     dependencies:
-      '@my-react/react-jsx': 0.3.29(@my-react/react@0.3.29(react@19.2.0))
+      '@my-react/react-jsx': 0.3.30(@my-react/react@0.3.30(react@19.2.0))
       react: 19.2.0
       react-compiler-runtime: 1.0.0(react@19.2.0)
 
