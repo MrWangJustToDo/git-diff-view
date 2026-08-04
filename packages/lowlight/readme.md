@@ -29,15 +29,23 @@ file.init();  // Automatically uses lowlight for syntax highlighting
 
 ## When to Use
 
-This is the default highlighter and suitable for most use cases. Consider [@git-diff-view/shiki](../shiki) if you need:
+This is the default highlighter and suitable for most use cases.
+
+Consider [@git-diff-view/shiki](../shiki) if you need:
 - More accurate syntax highlighting
 - VSCode-compatible themes
 - Better language grammar support
 
+Consider [@git-diff-view/lezer](../lezer) if you need:
+- Pure JS LR parsers (no WASM)
+- Constrained runtimes such as Lynx
+- Customizable Lezer tag colors
+
 ## Related Packages
 
 - [@git-diff-view/core](https://www.npmjs.com/package/@git-diff-view/core) - Core package that includes this
-- [@git-diff-view/shiki](https://www.npmjs.com/package/@git-diff-view/shiki) - Alternative highlighter
+- [@git-diff-view/shiki](https://www.npmjs.com/package/@git-diff-view/shiki) - Shiki highlighter
+- [@git-diff-view/lezer](https://www.npmjs.com/package/@git-diff-view/lezer) - Lezer highlighter
 - [lowlight](https://github.com/wooorm/lowlight) - Underlying library
 - [highlight.js](https://highlightjs.org/) - Language definitions
 

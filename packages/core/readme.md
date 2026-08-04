@@ -136,7 +136,9 @@ new DiffFile(
 - [@git-diff-view/react](https://www.npmjs.com/package/@git-diff-view/react) - React components
 - [@git-diff-view/vue](https://www.npmjs.com/package/@git-diff-view/vue) - Vue components
 - [@git-diff-view/file](https://www.npmjs.com/package/@git-diff-view/file) - File comparison mode
-- [@git-diff-view/lowlight](https://www.npmjs.com/package/@git-diff-view/lowlight) - Syntax highlighter
+- [@git-diff-view/lowlight](https://www.npmjs.com/package/@git-diff-view/lowlight) - Default syntax highlighter
+- [@git-diff-view/shiki](https://www.npmjs.com/package/@git-diff-view/shiki) - Shiki highlighter
+- [@git-diff-view/lezer](https://www.npmjs.com/package/@git-diff-view/lezer) - Lezer highlighter
 
 ## License
 

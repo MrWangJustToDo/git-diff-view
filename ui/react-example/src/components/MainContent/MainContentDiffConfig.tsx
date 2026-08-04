@@ -1,10 +1,17 @@
 import { DiffModeEnum } from "@git-diff-view/react";
-import { Button, Group, Tooltip, Collapse, NumberInput, Stack } from "@mantine/core";
+import { Button, Group, Tooltip, Collapse, NumberInput, Stack, Menu } from "@mantine/core";
+import { IconCheck, IconChevronDown } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
 import { useDiffConfig } from "../../hooks/useDiffConfig";
 
 import type { DiffFile } from "@git-diff-view/react";
+
+const highlightEngines = [
+  { value: "lowlight", label: "lowlight", description: "Built-in highlight.js" },
+  { value: "shiki", label: "shiki", description: "VS Code TextMate themes" },
+  { value: "lezer", label: "lezer", description: "CodeMirror LR parsers" },
+] as const;
 
 export const MainContentDiffConfig = ({ diffFile }: { diffFile?: DiffFile }) => {
   const {
@@ -68,11 +75,30 @@ export const MainContentDiffConfig = ({ diffFile }: { diffFile?: DiffFile }) => 
         <Tooltip label="highlight status">
           <Button onClick={() => setHighlight(!highlight)}>highlight {highlight ? "enable" : "disable"}</Button>
         </Tooltip>
-        <Tooltip label="highlight engine">
-          <Button disabled={!highlight} onClick={() => setEngine(engine === "lowlight" ? "shiki" : "lowlight")}>
-            {engine}
-          </Button>
-        </Tooltip>
+        <Menu shadow="md" width={220} position="bottom-start">
+          <Menu.Target>
+            <Button disabled={!highlight} rightSection={<IconChevronDown size={14} />}>
+              {engine}
+            </Button>
+          </Menu.Target>
+          <Menu.Dropdown>
+            <Menu.Label>Highlight engine</Menu.Label>
+            {highlightEngines.map((item) => (
+              <Menu.Item
+                key={item.value}
+                leftSection={
+                  engine === item.value ? <IconCheck size={14} /> : <span className="inline-block w-[14px]" />
+                }
+                onClick={() => setEngine(item.value)}
+              >
+                <Stack gap={0}>
+                  <span>{item.label}</span>
+                  <span className="text-xs opacity-60">{item.description}</span>
+                </Stack>
+              </Menu.Item>
+            ))}
+          </Menu.Dropdown>
+        </Menu>
         <Tooltip label="expand all lines">
           <Button
             onClick={() => {

@@ -6,7 +6,7 @@ type DiffConfig = {
   wrap: boolean;
   fontsize: number;
   mode: DiffModeEnum;
-  engine: "lowlight" | "shiki";
+  engine: "lowlight" | "shiki" | "lezer";
   tabSpace: boolean;
   fastDiff: boolean;
   autoExpandCommentLine: boolean;
@@ -53,7 +53,7 @@ export const useDiffConfig = createState(
             state.mode = v;
           }
         },
-        setEngine: (v: "lowlight" | "shiki") => {
+        setEngine: (v: "lowlight" | "shiki" | "lezer") => {
           if (v !== state.engine) {
             state.engine = v;
           }

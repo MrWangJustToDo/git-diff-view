@@ -199,7 +199,6 @@ export const MainContentDiffExample = ({ onUpdate }: { onUpdate?: (diffFile: Dif
           highlighter={highlighter}
           refreshDiffFile={refreshFile}
         />
-        // <MainContentDiffExampleView diffFile={diffFile} highlighter={highlighter} refreshDiffFile={refreshFile} />
       )}
     </>
   );

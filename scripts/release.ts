@@ -9,6 +9,7 @@ const pkgNameAlias = {
   "@git-diff-view/react": "react",
   "@git-diff-view/lowlight": "lowlight",
   "@git-diff-view/shiki": "shiki",
+  "@git-diff-view/lezer": "lezer",
   "@git-diff-view/solid": "solid",
   "@git-diff-view/svelte": "svelte",
   "@git-diff-view/cli": "cli",
@@ -68,6 +69,7 @@ const run = async () => {
   console.log("start release @git-dff-view packages");
   await release("@git-diff-view/lowlight");
   await release("@git-diff-view/shiki");
+  await release("@git-diff-view/lezer");
   await release("@git-diff-view/core");
   await release("@git-diff-view/file");
   await release("@git-diff-view/react");

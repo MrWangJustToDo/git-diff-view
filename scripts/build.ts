@@ -30,6 +30,11 @@ const buildShiki = async () => {
   await buildType("shiki");
 };
 
+const buildLezer = async () => {
+  await rollupBuild({ packageName: "lezer", packageScope: "packages", external: external });
+  await buildType("lezer");
+};
+
 const buildUtils = async () => {
   await rollupBuild({ packageName: "utils", packageScope: "packages", external: externalCorePackage });
   await buildType("utils");
@@ -117,6 +122,7 @@ const start = async () => {
   await buildUtils();
   await buildLowlight();
   await buildShiki();
+  await buildLezer();
   await buildCore();
   await buildFile();
   await buildCli();
@@ -128,6 +134,8 @@ const start = async () => {
 };
 
 start();
+
+// buildLezer();
 
 // buildCore();
 

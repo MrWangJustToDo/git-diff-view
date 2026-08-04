@@ -92,14 +92,15 @@ Accepts standard [Shiki configuration options](https://shiki.style/guide/install
 
 ## Comparison
 
-| Feature | @git-diff-view/lowlight | @git-diff-view/shiki |
-|---------|------------------------|---------------------|
-| Default | ✅ Built-in | ❌ Separate package |
-| Setup | No setup needed | Async initialization |
-| Accuracy | Good | Excellent (VSCode-level) |
-| Themes | highlight.js themes | VSCode themes |
-| Bundle Size | Smaller | Larger |
-| Performance | Synchronous | Async |
+| Feature | @git-diff-view/lowlight | @git-diff-view/shiki | @git-diff-view/lezer |
+|---------|------------------------|---------------------|---------------------|
+| Default | ✅ Built-in | ❌ Separate package | ❌ Separate package |
+| Setup | No setup needed | Async initialization | Sync parse / async API |
+| Accuracy | Good | Excellent (VSCode-level) | Strong (LR grammar) |
+| Themes | highlight.js themes | VSCode themes | GitHub-like CSS variables |
+| Bundle Size | Smaller | Larger | Medium (per-language) |
+| WASM | No | Optional | No |
+| Constrained runtimes | Limited | Limited | Stronger fit |
 
 ## When to Use
 
@@ -115,10 +116,16 @@ Use **@git-diff-view/lowlight** (default) when:
 - Synchronous initialization is preferred
 - Basic highlighting is sufficient
 
+Use **[@git-diff-view/lezer](../lezer)** when:
+- You need pure JS parsers (no WASM / Node)
+- Targeting constrained runtimes such as Lynx
+- CodeMirror-quality LR grammars are enough
+
 ## Related Packages
 
 - [@git-diff-view/core](https://www.npmjs.com/package/@git-diff-view/core) - Core diff engine
 - [@git-diff-view/lowlight](https://www.npmjs.com/package/@git-diff-view/lowlight) - Default highlighter
+- [@git-diff-view/lezer](https://www.npmjs.com/package/@git-diff-view/lezer) - Lezer highlighter
 - [Shiki](https://shiki.style/) - Underlying library
 
 ## License

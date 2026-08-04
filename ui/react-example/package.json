@@ -13,6 +13,7 @@
     "@codesandbox/sandpack-react": "^2.20.0",
     "@git-diff-view/cli": "workspace:*",
     "@git-diff-view/file": "workspace:*",
+    "@git-diff-view/lezer": "workspace:*",
     "@git-diff-view/react": "workspace:*",
     "@git-diff-view/shiki": "workspace:*",
     "@git-diff-view/vue": "workspace:*",

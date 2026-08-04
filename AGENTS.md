@@ -135,6 +135,7 @@ packages/
   utils/          # Shared utilities (@git-diff-view/utils)
   lowlight/       # Lowlight syntax highlighter
   shiki/          # Shiki syntax highlighter
+  lezer/          # Lezer syntax highlighter
 ui/
   react-example/  # React demo app (Vite)
   vue-example/    # Vue demo app (Vite)
@@ -148,7 +149,7 @@ scripts/          # Build scripts (ts-node)
 - `@git-diff-view/core` is the foundation (all framework packages depend on it)
 - Framework packages (react, vue, solid, svelte) wrap the core
 - `@git-diff-view/file` provides file-to-file comparison using the `diff` library
-- Syntax highlighting via `lowlight` (highlight.js) or `shiki`
+- Syntax highlighting via `lowlight` (highlight.js), `shiki`, or `lezer`
 
 ## ESLint Configuration
 

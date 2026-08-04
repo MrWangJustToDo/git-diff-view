@@ -74,7 +74,7 @@ const frameworkPills = [
 
 const capabilities = [
   { icon: IconColumns, label: "Split & Unified", description: "Both diff view modes with full feature parity" },
-  { icon: IconHighlight, label: "Syntax Highlighting", description: "Shiki or Lowlight powered, theme-aware" },
+  { icon: IconHighlight, label: "Syntax Highlighting", description: "Lowlight, Shiki or Lezer powered, theme-aware" },
   { icon: IconTextWrap, label: "Line Wrap", description: "Long lines wrap gracefully with proper alignment" },
   { icon: IconBraces, label: "Extensible API", description: "Widgets, extend lines, custom renderers and more" },
 ];

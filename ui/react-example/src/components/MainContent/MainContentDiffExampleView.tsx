@@ -1,3 +1,4 @@
+import { highlighter as lezerHighlighter } from "@git-diff-view/lezer";
 import { SplitSide, disableCache, highlighter as buildInHighlighter } from "@git-diff-view/react";
 import { Box, Button, Card, CloseButton, Group, Stack, useMantineColorScheme, Text } from "@mantine/core";
 import { usePrevious } from "@mantine/hooks";
@@ -69,6 +70,12 @@ export const MainContentDiffExampleView = memo(
       }
     }, [autoExpandCommentLine, prevAutoExpandCommentLine]);
 
+    const registerHighlighter = useMemo(() => {
+      if (engine === "lowlight") return buildInHighlighter;
+      if (engine === "lezer") return lezerHighlighter;
+      return highlighter;
+    }, [engine, highlighter]);
+
     const finalDiffFile = useMemo(() => {
       if (rangeMode && rangeStart && rangeEnd && rangeStart < rangeEnd) {
         return diffFile.generateInstanceFromLineNumberRange(rangeStart, rangeEnd);
@@ -85,6 +92,7 @@ export const MainContentDiffExampleView = memo(
           diffViewMode={mode}
           diffViewWrap={wrap}
           diffViewAddWidget
+          registerHighlighter={registerHighlighter}
           renderWidgetLine={({ side, lineNumber, onClose }) => {
             // render scope have a high level tailwind default style, next release should fix this
             return (
@@ -151,7 +159,6 @@ export const MainContentDiffExampleView = memo(
               </Box>
             );
           }}
-          registerHighlighter={engine === "lowlight" ? buildInHighlighter : highlighter}
           diffViewFontSize={13}
         />
       </Box>

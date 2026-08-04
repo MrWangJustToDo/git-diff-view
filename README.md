@@ -14,7 +14,7 @@
 
 ## ✨ Highlights
 
-- 🎨 **Full Syntax Highlighting** - Complete syntax context based on HAST AST
+- 🎨 **Full Syntax Highlighting** - HAST AST highlighting via Lowlight / Shiki / Lezer
 - ⚡ **High Performance** - Web Worker & Node Server support, template mode optimization
 - 🎯 **Framework Agnostic** - React, Vue, Solid, Svelte, and CLI support
 - 🔧 **Highly Customizable** - Widgets, extend data, themes, and flexible rendering
@@ -137,13 +137,31 @@ import { DiffView, DiffModeEnum } from "@git-diff-view/cli";
 - [`@git-diff-view/file`](https://www.npmjs.com/package/@git-diff-view/file) - File comparison engine
 
 **Syntax Highlighters**
-- [`@git-diff-view/lowlight`](https://www.npmjs.com/package/@git-diff-view/lowlight) - Built-in highlighter
-- [`@git-diff-view/shiki`](https://www.npmjs.com/package/@git-diff-view/shiki) - Shiki integration
+- [`@git-diff-view/lowlight`](https://www.npmjs.com/package/@git-diff-view/lowlight) - Built-in highlighter (highlight.js)
+- [`@git-diff-view/shiki`](https://www.npmjs.com/package/@git-diff-view/shiki) - Shiki / TextMate (VS Code quality)
+- [`@git-diff-view/lezer`](https://www.npmjs.com/package/@git-diff-view/lezer) - Lezer LR parsers (pure JS, no WASM)
+
+| Package | Engine | Best for |
+|---------|--------|----------|
+| `lowlight` | highlight.js | Default, broad language coverage |
+| `shiki` | TextMate / Shiki | Highest accuracy & VS Code themes |
+| `lezer` | CodeMirror Lezer | Constrained runtimes (e.g. Lynx), no WASM |
+
+```tsx
+import { DiffFile } from "@git-diff-view/core";
+import { getDiffViewHighlighter } from "@git-diff-view/shiki";
+// or: import { highlighter } from "@git-diff-view/lezer";
+
+const highlighter = await getDiffViewHighlighter();
+diffFile.initSyntax({ registerHighlighter: highlighter });
+```
+
+Try switching engines in the [live demo](https://mrwangjusttodo.github.io/git-diff-view/) homepage example (lowlight / shiki / lezer menu).
 
 ## 🎯 Key Features
 
 - ✅ **Split & Unified Views** - Switch between side-by-side and unified diff modes
-- ✅ **Full Syntax Highlighting** - Complete context-aware syntax highlighting with HAST AST
+- ✅ **Full Syntax Highlighting** - Lowlight, Shiki, or Lezer via the same HAST pipeline
 - ✅ **Light & Dark Themes** - Built-in theme support with customization
 - ✅ **Line Wrapping** - Toggle line wrapping for long code lines
 - ✅ **Widget System** - Add custom interactive widgets to diff lines
