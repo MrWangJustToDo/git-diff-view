@@ -6,7 +6,7 @@
 
 # Git Diff View
 
-**A high-performance, feature-rich diff view component for React / Vue / Solid / Svelte**
+**A high-performance, feature-rich diff view component for React / Vue / Solid / Svelte / Lynx**
 
 [![Deploy](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml/badge.svg)](https://github.com/MrWangJustToDo/git-diff-view/actions/workflows/deploy.yml)
 ![NPM Downloads](https://img.shields.io/npm/dm/%40git-diff-view%2Fcore)
@@ -16,7 +16,7 @@
 
 - 🎨 **Full Syntax Highlighting** - HAST AST highlighting via Lowlight / Shiki / Lezer
 - ⚡ **High Performance** - Web Worker & Node Server support, template mode optimization
-- 🎯 **Framework Agnostic** - React, Vue, Solid, Svelte, and CLI support
+- 🎯 **Framework Agnostic** - React, Vue, Solid, Svelte, Lynx (ReactLynx), and CLI support
 - 🔧 **Highly Customizable** - Widgets, extend data, themes, and flexible rendering
 - 📦 **Multiple Modes** - Git diff or file comparison with Split/Unified views
 - 🌗 **SSR/RSC Ready** - Full server-side rendering and React Server Components support
@@ -51,11 +51,14 @@ pnpm add @git-diff-view/vue
 pnpm add @git-diff-view/solid
 pnpm add @git-diff-view/svelte
 
+# ReactLynx (Lynx)
+pnpm add @git-diff-view/lynx
+
 # CLI (terminal / Ink)
 pnpm add @git-diff-view/cli
 ```
 
-**[View Examples](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui)** for React / Vue / Solid / Svelte
+**[View Examples](https://github.com/MrWangJustToDo/git-diff-view/tree/main/ui)** for React / Vue / Solid / Svelte / Lynx
 
 ## 🚀 Quick Start
 
@@ -130,6 +133,7 @@ import { DiffView, DiffModeEnum } from "@git-diff-view/cli";
 - [`@git-diff-view/vue`](https://www.npmjs.com/package/@git-diff-view/vue) - Vue component
 - [`@git-diff-view/solid`](https://www.npmjs.com/package/@git-diff-view/solid) - Solid component
 - [`@git-diff-view/svelte`](https://www.npmjs.com/package/@git-diff-view/svelte) - Svelte component
+- [`@git-diff-view/lynx`](https://www.npmjs.com/package/@git-diff-view/lynx) - ReactLynx DiffView (wrap-first Split/Unified)
 - [`@git-diff-view/cli`](https://www.npmjs.com/package/@git-diff-view/cli) - Terminal diff viewer (`DiffView`, `CodeView`, scroll API)
 
 **Core Libraries**
@@ -169,8 +173,9 @@ Try switching engines in the [live demo](https://mrwangjusttodo.github.io/git-di
 - ✅ **Web Worker Support** - Offload processing for better performance
 - ✅ **SSR & RSC** - Full server-side rendering support for React and Vue
 - ✅ **Diff Match Patch** - Enhanced line-level diff with FastDiff template
-- ✅ **Multiple Platforms** - React, Vue, Solid, Svelte, and CLI
+- ✅ **Multiple Platforms** - React, Vue, Solid, Svelte, Lynx, and CLI
 - ✅ **CLI Scroll Viewport** - Fixed-height terminal viewport with programmatic scroll (`@git-diff-view/cli`)
+- ✅ **Lynx DiffView** - Wrap-first Split/Unified on ReactLynx (`@git-diff-view/lynx`)
 
 ## ⚡ Advanced Features
 
