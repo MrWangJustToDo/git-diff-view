@@ -7,6 +7,7 @@ const pkgNameAlias = {
   "@git-diff-view/vue": "vue",
   "@git-diff-view/file": "file",
   "@git-diff-view/react": "react",
+  "@git-diff-view/octane": "octane",
   "@git-diff-view/lowlight": "lowlight",
   "@git-diff-view/shiki": "shiki",
   "@git-diff-view/lezer": "lezer",
@@ -73,6 +74,7 @@ const run = async () => {
   await release("@git-diff-view/core");
   await release("@git-diff-view/file");
   await release("@git-diff-view/react");
+  await release("@git-diff-view/octane");
   await release("@git-diff-view/vue");
   await release("@git-diff-view/solid");
   await release("@git-diff-view/svelte");

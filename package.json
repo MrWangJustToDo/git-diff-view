@@ -30,6 +30,7 @@
     "@git-diff-view/cli": "workspace:*",
     "@git-diff-view/core": "workspace:*",
     "@git-diff-view/file": "workspace:*",
+    "@git-diff-view/octane": "workspace:*",
     "@git-diff-view/react": "workspace:*",
     "@git-diff-view/lezer": "workspace:*",
     "@git-diff-view/shiki": "workspace:*",

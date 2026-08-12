@@ -70,6 +70,14 @@ const buildReact = async () => {
   await copyCss("react", "diff-view-pure.css");
 };
 
+const buildOctane = async () => {
+  await new Promise<void>((resolve, reject) => {
+    const process = spawn("pnpm run build", { cwd: "packages/octane", shell: true, stdio: "inherit" });
+    process.on("close", (code) => (code === 0 ? resolve() : reject(new Error(`Octane build exited with ${code}`))));
+    process.on("error", reject);
+  });
+};
+
 const buildCli = async () => {
   await rollupBuild({
     packageName: "cli",
@@ -127,6 +135,7 @@ const start = async () => {
   await buildFile();
   await buildCli();
   await buildReact();
+  await buildOctane();
   await buildSolid();
   await buildSvelte();
   await buildVue();
