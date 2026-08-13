@@ -56,7 +56,7 @@
     "fast-diff": "^1.3.0",
     "highlight.js": "^11.11.0",
     "lowlight": "^3.3.0",
-    "reactivity-store": "^0.4.0"
+    "reactivity-store": "github:zhsama/reactivity-store#path:packages/r-store&2f12accdcc56a62a32fe2ef569bca5f7a33ddd7c"
   },
   "peerDependencies": {
     "octane": ">=0.1.36 <0.2.0"

@@ -25,11 +25,6 @@
     "clean": "pnpm -p -r -c exec rm -rf dist dev .cache",
     "purge": "pnpm -p -r -c exec rm -rf node_modules"
   },
-  "pnpm": {
-    "overrides": {
-      "@git-diff-view/octane>reactivity-store": "github:zhsama/reactivity-store#path:packages/r-store&3b16294fc1bd67ce567d94920e65bdc8322b2cda"
-    }
-  },
   "packageManager": "pnpm@9.12.0",
   "devDependencies": {
     "@git-diff-view/cli": "workspace:*",
