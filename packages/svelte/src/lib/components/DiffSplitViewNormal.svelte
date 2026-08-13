@@ -66,7 +66,7 @@
 
 	const width = $derived.by(useTextWidth({ text: () => maxText, font: () => font }));
 
-	const computedWidth = $derived.by(() => Math.max(40, width + 25));
+	const computedWidth = $derived.by(() => Math.max(40, width + 20));
 
 	const getId = () => `diff-split-view-${props.diffFile.getId()}`;
 </script>

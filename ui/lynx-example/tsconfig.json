@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "@lynx-js/react",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "target": "ESNext",
+    "lib": ["ES2022"],
+    "types": ["@lynx-js/types"]
+  },
+  "include": ["src"]
+}

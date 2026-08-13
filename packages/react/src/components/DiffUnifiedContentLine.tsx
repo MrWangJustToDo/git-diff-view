@@ -51,13 +51,13 @@ const DiffUnifiedOldLine = ({
   return (
     <tr data-line={index} data-state="diff" className="diff-line group">
       <td
-        className="diff-line-num sticky left-0 z-[1] w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
+        className="diff-line-num sticky left-0 z-[1] w-[1%] select-none whitespace-nowrap pl-[5px] pr-[5px] text-right align-top"
         style={{
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${delLineNumberBGName})`,
-          width: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
-          maxWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
-          minWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
+          width: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
+          maxWidth: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
+          minWidth: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
         }}
       >
         {enableAddWidget && (
@@ -74,7 +74,7 @@ const DiffUnifiedOldLine = ({
           <span data-line-old-num={lineNumber} className="inline-block w-[50%]">
             {lineNumber}
           </span>
-          <span className="w-[10px] shrink-0" />
+          <span className="w-[8px] shrink-0" />
           <span className="inline-block w-[50%]" />
         </div>
       </td>
@@ -123,13 +123,13 @@ const DiffUnifiedNewLine = ({
   return (
     <tr data-line={index} data-state="diff" className="diff-line group">
       <td
-        className="diff-line-num sticky left-0 z-[1] w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
+        className="diff-line-num sticky left-0 z-[1] w-[1%] select-none whitespace-nowrap pl-[5px] pr-[5px] text-right align-top"
         style={{
           color: `var(${plainLineNumberColorName})`,
           backgroundColor: `var(${addLineNumberBGName})`,
-          width: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
-          maxWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
-          minWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
+          width: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
+          maxWidth: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
+          minWidth: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
         }}
       >
         {enableAddWidget && (
@@ -144,7 +144,7 @@ const DiffUnifiedNewLine = ({
         )}
         <div className="flex">
           <span className="inline-block w-[50%]" />
-          <span className="w-[10px] shrink-0" />
+          <span className="w-[8px] shrink-0" />
           <span data-line-new-num={lineNumber} className="inline-block w-[50%]">
             {lineNumber}
           </span>
@@ -254,12 +254,12 @@ const InternalDiffUnifiedLine = ({
     return (
       <tr data-line={lineNumber} data-state={unifiedLine.diff ? "diff" : "plain"} className="diff-line group">
         <td
-          className="diff-line-num sticky left-0 z-[1] w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
+          className="diff-line-num sticky left-0 z-[1] w-[1%] select-none whitespace-nowrap pl-[5px] pr-[5px] text-right align-top"
           style={{
             color: `var(${hasDiff ? plainLineNumberColorName : expandLineNumberColorName})`,
-            width: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
-            maxWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
-            minWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
+            width: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
+            maxWidth: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
+            minWidth: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
             backgroundColor: hasDiff ? `var(${plainLineNumberBGName})` : `var(${expandContentBGName})`,
           }}
         >
@@ -277,7 +277,7 @@ const InternalDiffUnifiedLine = ({
             <span data-line-old-num={unifiedLine.oldLineNumber} className="inline-block w-[50%]">
               {unifiedLine.oldLineNumber}
             </span>
-            <span className="w-[10px] shrink-0" />
+            <span className="w-[8px] shrink-0" />
             <span data-line-new-num={unifiedLine.newLineNumber} className="inline-block w-[50%]">
               {unifiedLine.newLineNumber}
             </span>

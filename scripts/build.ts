@@ -79,6 +79,17 @@ const buildCli = async () => {
   await buildType("cli");
 };
 
+const buildLynx = async () => {
+  await rollupBuild({
+    packageName: "lynx",
+    packageScope: "packages",
+    external: external,
+  });
+  await buildCss("lynx");
+  await buildType("lynx");
+  await copyCss("lynx", "diff-view.css");
+};
+
 const buildSolid = async () => {
   await new Promise<void>((r, j) => {
     const ls = spawn(`cd packages/solid && pnpm run build`, { shell: true, stdio: "inherit" });
@@ -127,6 +138,7 @@ const start = async () => {
   await buildFile();
   await buildCli();
   await buildReact();
+  await buildLynx();
   await buildSolid();
   await buildSvelte();
   await buildVue();
@@ -134,6 +146,8 @@ const start = async () => {
 };
 
 start();
+
+// buildLynx();
 
 // buildLezer();
 

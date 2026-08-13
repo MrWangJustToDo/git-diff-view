@@ -1,0 +1,5 @@
+@import "./styles/theme.css";
+@import "./styles/diff-view.css";
+
+@tailwind components;
+@tailwind utilities;

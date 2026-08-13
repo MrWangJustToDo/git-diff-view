@@ -1,0 +1,26 @@
+{
+  "name": "lynx-example",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "rspeedy dev",
+    "build": "rspeedy build",
+    "preview": "rspeedy preview"
+  },
+  "dependencies": {
+    "@git-diff-view/lezer": "workspace:*",
+    "@git-diff-view/lynx": "workspace:*",
+    "@lynx-js/react": "^0.123.0"
+  },
+  "devDependencies": {
+    "@lynx-js/react-rsbuild-plugin": "*",
+    "@lynx-js/rspeedy": "*",
+    "@lynx-js/tailwind-preset": "^0.5.0",
+    "@lynx-js/types": "*",
+    "postcss": "^8.5.25",
+    "rsbuild-plugin-tailwindcss": "^0.2.4",
+    "tailwindcss": "3",
+    "typescript": "catalog:"
+  }
+}

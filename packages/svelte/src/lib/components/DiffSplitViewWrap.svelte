@@ -110,7 +110,7 @@
 
 	const width = $derived.by(useTextWidth({ text: () => maxText, font: () => font }));
 
-	const memoWidth = $derived.by(() => Math.max(40, width + 25));
+	const memoWidth = $derived.by(() => Math.max(40, width + 20));
 </script>
 
 <div class="split-diff-view split-diff-view-warp w-full">
