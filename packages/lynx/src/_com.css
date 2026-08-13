@@ -1,0 +1,16 @@
+/* Component chrome kept outside Tailwind (surfaces use CSS vars — Lynx-reliable stylesheet path).
+ * Layout utilities come from @tailwind via src/tailwind.css.
+ */
+
+.diff-view-lynx-scroll {
+  width: 100%;
+  flex: 1;
+}
+
+.diff-line-content-text {
+  white-space: pre-wrap;
+}
+
+.diff-extend.diff-extend-column {
+  flex-direction: column;
+}

@@ -1,0 +1,111 @@
+/* Lynx theming: define CSS vars on class themes (not [data-theme] alone). */
+.diff-view-lynx.theme-light {
+  --diff-add-content--: #e6ffec;
+  --diff-del-content--: #ffebe9;
+  --diff-plain-content--: #ffffff;
+  --diff-expand-content--: #fafafa;
+  --diff-empty-content--: #fafafa;
+  --diff-add-lineNumber--: #ccffd8;
+  --diff-del-lineNumber--: #ffd7d5;
+  --diff-plain-lineNumber--: #fafafa;
+  --diff-expand-lineNumber--: #fafafa;
+  --diff-hunk-lineNumber--: #c7ecff;
+  --diff-plain-content-color--: #24292e;
+  --diff-plain-lineNumber-color--: #555555;
+  /* Context / expand nums: slightly more muted than diff nums (split parity via opacity + hue). */
+  --diff-expand-lineNumber-color--: #8b949e;
+  --diff-hunk-content-color--: #777777;
+  --diff-add-content-highlight--: #abf2bc;
+  --diff-del-content-highlight--: #ffb3ad;
+  --diff-hunk-content--: #ddf4ff;
+  --diff-border--: #dedede;
+  --diff-font-size--: 13px;
+}
+
+.diff-view-lynx.theme-dark {
+  --diff-add-content--: #14261f;
+  --diff-del-content--: #311b1f;
+  --diff-plain-content--: #0d1117;
+  --diff-expand-content--: #161b22;
+  --diff-empty-content--: #161b22;
+  --diff-add-lineNumber--: #1f4429;
+  --diff-del-lineNumber--: #552527;
+  --diff-plain-lineNumber--: #161b22;
+  --diff-expand-lineNumber--: #161b22;
+  --diff-hunk-lineNumber--: #204274;
+  /* Match react dark `[data-state] { color: white }` — content text had no FG and stayed black. */
+  --diff-plain-content-color--: #e6edf3;
+  --diff-plain-lineNumber-color--: #a0aaab;
+  --diff-expand-lineNumber-color--: #6e7681;
+  --diff-hunk-content-color--: #9298a0;
+  --diff-add-content-highlight--: #1f572d;
+  --diff-del-content-highlight--: #80312f;
+  --diff-hunk-content--: #131d2e;
+  --diff-border--: #3d444d;
+  --diff-font-size--: 13px;
+}
+
+/* Surfaces — consume vars in stylesheet (Lynx-reliable). Do not use var() in inline styles. */
+.diff-surface-add {
+  background-color: var(--diff-add-content--);
+}
+.diff-surface-del {
+  background-color: var(--diff-del-content--);
+}
+.diff-surface-plain {
+  background-color: var(--diff-plain-content--);
+}
+.diff-surface-expand {
+  background-color: var(--diff-expand-content--);
+}
+.diff-surface-empty {
+  background-color: var(--diff-empty-content--);
+}
+.diff-surface-hunk {
+  background-color: var(--diff-hunk-content--);
+}
+.diff-surface-hunk-num {
+  background-color: var(--diff-hunk-lineNumber--);
+}
+.diff-surface-add-num {
+  background-color: var(--diff-add-lineNumber--);
+}
+.diff-surface-del-num {
+  background-color: var(--diff-del-lineNumber--);
+}
+.diff-surface-plain-num {
+  background-color: var(--diff-plain-lineNumber--);
+}
+.diff-surface-expand-num {
+  background-color: var(--diff-expand-lineNumber--);
+}
+
+.diff-fg-num {
+  color: var(--diff-plain-lineNumber-color--);
+}
+.diff-fg-num-expand {
+  color: var(--diff-expand-lineNumber-color--);
+}
+.diff-fg-hunk {
+  color: var(--diff-hunk-content-color--);
+}
+/* Base content / operator text (plain runs have no inline color). */
+.diff-fg-content {
+  color: var(--diff-plain-content-color--);
+}
+
+.diff-border-bg {
+  background-color: var(--diff-border--);
+}
+
+.diff-inline-hl-add {
+  background-color: var(--diff-add-content-highlight--);
+}
+.diff-inline-hl-del {
+  background-color: var(--diff-del-content-highlight--);
+}
+
+/* Match DOM hunk action: `color: var(--diff-plain-lineNumber-color--)` + icon fill-current. */
+.diff-hunk-action {
+  color: var(--diff-plain-lineNumber-color--);
+}

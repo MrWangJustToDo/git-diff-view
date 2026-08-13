@@ -1,5 +1,5 @@
 /**
- * Theme helpers for Lynx — colors live in CSS variables (theme.css).
+ * Theme helpers for Lynx — colors live in CSS variables (`_theme.css`).
  * Prefer className + stylesheet `var(--*)` over inline `var()` / hex.
  */
 

@@ -9,7 +9,7 @@ import { useDiffViewContext } from "./DiffViewContext";
 
 type IconProps = { size?: number };
 
-/** Keep in sync with `--diff-plain-lineNumber-color--` in theme.css / react `_com.css`. */
+/** Keep in sync with `--diff-plain-lineNumber-color--` in `_theme.css` / react `_com.css`. */
 const PLAIN_LINE_NUMBER_COLOR = { light: "#555555", dark: "#a0aaab" } as const;
 
 /** `A.25.25` / `a.75.75` → `A 0.25 0.25` / `a 0.75 0.75` */
