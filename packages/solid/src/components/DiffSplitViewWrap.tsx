@@ -97,7 +97,7 @@ export const DiffSplitViewWrap = (props: { diffFile: DiffFile }) => {
 
   const width = useTextWidth({ text: maxText, font });
 
-  const memoWidth = createMemo(() => Math.max(40, width() + 25));
+  const memoWidth = createMemo(() => Math.max(40, width() + 20));
 
   return (
     <div class="split-diff-view split-diff-view-warp w-full">

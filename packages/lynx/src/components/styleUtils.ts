@@ -38,13 +38,13 @@ export const getStyleFromClassName = memoFunc((className: string) => {
 /** ~monospace digit advance (Menlo/Consolas), no canvas on Lynx. */
 const DIGIT_EM = 0.62;
 
-/** Split: 大空白 + 行号 + 小空白 */
+/** Split: pad + 行号 + pad — keep in sync with @git-diff-view/utils size.ts */
 export const SPLIT_NUM_PAD_START = 10;
-export const SPLIT_NUM_PAD_END = 4;
+export const SPLIT_NUM_PAD_END = 10;
 
-/** Unified: 小空白 + 行号 + 中空白 + 行号 + 小空白 */
-export const UNIFIED_NUM_PAD_EDGE = 4;
-export const UNIFIED_NUM_PAD_MID = 10;
+/** Unified: edge + 行号 + mid + 行号 + edge */
+export const UNIFIED_NUM_PAD_EDGE = 5;
+export const UNIFIED_NUM_PAD_MID = 8;
 
 export const estimateDigitWidth = (lineCount: number, fontSize: number) => {
   const digits = Math.max(1, String(Math.max(1, lineCount)).length);

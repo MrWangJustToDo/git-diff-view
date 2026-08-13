@@ -60,13 +60,13 @@ export const DiffUnifiedHunkLine = (props: { index: number; diffFile: DiffFile; 
     <Show when={currentIsShow() || currentIsPureHunk()}>
       <tr data-line={`${props.lineNumber}-hunk`} data-state="hunk" class="diff-line diff-line-hunk">
         <td
-          class="diff-line-hunk-action sticky left-0 w-[1%] min-w-[100px] select-none"
+          class="diff-line-hunk-action sticky left-0 w-[1%] select-none"
           style={{
             "background-color": `var(${hunkLineNumberBGName})`,
             color: `var(${plainLineNumberColorName})`,
-            width: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
-            "max-width": `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
-            "min-width": `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
+            width: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
+            "max-width": `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
+            "min-width": `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
           }}
         >
           {couldExpand() ? (

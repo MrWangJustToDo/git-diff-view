@@ -63,13 +63,13 @@ export const DiffUnifiedHunkLine = defineComponent(
       return (
         <tr data-line={`${props.lineNumber}-hunk`} data-state="hunk" class="diff-line diff-line-hunk">
           <td
-            class="diff-line-hunk-action sticky left-0 w-[1%] min-w-[100px] select-none"
+            class="diff-line-hunk-action sticky left-0 w-[1%] select-none"
             style={{
               backgroundColor: `var(${hunkLineNumberBGName})`,
               color: `var(${plainLineNumberColorName})`,
-              width: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
-              maxWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
-              minWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
+              width: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
+              maxWidth: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
+              minWidth: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
             }}
           >
             {couldExpand.value ? (

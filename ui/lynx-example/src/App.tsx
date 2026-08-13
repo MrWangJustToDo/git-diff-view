@@ -31,7 +31,7 @@ export function App() {
           <text style={{ color: "#fff" }}>hl:{highlight ? "lezer" : "off"}</text>
         </view>
       </view>
-      <view className="min-h-0 flex-1 flex flex-col" style={{ flexBasis: "0%" }}>
+      <view className="min-h-0 flex-1 flex flex-col m-4 border border-gray-200 rounded-md overflow-hidden" style={{ flexBasis: "0%" }}>
         <DiffView
           data={{
             oldFile: {

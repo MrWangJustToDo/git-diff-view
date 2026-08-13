@@ -87,7 +87,7 @@ export const DiffUnifiedContentLine = ({
 
   return (
     <view className="diff-line flex w-full flex-row" flatten={false}>
-      {/* 小空白 + 行号 + 中空白 + 行号 + 小空白 — fixed widths, never wrap on native */}
+      {/* edge + 行号 + mid + 行号 + edge — fixed widths, never wrap on native */}
       <view
         className={joinClass("diff-line-num flex flex-shrink-0 flex-row items-start", surfaceClass(numSurface))}
         style={{

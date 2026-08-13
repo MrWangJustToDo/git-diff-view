@@ -43,13 +43,13 @@ const InternalDiffUnifiedHunkLine = ({
   return (
     <tr data-line={`${lineNumber}-hunk`} data-state="hunk" className="diff-line diff-line-hunk">
       <td
-        className="diff-line-hunk-action sticky left-0 w-[1%] min-w-[100px] select-none p-[1px]"
+        className="diff-line-hunk-action sticky left-0 w-[1%] select-none p-[1px]"
         style={{
           backgroundColor: `var(${hunkLineNumberBGName})`,
           color: `var(${plainLineNumberColorName})`,
-          width: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
-          maxWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
-          minWidth: `calc(calc(var(${diffAsideWidthName}) + 5px) * 2)`,
+          width: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
+          maxWidth: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
+          minWidth: `calc(var(${diffAsideWidthName}) * 2 + 8px)`,
         }}
       >
         {couldExpand ? (

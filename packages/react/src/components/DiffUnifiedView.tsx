@@ -62,7 +62,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
     font: useMemo(() => ({ fontSize: fontSize + "px", fontFamily: "Menlo, Consolas, monospace" }), [fontSize]),
   });
 
-  const width = Math.max(40, _width + 10);
+  const width = Math.max(20, _width + 5);
 
   const lines = getUnifiedContentLine(diffFile);
 

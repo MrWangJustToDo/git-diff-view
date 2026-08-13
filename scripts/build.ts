@@ -145,9 +145,9 @@ const start = async () => {
   process.exit(0);
 };
 
-// start();
+start();
 
-buildLynx();
+// buildLynx();
 
 // buildLezer();
 

@@ -110,13 +110,13 @@
 		})}
 			<tr data-line={props.index} data-state="diff" class="diff-line group">
 				<td
-					class="diff-line-num sticky left-0 z-[1] w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
+					class="diff-line-num sticky left-0 z-[1] w-[1%] select-none whitespace-nowrap pl-[5px] pr-[5px] text-right align-top"
 					style={`
           color: var(${plainLineNumberColorName});
           background-color: var(${delLineNumberBGName});
-          width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
-          max-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
-          min-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
+          width: calc(var(${diffAsideWidthName}) * 2 + 8px);
+          max-width: calc(var(${diffAsideWidthName}) * 2 + 8px);
+          min-width: calc(var(${diffAsideWidthName}) * 2 + 8px);
         `}
 				>
 					{#if props.enableAddWidget}
@@ -133,7 +133,7 @@
 						<span data-line-old-num={props.lineNumber} class="inline-block w-[50%]">
 							{props.lineNumber}
 						</span>
-						<span class="w-[10px] shrink-0"></span>
+						<span class="w-[8px] shrink-0"></span>
 						<span class="inline-block w-[50%]"></span>
 					</div>
 				</td>
@@ -169,13 +169,13 @@
 		})}
 			<tr data-line={props.index} data-state="diff" class="diff-line group">
 				<td
-					class="diff-line-num sticky left-0 z-[1] w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
+					class="diff-line-num sticky left-0 z-[1] w-[1%] select-none whitespace-nowrap pl-[5px] pr-[5px] text-right align-top"
 					style={`
           color: var(${plainLineNumberColorName});
           background-color: var(${addLineNumberBGName});
-          width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
-          max-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
-          min-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
+          width: calc(var(${diffAsideWidthName}) * 2 + 8px);
+          max-width: calc(var(${diffAsideWidthName}) * 2 + 8px);
+          min-width: calc(var(${diffAsideWidthName}) * 2 + 8px);
         `}
 				>
 					{#if props.enableAddWidget}
@@ -190,7 +190,7 @@
 					{/if}
 					<div class="flex">
 						<span class="inline-block w-[50%]"></span>
-						<span class="w-[10px] shrink-0"></span>
+						<span class="w-[8px] shrink-0"></span>
 						<span data-line-new-num={props.lineNumber} class="inline-block w-[50%]">
 							{props.lineNumber}
 						</span>
@@ -251,15 +251,15 @@
 			class="diff-line group"
 		>
 			<td
-				class="diff-line-num sticky left-0 z-[1] w-[1%] min-w-[100px] select-none whitespace-nowrap pl-[10px] pr-[10px] text-right align-top"
+				class="diff-line-num sticky left-0 z-[1] w-[1%] select-none whitespace-nowrap pl-[5px] pr-[5px] text-right align-top"
 				style={`
 					color: var(${unifiedItem?.diff ? plainLineNumberColorName : expandLineNumberColorName});
 					background-color: ${
 						unifiedItem?.diff ? `var(${plainLineNumberBGName})` : `var(${expandContentBGName})`
 					};
-					width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
-					max-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2);
-					min-width: calc(calc(var(${diffAsideWidthName}) + 5px) * 2;
+					width: calc(var(${diffAsideWidthName}) * 2 + 8px);
+					max-width: calc(var(${diffAsideWidthName}) * 2 + 8px);
+					min-width: calc(var(${diffAsideWidthName}) * 2 + 8px);
 				`}
 			>
 				{#if enableAddWidget && unifiedItem?.diff}
@@ -276,7 +276,7 @@
 					<span data-line-old-num={unifiedItem?.oldLineNumber || 0} class="inline-block w-[50%]">
 						{unifiedItem?.oldLineNumber || 0}
 					</span>
-					<span class="w-[10px] shrink-0"></span>
+					<span class="w-[8px] shrink-0"></span>
 					<span data-line-new-num={unifiedItem?.newLineNumber || 0} class="inline-block w-[50%]">
 						{unifiedItem?.newLineNumber || 0}
 					</span>

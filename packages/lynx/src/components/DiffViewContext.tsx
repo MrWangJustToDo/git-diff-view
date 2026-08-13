@@ -1,6 +1,9 @@
-import { createContext, useContext } from "react";
+import { createContext as _createContext, useContext } from "@lynx-js/react";
+import type { createContext as createReactContext } from "react";
 
 import type { createDiffConfigStore } from "./tools";
+
+const createContext = _createContext as typeof createReactContext;
 
 export const DiffViewContext = createContext<{
   useDiffContext: ReturnType<typeof createDiffConfigStore>;

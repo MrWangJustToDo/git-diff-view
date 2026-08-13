@@ -39,6 +39,23 @@ export declare const getElementRoot: (element?: HTMLElement) => Document | Shado
 export declare const getDiffIdFromElement: (element?: HTMLElement) => string;
 export declare const diffFontSizeName = "--diff-font-size--";
 export declare const diffAsideWidthName = "--diff-aside-width--";
+/** Split gutter: pad + digits + pad */
+export declare const SPLIT_NUM_PAD_START = 10;
+export declare const SPLIT_NUM_PAD_END = 10;
+export declare const SPLIT_NUM_PAD_TOTAL: number;
+/** Unified gutter: edge + digits + mid + digits + edge */
+export declare const UNIFIED_NUM_PAD_EDGE = 5;
+export declare const UNIFIED_NUM_PAD_MID = 8;
+/** Split `--diff-aside-width--` from measured digit column width. */
+export declare const getSplitAsideWidth: (digitWidth: number, min?: number) => number;
+/**
+ * Unified half aside (one digit column + edge pad).
+ * Full dual column = `aside * 2 + UNIFIED_NUM_PAD_MID`.
+ * Floor is intentionally low so 2–3 digit files stay compact.
+ */
+export declare const getUnifiedAsideHalfWidth: (digitWidth: number, min?: number) => number;
+/** CSS width for the unified dual line-number column. */
+export declare const unifiedAsideColumnWidthCss = "calc(var(--diff-aside-width--) * 2 + 8px)";
 export declare const memoFunc: <T extends Function>(func: T) => T;
 export declare enum NewLineSymbol {
 	CRLF = 1,

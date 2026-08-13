@@ -65,7 +65,7 @@ export const DiffSplitContentLine = ({
       )}
       style={{ flexBasis: "0%" }}
     >
-      {/* 大空白 + 行号 + 小空白 */}
+      {/* pad + 行号 + pad */}
       <view
         className={joinClass(
           "diff-line-num flex flex-shrink-0 items-start justify-end",

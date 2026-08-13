@@ -118,7 +118,7 @@ export const DiffSplitViewNormal = memo(({ diffFile }: { diffFile: DiffFile }) =
     font,
   });
 
-  const width = Math.max(40, _width + 25);
+  const width = Math.max(40, _width + 20);
 
   const setStyle = (side?: SplitSide) => {
     if (!ref.current) return;
