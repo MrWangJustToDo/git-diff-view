@@ -70,14 +70,6 @@ const buildReact = async () => {
   await copyCss("react", "diff-view-pure.css");
 };
 
-const buildOctane = async () => {
-  await new Promise<void>((resolve, reject) => {
-    const process = spawn("pnpm run build", { cwd: "packages/octane", shell: true, stdio: "inherit" });
-    process.on("close", (code) => (code === 0 ? resolve() : reject(new Error(`Octane build exited with ${code}`))));
-    process.on("error", reject);
-  });
-};
-
 const buildCli = async () => {
   await rollupBuild({
     packageName: "cli",
@@ -85,6 +77,29 @@ const buildCli = async () => {
     external: external,
   });
   await buildType("cli");
+};
+
+const buildLynx = async () => {
+  await rollupBuild({
+    packageName: "lynx",
+    packageScope: "packages",
+    external: external,
+  });
+  await buildCss("lynx");
+  await buildType("lynx");
+  await copyCss("lynx", "diff-view.css");
+};
+
+const buildOctane = async () => {
+  await new Promise<void>((resolve, reject) => {
+    const process = spawn("pnpm", ["run", "build"], {
+      cwd: "packages/octane",
+      shell: true,
+      stdio: "inherit",
+    });
+    process.on("close", (code) => (code === 0 ? resolve() : reject(new Error(`Octane build exited with ${code}`))));
+    process.on("error", reject);
+  });
 };
 
 const buildSolid = async () => {
@@ -135,6 +150,7 @@ const start = async () => {
   await buildFile();
   await buildCli();
   await buildReact();
+  await buildLynx();
   await buildOctane();
   await buildSolid();
   await buildSvelte();
@@ -143,6 +159,8 @@ const start = async () => {
 };
 
 start();
+
+// buildLynx();
 
 // buildLezer();
 

@@ -175,7 +175,7 @@ export const DiffSplitViewNormal = (props: { diffFile: DiffFile }) => {
 
   const width = useTextWidth({ text: maxText, font });
 
-  const computedWidth = createMemo(() => Math.max(40, width() + 25));
+  const computedWidth = createMemo(() => Math.max(40, width() + 20));
 
   const getId = () => `diff-split-view-${props.diffFile.getId()}`;
 

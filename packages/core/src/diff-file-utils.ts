@@ -113,7 +113,7 @@ export const getUnifiedContentLine = (diffFile: DiffFile): DiffUnifiedContentLin
   numIterator(unifiedLineLength, (index) => {
     const unifiedLine = diffFile.getUnifiedLine(index);
 
-    if (!unifiedLine.isHidden) {
+    if (!unifiedLine?.isHidden) {
       unifiedLines.push({ type: DiffFileLineType.content, index, lineNumber: index + 1, unifiedLine: unifiedLine });
     }
   });

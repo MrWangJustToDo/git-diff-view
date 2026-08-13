@@ -88,7 +88,7 @@ export const DiffUnifiedView = (props: { diffFile: DiffFile }) => {
 
   const width = useTextWidth({ text: maxText, font });
 
-  const computedWidth = createMemo(() => Math.max(40, width() + 10));
+  const computedWidth = createMemo(() => Math.max(20, width() + 5));
 
   const getId = () => `diff-root${props.diffFile.getId()}`;
 

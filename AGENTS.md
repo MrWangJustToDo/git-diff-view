@@ -130,6 +130,7 @@ packages/
   vue/            # Vue components (@git-diff-view/vue)
   solid/          # Solid components (@git-diff-view/solid)
   svelte/         # Svelte components (@git-diff-view/svelte)
+  lynx/           # ReactLynx DiffView (@git-diff-view/lynx)
   cli/            # CLI tool (@git-diff-view/cli)
   file/           # File comparison engine (@git-diff-view/file)
   utils/          # Shared utilities (@git-diff-view/utils)
@@ -141,6 +142,7 @@ ui/
   vue-example/    # Vue demo app (Vite)
   solid-example/  # Solid demo app
   svelte-example/ # Svelte demo
+  lynx-example/   # ReactLynx DiffView demo
 scripts/          # Build scripts (ts-node)
 ```
 
@@ -154,7 +156,7 @@ scripts/          # Build scripts (ts-node)
 ## ESLint Configuration
 
 - Base config: `project-tool/baseLint`
-- Ignored: `dist`, `dev`, `scripts`, `node_modules`, `next-*-example`, `packages/solid`, `packages/svelte`
+- Ignored: `dist`, `dev`, `scripts`, `node_modules`, `next-*-example`, `packages/solid`, `packages/svelte`, `packages/lynx`, `ui/lynx-example`
 
 ## Important Notes
 

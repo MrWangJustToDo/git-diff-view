@@ -13,7 +13,9 @@ export default [
       "node_modules/**",
       "ui/next-app-example/**",
       "ui/next-page-example/**",
+      "ui/lynx-example/**",
       "packages/svelte/**",
+      "packages/lynx/**",
     ],
   },
   {

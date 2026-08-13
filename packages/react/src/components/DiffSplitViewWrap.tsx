@@ -41,7 +41,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
     font,
   });
 
-  const width = Math.max(40, _width + 25);
+  const width = Math.max(40, _width + 20);
 
   const lines = getSplitContentLines(diffFile);
 
