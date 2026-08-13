@@ -16,17 +16,12 @@
 ## Installation
 
 ```bash
+npm install @git-diff-view/octane octane
+# or
 pnpm add @git-diff-view/octane octane
+# or
+yarn add @git-diff-view/octane octane
 ```
-
-> **Note:** this package currently requires pnpm. Its `reactivity-store` dependency is
-> pinned to a git commit (`github:zhsama/reactivity-store#path:packages/r-store&...`),
-> which uses pnpm's `path:` selector — npm and yarn cannot resolve it. On pnpm >= 11 you
-> also need to allow the git-hosted transitive dependency, e.g. in `pnpm-workspace.yaml`:
->
-> ```yaml
-> blockExoticSubdeps: false
-> ```
 
 ## Quick Start
 

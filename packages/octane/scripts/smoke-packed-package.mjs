@@ -1,10 +1,16 @@
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 const packageRoot = resolve(import.meta.dirname, "..");
 const temporaryRoot = mkdtempSync(join(tmpdir(), "git-diff-view-octane-pack-"));
+const reactivityStoreTarball = process.env.REACTIVITY_STORE_TARBALL;
+
+if (reactivityStoreTarball && !existsSync(reactivityStoreTarball)) {
+  throw new Error(`REACTIVITY_STORE_TARBALL does not exist: ${reactivityStoreTarball}`);
+}
 
 try {
   const output = execFileSync("pnpm", ["pack", "--pack-destination", temporaryRoot], {
@@ -15,6 +21,21 @@ try {
   if (!tarball) throw new Error("pnpm pack did not return a tarball path.");
   const listing = execFileSync("tar", ["-tf", tarball], { encoding: "utf8" });
 
+  // Reason: registry 0.4.0 predates the Octane export. Pack the dependency
+  // selected by the development override so the smoke test still exercises
+  // the publishable package without leaking that override into its manifest.
+  const resolvedReactivityStoreTarball = reactivityStoreTarball
+    ? resolve(reactivityStoreTarball)
+    : execFileSync("pnpm", ["pack", "--pack-destination", temporaryRoot], {
+        cwd: resolve(fileURLToPath(import.meta.resolve("reactivity-store/package.json")), ".."),
+        encoding: "utf8",
+      })
+        .trim()
+        .split("\n")
+        .at(-1);
+  if (!resolvedReactivityStoreTarball) throw new Error("Unable to pack reactivity-store.");
+  const localReactivityStore = `file:${resolvedReactivityStoreTarball}`;
+
   for (const expected of [
     "package/dist/client/index.js",
     "package/dist/server/index.js",
@@ -24,9 +45,6 @@ try {
     if (!listing.includes(expected)) throw new Error(`Packed package omitted ${expected}.`);
   }
 
-  // Reason: no overrides and no local reactivity-store tarball here — the store
-  // adapter must resolve from the packed package's own dependency declaration,
-  // exactly like a real consumer install (requires network access to GitHub).
   writeFileSync(
     join(temporaryRoot, "package.json"),
     JSON.stringify({
@@ -36,25 +54,18 @@ try {
       dependencies: {
         "@git-diff-view/octane": `file:${tarball}`,
         octane: "^0.1.36",
+        "reactivity-store": localReactivityStore,
       },
     })
   );
-  // Reason: pnpm >= 11 blocks git-hosted transitive dependencies by default
-  // (blockExoticSubdeps); real consumers must opt out the same way to install
-  // the pinned reactivity-store fork, so the smoke consumer mirrors that step.
-  execFileSync(
-    "pnpm",
-    [
-      "install",
-      "--ignore-scripts",
-      "--config.auto-install-peers=false",
-      "--config.block-exotic-subdeps=false",
-    ],
-    {
-      cwd: temporaryRoot,
-      stdio: "inherit",
-    }
+  writeFileSync(
+    join(temporaryRoot, "pnpm-workspace.yaml"),
+    `overrides:\n  reactivity-store: ${JSON.stringify(localReactivityStore)}\n`
   );
+  execFileSync("pnpm", ["install", "--ignore-scripts", "--config.auto-install-peers=false"], {
+    cwd: temporaryRoot,
+    stdio: "inherit",
+  });
   const productionPackages = readdirSync(join(temporaryRoot, "node_modules/.pnpm"));
   for (const forbiddenRuntime of ["react@", "react-dom@", "use-sync-external-store@"]) {
     if (productionPackages.some((entry) => entry.startsWith(forbiddenRuntime))) {
@@ -67,9 +78,15 @@ try {
   if (!packageJson.exports?.["."]?.browser || !packageJson.exports?.["."]?.node) {
     throw new Error("Packed package lost browser/node conditional exports.");
   }
-  const storeDependency = packageJson.dependencies?.["reactivity-store"];
-  if (!storeDependency?.startsWith("github:zhsama/reactivity-store#")) {
-    throw new Error(`Packed package does not pin the reactivity-store fork: ${storeDependency}`);
+  if (packageJson.dependencies?.["reactivity-store"] !== "^0.4.0") {
+    throw new Error("Packed package leaked the development reactivity-store override.");
+  }
+  const declarationEntry = readFileSync(
+    join(temporaryRoot, "node_modules/@git-diff-view/octane/dist/index.d.ts"),
+    "utf8"
+  );
+  if (/from\s+["']@git-diff-view\/utils(?:\/[^"']*)?["']/.test(declarationEntry)) {
+    throw new Error("Packed declarations retained the private @git-diff-view/utils workspace import.");
   }
 
   execFileSync(

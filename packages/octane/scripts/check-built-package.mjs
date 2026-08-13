@@ -49,6 +49,11 @@ for (const environment of ["client", "server"]) {
   }
 }
 
+const declarationEntry = readFileSync(join(distRoot, "index.d.ts"), "utf8");
+if (/from\s+["']@git-diff-view\/utils(?:\/[^"']*)?["']/.test(declarationEntry)) {
+  throw new Error("Published declarations retained the private @git-diff-view/utils workspace import.");
+}
+
 const clientEntry = readFileSync(join(distRoot, "client/index.js"), "utf8");
 const compiledHookRegions = [
   "src/hooks/useCallbackRef.ts",
