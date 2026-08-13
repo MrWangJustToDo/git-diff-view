@@ -76,9 +76,6 @@ catalogs:
       specifier: ^5.9.3
       version: 5.9.3
 
-overrides:
-  '@git-diff-view/octane>reactivity-store': github:zhsama/reactivity-store#path:packages/r-store&2f12accdcc56a62a32fe2ef569bca5f7a33ddd7c
-
 importers:
 
   .:
@@ -416,8 +413,8 @@ importers:
         specifier: ^3.3.0
         version: 3.3.0
       reactivity-store:
-        specifier: github:zhsama/reactivity-store#path:packages/r-store&2f12accdcc56a62a32fe2ef569bca5f7a33ddd7c
-        version: https://codeload.github.com/zhsama/reactivity-store/tar.gz/2f12accdcc56a62a32fe2ef569bca5f7a33ddd7c#path:packages/r-store(octane@0.1.36(@typescript-eslint/types@8.59.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(vite@8.2.1(@types/node@22.19.17)(jiti@1.21.7)(sugarss@5.0.1(postcss@8.5.25))(terser@5.44.0)(yaml@2.8.1)))(react@19.2.0)
+        specifier: ^0.4.0
+        version: 0.4.0(react@19.2.0)
     devDependencies:
       '@octanejs/testing-library':
         specifier: ^0.1.18
@@ -3686,9 +3683,6 @@ packages:
   '@vue/reactivity@3.5.30':
     resolution: {integrity: sha512-179YNgKATuwj9gB+66snskRDOitDiuOZqkYia7mHKJaidOMo/WJxHKF8DuGc4V4XbYTJANlfEKb0yxTQotnx4Q==}
 
-  '@vue/reactivity@3.5.41':
-    resolution: {integrity: sha512-rznsqKM0np0x18EjzF8x88MpEhdNsffbvFbckLL5+oUKz1BxAImEmO7J1ArRYSyo6aQaVoBDp7jEkT91OOxydA==}
-
   '@vue/runtime-core@3.5.22':
     resolution: {integrity: sha512-EHo4W/eiYeAzRTN5PCextDUZ0dMs9I8mQ2Fy+OkzvRPUYQEyK9yAjbasrMCXbLNhF7P0OUyivLjIy0yc6VrLJQ==}
 
@@ -3705,9 +3699,6 @@ packages:
 
   '@vue/shared@3.5.30':
     resolution: {integrity: sha512-YXgQ7JjaO18NeK2K9VTbDHaFy62WrObMa6XERNfNOkAhD1F1oDSf3ZJ7K6GqabZ0BvSDHajp8qfS5Sa2I9n8uQ==}
-
-  '@vue/shared@3.5.41':
-    resolution: {integrity: sha512-IOnwSCma8j+9xJT6b8H0dEYidC80NsYmNMlZxRsukYcSoGaDBohog5hDxzeUXdFeGWFA++vWvxqOmrr96VlqMA==}
 
   '@webassemblyjs/ast@1.14.1':
     resolution: {integrity: sha512-nuBEDgQfm1ccRp/8bCQrx1frohyufl4JlbMMZ4P1wpeOfDhF6FQkxZJ1b/e+PLwr6X1Nhw6OLme5usuBWYBvuQ==}
@@ -7165,18 +7156,6 @@ packages:
     resolution: {integrity: sha512-uL9uoREOBg2o4zUa8vMU0AbvAOk0osPloizscmyZqMvJzcuuKX3ELFYYr1DX8gAcfvlhPduz4QuLZn1eChCu4Q==}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-
-  reactivity-store@https://codeload.github.com/zhsama/reactivity-store/tar.gz/2f12accdcc56a62a32fe2ef569bca5f7a33ddd7c#path:packages/r-store:
-    resolution: {path: packages/r-store, tarball: https://codeload.github.com/zhsama/reactivity-store/tar.gz/2f12accdcc56a62a32fe2ef569bca5f7a33ddd7c}
-    version: 0.4.0
-    peerDependencies:
-      octane: '>=0.1.36 <0.2.0'
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-    peerDependenciesMeta:
-      octane:
-        optional: true
-      react:
-        optional: true
 
   read-cache@1.0.0:
     resolution: {integrity: sha512-Owdv/Ft7IjOgm/i0xvNDZ1LrRANRfew4b2prF3OWMQLxLfu3bS8FVhCsrSCMK4lR56Y9ya+AThoTpDCTxCmpRA==}
@@ -11357,10 +11336,6 @@ snapshots:
     dependencies:
       '@vue/shared': 3.5.30
 
-  '@vue/reactivity@3.5.41':
-    dependencies:
-      '@vue/shared': 3.5.41
-
   '@vue/runtime-core@3.5.22':
     dependencies:
       '@vue/reactivity': 3.5.22
@@ -11382,8 +11357,6 @@ snapshots:
   '@vue/shared@3.5.22': {}
 
   '@vue/shared@3.5.30': {}
-
-  '@vue/shared@3.5.41': {}
 
   '@webassemblyjs/ast@1.14.1':
     dependencies:
@@ -15013,14 +14986,6 @@ snapshots:
       '@vue/shared': 3.5.30
       react: 19.2.0
       use-sync-external-store: 1.6.0(react@19.2.0)
-
-  reactivity-store@https://codeload.github.com/zhsama/reactivity-store/tar.gz/2f12accdcc56a62a32fe2ef569bca5f7a33ddd7c#path:packages/r-store(octane@0.1.36(@typescript-eslint/types@8.59.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(vite@8.2.1(@types/node@22.19.17)(jiti@1.21.7)(sugarss@5.0.1(postcss@8.5.25))(terser@5.44.0)(yaml@2.8.1)))(react@19.2.0):
-    dependencies:
-      '@vue/reactivity': 3.5.41
-      '@vue/shared': 3.5.41
-    optionalDependencies:
-      octane: 0.1.36(@typescript-eslint/types@8.59.0)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)(vite@8.2.1(@types/node@22.19.17)(jiti@1.21.7)(sugarss@5.0.1(postcss@8.5.25))(terser@5.44.0)(yaml@2.8.1))
-      react: 19.2.0
 
   read-cache@1.0.0:
     dependencies:
