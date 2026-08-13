@@ -1,8 +1,14 @@
-import { DiffLineType, checkDiffLineIncludeChange, type DiffFile } from "@git-diff-view/core";
+import { DiffLineType, SplitSide, checkDiffLineIncludeChange, type DiffFile } from "@git-diff-view/core";
 
 import { DiffContent } from "./DiffContent";
 import { useDiffViewContext } from "./DiffViewContext";
-import { estimateLineHeight, estimateLineNumberWidth, estimateDigitWidth, SPLIT_NUM_PAD_START, SPLIT_NUM_PAD_END } from "./styleUtils";
+import {
+  estimateDigitWidth,
+  estimateLineHeight,
+  estimateLineNumberWidth,
+  SPLIT_NUM_PAD_END,
+  SPLIT_NUM_PAD_START,
+} from "./styleUtils";
 import { contentSurface, joinClass, lineNumberSurface, surfaceClass } from "../theme";
 
 export const DiffSplitContentLine = ({
@@ -22,9 +28,10 @@ export const DiffSplitContentLine = ({
   }
 
   const { useDiffContext } = useDiffViewContext();
-  const { enableHighlight, fontSize } = useDiffContext.useShallowStableSelector((s) => ({
+  const { enableHighlight, fontSize, onDiffLineClick } = useDiffContext.useShallowStableSelector((s) => ({
     enableHighlight: s.enableHighlight,
     fontSize: s.fontSize || 13,
+    onDiffLineClick: s.onDiffLineClick,
   }));
   const lineCount = Math.max(diffFile.splitLineLength, diffFile.fileLineLength);
   const asideWidth = estimateLineNumberWidth(lineCount, fontSize);
@@ -53,6 +60,7 @@ export const DiffSplitContentLine = ({
   const renderSide = (
     hasLine: boolean,
     line: typeof oldLine,
+    side: SplitSide,
     numSurface: ReturnType<typeof lineNumberSurface>,
     contentSurfaceName: ReturnType<typeof contentSurface>,
     plainLine: ReturnType<DiffFile["getOldPlainLine"]>,
@@ -64,8 +72,19 @@ export const DiffSplitContentLine = ({
         surfaceClass(hasLine ? contentSurfaceName : "empty")
       )}
       style={{ flexBasis: "0%" }}
+      bindtap={
+        hasLine && onDiffLineClick
+          ? () =>
+              onDiffLineClick({
+                type: "content",
+                lineNumber,
+                side,
+                oldLineNumber: side === SplitSide.old ? line?.lineNumber : undefined,
+                newLineNumber: side === SplitSide.new ? line?.lineNumber : undefined,
+              })
+          : undefined
+      }
     >
-      {/* pad + 行号 + pad */}
       <view
         className={joinClass(
           "diff-line-num flex flex-shrink-0 items-start justify-end",
@@ -123,9 +142,9 @@ export const DiffSplitContentLine = ({
 
   return (
     <view className="diff-line diff-split-row flex w-full flex-row items-stretch" flatten={false}>
-      {renderSide(hasOldLine, oldLine, oldNumSurface, oldContentSurface, oldPlainLine, oldSyntaxLine)}
+      {renderSide(hasOldLine, oldLine, SplitSide.old, oldNumSurface, oldContentSurface, oldPlainLine, oldSyntaxLine)}
       <view className="diff-split-divider diff-border-bg w-px flex-shrink-0" style={{ minWidth: "1px" }} />
-      {renderSide(hasNewLine, newLine, newNumSurface, newContentSurface, newPlainLine, newSyntaxLine)}
+      {renderSide(hasNewLine, newLine, SplitSide.new, newNumSurface, newContentSurface, newPlainLine, newSyntaxLine)}
     </view>
   );
 };

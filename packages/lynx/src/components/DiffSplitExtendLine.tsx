@@ -18,12 +18,13 @@ export const DiffSplitExtendLine = ({
   const oldLine = diffFile.getSplitLeftLine(index);
   const newLine = diffFile.getSplitRightLine(index);
 
-  const { oldLineExtend, newLineExtend, renderExtendLine } = useDiffContext(
+  const { oldLineExtend, newLineExtend, renderExtendLine, onDiffLineClick } = useDiffContext(
     useCallback(
       (s) => ({
         oldLineExtend: s.extendData?.oldFile?.[oldLine?.lineNumber ?? -1],
         newLineExtend: s.extendData?.newFile?.[newLine?.lineNumber ?? -1],
         renderExtendLine: s.renderExtendLine,
+        onDiffLineClick: s.onDiffLineClick,
       }),
       [oldLine?.lineNumber, newLine?.lineNumber]
     )
@@ -59,6 +60,17 @@ export const DiffSplitExtendLine = ({
       <view
         className={joinClass("diff-split-pane min-w-0 flex-1", !oldRendered && surfaceClass("empty"))}
         style={{ flexBasis: "0%" }}
+        bindtap={
+          oldRendered && onDiffLineClick
+            ? () =>
+                onDiffLineClick({
+                  type: "extend",
+                  lineNumber,
+                  side: SplitSide.old,
+                  oldLineNumber: oldLine?.lineNumber,
+                })
+            : undefined
+        }
       >
         {oldRendered}
       </view>
@@ -66,6 +78,17 @@ export const DiffSplitExtendLine = ({
       <view
         className={joinClass("diff-split-pane min-w-0 flex-1", !newRendered && surfaceClass("empty"))}
         style={{ flexBasis: "0%" }}
+        bindtap={
+          newRendered && onDiffLineClick
+            ? () =>
+                onDiffLineClick({
+                  type: "extend",
+                  lineNumber,
+                  side: SplitSide.new,
+                  newLineNumber: newLine?.lineNumber,
+                })
+            : undefined
+        }
       >
         {newRendered}
       </view>

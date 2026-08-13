@@ -5,6 +5,14 @@ export { DiffModeEnum } from "@git-diff-view/utils";
 import type { DiffFile, DiffHighlighter, DiffHighlighterLang, SplitSide } from "@git-diff-view/core";
 import type { DiffModeEnum as DiffModeEnumType } from "@git-diff-view/utils";
 
+export type DiffLineClickPayload = {
+  lineNumber: number;
+  oldLineNumber?: number;
+  newLineNumber?: number;
+  side?: SplitSide;
+  type: "content" | "hunk" | "extend";
+};
+
 export type DiffViewProps<T = unknown> = {
   data?: {
     oldFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
@@ -17,11 +25,15 @@ export type DiffViewProps<T = unknown> = {
   style?: Record<string, string | number>;
   registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
   diffViewMode?: DiffModeEnumType;
-  /** MVP defaults to wrap (v2 Wrap Split model). No-wrap dual-pane is deferred. */
+  /**
+   * Line wrap. Affects Unified only — Split always wraps.
+   * Unified `false`: nowrap + shared H scroll; line nums stay on the left.
+   */
   diffViewWrap?: boolean;
   diffViewTheme?: "light" | "dark";
   diffViewFontSize?: number;
   diffViewHighlight?: boolean;
+  onDiffLineClick?: (payload: DiffLineClickPayload) => void;
   renderExtendLine?: (ctx: {
     lineNumber: number;
     side: SplitSide;

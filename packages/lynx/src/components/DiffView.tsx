@@ -26,6 +26,16 @@ setEnableBuildTemplate(false);
 
 export { SplitSide, DiffModeEnum };
 
+export type DiffLineClickPayload = {
+  /** Display / sequence line number (1-based). */
+  lineNumber: number;
+  oldLineNumber?: number;
+  newLineNumber?: number;
+  /** Set in Split when a side is tapped. */
+  side?: SplitSide;
+  type: "content" | "hunk" | "extend";
+};
+
 export type DiffViewProps<T> = {
   data?: {
     oldFile?: { fileName?: string | null; fileLang?: DiffHighlighterLang | string | null; content?: string | null };
@@ -38,11 +48,16 @@ export type DiffViewProps<T> = {
   style?: Record<string, string | number>;
   registerHighlighter?: Omit<DiffHighlighter, "getHighlighterEngine">;
   diffViewMode?: DiffModeEnum;
-  /** MVP defaults to wrap (v2 Wrap Split model). No-wrap dual-pane is deferred. */
+  /**
+   * Line wrap. Affects **Unified** only — Split always wraps (no dual-pane nowrap).
+   * Unified `false`: nowrap + shared H scroll; line nums sit outside the H scroller.
+   */
   diffViewWrap?: boolean;
   diffViewTheme?: "light" | "dark";
   diffViewFontSize?: number;
   diffViewHighlight?: boolean;
+  /** Tap a content / extend row (native-friendly alternative to add-widget). */
+  onDiffLineClick?: (payload: DiffLineClickPayload) => void;
   renderExtendLine?: ({
     diffFile,
     side,
@@ -76,6 +91,7 @@ const InternalDiffView = <T extends unknown>(props: InternalProps<T>) => {
     diffViewTheme,
     diffViewFontSize = 13,
     diffViewHighlight,
+    onDiffLineClick,
   } = props;
 
   // Build store once with final props — avoid post-mount store churn that patches Lynx slots.
@@ -90,6 +106,7 @@ const InternalDiffView = <T extends unknown>(props: InternalProps<T>) => {
           diffViewHighlight,
           extendData,
           renderExtendLine,
+          onDiffLineClick,
           isMounted: true,
         } as DiffViewProps<T> & { isMounted: boolean },
         diffFileId
@@ -107,6 +124,7 @@ const InternalDiffView = <T extends unknown>(props: InternalProps<T>) => {
       setTheme,
       setExtendData,
       setRenderExtendLine,
+      setOnDiffLineClick,
     } = useDiffContext.getReadonlyState();
 
     setMode(diffViewMode);
@@ -116,6 +134,7 @@ const InternalDiffView = <T extends unknown>(props: InternalProps<T>) => {
     if (diffViewTheme) setTheme(diffViewTheme);
     setExtendData(extendData);
     setRenderExtendLine(renderExtendLine);
+    setOnDiffLineClick(onDiffLineClick);
   }, [
     useDiffContext,
     diffViewMode,
@@ -125,6 +144,7 @@ const InternalDiffView = <T extends unknown>(props: InternalProps<T>) => {
     diffViewTheme,
     renderExtendLine,
     extendData,
+    onDiffLineClick,
   ]);
 
   const value = useMemo(() => ({ useDiffContext }), [useDiffContext]);

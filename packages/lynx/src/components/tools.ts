@@ -16,6 +16,7 @@ export const createDiffConfigStore = (props: DiffViewProps<any> & { isMounted: b
 
     const setMounted = (_mounted: boolean) => (mounted.value = _mounted);
 
+    /** Unified only — Split always wraps. */
     const enableWrap = ref(props.diffViewWrap ?? true);
 
     const setEnableWrap = (_enableWrap: boolean) => (enableWrap.value = _enableWrap);
@@ -66,6 +67,11 @@ export const createDiffConfigStore = (props: DiffViewProps<any> & { isMounted: b
     const setRenderExtendLine = (_renderExtendLine: typeof renderExtendLine.value) =>
       (renderExtendLine.value = _renderExtendLine);
 
+    const onDiffLineClick = ref(props.onDiffLineClick);
+
+    const setOnDiffLineClick = (_onDiffLineClick: typeof onDiffLineClick.value) =>
+      (onDiffLineClick.value = _onDiffLineClick);
+
     return {
       id,
       setId,
@@ -85,6 +91,8 @@ export const createDiffConfigStore = (props: DiffViewProps<any> & { isMounted: b
       setExtendData,
       renderExtendLine,
       setRenderExtendLine,
+      onDiffLineClick,
+      setOnDiffLineClick,
     };
   });
 };

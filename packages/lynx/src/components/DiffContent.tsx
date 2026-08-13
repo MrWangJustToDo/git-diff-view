@@ -157,7 +157,15 @@ const InternalDiffContent = ({ diffLine, rawLine, syntaxLine, enableHighlight, e
     : ({ whiteSpace: "nowrap", wordBreak: "normal" } as const);
 
   return (
-    <view className="diff-line-content-item flex w-full flex-row items-start" flatten={false}>
+    <view
+      className={
+        enableWrap
+          ? "diff-line-content-item flex w-full flex-row items-start"
+          : "diff-line-content-item flex flex-row items-start"
+      }
+      flatten={false}
+      style={enableWrap ? undefined : { minHeight: `${lineHeight}px` }}
+    >
       <view
         className="diff-line-content-operator flex flex-shrink-0 justify-center"
         style={{ width: `${gutterW}px`, minWidth: `${gutterW}px`, maxWidth: `${gutterW}px` }}
@@ -170,8 +178,16 @@ const InternalDiffContent = ({ diffLine, rawLine, syntaxLine, enableHighlight, e
         </text>
       </view>
       <text
-        className="diff-line-content-text diff-fg-content w-full min-w-0 flex-1"
-        style={asDiffStyle({ ...wrapStyle, flexBasis: "0%", lineHeight: `${lineHeight}px` })}
+        className={
+          enableWrap
+            ? "diff-line-content-text diff-fg-content w-full min-w-0 flex-1"
+            : "diff-line-content-text diff-fg-content flex-shrink-0"
+        }
+        style={asDiffStyle({
+          ...wrapStyle,
+          lineHeight: `${lineHeight}px`,
+          ...(enableWrap ? { flexBasis: "0%" } : {}),
+        })}
       >
         {runs.map((run) => (
           <text

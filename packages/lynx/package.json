@@ -15,7 +15,7 @@
   ],
   "scripts": {
     "gen:type": "echo '[@git-diff-view/lynx] using hand-written index.d.ts'",
-    "gen:css": "mkdir -p dist/css styles && postcss src/tailwind.css -o dist/css/diff-view.css && cp dist/css/diff-view.css styles/diff-view.css && cp src/styles/theme.css styles/theme.css && cp src/styles/theme.css dist/css/theme.css"
+    "gen:css": "mkdir -p dist/css && postcss src/tailwind.css -o dist/css/diff-view.css"
   },
   "repository": {
     "type": "git",

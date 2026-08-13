@@ -13,8 +13,10 @@ ReactLynx `DiffView` for the [Lynx](https://lynxjs.org/) runtime — wrap-first 
 | Extend lines | ✅ `extendData` + `renderExtendLine` |
 | Expand hidden lines | ✅ |
 | `<list>` virtualization | ✅ Wrap Split + Unified (`estimated-main-axis-size-px`) |
-| `diffViewWrap={false}` dual-pane Split | ❌ deferred |
-| Add-widget / multiSelect | ❌ deferred |
+| Unified `diffViewWrap={false}` | ✅ shared H scroll; line nums stay put (gutter outside H scroller) |
+| `onDiffLineClick` | ✅ content / extend (Split side-aware) |
+| Split `diffViewWrap={false}` dual-pane | ❌ not planned (sync hard on Lynx) |
+| Add-widget / multiSelect | ❌ not planned (use `onDiffLineClick`) |
 
 ## Installation
 
@@ -57,21 +59,22 @@ import "@git-diff-view/lynx/styles/diff-view.css";
 | `data` | `{ oldFile?, newFile?, hunks }` | — | Same shape as react |
 | `diffFile` | `DiffFile` | — | Prebuilt/cloned instance |
 | `diffViewMode` | `DiffModeEnum` | SplitGitHub | Split vs Unified |
-| `diffViewWrap` | `boolean` | `true` | MVP always uses Wrap Split tree; no-wrap dual pane deferred |
+| `diffViewWrap` | `boolean` | `true` | **Unified only.** `false` → nowrap + shared H scroll; line numbers stay on the left. Split always wraps. |
 | `diffViewTheme` | `"light" \| "dark"` | `"light"` | Sets `data-theme` |
 | `diffViewHighlight` | `boolean` | — | `initSyntax` + AST colors |
 | `diffViewFontSize` | `number` | `13` | CSS `--diff-font-size--` |
 | `extendData` | `{ oldFile?, newFile? }` | — | Per-line extend payload |
 | `renderExtendLine` | `(ctx) => ReactNode` | — | Custom extend UI |
+| `onDiffLineClick` | `(payload) => void` | — | Tap content/extend row |
 | `registerHighlighter` | highlighter | — | Prefer `@git-diff-view/lezer` on Lynx |
 
-Also exports: `SplitSide`, `DiffModeEnum`, and `@git-diff-view/core` re-exports.
+Also exports: `SplitSide`, `DiffModeEnum`, `DiffLineClickPayload`, and `@git-diff-view/core` re-exports.
 
 ## Architecture notes
 
 - Calls `setEnableBuildTemplate(false)` — content is rendered from plain/syntax AST, not HTML templates.
 - Split layout mirrors `packages/react/src/components/v2/DiffSplitViewWrap_v2`: single tree, `getSplitLines()` + `DiffFileLineType` dispatcher.
-- Outer scroll is Lynx `<list>` / `<list-item>` (virtualized). Wrap Split keeps one row = both sides; no-wrap dual pane still deferred.
+- Outer scroll: wrap uses virtualized `<list>`. Unified nowrap follows the official `<scroll-view>` model (one child, complex layout inside): vertical `<scroll-view>` → `[gutter | horizontal <scroll-view>]`. Line numbers never enter the H scroller (`sticky` only works on direct children and pins to the scroll-axis start, typically top).
 
 ## Lynx + highlight.js caveat
 

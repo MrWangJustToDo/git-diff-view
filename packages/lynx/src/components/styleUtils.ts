@@ -62,6 +62,25 @@ export const estimateUnifiedLineNumberWidth = (lineCount: number, fontSize: numb
   return UNIFIED_NUM_PAD_EDGE + digit + UNIFIED_NUM_PAD_MID + digit + UNIFIED_NUM_PAD_EDGE;
 };
 
+/** Operator column (~1.5em) for DiffContent. */
+export const estimateOperatorWidth = (fontSize: number) => Math.round(fontSize * 1.5);
+
+/**
+ * Full Unified table width when nowrap — mirrors react auto table (no table-fixed).
+ * Used so one outer horizontal scroll can pan the whole view (not per-row).
+ */
+export const estimateUnifiedNowrapTableWidth = (
+  maxContentChars: number,
+  lineCount: number,
+  fontSize: number
+) => {
+  const numCol = estimateUnifiedLineNumberWidth(lineCount, fontSize);
+  const op = estimateOperatorWidth(fontSize);
+  const content = Math.ceil(Math.max(1, maxContentChars) * fontSize * DIGIT_EM);
+  // content pad (pr 10) + small slack
+  return numCol + op + content + 16;
+};
+
 /** Content line-height aligned with typical DOM monospace rendering. */
 export const estimateLineHeight = (fontSize: number) => Math.round(fontSize * 1.5);
 
@@ -80,6 +99,12 @@ export const estimateListItemHeight = (type: DiffFileLineType, fontSize: number)
 
 /** Stable `<list-item item-key>` — must stay unique across expand/collapse. */
 export const listItemKey = (type: DiffFileLineType | number, index: number) => `${type}-${index}`;
+
+/**
+ * Unified nowrap splits each row across two columns:
+ * gutter stays outside the horizontal `scroll-view`; content is the only H-scroll child.
+ */
+export type UnifiedNowrapPane = "gutter" | "content";
 
 /**
  * Lynx CSSProperties only types `whiteSpace` as `normal` | `nowrap`,
