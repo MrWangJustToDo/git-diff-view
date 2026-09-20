@@ -189,6 +189,17 @@ import { setEnableFastDiffTemplate } from '@git-diff-view/core';
 setEnableFastDiffTemplate(true);
 ```
 
+By default the inline ranges are merged with a semantic cleanup, which may
+highlight everything between the first and the last change on a line as a
+single block. This is especially visible for text without word boundaries
+(e.g. CJK text). Disable the cleanup to highlight each change separately:
+
+```ts
+import { setEnableDiffSemanticCleanup } from '@git-diff-view/core';
+
+setEnableDiffSemanticCleanup(false);
+```
+
 | Default | FastDiff |
 |---------|----------|
 | ![default](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/main/default.png) | ![fastdiff](https://raw.githubusercontent.com/MrWangJustToDo/git-diff-view/main/enableFastDiffTemplate.png) |
