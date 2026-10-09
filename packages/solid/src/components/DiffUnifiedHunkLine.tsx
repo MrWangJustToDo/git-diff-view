@@ -1,4 +1,4 @@
-import { composeLen, type DiffFile } from "@git-diff-view/core";
+import { composeLen, type DiffFile, type DiffHunkItem } from "@git-diff-view/core";
 import {
   hunkLineNumberBGName,
   plainLineNumberColorName,
@@ -6,14 +6,16 @@ import {
   hunkContentBGName,
   hunkContentColorName,
 } from "@git-diff-view/utils";
-import { createEffect, createMemo, createSignal, onCleanup, Show } from "solid-js";
+import { createEffect, createMemo, createSignal, onCleanup, Show, untrack } from "solid-js";
 
 import { useEnableWrap } from "../hooks";
 
 import { ExpandUp, ExpandDown, ExpandAll } from "./DiffExpand";
 
 export const DiffUnifiedHunkLine = (props: { index: number; diffFile: DiffFile; lineNumber: number }) => {
-  const currentHunk = createMemo(() => props.diffFile.getUnifiedHunkLine(props.index));
+  const getHunk = () => props.diffFile.getUnifiedHunkLine(props.index);
+
+  const [currentHunk, setCurrentHunk] = createSignal(untrack(getHunk));
 
   const enableExpand = createMemo(() => props.diffFile.getExpandEnabled());
 
@@ -21,19 +23,17 @@ export const DiffUnifiedHunkLine = (props: { index: number; diffFile: DiffFile; 
 
   const enableWrap = useEnableWrap();
 
-  const checkCurrentIsShow = () => {
-    const hunk = currentHunk();
-    return hunk && hunk.unifiedInfo && hunk.unifiedInfo.startHiddenIndex < hunk.unifiedInfo.endHiddenIndex;
-  };
+  const checkCurrentIsShow = (hunk: DiffHunkItem | undefined) =>
+    !!(hunk && hunk.unifiedInfo && hunk.unifiedInfo.startHiddenIndex < hunk.unifiedInfo.endHiddenIndex);
 
-  const [currentIsShow, setCurrentIsShow] = createSignal(checkCurrentIsShow());
+  const [currentIsShow, setCurrentIsShow] = createSignal(untrack(() => checkCurrentIsShow(currentHunk())));
 
-  const checkCurrentIsEnableAll = () => {
-    const hunk = currentHunk();
-    return hunk && hunk.unifiedInfo && hunk.unifiedInfo.endHiddenIndex - hunk.unifiedInfo.startHiddenIndex < composeLen;
-  };
+  const checkCurrentIsEnableAll = (hunk: DiffHunkItem | undefined) =>
+    !!(hunk && hunk.unifiedInfo && hunk.unifiedInfo.endHiddenIndex - hunk.unifiedInfo.startHiddenIndex < composeLen);
 
-  const [currentIsEnableAll, setCurrentIsEnableAll] = createSignal(checkCurrentIsEnableAll());
+  const [currentIsEnableAll, setCurrentIsEnableAll] = createSignal(
+    untrack(() => checkCurrentIsEnableAll(currentHunk()))
+  );
 
   const currentIsFirstLine = createMemo(() => currentHunk()?.isFirst);
 
@@ -45,8 +45,10 @@ export const DiffUnifiedHunkLine = (props: { index: number; diffFile: DiffFile; 
 
   createEffect(() => {
     const init = () => {
-      setCurrentIsShow(checkCurrentIsShow);
-      setCurrentIsEnableAll(checkCurrentIsEnableAll);
+      const hunk = getHunk();
+      setCurrentHunk(hunk);
+      setCurrentIsShow(checkCurrentIsShow(hunk));
+      setCurrentIsEnableAll(checkCurrentIsEnableAll(hunk));
     };
 
     init();

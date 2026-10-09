@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { composeLen, type DiffFile } from '@git-diff-view/core';
+	import { composeLen, type DiffFile, type DiffHunkItem } from '@git-diff-view/core';
 	import {
 		borderColorName,
 		hunkContentBGName,
@@ -20,31 +20,21 @@
 
 	let props: Props = $props();
 
-	const currentHunk = $derived.by(() => props.diffFile.getSplitHunkLine(props.index));
+	let currentHunk = $state(props.diffFile.getSplitHunkLine(props.index));
 
 	const enableExpand = $derived.by(() => props.diffFile.getExpandEnabled());
 
 	const couldExpand = $derived.by(() => enableExpand && currentHunk?.splitInfo);
 
-	const checkCurrentShowExpandAll = () => {
-		const hunk = currentHunk;
-		return (
-			hunk &&
-			hunk.splitInfo &&
-			hunk.splitInfo.endHiddenIndex - hunk.splitInfo.startHiddenIndex < composeLen
-		);
-	};
+	const checkCurrentShowExpandAll = (hunk: DiffHunkItem | undefined) =>
+		!!(hunk && hunk.splitInfo && hunk.splitInfo.endHiddenIndex - hunk.splitInfo.startHiddenIndex < composeLen);
 
-	let currentShowExpandAll = $state(checkCurrentShowExpandAll());
+	let currentShowExpandAll = $state(checkCurrentShowExpandAll(props.diffFile.getSplitHunkLine(props.index)));
 
-	const checkCurrentIsShow = () => {
-		const hunk = currentHunk;
-		return (
-			hunk && hunk.splitInfo && hunk.splitInfo.startHiddenIndex < hunk.splitInfo.endHiddenIndex
-		);
-	};
+	const checkCurrentIsShow = (hunk: DiffHunkItem | undefined) =>
+		!!(hunk && hunk.splitInfo && hunk.splitInfo.startHiddenIndex < hunk.splitInfo.endHiddenIndex);
 
-	let currentIsShow = $state(checkCurrentIsShow());
+	let currentIsShow = $state(checkCurrentIsShow(props.diffFile.getSplitHunkLine(props.index)));
 
 	const currentIsFirstLine = $derived.by(() => {
 		const hunk = currentHunk;
@@ -67,8 +57,10 @@
 		unSubscribe.current();
 
 		const init = () => {
-			currentIsShow = checkCurrentIsShow();
-			currentShowExpandAll = checkCurrentShowExpandAll();
+			const hunk = props.diffFile.getSplitHunkLine(props.index);
+			currentHunk = hunk;
+			currentIsShow = checkCurrentIsShow(hunk);
+			currentShowExpandAll = checkCurrentShowExpandAll(hunk);
 		};
 
 		init();

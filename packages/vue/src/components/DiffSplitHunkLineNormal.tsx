@@ -17,7 +17,7 @@ import { DiffModeEnum, SplitSide } from "./DiffView";
 
 const DiffSplitHunkLineGitHub = defineComponent(
   (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
-    const currentHunk = computed(() => props.diffFile.getSplitHunkLine(props.index));
+    const currentHunk = ref(props.diffFile.getSplitHunkLine(props.index));
 
     const enableExpand = computed(() => props.diffFile.getExpandEnabled());
 
@@ -50,6 +50,8 @@ const DiffSplitHunkLineGitHub = defineComponent(
     );
 
     useSubscribeDiffFile(props, () => {
+      currentHunk.value = props.diffFile.getSplitHunkLine(props.index);
+
       currentShowExpandAll.value =
         currentHunk.value &&
         currentHunk.value.splitInfo &&
@@ -179,7 +181,7 @@ const DiffSplitHunkLineGitHub = defineComponent(
 
 const DiffSplitHunkLineGitLab = defineComponent(
   (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
-    const currentHunk = computed(() => props.diffFile.getSplitHunkLine(props.index));
+    const currentHunk = ref(props.diffFile.getSplitHunkLine(props.index));
 
     const enableExpand = computed(() => props.diffFile.getExpandEnabled());
 
@@ -221,6 +223,8 @@ const DiffSplitHunkLineGitLab = defineComponent(
     });
 
     useSubscribeDiffFile(props, () => {
+      currentHunk.value = props.diffFile.getSplitHunkLine(props.index);
+
       currentShowExpandAll.value =
         currentHunk.value &&
         currentHunk.value.splitInfo &&
