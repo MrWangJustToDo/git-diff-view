@@ -40,6 +40,18 @@ export const resetMaxLengthToIgnoreLineDiff = () => {
 
 export const getMaxLengthToIgnoreLineDiff = () => maxLengthToIgnoreLineDiff;
 
+let enableDiffSemanticCleanup = true;
+
+export const getEnableDiffSemanticCleanup = () => enableDiffSemanticCleanup;
+
+export const setEnableDiffSemanticCleanup = (enable: boolean) => {
+  enableDiffSemanticCleanup = enable;
+};
+
+export const resetEnableDiffSemanticCleanup = () => {
+  enableDiffSemanticCleanup = true;
+};
+
 /** Get the maximum position in the range. */
 function rangeMax(range: IRange["range"]): number {
   return range.location + range.length;
@@ -222,7 +234,7 @@ export function diffChanges(addition: DiffLine, deletion: DiffLine): { addRange:
     };
   }
 
-  const diffRange = fastDiff(delString, addString, 0, true);
+  const diffRange = fastDiff(delString, addString, 0, enableDiffSemanticCleanup);
 
   let aStart = 0;
   let bStart = 0;
