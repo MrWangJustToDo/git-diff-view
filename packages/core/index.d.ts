@@ -733,7 +733,7 @@ export declare function getLineNumberFromElement_Split(el: HTMLElement | null): 
 /**
  * Get line numbers from a unified mode element
  */
-export declare function getLineNumbersFromElement_Unified(el: HTMLElement | null): {
+export declare function getLineNumbersFromElement_Unified(el: HTMLElement | null, inMouseDown?: boolean): {
 	old?: number;
 	new?: number;
 } | null;
