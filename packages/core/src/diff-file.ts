@@ -72,6 +72,25 @@ export interface DiffHunkItem extends DiffLineItem {
   unifiedInfo?: HunkLineInfo & HunkInfo;
 }
 
+/**
+ * Build a `lineNumber -> index` lookup so the `getXxxLineByLineNumber` helpers
+ * stay O(1) instead of scanning the whole line array on every call. The first
+ * occurrence wins, mirroring `Array.prototype.findIndex`.
+ */
+const buildLineNumberIndex = <T>(lines: T[], getLineNumber: (line: T) => number | undefined) => {
+  const map = new Map<number, number>();
+
+  for (let i = 0; i < lines.length; i++) {
+    const lineNumber = getLineNumber(lines[i]);
+
+    if (lineNumber !== undefined && !map.has(lineNumber)) {
+      map.set(lineNumber, i);
+    }
+  }
+
+  return map;
+};
+
 export class DiffFile {
   #oldFileResult?: File | null;
 
@@ -104,6 +123,13 @@ export class DiffFile {
   #splitLeftLines: SplitLineItem[] = [];
 
   #splitRightLines: SplitLineItem[] = [];
+
+  // Lazily-built `lineNumber -> index` lookups so the multi-select range scan
+  // stays O(selected) instead of O(selected * totalLines). They are dropped
+  // whenever the line arrays are (re)built or replaced.
+  #splitLineNumberIndex?: { old: Map<number, number>; new: Map<number, number> };
+
+  #unifiedLineNumberIndex?: { old: Map<number, number>; new: Map<number, number> };
 
   #splitHunksLines?: Record<string, DiffHunkItem>;
 
@@ -788,6 +814,7 @@ export class DiffFile {
 
   buildSplitDiffLines() {
     if (this.#hasBuildSplit) return;
+    this.#clearLineNumberIndex();
     let oldFileLineNumber = 1;
     let newFileLineNumber = 1;
     let prevIsHidden = true;
@@ -976,6 +1003,7 @@ export class DiffFile {
 
   buildUnifiedDiffLines() {
     if (this.#hasBuildUnified) return;
+    this.#clearLineNumberIndex();
     let oldFileLineNumber = 1;
     let newFileLineNumber = 1;
     let prevIsHidden = true;
@@ -1154,24 +1182,47 @@ export class DiffFile {
     this.notifyAll();
   }
 
+  #clearLineNumberIndex() {
+    this.#splitLineNumberIndex = undefined;
+    this.#unifiedLineNumberIndex = undefined;
+  }
+
+  #getSplitLineNumberIndex(side: SplitSide) {
+    if (!this.#splitLineNumberIndex) {
+      this.#splitLineNumberIndex = {
+        old: buildLineNumberIndex(this.#splitLeftLines, (item) => item.lineNumber),
+        new: buildLineNumberIndex(this.#splitRightLines, (item) => item.lineNumber),
+      };
+    }
+
+    return side === SplitSide.old ? this.#splitLineNumberIndex.old : this.#splitLineNumberIndex.new;
+  }
+
+  #getUnifiedLineNumberIndex(side: SplitSide) {
+    if (!this.#unifiedLineNumberIndex) {
+      this.#unifiedLineNumberIndex = {
+        old: buildLineNumberIndex(this.#unifiedLines, (item) => item.oldLineNumber),
+        new: buildLineNumberIndex(this.#unifiedLines, (item) => item.newLineNumber),
+      };
+    }
+
+    return side === SplitSide.old ? this.#unifiedLineNumberIndex.old : this.#unifiedLineNumberIndex.new;
+  }
+
   getSplitLeftLine = (index: number) => {
     return this.#splitLeftLines[index];
   };
 
   getSplitLineByLineNumber = (lineNumber: number, side: SplitSide) => {
-    if (side === SplitSide.old) {
-      return this.#splitLeftLines?.find((item) => item.lineNumber === lineNumber);
-    } else {
-      return this.#splitRightLines?.find((item) => item.lineNumber === lineNumber);
-    }
+    const index = this.#getSplitLineNumberIndex(side).get(lineNumber);
+
+    if (index === undefined) return;
+
+    return (side === SplitSide.old ? this.#splitLeftLines : this.#splitRightLines)[index];
   };
 
   getSplitLineIndexByLineNumber = (lineNumber: number, side: SplitSide) => {
-    if (side === SplitSide.old) {
-      return this.#splitLeftLines?.findIndex((item) => item.lineNumber === lineNumber);
-    } else {
-      return this.#splitRightLines?.findIndex((item) => item.lineNumber === lineNumber);
-    }
+    return this.#getSplitLineNumberIndex(side).get(lineNumber) ?? -1;
   };
 
   getSplitRightLine = (index: number) => {
@@ -1296,20 +1347,16 @@ export class DiffFile {
     return this.#unifiedLines[index];
   };
 
-  getUnifiedLineByLineNumber = (lienNumber: number, side: SplitSide) => {
-    if (side === SplitSide.old) {
-      return this.#unifiedLines?.find((item) => item.oldLineNumber === lienNumber);
-    } else {
-      return this.#unifiedLines?.find((item) => item.newLineNumber === lienNumber);
-    }
+  getUnifiedLineByLineNumber = (lineNumber: number, side: SplitSide) => {
+    const index = this.#getUnifiedLineNumberIndex(side).get(lineNumber);
+
+    if (index === undefined) return;
+
+    return this.#unifiedLines[index];
   };
 
   getUnifiedLineIndexByLineNumber = (lineNumber: number, side: SplitSide) => {
-    if (side === SplitSide.old) {
-      return this.#unifiedLines?.findIndex((item) => item.oldLineNumber === lineNumber);
-    } else {
-      return this.#unifiedLines?.findIndex((item) => item.newLineNumber === lineNumber);
-    }
+    return this.#getUnifiedLineNumberIndex(side).get(lineNumber) ?? -1;
   };
 
   getUnifiedHunkLine = (index: number) => {
@@ -1690,6 +1737,8 @@ export class DiffFile {
     this.#unifiedLines = data.unifiedLines;
     this.#unifiedHunksLines = data.unifiedHunkLines;
 
+    this.#clearLineNumberIndex();
+
     this.#theme = data.theme;
 
     // mark this instance as a merged instance
@@ -1879,6 +1928,7 @@ export class DiffFile {
     this.#splitRightLines = [];
     this.#unifiedHunksLines = undefined;
     this.#unifiedLines = [];
+    this.#clearLineNumberIndex();
     this.#theme = "light";
   };
 }
