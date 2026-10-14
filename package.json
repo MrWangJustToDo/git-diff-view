@@ -9,6 +9,7 @@
     "build:packages": "ts-node ./scripts/build.ts",
     "start:release": "ts-node ./scripts/release.ts",
     "dev:react": "cd ui/react-example && pnpm run dev",
+    "dev:react:official": "MY_REACT=0 pnpm run dev:react",
     "dev:vue": "cd ui/vue-example && pnpm run dev",
     "dev:vue-ssr": "cd ui/vue-ssr-example && pnpm run dev",
     "dev:next-page": "cd ui/next-page-example && pnpm run dev",

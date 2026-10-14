@@ -20,7 +20,8 @@ export const StartContent = () => {
       <Stack gap="xl">
         <ReactPlayGround />
         <VuePlayGround />
-        <CliPlayGround />
+        {/* The CliPlayGround relies on @my-react internals, so it only runs on the @my-react runtime. */}
+        {__MY_REACT__ && <CliPlayGround />}
       </Stack>
 
       <Space h="xl" />
