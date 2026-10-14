@@ -189,16 +189,24 @@ import { setEnableFastDiffTemplate } from '@git-diff-view/core';
 setEnableFastDiffTemplate(true);
 ```
 
-By default the inline ranges are merged with a semantic cleanup, which may
-highlight everything between the first and the last change on a line as a
-single block. This is especially visible for text without word boundaries
-(e.g. CJK text). Disable the cleanup to highlight each change separately:
+In FastDiff mode, adjacent small changes are merged by a semantic cleanup by
+default, so text without word boundaries (e.g. CJK) may be highlighted as a
+single block between the first and the last change. To highlight each change
+separately, keep FastDiff enabled and disable the semantic cleanup:
 
 ```ts
-import { setEnableDiffSemanticCleanup } from '@git-diff-view/core';
+import { setEnableFastDiffTemplate, setEnableDiffSemanticCleanup } from '@git-diff-view/core';
 
+setEnableFastDiffTemplate(true);
 setEnableDiffSemanticCleanup(false);
 ```
+
+> **Note:** `setEnableDiffSemanticCleanup` only affects FastDiff mode
+> (`setEnableFastDiffTemplate(true)`). It has no effect in the default
+> (relative) mode, which always renders the whole changed span as one block.
+>
+> `setEnableDiffSemanticCleanup(false)` is **not** a substitute for
+> `setEnableFastDiffTemplate(true)` — the two must be used together.
 
 | Default | FastDiff |
 |---------|----------|

@@ -40,6 +40,13 @@ export const resetMaxLengthToIgnoreLineDiff = () => {
 
 export const getMaxLengthToIgnoreLineDiff = () => maxLengthToIgnoreLineDiff;
 
+/**
+ * Controls whether `fast-diff` merges adjacent small changes with a semantic cleanup.
+ *
+ * Only affects the fast-diff path (`diffChanges`, gated by `enableFastDiffTemplate`
+ * in template.ts). The default/relative path (`relativeChanges`) always produces a
+ * single contiguous range and is unaffected by this flag.
+ */
 let enableDiffSemanticCleanup = true;
 
 export const getEnableDiffSemanticCleanup = () => enableDiffSemanticCleanup;

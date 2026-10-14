@@ -45,6 +45,8 @@ export const getPlainDiffTemplate = ({
 }) => {
   if (diffLine.plainTemplate && diffLine.plainTemplateMode === "relative") return;
 
+  // Defensive: keep an already-built fast-diff template while fast-diff mode is on.
+  // (Internal routing only calls this in relative mode, so this guards external callers.)
   if (diffLine.plainTemplate && diffLine.plainTemplateMode === "fast-diff" && enableFastDiffTemplate) return;
 
   const changes = diffLine.changes;
@@ -151,6 +153,8 @@ export const getSyntaxDiffTemplate = ({
   )
     return;
 
+  // Defensive: keep an already-built fast-diff template while fast-diff mode is on.
+  // (Internal routing only calls this in relative mode, so this guards external callers.)
   if (
     diffLine.syntaxTemplate &&
     diffLine.syntaxTemplateMode === "fast-diff" &&
