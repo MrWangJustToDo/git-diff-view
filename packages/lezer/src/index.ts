@@ -113,7 +113,7 @@ Object.defineProperty(instance, "getAST", {
     ) {
       if (__DEV__) {
         console.warn(
-          `ignore syntax for current file, because the fileName is in the ignoreSyntaxHighlightList: ${fileName}`
+          `[@git-diff-view/lezer] Skipping syntax highlighting for "${fileName}" because it is listed in ignoreSyntaxHighlightList.`
         );
       }
       return;
@@ -123,7 +123,7 @@ Object.defineProperty(instance, "getAST", {
 
     if (!language) {
       if (__DEV__ && lang) {
-        console.warn(`[@git-diff-view/lezer] not support current lang: ${lang} yet`);
+        console.warn(`[@git-diff-view/lezer] Unsupported language: "${lang}".`);
       }
       return;
     }

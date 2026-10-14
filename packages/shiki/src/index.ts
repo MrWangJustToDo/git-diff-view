@@ -104,11 +104,11 @@ const getHighlighter = async (langs?: BundledLanguage[]) => {
         if (customInternalLangs) {
           if (customInternalLangs.length < langs.length) {
             console.warn(
-              "@git-diff-view/shiki: custom langs has been set, but the new langs is different from the old one, please check your code"
+              "[@git-diff-view/shiki] Custom languages were already set, but the new list differs from the previous one. Please check your code."
             );
           } else if (!customInternalLangs.sort().join(",").startsWith(langs.sort().join(","))) {
             console.warn(
-              "@git-diff-view/shiki: custom langs has been set, but the new langs is not a subset of the old one, please check your code"
+              "[@git-diff-view/shiki] Custom languages were already set, and the new list is not a subset of the previous one. Please check your code."
             );
           }
         }
@@ -160,7 +160,7 @@ Object.defineProperty(instance, "getAST", {
     ) {
       if (__DEV__) {
         console.warn(
-          `ignore syntax for current file, because the fileName is in the ignoreSyntaxHighlightList: ${fileName}`
+          `[@git-diff-view/shiki] Skipping syntax highlighting for "${fileName}" because it is listed in ignoreSyntaxHighlightList.`
         );
       }
       return;
@@ -230,7 +230,7 @@ export const highlighterReady = new Promise<DiffHighlighter>((r) => {
   const proxy = new Proxy(r, {
     get(target, prop, receiver) {
       if (typeof prop === "string" && prop !== "then") {
-        console.warn("@git-diff-view/shiki: highlighterReady is deprecated, please use getDiffViewHighlighter instead");
+        console.warn("[@git-diff-view/shiki] `highlighterReady` is deprecated; use `getDiffViewHighlighter` instead.");
       }
       return Reflect.get(target, prop, receiver);
     },

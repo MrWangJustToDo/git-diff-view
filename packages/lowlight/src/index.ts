@@ -100,7 +100,7 @@ Object.defineProperty(instance, "getAST", {
 
     if (!lowlight.registered(lang || "")) {
       if (__DEV__) {
-        console.warn(`not support current lang: ${lang} yet`);
+        console.warn(`[@git-diff-view/lowlight] Unsupported language: "${lang}".`);
       }
       hasRegisteredLang = false;
     }
@@ -113,7 +113,7 @@ Object.defineProperty(instance, "getAST", {
     ) {
       if (__DEV__) {
         console.warn(
-          `ignore syntax for current file, because the fileName is in the ignoreSyntaxHighlightList: ${fileName}`
+          `[@git-diff-view/lowlight] Skipping syntax highlighting for "${fileName}" because it is listed in ignoreSyntaxHighlightList.`
         );
       }
       return;

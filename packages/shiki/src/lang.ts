@@ -47,7 +47,7 @@ export function _getAST(
   _theme?: "light" | "dark"
 ) {
   if (__DEV__) {
-    console.warn("This is a type helper function, do not call it directly.");
+    console.warn("[@git-diff-view/shiki] `_getAST` is a type-level helper and is not meant to be called at runtime.");
   }
   return {} as DiffAST;
 }
