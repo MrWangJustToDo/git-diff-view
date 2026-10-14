@@ -45,6 +45,9 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
 
   const lines = getSplitContentLines(diffFile);
 
+  // changes only on content / template rebuilds, not on expand / collapse
+  const contentVersion = diffFile.getContentVersion();
+
   const setStyle = (side?: SplitSide) => {
     if (!ref.current) return;
     if (!side) {
@@ -135,6 +138,7 @@ export const DiffSplitViewWrap = memo(({ diffFile }: { diffFile: DiffFile }) => 
                   diffFile={diffFile}
                   enableAddWidget={!!enableAddWidget}
                   enableHighlight={!!enableHighlight}
+                  contentVersion={contentVersion}
                 />
                 <DiffSplitWidgetLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />
                 <DiffSplitExtendLine index={line.index} lineNumber={line.lineNumber} diffFile={diffFile} />

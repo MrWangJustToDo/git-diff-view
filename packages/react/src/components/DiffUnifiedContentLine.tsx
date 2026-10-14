@@ -11,6 +11,7 @@ import {
   plainLineNumberColorName,
   expandLineNumberColorName,
 } from "@git-diff-view/utils";
+import { memo } from "react";
 
 import { SplitSide } from "..";
 
@@ -304,7 +305,7 @@ const InternalDiffUnifiedLine = ({
   }
 };
 
-export const DiffUnifiedContentLine = ({
+const InternalDiffUnifiedContentLine = ({
   index,
   diffFile,
   lineNumber,
@@ -318,6 +319,8 @@ export const DiffUnifiedContentLine = ({
   enableWrap: boolean;
   enableHighlight: boolean;
   enableAddWidget: boolean;
+  /** Memo key: bumped only on content / template rebuilds, not on expand / collapse. */
+  contentVersion: number;
 }) => {
   const unifiedLine = diffFile.getUnifiedLine(index);
 
@@ -334,3 +337,5 @@ export const DiffUnifiedContentLine = ({
     />
   );
 };
+
+export const DiffUnifiedContentLine = memo(InternalDiffUnifiedContentLine);

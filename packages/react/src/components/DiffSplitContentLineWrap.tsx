@@ -7,6 +7,7 @@ import {
   borderColorName,
   expandLineNumberColorName,
 } from "@git-diff-view/utils";
+import { memo } from "react";
 
 import { SplitSide } from "..";
 
@@ -204,7 +205,7 @@ const InternalDiffSplitLine = ({
   );
 };
 
-export const DiffSplitContentLine = ({
+const InternalDiffSplitContentLine = ({
   index,
   diffFile,
   lineNumber,
@@ -216,6 +217,8 @@ export const DiffSplitContentLine = ({
   lineNumber: number;
   enableHighlight: boolean;
   enableAddWidget: boolean;
+  /** Memo key: bumped only on content / template rebuilds, not on expand / collapse. */
+  contentVersion: number;
 }) => {
   const oldLine = diffFile.getSplitLeftLine(index);
 
@@ -233,3 +236,5 @@ export const DiffSplitContentLine = ({
     />
   );
 };
+
+export const DiffSplitContentLine = memo(InternalDiffSplitContentLine);

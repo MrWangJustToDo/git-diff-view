@@ -111,7 +111,9 @@ export class DiffFile {
 
   #unifiedHunksLines?: Record<string, DiffHunkItem>;
 
-  #listeners: ((() => void) & { isSyncExternal?: boolean })[] = [];
+  // A `Set` keeps subscribe / unsubscribe O(1); the previous array + `filter`
+  // made tearing down N per-row subscribers O(N^2).
+  #listeners = new Set<(() => void) & { isSyncExternal?: boolean }>();
 
   #hasInitRaw: boolean = false;
 
@@ -122,6 +124,11 @@ export class DiffFile {
   #hasBuildUnified: boolean = false;
 
   #updateCount: number = 0;
+
+  // Bumped whenever line content / templates are (re)built (see `#composeDiff`).
+  // Unlike `#updateCount` it does NOT change on expand / collapse, so row
+  // components can memoize on it and skip work when only visibility changed.
+  #contentVersion: number = 0;
 
   #composeByDiff: boolean = false;
 
@@ -488,6 +495,8 @@ export class DiffFile {
 
   #composeDiff() {
     if (!this.#diffListResults?.length) return;
+
+    this.#contentVersion++;
 
     const getAdditionRaw = (lineNumber: number) => {
       return this.#getNewRawLine(lineNumber);
@@ -1533,10 +1542,10 @@ export class DiffFile {
 
   // TODO improve
   subscribe = (listener: (() => void) & { isSyncExternal?: boolean }) => {
-    this.#listeners.push(listener);
+    this.#listeners.add(listener);
 
     return () => {
-      this.#listeners = this.#listeners.filter((i) => i !== listener);
+      this.#listeners.delete(listener);
     };
   };
 
@@ -1557,6 +1566,8 @@ export class DiffFile {
   };
 
   getUpdateCount = () => this.#updateCount;
+
+  getContentVersion = () => this.#contentVersion;
 
   getExpandEnabled = () => !this.#composeByDiff && !this.#composeByRange;
 
@@ -1846,7 +1857,7 @@ export class DiffFile {
 
   _destroy = () => {
     this.clearId();
-    this.#listeners.splice(0, this.#listeners.length);
+    this.#listeners.clear();
     this.#clonedInstance.forEach((v) => v());
     this.#clonedInstance.clear();
   };

@@ -156,6 +156,7 @@ export declare class DiffFile {
 	}) => () => void;
 	notifyAll: (skipSyncExternal?: boolean) => void;
 	getUpdateCount: () => number;
+	getContentVersion: () => number;
 	getExpandEnabled: () => boolean;
 	getBundle: () => {
 		hasInitRaw: boolean;
@@ -279,9 +280,9 @@ export declare class DiffFile {
 		theme: "light" | "dark";
 	};
 	_mergeFullBundle: (data: ReturnType<DiffFile["_getFullBundle"]>, notifyUpdate?: boolean) => void;
-	_getAllListener: () => ((() => void) & {
+	_getAllListener: () => Set<(() => void) & {
 		isSyncExternal?: boolean;
-	})[];
+	}>;
 	_destroy: () => void;
 	clear: () => void;
 }

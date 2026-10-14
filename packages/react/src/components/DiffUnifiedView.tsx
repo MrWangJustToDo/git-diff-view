@@ -66,6 +66,9 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
 
   const lines = getUnifiedContentLine(diffFile);
 
+  // changes only on content / template rebuilds, not on expand / collapse
+  const contentVersion = diffFile.getContentVersion();
+
   const setStyle = (side?: SplitSide) => {
     if (!ref.current) return;
     if (!side) {
@@ -152,6 +155,7 @@ export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
                     enableWrap={!!enableWrap}
                     enableHighlight={!!enableHighlight}
                     enableAddWidget={!!enableAddWidget}
+                    contentVersion={contentVersion}
                   />
                   <DiffUnifiedWidgetLine
                     index={item.index}

@@ -41,6 +41,9 @@ const DiffSplitViewTable = ({
 
   const lines = getSplitContentLines(diffFile);
 
+  // changes only on content / template rebuilds, not on expand / collapse
+  const contentVersion = diffFile.getContentVersion();
+
   return (
     <table className={className + " w-full border-collapse border-spacing-0"} data-mode={SplitSide[side]}>
       <colgroup>
@@ -64,6 +67,7 @@ const DiffSplitViewTable = ({
               diffFile={diffFile}
               enableAddWidget={enableAddWidget}
               enableHighlight={enableHighlight}
+              contentVersion={contentVersion}
             />
             <DiffSplitWidgetLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
             <DiffSplitExtendLine index={line.index} side={side} lineNumber={line.lineNumber} diffFile={diffFile} />
