@@ -283,9 +283,9 @@ const InternalDiffViewWithMultiSelect = <T extends unknown>(
             if (isUnifiedMode && otherMultiResult?.length) {
               const max = Math.max(...otherMultiResult);
               const diffFile = getDiffFile();
-              const index = diffFile.getUnifiedLineIndexByLineNumber(lineNum, side);
-              const unifiedItem = diffFile.getUnifiedLine(index);
-              const otherSideLineNum = side === SplitSide.old ? unifiedItem.newLineNumber : unifiedItem.oldLineNumber;
+              const index = diffFile?.getUnifiedLineIndexByLineNumber(lineNum, side) || -1;
+              const unifiedItem = diffFile?.getUnifiedLine?.(index);
+              const otherSideLineNum = side === SplitSide.old ? unifiedItem?.newLineNumber : unifiedItem?.oldLineNumber;
               if (max === otherSideLineNum) {
                 const finalResult = { [otherSide]: otherMultiResult };
                 updateMultiResult(finalResult as MultiResult);

@@ -32,8 +32,14 @@ export function getSideFromElement_Split(el: HTMLElement | null): MultiSelectSid
 /**
  * Get line numbers from a unified mode element
  */
-export function getLineNumbersFromElement_Unified(el: HTMLElement | null): { old?: number; new?: number } | null {
+export function getLineNumbersFromElement_Unified(
+  el: HTMLElement | null,
+  inMouseDown = false
+): { old?: number; new?: number } | null {
   if (!el) return null;
+
+  // Starting a selection from the add-widget button would clear the previous selection.
+  if (inMouseDown && el.closest(".diff-add-widget-wrapper")) return null;
 
   const lineNumbersEl = el.closest(".diff-line-num");
   if (!lineNumbersEl) return null;
@@ -58,9 +64,12 @@ export function getLineNumbersFromElement_Unified(el: HTMLElement | null): { old
 export function getNumberHolderElement_Split(el: HTMLElement | null, inMouseDown = false): HTMLElement | null {
   if (!el) return null;
 
+  // Starting a selection from the add-widget button would clear the previous selection.
+  if (inMouseDown && el.closest(".diff-add-widget-wrapper")) return null;
+
   let numberHolder: HTMLElement | null = null;
 
-  if (!inMouseDown || el.closest(".diff-add-widget-wrapper")) {
+  if (!inMouseDown) {
     const newContentEl = el.closest(".diff-line-new-content");
     const oldContentEl = el.closest(".diff-line-old-content");
 

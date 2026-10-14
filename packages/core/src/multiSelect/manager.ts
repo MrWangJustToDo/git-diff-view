@@ -136,7 +136,7 @@ export class DiffMultiSelectManager {
   }
 
   #handleMouseDown_Unified(e: MouseEvent): void {
-    const lineNumbers = getLineNumbersFromElement_Unified(e.target as HTMLElement);
+    const lineNumbers = getLineNumbersFromElement_Unified(e.target as HTMLElement, true);
     if (!lineNumbers) return;
 
     const lineNumber = lineNumbers.new ?? lineNumbers.old;
