@@ -151,9 +151,10 @@ export class DiffFile {
 
   #updateCount: number = 0;
 
-  // Bumped whenever line content / templates are (re)built (see `#composeDiff`).
-  // Unlike `#updateCount` it does NOT change on expand / collapse, so row
-  // components can memoize on it and skip work when only visibility changed.
+  // Bumped whenever the rendered line content may have changed: line content /
+  // templates are (re)built (`#composeDiff`) or the line arrays are replaced by a
+  // bundle merge. Unlike `#updateCount` it does NOT change on expand / collapse,
+  // so row components can memoize on it and skip work when only visibility changed.
   #contentVersion: number = 0;
 
   #composeByDiff: boolean = false;
@@ -1738,6 +1739,11 @@ export class DiffFile {
     this.#unifiedHunksLines = data.unifiedHunkLines;
 
     this.#clearLineNumberIndex();
+
+    // A merge replaces the line arrays wholesale, so the content at a given index
+    // may change without a compose. Bump so memoized rows on a rendered instance
+    // cannot keep showing stale lines.
+    this.#contentVersion++;
 
     this.#theme = data.theme;
 
