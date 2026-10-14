@@ -226,7 +226,7 @@ export class File {
   #doCheck() {
     if (this.rawLength && this.syntaxLength) {
       if (this.rawLength !== this.syntaxLength) {
-        console.warn("[@git-diff-view/core] The rawLength does not match the syntaxLength.");
+        console.warn("[@git-diff-view/core] The `rawLength` does not match the `syntaxLength`.");
       }
       Object.values(this.syntaxFile).forEach(({ value, lineNumber }) => {
         if (value !== this.rawFile[lineNumber]) {
@@ -236,7 +236,8 @@ export class File {
               ": " +
               value +
               " !== " +
-              this.rawFile[lineNumber]
+              this.rawFile[lineNumber] +
+              "."
           );
         }
       });

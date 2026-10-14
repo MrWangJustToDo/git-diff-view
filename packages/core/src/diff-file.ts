@@ -396,7 +396,7 @@ export class DiffFile {
       if (!hasSymbolChanged && oldFileContent === newFileContent) {
         if (__DEV__) {
           console.warn(
-            '[@git-diff-view/core] The composed "oldFileContent" and "newFileContent" are identical. This might indicate an invalid "diff" string.'
+            "[@git-diff-view/core] The composed `oldFileContent` and `newFileContent` are identical. This might indicate an invalid `diff` string."
           );
         }
         return;
@@ -500,7 +500,7 @@ export class DiffFile {
         diffLine?.text !== fileLine?.value
       ) {
         console.warn(
-          `[@git-diff-view/core] Mismatch detected between 'oldFileContent' and 'diff' at line ${line}. Please verify the 'oldFileContent' is correct.`
+          `[@git-diff-view/core] Mismatch detected between \`oldFileContent\` and \`diff\` at line ${line}. Please verify that \`oldFileContent\` is correct.`
         );
         break;
       }
@@ -513,7 +513,7 @@ export class DiffFile {
         diffLine?.text !== fileLine?.value
       ) {
         console.warn(
-          `[@git-diff-view/core] Mismatch detected between 'newFileContent' and 'diff' at line ${line}. Please verify the 'newFileContent' is correct.`
+          `[@git-diff-view/core] Mismatch detected between \`newFileContent\` and \`diff\` at line ${line}. Please verify that \`newFileContent\` is correct.`
         );
         break;
       }
@@ -651,7 +651,7 @@ export class DiffFile {
         if (__DEV__) {
           if (item.oldLineNumber <= maxOldLineNumber) {
             console.warn(
-              '[@git-diff-view/core] Line numbers in "diff" must be in ascending order. This might indicate an invalid "diff" string.'
+              "[@git-diff-view/core] Line numbers in `diff` must be in ascending order. This might indicate an invalid `diff` string."
             );
           }
 
@@ -667,7 +667,7 @@ export class DiffFile {
         if (__DEV__) {
           if (item.newLineNumber <= maxNewLineNumber) {
             console.warn(
-              '[@git-diff-view/core] Line numbers in "diff" must be in ascending order. This might indicate an invalid "diff" string.'
+              "[@git-diff-view/core] Line numbers in `diff` must be in ascending order. This might indicate an invalid `diff` string."
             );
           }
 
@@ -707,7 +707,7 @@ export class DiffFile {
     if (this.#composeByMerge && !this.#composeByFullMerge) {
       if (__DEV__) {
         console.error(
-          "[@git-diff-view/core] Syntax highlighting failed due to missing data. Consider using '_getFullBundle' and '_mergeFullBundle' instead of 'getBundle' and 'mergeBundle'."
+          "[@git-diff-view/core] Syntax highlighting failed because the file data is missing on this merged instance. Use `_getFullBundle` and `_mergeFullBundle` instead of `getBundle` and `mergeBundle`."
         );
       }
 
@@ -825,7 +825,7 @@ export class DiffFile {
 
     if (__DEV__ && !this.#oldFileResult && !this.#newFileResult && this.#composeByMerge && !this.#composeByFullMerge) {
       console.error(
-        "[@git-diff-view/core] this instance can not `buildSplitDiffLines` because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'"
+        "[@git-diff-view/core] `buildSplitDiffLines` requires the file content, which is missing on this merged instance. Use `_getFullBundle` and `_mergeFullBundle` instead of `getBundle` and `mergeBundle`."
       );
     }
 
@@ -1014,7 +1014,7 @@ export class DiffFile {
 
     if (__DEV__ && !this.#oldFileResult && !this.#newFileResult && this.#composeByMerge && !this.#composeByFullMerge) {
       console.error(
-        "[@git-diff-view/core] this instance can not `buildUnifiedDiffLines` because of the data missing, try to use '_getFullBundle' & '_mergeFullBundle' instead of 'getBundle' & 'mergeBundle'"
+        "[@git-diff-view/core] `buildUnifiedDiffLines` requires the file content, which is missing on this merged instance. Use `_getFullBundle` and `_mergeFullBundle` instead of `getBundle` and `mergeBundle`."
       );
     }
 
@@ -1288,7 +1288,7 @@ export class DiffFile {
     } else if (dir === "up") {
       if (current.isLast) {
         if (__DEV__) {
-          console.error("[@git-diff-view/core] The last hunk cannot expand up!");
+          console.warn("[@git-diff-view/core] The last hunk cannot be expanded upward.");
         }
         return;
       }
@@ -1318,7 +1318,7 @@ export class DiffFile {
     } else if (dir === "up-all") {
       if (current.isLast) {
         if (__DEV__) {
-          console.error("[@git-diff-view/core] The last hunk cannot expand up!");
+          console.warn("[@git-diff-view/core] The last hunk cannot be expanded upward.");
         }
         return;
       }
@@ -1415,7 +1415,7 @@ export class DiffFile {
     } else if (dir === "up") {
       if (current.isLast) {
         if (__DEV__) {
-          console.error("[@git-diff-view/core] The last hunk cannot expand up!");
+          console.warn("[@git-diff-view/core] The last hunk cannot be expanded upward.");
         }
         return;
       }
@@ -1443,7 +1443,7 @@ export class DiffFile {
     } else if (dir === "up-all") {
       if (current.isLast) {
         if (__DEV__) {
-          console.error("[@git-diff-view/core] The last hunk cannot expand up!");
+          console.warn("[@git-diff-view/core] The last hunk cannot be expanded upward.");
         }
         return;
       }
@@ -1757,9 +1757,7 @@ export class DiffFile {
     }
 
     if (__DEV__ && !data.hasInitRaw) {
-      console.error(
-        "[@git-diff-view/core] Invalid bundle data. Try calling the 'initRaw' function before merge / getBundle."
-      );
+      console.error("[@git-diff-view/core] Invalid bundle data. Call `initRaw` before `mergeBundle` / `getBundle`.");
     }
 
     if (notifyUpdate) {
@@ -1777,7 +1775,7 @@ export class DiffFile {
   generateInstanceFromLineNumberRange = (start: number, end: number, side = SplitSide.new) => {
     if (start >= end) {
       if (__DEV__) {
-        console.warn(`[@git-diff-view/core] The end line must gt start line`);
+        console.warn("[@git-diff-view/core] The end line must be greater than the start line.");
       }
 
       return this;
