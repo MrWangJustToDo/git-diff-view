@@ -26,3 +26,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.agents/cache
+.agents/memory
+.agents/sessions
+.agents/usage
