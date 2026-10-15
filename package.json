@@ -24,8 +24,8 @@
     "lint": "eslint --cache .",
     "lint:fix": "pnpm run lint --fix",
     "prettier": "prettier --ignore-path .prettierignore --write .",
-    "clean": "pnpm -p -r -c exec rm -rf dist dev .cache",
-    "purge": "pnpm -p -r -c exec rm -rf node_modules"
+    "clean": "pnpm -r -c exec rm -rf dist dev .cache",
+    "purge": "pnpm -r -c exec rm -rf node_modules"
   },
   "packageManager": "pnpm@9.12.0",
   "devDependencies": {

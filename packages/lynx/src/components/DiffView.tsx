@@ -1,10 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
-import {
-  DiffFile,
-  _cacheMap,
-  SplitSide,
-  setEnableBuildTemplate,
-} from "@git-diff-view/core";
+import { DiffFile, _cacheMap, SplitSide, setEnableBuildTemplate } from "@git-diff-view/core";
 import { diffFontSizeName, DiffModeEnum } from "@git-diff-view/utils";
 import { memo, useEffect, useMemo, useRef } from "@lynx-js/react";
 
@@ -154,7 +149,12 @@ const InternalDiffView = <T extends unknown>(props: InternalProps<T>) => {
   return (
     <DiffViewContext.Provider value={value}>
       <view
-        className={"diff-view-lynx " + themeClassName(theme) + " flex h-full w-full flex-col" + (className ? ` ${className}` : "")}
+        className={
+          "diff-view-lynx " +
+          themeClassName(theme) +
+          " flex h-full w-full flex-col" +
+          (className ? ` ${className}` : "")
+        }
         data-theme={theme}
         data-component="git-diff-view"
         style={{
@@ -210,8 +210,7 @@ const prepareDiffFile = (
     enableHighlight &&
     registerHighlighter &&
     fromBundle &&
-    (registerHighlighter.name !== file._getHighlighterName() ||
-      registerHighlighter.type !== file._getHighlighterType())
+    (registerHighlighter.name !== file._getHighlighterName() || registerHighlighter.type !== file._getHighlighterType())
   ) {
     file.initSyntax({ registerHighlighter });
   }
@@ -267,9 +266,10 @@ const DiffViewInner = <T extends unknown>(props: DiffViewProps<T>) => {
     }
   }, [diffFile, _diffFile]);
 
-  useUnmount(() => ((typeof __DEV__ !== "undefined" ? __DEV__ : false) ? diffFile?._destroy?.() : diffFile?.clear?.()), [
-    diffFile,
-  ]);
+  useUnmount(
+    () => ((typeof __DEV__ !== "undefined" ? __DEV__ : false) ? diffFile?._destroy?.() : diffFile?.clear?.()),
+    [diffFile]
+  );
 
   if (!diffFile) return <view />;
 

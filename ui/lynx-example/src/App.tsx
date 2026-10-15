@@ -31,21 +31,21 @@ export function App() {
       <view className="flex flex-row flex-wrap p-[8px]">
         <view
           bindtap={() => setMode(isSplit ? DiffModeEnum.Unified : DiffModeEnum.Split)}
-          className="mr-[8px] mb-[4px] px-[10px] py-[6px]"
+          className="mb-[4px] mr-[8px] px-[10px] py-[6px]"
           style={{ backgroundColor: "#0969da" }}
         >
           <text style={{ color: "#fff" }}>{isSplit ? "Split" : "Unified"}</text>
         </view>
         <view
           bindtap={() => setTheme(theme === "light" ? "dark" : "light")}
-          className="mr-[8px] mb-[4px] px-[10px] py-[6px]"
+          className="mb-[4px] mr-[8px] px-[10px] py-[6px]"
           style={{ backgroundColor: "#6e7781" }}
         >
           <text style={{ color: "#fff" }}>{theme}</text>
         </view>
         <view
           bindtap={() => setHighlight((v) => !v)}
-          className="mr-[8px] mb-[4px] px-[10px] py-[6px]"
+          className="mb-[4px] mr-[8px] px-[10px] py-[6px]"
           style={{ backgroundColor: "#1a7f37" }}
         >
           <text style={{ color: "#fff" }}>hl:{highlight ? "lezer" : "off"}</text>
@@ -67,7 +67,7 @@ export function App() {
         </view>
       ) : null}
       <view
-        className="min-h-0 flex-1 flex flex-col m-4 border border-gray-200 rounded-md overflow-hidden"
+        className="m-4 flex min-h-0 flex-1 flex-col overflow-hidden rounded-md border border-gray-200"
         style={{ flexBasis: "0%" }}
       >
         <DiffView

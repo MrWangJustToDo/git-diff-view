@@ -1,8 +1,4 @@
-import {
-  DiffLineType,
-  checkDiffLineIncludeChange,
-  type DiffFile,
-} from "@git-diff-view/core";
+import { DiffLineType, checkDiffLineIncludeChange, type DiffFile } from "@git-diff-view/core";
 
 import { DiffContent } from "./DiffContent";
 import { useDiffViewContext } from "./DiffViewContext";

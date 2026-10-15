@@ -69,11 +69,7 @@ export const estimateOperatorWidth = (fontSize: number) => Math.round(fontSize *
  * Full Unified table width when nowrap — mirrors react auto table (no table-fixed).
  * Used so one outer horizontal scroll can pan the whole view (not per-row).
  */
-export const estimateUnifiedNowrapTableWidth = (
-  maxContentChars: number,
-  lineCount: number,
-  fontSize: number
-) => {
+export const estimateUnifiedNowrapTableWidth = (maxContentChars: number, lineCount: number, fontSize: number) => {
   const numCol = estimateUnifiedLineNumberWidth(lineCount, fontSize);
   const op = estimateOperatorWidth(fontSize);
   const content = Math.ceil(Math.max(1, maxContentChars) * fontSize * DIGIT_EM);

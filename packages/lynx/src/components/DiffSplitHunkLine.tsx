@@ -29,10 +29,7 @@ export const DiffSplitHunkLine = ({
 
   const { useDiffContext } = useDiffViewContext();
   const fontSize = useDiffContext.useShallowStableSelector((s) => s.fontSize) || 13;
-  const asideWidth = estimateLineNumberWidth(
-    Math.max(diffFile.splitLineLength, diffFile.fileLineLength),
-    fontSize
-  );
+  const asideWidth = estimateLineNumberWidth(Math.max(diffFile.splitLineLength, diffFile.fileLineLength), fontSize);
 
   const expandEnabled = diffFile.getExpandEnabled();
   const couldExpand = expandEnabled && currentHunk && currentHunk.splitInfo;
@@ -109,10 +106,7 @@ export const DiffSplitHunkLine = ({
         {action || <view style={{ minHeight: `${HUNK_MIN_HEIGHT}px` }} />}
       </view>
       <view
-        className={joinClass(
-          "diff-line-hunk-content flex min-w-0 flex-1 items-center px-[10px]",
-          surfaceClass("hunk")
-        )}
+        className={joinClass("diff-line-hunk-content flex min-w-0 flex-1 items-center px-[10px]", surfaceClass("hunk"))}
         style={{ flexBasis: "0%", minHeight: `${HUNK_MIN_HEIGHT}px` }}
       >
         <text className="diff-fg-hunk w-full">{currentHunk.splitInfo?.plainText || currentHunk.text}</text>

@@ -85,9 +85,7 @@ export const DiffUnifiedExtendLine = ({
                 onUpdate: diffFile.notifyAll,
               })
             : null}
-          {!oldLineExtend?.data && !newLineExtend?.data ? (
-            <view className={surfaceClass("empty") + " h-px"} />
-          ) : null}
+          {!oldLineExtend?.data && !newLineExtend?.data ? <view className={surfaceClass("empty") + " h-px"} /> : null}
         </view>
       )}
     </view>

@@ -37,11 +37,7 @@ const InternalDiffSplitView = ({ diffFile }: { diffFile: DiffFile }) => {
       {lines.map((line) => {
         const key = listItemKey(line.type, line.index);
         return (
-          <list-item
-            key={key}
-            item-key={key}
-            estimated-main-axis-size-px={estimateListItemHeight(line.type, fontSize)}
-          >
+          <list-item key={key} item-key={key} estimated-main-axis-size-px={estimateListItemHeight(line.type, fontSize)}>
             <DiffSplitViewLine line={line} diffFile={diffFile} />
           </list-item>
         );
