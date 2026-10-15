@@ -13,16 +13,28 @@ const pkgNameAlias = {
   "@git-diff-view/solid": "solid",
   "@git-diff-view/svelte": "svelte",
   "@git-diff-view/cli": "cli",
+  "@git-diff-view/lynx": "lynx",
 };
 
 const getVersion = (pkgName: string) =>
-  new Promise((a, b) => {
+  new Promise<string | undefined>((resolve, reject) => {
     const ls = spawn(`pnpm view ${pkgName} version --json`, { shell: true, stdio: "pipe" });
-    ls.stdout.on("data", (d) => {
-      const res = Buffer.from(d).toString("utf-8");
-      a(JSON.parse(res));
+    let stdout = "";
+    ls.stdout.on("data", (d) => (stdout += d));
+    ls.on("error", (e) => reject(e));
+    ls.on("close", (code) => {
+      const trimmed = stdout.trim();
+      // An unpublished package prints nothing to stdout and exits non-zero.
+      if (code !== 0 || !trimmed) {
+        resolve(undefined);
+        return;
+      }
+      try {
+        resolve(JSON.parse(trimmed));
+      } catch {
+        resolve(undefined);
+      }
     });
-    ls.on("error", (e) => b(e));
   });
 
 const publish = (pnkName: string, cwd: string) => {
@@ -71,6 +83,7 @@ const run = async () => {
   await release("@git-diff-view/shiki");
   await release("@git-diff-view/lezer");
   await release("@git-diff-view/core");
+  await release("@git-diff-view/lynx");
   await release("@git-diff-view/file");
   await release("@git-diff-view/react");
   await release("@git-diff-view/vue");
