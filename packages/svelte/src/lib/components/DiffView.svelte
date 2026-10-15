@@ -124,16 +124,23 @@
 
 	const theme = $derived(props.diffViewTheme);
 
-	$effect(() => {
-		widgetState.side = props.initialWidgetState?.side;
-		widgetState.lineNumber = props.initialWidgetState?.lineNumber;
-	});
+	// Reset the widget state only when the diff source changes to a new value,
+	// so `initialWidgetState` is still honored on the first render (it was being
+	// unconditionally cleared on mount before).
+	let prevDiffSource: unknown;
 
 	$effect(() => {
-		if (props.data || props.diffFile) {
+		const source = props.data ?? props.diffFile;
+		if (prevDiffSource !== undefined && source !== prevDiffSource) {
 			widgetState.side = undefined;
 			widgetState.lineNumber = undefined;
 		}
+		prevDiffSource = source;
+	});
+
+	$effect(() => {
+		widgetState.side = props.initialWidgetState?.side;
+		widgetState.lineNumber = props.initialWidgetState?.lineNumber;
 	});
 
 	const unSubscribe = { current: () => {} };
