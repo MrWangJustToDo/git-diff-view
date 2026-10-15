@@ -281,16 +281,7 @@ const DiffViewWithRef = <T extends unknown>(
     return null;
   }, [data, _diffFile]);
 
-  const diffFileRef = useRef(diffFile);
-
   const wrapperRef = useRef<HTMLDivElement>(null);
-
-  // eslint-disable-next-line react-hooks/refs
-  if (diffFileRef.current && diffFileRef.current !== diffFile) {
-    // eslint-disable-next-line react-hooks/refs
-    diffFileRef.current.clear?.();
-    diffFileRef.current = diffFile;
-  }
 
   const isMounted = useIsMounted();
 
