@@ -70,8 +70,8 @@
     "git-diff-view"
   ],
   "dependencies": {
-    "@git-diff-view/core": "^0.1.7",
-    "reactivity-store": "^0.4.0",
+    "@git-diff-view/core": "^0.1.8",
+    "reactivity-store": "^0.4.1",
     "use-sync-external-store": "^1.6.0"
   },
   "devDependencies": {
