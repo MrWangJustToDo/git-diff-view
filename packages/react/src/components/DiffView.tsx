@@ -5,7 +5,6 @@ import { diffFontSizeName, DiffModeEnum } from "@git-diff-view/utils";
 import { memo, useEffect, useMemo, forwardRef, useImperativeHandle, useRef } from "react";
 
 import { useIsMounted } from "../hooks/useIsMounted";
-import { useUnmount } from "../hooks/useUnmount";
 
 import { DiffSplitView } from "./DiffSplitView";
 import { DiffUnifiedView } from "./DiffUnifiedView";
@@ -344,7 +343,9 @@ const DiffViewWithRef = <T extends unknown>(
   }, [diffFile, diffViewTheme]);
 
   // fix react strict mode error
-  useUnmount(() => (__DEV__ ? diffFile?._destroy?.() : diffFile?.clear?.()), [diffFile]);
+  useEffect(() => {
+    return () => (__DEV__ ? diffFile?._destroy?.() : diffFile?.clear?.());
+  }, [diffFile]);
 
   useImperativeHandle(ref, () => ({ getDiffFileInstance: () => diffFile }), [diffFile]);
 
