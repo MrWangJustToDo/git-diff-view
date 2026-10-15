@@ -68,7 +68,7 @@ export const DiffViewWithMultiSelect = defineComponent<
     };
 
     const enableMultiSelect = computed(() => props.enableMultiSelect ?? true);
-    const isUnifiedMode = computed(() => !(props.diffViewMode ?? DiffModeEnum.SplitGitHub & DiffModeEnum.Split));
+    const isUnifiedMode = computed(() => !((props.diffViewMode ?? DiffModeEnum.SplitGitHub) & DiffModeEnum.Split));
 
     const getDiffFile = () => {
       return diffViewRef.value?.getDiffFileInstance() ?? null;
