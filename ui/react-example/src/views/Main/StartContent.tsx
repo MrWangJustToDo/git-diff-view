@@ -1,30 +1,23 @@
-import { Container, Space, Title, Text, Box, Badge, Stack } from "@mantine/core";
+import { Container, Stack } from "@mantine/core";
 
 import { ReactPlayGround, VuePlayGround, CliPlayGround } from "../../components/PlayGround";
 
-export const StartContent = () => {
-  return (
-    <Container className="mb-12 mt-16" size="xl">
-      <Box className="mb-10 text-center">
-        <Badge size="lg" variant="light" color="blue" mb="md">
-          Quick Start
-        </Badge>
-        <Title order={2} className="mb-4 text-3xl font-bold">
-          Get Started in Seconds
-        </Title>
-        <Text size="lg" c="dimmed" className="mx-auto max-w-2xl">
-          Install the package and start using Git Diff View in your project right away
-        </Text>
-      </Box>
+import { SectionHeading } from "./SectionHeading";
 
-      <Stack gap="xl">
-        <ReactPlayGround />
-        <VuePlayGround />
-        {/* The CliPlayGround relies on @my-react internals, so it only runs on the @my-react runtime. */}
-        {__MY_REACT__ && <CliPlayGround />}
-      </Stack>
+export const StartContent = () => (
+  <Container size="xl" className="mb-20 mt-20 md:mt-24">
+    <SectionHeading
+      align="center"
+      eyebrow="Quick start"
+      title="Get started in seconds"
+      description="Install the package and start using Git Diff View in your project right away."
+    />
 
-      <Space h="xl" />
-    </Container>
-  );
-};
+    <Stack gap="xl">
+      <ReactPlayGround />
+      <VuePlayGround />
+      {/* The CliPlayGround relies on @my-react internals, so it only runs on the @my-react runtime. */}
+      {__MY_REACT__ && <CliPlayGround />}
+    </Stack>
+  </Container>
+);

@@ -154,6 +154,244 @@
   animation: shimmer 1.5s infinite;
 }
 
+/* ============================================================
+   Modern design utilities
+   ============================================================ */
+
+/* Animated gradient text (background must include background-size: 200% auto) */
+@keyframes gradient-x {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+.animate-gradient-x {
+  background-size: 200% auto;
+  animation: gradient-x 6s ease infinite;
+}
+
+/* Ambient glow blob background for hero sections */
+.hero-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.hero-blob-a {
+  background: rgba(99, 102, 241, 0.35);
+}
+
+.hero-blob-b {
+  background: rgba(168, 85, 247, 0.3);
+}
+
+.hero-blob-c {
+  background: rgba(59, 130, 246, 0.25);
+}
+
+/* Light mode: soften the blobs into pale pastels so they don't look muddy on white */
+[data-mantine-color-scheme="light"] .hero-blob {
+  filter: blur(70px);
+}
+
+[data-mantine-color-scheme="light"] .hero-blob-a {
+  background: rgba(99, 102, 241, 0.16);
+}
+
+[data-mantine-color-scheme="light"] .hero-blob-b {
+  background: rgba(168, 85, 247, 0.13);
+}
+
+[data-mantine-color-scheme="light"] .hero-blob-c {
+  background: rgba(59, 130, 246, 0.11);
+}
+
+@keyframes blob-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+  33% {
+    transform: translate(40px, -30px) scale(1.08);
+  }
+  66% {
+    transform: translate(-30px, 24px) scale(0.94);
+  }
+}
+
+.animate-blob {
+  animation: blob-drift 14s ease-in-out infinite;
+}
+
+/* Frosted glass surface */
+.glass {
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+}
+
+/* Card hover lift */
+.card-hover {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-4px);
+}
+
+/* Gradient border card (uses ::before as the gradient) */
+.gradient-border {
+  position: relative;
+  background-clip: padding-box;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.6), rgba(168, 85, 247, 0.6));
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* Subtle top light line for cards */
+.card-top-light::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(139, 92, 246, 0.5), transparent);
+  pointer-events: none;
+}
+
+/* Modern slim scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.6);
+  background-clip: content-box;
+}
+
+/* Grid pattern backdrop */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgba(148, 163, 184, 0.09) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(148, 163, 184, 0.09) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%);
+}
+
+/* ============================================================
+   Hero canvas — near-white paper with a dark code window as the anchor
+   ============================================================ */
+.hero-canvas {
+  background:
+    radial-gradient(720px 440px at 92% 0%, rgba(99, 102, 241, 0.11), transparent 62%),
+    radial-gradient(520px 320px at 0% 0%, rgba(139, 92, 246, 0.06), transparent 60%),
+    linear-gradient(180deg, #f9f9fc 0%, #ffffff 60%);
+}
+
+[data-mantine-color-scheme="dark"] .hero-canvas {
+  background:
+    radial-gradient(720px 440px at 92% 0%, rgba(99, 102, 241, 0.18), transparent 62%), var(--mantine-color-dark-8);
+}
+
+.hero-dots {
+  background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+  -webkit-mask-image: radial-gradient(ellipse 88% 78% at 50% 0%, #000 15%, transparent 88%);
+  mask-image: radial-gradient(ellipse 88% 78% at 50% 0%, #000 15%, transparent 88%);
+}
+
+[data-mantine-color-scheme="dark"] .hero-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+}
+
+.hero-glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+}
+
+/* Only one glow, sitting behind the window — no ambient haze over the copy */
+.hero-glow-a {
+  top: -60px;
+  right: -40px;
+  width: 420px;
+  height: 280px;
+  background: rgba(99, 102, 241, 0.14);
+}
+
+[data-mantine-color-scheme="dark"] .hero-glow-a {
+  background: rgba(99, 102, 241, 0.2);
+}
+
+/* Narrow screens: one glow stretched over the whole width reads as a purple wash */
+@media (max-width: 767px) {
+  .hero-glow-a {
+    opacity: 0.55;
+    filter: blur(70px);
+  }
+}
+
+/* Dark editor window shell — #0d1117 matches the library's dark plain bg */
+.hero-window {
+  background: #0d1117;
+  border: 1px solid rgba(15, 23, 42, 0.45);
+  box-shadow:
+    0 40px 80px -28px rgba(15, 23, 42, 0.42),
+    0 10px 24px -14px rgba(15, 23, 42, 0.3);
+}
+
+[data-mantine-color-scheme="dark"] .hero-window {
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.85);
+}
+
+.hero-window-glow {
+  position: absolute;
+  inset: -14% -8% -16% -8%;
+  background: radial-gradient(closest-side, rgba(99, 102, 241, 0.26), rgba(139, 92, 246, 0.08) 55%, transparent 72%);
+  filter: blur(46px);
+  pointer-events: none;
+}
+
+[data-mantine-color-scheme="light"] .hero-window-glow {
+  opacity: 0.5;
+}
+
 .diff-symbol {
   position: relative;
   color: #aeaeae !important;

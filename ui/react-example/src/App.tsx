@@ -10,9 +10,11 @@ import {
   em,
   Anchor,
   Tooltip,
+  ActionIcon,
+  Box,
 } from "@mantine/core";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
-import { IconBrandGithub, IconMoon, IconSun } from "@tabler/icons-react";
+import { IconBrandGithub, IconGitCompare, IconMoon, IconSun } from "@tabler/icons-react";
 import { version } from "react";
 
 import { DevTool } from "./components/DevTool";
@@ -55,20 +57,40 @@ function App() {
       navbar={{ width: 300, breakpoint: "sm", collapsed: { desktop: true, mobile: !opened } }}
       padding="md"
     >
-      <AppShell.Header>
+      <AppShell.Header
+        className="glass z-50 border-b border-solid transition-colors"
+        style={{
+          borderColor: colorScheme === "light" ? "rgba(148,163,184,0.28)" : "var(--mantine-color-dark-4)",
+          backgroundColor: colorScheme === "light" ? "rgba(255,255,255,0.82)" : "rgba(26,27,30,0.72)",
+          boxShadow: colorScheme === "light" ? "0 1px 12px rgba(99,102,241,0.06)" : "none",
+        }}
+      >
         <Group h="100%" px="lg" justify="space-between" align="center">
           {/* Left: logo */}
-          <Flex align="center">
+          <Flex align="center" gap="sm">
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" className="mr-2" />
-            <Title order={1} className="text-xl font-bold">
-              Git Diff View
-            </Title>
+            <Flex align="center" gap={8} className="cursor-pointer select-none" onClick={() => goto("main")}>
+              <Box
+                className="flex items-center justify-center rounded-lg"
+                style={{
+                  width: 30,
+                  height: 30,
+                  background: "linear-gradient(135deg,#6366f1,#a855f7)",
+                  color: "#fff",
+                }}
+              >
+                <IconGitCompare size={18} />
+              </Box>
+              <Title order={1} className="text-lg font-extrabold tracking-tight">
+                Git Diff View
+              </Title>
+            </Flex>
             {width > 1000 && (
               <>
-                <small className="ml-4 mr-1">power by</small>
+                <small className="ml-4 mr-1 opacity-60">power by</small>
                 <Tooltip label={<span>Go to @my-react project, version: {version}</span>} withArrow position="top">
                   <Anchor href="https://github.com/MrWangJustToDo/MyReact" target="_blank">
-                    <small>@my-react</small>
+                    <small className="font-semibold text-indigo-600 dark:text-indigo-400">@my-react</small>
                   </Anchor>
                 </Tooltip>
               </>
@@ -76,37 +98,45 @@ function App() {
           </Flex>
 
           {/* Right: nav + actions */}
-          <Flex gap="8" align="center" visibleFrom="sm">
+          <Flex
+            align="center"
+            visibleFrom="sm"
+            className="rounded-full border border-solid px-1.5 py-1"
+            style={{
+              borderColor: colorScheme === "light" ? "rgba(148,163,184,0.3)" : "var(--mantine-color-dark-5)",
+              background: colorScheme === "light" ? "rgba(255,255,255,0.6)" : "rgba(38,38,42,0.6)",
+            }}
+          >
             {navItems.map((item) => (
               <Button
                 key={item.key}
-                variant={type === item.key ? "outline" : "subtle"}
-                color={type === item.key ? "blue" : "gray"}
+                variant={type === item.key ? "filled" : "subtle"}
                 size="compact-sm"
                 onClick={() => goto(item.key)}
+                className="rounded-full font-medium"
               >
                 {item.label}
               </Button>
             ))}
-            <Button
+            <ActionIcon
               variant="subtle"
-              color="gray"
-              size="compact-sm"
+              size="sm"
               component="a"
               href="https://github.com/MrWangJustToDo/git-diff-view"
               target="_blank"
+              className="mx-1"
             >
               <IconBrandGithub size={18} />
-            </Button>
-            <Button variant="subtle" size="compact-sm" onClick={toggleColorScheme} color="violet">
+            </ActionIcon>
+            <ActionIcon variant="subtle" size="sm" onClick={toggleColorScheme} className="mr-1">
               {colorScheme === "light" ? (
                 <IconSun style={{ width: em(18), height: em(18) }} />
               ) : (
                 <IconMoon style={{ width: em(18), height: em(18) }} />
               )}
-            </Button>
+            </ActionIcon>
           </Flex>
-          <Button variant="subtle" hiddenFrom="sm" onClick={toggleColorScheme} color="violet">
+          <Button variant="subtle" hiddenFrom="sm" onClick={toggleColorScheme} color="gray" size="compact-sm">
             {colorScheme === "light" ? <IconSun size={18} /> : <IconMoon size={18} />}
           </Button>
         </Group>
