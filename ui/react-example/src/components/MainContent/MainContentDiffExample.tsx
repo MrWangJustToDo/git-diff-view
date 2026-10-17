@@ -1,5 +1,5 @@
 import { generateDiffFile, DiffFile } from "@git-diff-view/file";
-import { Button, ButtonGroup, Card, FloatingIndicator, Group, LoadingOverlay, Popover, Tooltip } from "@mantine/core";
+import { Button, ButtonGroup, Card, FloatingIndicator, LoadingOverlay, Popover, Tooltip } from "@mantine/core";
 import { useCallbackRef, useDisclosure, useMounted } from "@mantine/hooks";
 import { IconCode, IconPlayerPlay, IconRefresh, IconBrandReact, IconBrandVue } from "@tabler/icons-react";
 import { useState, startTransition, useCallback, forwardRef, useMemo, useEffect } from "react";
@@ -130,9 +130,9 @@ export const MainContentDiffExample = ({ onUpdate }: { onUpdate?: (diffFile: Dif
   );
 
   return (
-    <>
-      <Group className="fixed right-6 top-2 z-10">
-        <div ref={setRootRef}>
+    <div className="flex h-full flex-col">
+      <div className="flex shrink-0 items-center gap-2 border-b border-solid border-gray-200 px-2 py-1.5 dark:border-[var(--mantine-color-dark-4)]">
+        <div ref={setRootRef} className="relative">
           <ButtonGroup>
             <Popover withArrow opened={showCode && isMounted} onClose={closeShowCode} closeOnClickOutside={false}>
               <Popover.Target>
@@ -167,39 +167,43 @@ export const MainContentDiffExample = ({ onUpdate }: { onUpdate?: (diffFile: Dif
           />
         </div>
 
-        {!code ? (
-          <Tooltip label="refresh">
-            <Button variant="light" size="compact-sm" onClick={refreshFile}>
-              <IconRefresh className="w-[1.2em]" />
-            </Button>
-          </Tooltip>
-        ) : (
-          <Popover withArrow opened={showPlatform} onClose={closePlatform} closeOnClickOutside={false}>
-            <Popover.Target>
-              <PlatformSwitchElement onClick={closePlatform} />
-            </Popover.Target>
-            <Popover.Dropdown className="animate-float">
-              <Card>
-                <Card.Section>Click to show the other platform code ✨✨</Card.Section>
-              </Card>
-              <Button size="compact-sm" className="float-right" onClick={closePlatform}>
-                Close
+        <div className="ml-auto">
+          {!code ? (
+            <Tooltip label="refresh">
+              <Button variant="light" size="compact-sm" onClick={refreshFile}>
+                <IconRefresh className="w-[1.2em]" />
               </Button>
-            </Popover.Dropdown>
-          </Popover>
-        )}
-      </Group>
+            </Tooltip>
+          ) : (
+            <Popover withArrow opened={showPlatform} onClose={closePlatform} closeOnClickOutside={false}>
+              <Popover.Target>
+                <PlatformSwitchElement onClick={closePlatform} />
+              </Popover.Target>
+              <Popover.Dropdown className="animate-float">
+                <Card>
+                  <Card.Section>Click to show the other platform code ✨✨</Card.Section>
+                </Card>
+                <Button size="compact-sm" className="float-right" onClick={closePlatform}>
+                  Close
+                </Button>
+              </Popover.Dropdown>
+            </Popover>
+          )}
+        </div>
+      </div>
 
-      <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
-      {code ? (
-        <MainContentDiffExampleCode type={platform} />
-      ) : (
-        <MainContentDiffExampleViewWrapper
-          diffFile={diffFile}
-          highlighter={highlighter}
-          refreshDiffFile={refreshFile}
-        />
-      )}
-    </>
+      <div className="relative min-h-0 flex-1">
+        <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} />
+        {code ? (
+          <MainContentDiffExampleCode type={platform} />
+        ) : (
+          <MainContentDiffExampleViewWrapper
+            diffFile={diffFile}
+            highlighter={highlighter}
+            refreshDiffFile={refreshFile}
+          />
+        )}
+      </div>
+    </div>
   );
 };
