@@ -41,6 +41,7 @@ export const MainContentDiffExampleView = memo(
       engine,
       tabSpace,
       fastDiff,
+      semanticCleanup,
       autoExpandCommentLine,
       rangeMode,
       rangeStart,
@@ -51,13 +52,15 @@ export const MainContentDiffExampleView = memo(
 
     const prevFastDiff = usePrevious(fastDiff);
 
+    const prevSemanticCleanup = usePrevious(semanticCleanup);
+
     const prevAutoExpandCommentLine = usePrevious(autoExpandCommentLine);
 
     useEffect(() => {
-      if (tabSpace !== prevTabSpace || fastDiff !== prevFastDiff) {
+      if (tabSpace !== prevTabSpace || fastDiff !== prevFastDiff || semanticCleanup !== prevSemanticCleanup) {
         refreshDiffFile();
       }
-    }, [tabSpace, prevTabSpace, fastDiff, prevFastDiff, refreshDiffFile]);
+    }, [tabSpace, prevTabSpace, fastDiff, prevFastDiff, semanticCleanup, prevSemanticCleanup, refreshDiffFile]);
 
     useEffect(() => {
       if (autoExpandCommentLine !== prevAutoExpandCommentLine) {

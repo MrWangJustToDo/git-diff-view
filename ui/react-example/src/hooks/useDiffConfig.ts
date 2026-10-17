@@ -9,6 +9,7 @@ type DiffConfig = {
   engine: "lowlight" | "shiki" | "lezer";
   tabSpace: boolean;
   fastDiff: boolean;
+  semanticCleanup: boolean;
   autoExpandCommentLine: boolean;
   rangeMode: boolean;
   rangeStart: number;
@@ -25,6 +26,7 @@ export const useDiffConfig = createState(
       engine: "lowlight",
       tabSpace: false,
       fastDiff: false,
+      semanticCleanup: true,
       autoExpandCommentLine: false,
       rangeMode: false,
       rangeStart: 0,
@@ -66,6 +68,11 @@ export const useDiffConfig = createState(
         setFastDiff: (v: boolean) => {
           if (v !== state.fastDiff) {
             state.fastDiff = v;
+          }
+        },
+        setSemanticCleanup: (v: boolean) => {
+          if (v !== state.semanticCleanup) {
+            state.semanticCleanup = v;
           }
         },
         setAutoExpandCommentLine: (v: boolean) => {

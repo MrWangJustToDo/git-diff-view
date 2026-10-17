@@ -5,6 +5,8 @@ import {
   setEnableBuildTemplate,
   setEnableFastDiffTemplate,
   resetEnableFastDiffTemplate,
+  setEnableDiffSemanticCleanup,
+  resetEnableDiffSemanticCleanup,
 } from "@git-diff-view/core";
 import { Button, Group } from "@mantine/core";
 import { useEffect } from "react";
@@ -17,15 +19,25 @@ const transform = (str: string) =>
     .replace(/\t/g, '<span class="diff-symbol diff-symbol-tab">\t</span>');
 
 export const MainContentDiffAdvance = () => {
-  const { tabSpace, setFastDiff, setTabSpace, fastDiff, autoExpandCommentLine, setAutoExpandCommentLine } =
-    useDiffConfig((s) => ({
-      tabSpace: s.tabSpace,
-      setTabSpace: s.setTabSpace,
-      fastDiff: s.fastDiff,
-      setFastDiff: s.setFastDiff,
-      autoExpandCommentLine: s.autoExpandCommentLine,
-      setAutoExpandCommentLine: s.setAutoExpandCommentLine,
-    }));
+  const {
+    tabSpace,
+    setFastDiff,
+    setTabSpace,
+    fastDiff,
+    semanticCleanup,
+    setSemanticCleanup,
+    autoExpandCommentLine,
+    setAutoExpandCommentLine,
+  } = useDiffConfig((s) => ({
+    tabSpace: s.tabSpace,
+    setTabSpace: s.setTabSpace,
+    fastDiff: s.fastDiff,
+    setFastDiff: s.setFastDiff,
+    semanticCleanup: s.semanticCleanup,
+    setSemanticCleanup: s.setSemanticCleanup,
+    autoExpandCommentLine: s.autoExpandCommentLine,
+    setAutoExpandCommentLine: s.setAutoExpandCommentLine,
+  }));
 
   useEffect(() => {
     if (tabSpace) {
@@ -46,9 +58,18 @@ export const MainContentDiffAdvance = () => {
   }, [fastDiff]);
 
   useEffect(() => {
+    if (semanticCleanup) {
+      setEnableDiffSemanticCleanup(true);
+    } else {
+      resetEnableDiffSemanticCleanup();
+    }
+  }, [semanticCleanup]);
+
+  useEffect(() => {
     return () => {
       resetTransform();
       resetEnableFastDiffTemplate();
+      resetEnableDiffSemanticCleanup();
     };
   }, []);
 
@@ -59,6 +80,9 @@ export const MainContentDiffAdvance = () => {
       </Button>
       <Button onClick={() => setFastDiff(!fastDiff)}>
         {fastDiff ? "disable fast diff template" : "enable fast diff template"}
+      </Button>
+      <Button disabled={!fastDiff} onClick={() => setSemanticCleanup(!semanticCleanup)}>
+        {semanticCleanup ? "disable semantic cleanup" : "enable semantic cleanup"}
       </Button>
       <Button onClick={() => setAutoExpandCommentLine(!autoExpandCommentLine)}>
         {autoExpandCommentLine ? "disable auto expand comment line" : "enable auto expand comment line"}
