@@ -30,3 +30,4 @@ dist-ssr
 .agents/memory
 .agents/sessions
 .agents/usage
+.agents/media
