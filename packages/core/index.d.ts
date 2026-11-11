@@ -738,6 +738,18 @@ export declare function getLineNumbersFromElement_Unified(el: HTMLElement | null
 	new?: number;
 } | null;
 /**
+ * Resolve which side of the multi selection the clicked line belongs to.
+ *
+ * In unified mode an unchanged line always reports its add widget as `new` side,
+ * so a selection which starts from deleted lines and ends on an unchanged line
+ * would be attached to the wrong side. In that case we fall back to the other side
+ * when it holds the selection and its max line number is the current line itself.
+ *
+ * Both the `onAddWidgetClick` callback and the widget line renderer must use this
+ * helper, otherwise the emitted callback arguments and the rendered widget diverge.
+ */
+export declare function getMatchedMultiSelectLine({ multiResult, lineNumber, side, isUnifiedMode, diffFile, }: MatchMultiSelectLineOptions): MultiSelectMatchedLine | undefined;
+/**
  * Find the number holder element from a target element in split mode
  */
 export declare function getNumberHolderElement_Split(el: HTMLElement | null, inMouseDown?: boolean): HTMLElement | null;
@@ -844,6 +856,53 @@ export interface LineRange {
 	side: MultiSelectSide;
 	startLineNumber: number;
 	endLineNumber: number;
+}
+export interface MatchMultiSelectLineOptions {
+	/**
+	 * The current multi selection line numbers of each side
+	 */
+	multiResult?: MultiSelectLineNumbers;
+	/**
+	 * The clicked / rendering line number, in the side of `side`
+	 */
+	lineNumber: number;
+	/**
+	 * The line side reported by the add widget
+	 */
+	side: SplitSide;
+	/**
+	 * Whether the diff view is rendered in unified mode
+	 */
+	isUnifiedMode?: boolean;
+	diffFile?: DiffFileForMultiSelect | null;
+}
+/**
+ * The selected line numbers of each side, usually the result of `extendDataToPreselectedLines`
+ */
+export interface MultiSelectLineNumbers {
+	old?: number[];
+	new?: number[];
+}
+/**
+ * The resolved multi selection description of a single line
+ */
+export interface MultiSelectMatchedLine {
+	/**
+	 * The side the widget / callback should be attached to
+	 */
+	side: SplitSide;
+	/**
+	 * The `MultiSelectLineNumbers` key of the matched side
+	 */
+	sideKey: MultiSelectSide;
+	/**
+	 * The selected line numbers of the matched side
+	 */
+	lineNumbers: number[];
+	/**
+	 * The last line number of the matched side
+	 */
+	max: number;
 }
 export interface MultiSelectOptions {
 	/**
