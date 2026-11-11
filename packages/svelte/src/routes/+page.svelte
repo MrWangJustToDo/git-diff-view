@@ -239,7 +239,7 @@
 								const _side =
 									multiSelectWidget.side === SplitSide.old ? 'oldFile' : 'newFile';
 								const prev = multiSelectExtend;
-								const sideData = { ...prev[_side] };
+								const sideData: Record<string, { data: CommentItem[] }> = { ...prev[_side] };
 								const existing = sideData?.[multiSelectWidget.lineNumber]?.data || [];
 								sideData[multiSelectWidget.lineNumber] = {
 									data: [

@@ -1,4 +1,4 @@
-import { SplitSide, createDiffMultiSelectManager, multiSelectClassNames } from "@git-diff-view/core";
+import { createDiffMultiSelectManager, multiSelectClassNames, getMatchedMultiSelectLine } from "@git-diff-view/core";
 import { DiffModeEnum } from "@git-diff-view/utils";
 import { defineComponent, ref, watch, computed, onUnmounted, watchEffect } from "vue";
 
@@ -13,6 +13,7 @@ import type {
   DiffMultiSelectManager,
   MultiSelectOptions,
   extendDataToPreselectedLines,
+  SplitSide,
 } from "@git-diff-view/core";
 import type { CSSProperties, SlotsType, VNode } from "vue";
 
@@ -137,50 +138,30 @@ export const DiffViewWithMultiSelect = defineComponent<
 
     watchEffect((onClean) => initManager(onClean));
 
+    const getMatchedMultiResult = (lineNum: number, side: SplitSide, diffFile?: DiffFile | null) =>
+      getMatchedMultiSelectLine({
+        multiResult: multiResultRef,
+        lineNumber: lineNum,
+        side,
+        isUnifiedMode: isUnifiedMode.value,
+        diffFile: diffFile || getDiffFile(),
+      });
+
     const handleAddWidgetClick = (lineNum: number, side: SplitSide) => {
       managerRef.value?.clearSelection();
-      const multiResult = multiResultRef;
-      if (multiResult) {
-        const currentSide = SplitSide[side] as unknown as "new" | "old";
-        const currentMultiResult = multiResult[currentSide] as number[];
-        const otherSide = currentSide === "new" ? "old" : "new";
-        const otherMultiResult = multiResult[otherSide] as number[];
-        if (currentMultiResult?.length) {
-          const max = Math.max(...currentMultiResult);
-          if (max === lineNum) {
-            const finalResult = { [currentSide]: currentMultiResult };
-            updateMultiResult(finalResult as MultiResult);
-            options.emit("onAddWidgetClick", {
-              lineNumber: max,
-              fromLineNumber: Math.min(...currentMultiResult),
-              side,
-            });
-            return;
-          }
-        }
-        if (isUnifiedMode.value && otherMultiResult?.length) {
-          const max = Math.max(...otherMultiResult);
-          const diffFile = getDiffFile();
-          const index = diffFile?.getUnifiedLineIndexByLineNumber(lineNum, side) ?? -1;
-          const unifiedItem = diffFile?.getUnifiedLine(index);
-          const otherSideLineNum = side === SplitSide.old ? unifiedItem?.newLineNumber : unifiedItem?.oldLineNumber;
-          if (max === otherSideLineNum) {
-            const finalResult = { [otherSide]: otherMultiResult };
-            updateMultiResult(finalResult as MultiResult);
-            options.emit("onAddWidgetClick", {
-              lineNumber: max,
-              fromLineNumber: Math.min(...otherMultiResult),
-              side: otherSide === "old" ? SplitSide.old : SplitSide.new,
-            });
-            return;
-          }
-        }
-        updateMultiResult(undefined);
-        options.emit("onAddWidgetClick", { lineNumber: lineNum, fromLineNumber: lineNum, side });
-      } else {
-        updateMultiResult(undefined);
-        options.emit("onAddWidgetClick", { lineNumber: lineNum, fromLineNumber: lineNum, side });
+      // the clicked line may belong to the selection of the other side (unified mode only)
+      const matched = getMatchedMultiResult(lineNum, side);
+      if (matched) {
+        updateMultiResult({ [matched.sideKey]: matched.lineNumbers } as MultiResult);
+        options.emit("onAddWidgetClick", {
+          lineNumber: matched.max,
+          fromLineNumber: Math.min(...matched.lineNumbers),
+          side: matched.side,
+        });
+        return;
       }
+      updateMultiResult(undefined);
+      options.emit("onAddWidgetClick", { lineNumber: lineNum, fromLineNumber: lineNum, side });
     };
 
     const getSelectionResult = () => {
@@ -231,15 +212,15 @@ export const DiffViewWithMultiSelect = defineComponent<
             diffFile: DiffFile;
             onClose: () => void;
           }): VNode[] => {
-            const sideKey = side === SplitSide.old ? "old" : "new";
-            const multiResultItem = multiResultRef?.[sideKey] as number[];
-            const fromLineNumber = multiResultItem ? Math.min(...multiResultItem) : lineNumber;
-            const toLineNumber = multiResultItem ? Math.max(...multiResultItem) : lineNumber;
+            const matched = getMatchedMultiResult(lineNumber, side, diffFile);
+
+            const fromLineNumber = matched ? Math.min(...matched.lineNumbers) : lineNumber;
+            const toLineNumber = matched ? matched.max : lineNumber;
 
             return widgetSlot({
               lineNumber: toLineNumber,
               fromLineNumber,
-              side,
+              side: matched?.side ?? side,
               diffFile,
               onClose,
             });

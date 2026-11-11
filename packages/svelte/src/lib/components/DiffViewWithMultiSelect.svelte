@@ -5,6 +5,7 @@
 		type DiffHighlighter,
 		SplitSide,
 		createDiffMultiSelectManager,
+		getMatchedMultiSelectLine,
 		multiSelectClassNames,
 		type MultiSelectResult,
 		type LineRange,
@@ -135,25 +136,25 @@
 					containerRef?.classList.remove(multiSelectClassNames.selecting);
 				}
 				if (state.isSelecting && multiResultRef) {
-          updateMultiResult(undefined);
-        }
+					updateMultiResult(undefined);
+				}
 				props.onMultiSelectChange?.(range, state);
 			},
-		onSelectionComplete: (result) => {
-			containerRef?.classList.remove(multiSelectClassNames.selecting);
-			if (result && result.lines.length > 0) {
-				props.onMultiSelectComplete?.(result);
-				const finalResult = {
-					[result.range.side as 'old' | 'new']: [
-						result.range.startLineNumber,
-						result.range.endLineNumber
-					]
-				} as MultiResult;
-				updateMultiResult(finalResult);
-			} else {
-				updateMultiResult(undefined);
-			}
-		},
+			onSelectionComplete: (result) => {
+				containerRef?.classList.remove(multiSelectClassNames.selecting);
+				if (result && result.lines.length > 0) {
+					props.onMultiSelectComplete?.(result);
+					const finalResult = {
+						[result.range.side as 'old' | 'new']: [
+							result.range.startLineNumber,
+							result.range.endLineNumber
+						]
+					} as MultiResult;
+					updateMultiResult(finalResult);
+				} else {
+					updateMultiResult(undefined);
+				}
+			},
 			scopeToHunk: props.scopeMultiSelectToHunk
 		};
 
@@ -181,51 +182,30 @@
 
 	$effect(initManager);
 
+	const getMatchedMultiResult = (lineNum: number, side: SplitSide, diffFile?: DiffFile | null) =>
+		getMatchedMultiSelectLine({
+			multiResult: multiResultRef,
+			lineNumber: lineNum,
+			side,
+			isUnifiedMode,
+			diffFile: diffFile || innerDiffFile
+		});
+
 	const handleAddWidgetClick = (lineNum: number, side: SplitSide) => {
 		managerRef?.clearSelection();
-		const multiResult = multiResultRef;
-		if (multiResult) {
-			const currentSide = SplitSide[side] as unknown as 'new' | 'old';
-			const currentMultiResult = multiResult[currentSide] as number[];
-			const otherSide = currentSide === 'new' ? 'old' : 'new';
-			const otherMultiResult = multiResult[otherSide] as number[];
-			if (currentMultiResult?.length) {
-				const max = Math.max(...currentMultiResult);
-				if (max === lineNum) {
-					const finalResult = { [currentSide]: currentMultiResult };
-					updateMultiResult(finalResult as MultiResult);
-					props.onAddWidgetClick?.({
-						lineNumber: max,
-						fromLineNumber: Math.min(...currentMultiResult),
-						side
-					});
-					return;
-				}
-			}
-			if (isUnifiedMode && otherMultiResult?.length) {
-				const max = Math.max(...otherMultiResult);
-				const diffFile = innerDiffFile;
-				const index = diffFile?.getUnifiedLineIndexByLineNumber(lineNum, side) ?? -1;
-				const unifiedItem = diffFile?.getUnifiedLine(index);
-				const otherSideLineNum =
-					side === SplitSide.old ? unifiedItem?.newLineNumber : unifiedItem?.oldLineNumber;
-				if (max === otherSideLineNum) {
-					const finalResult = { [otherSide]: otherMultiResult };
-					updateMultiResult(finalResult as MultiResult);
-					props.onAddWidgetClick?.({
-						lineNumber: max,
-						fromLineNumber: Math.min(...otherMultiResult),
-						side: otherSide === 'old' ? SplitSide.old : SplitSide.new
-					});
-					return;
-				}
-			}
-			updateMultiResult(undefined);
-			props.onAddWidgetClick?.({ lineNumber: lineNum, fromLineNumber: lineNum, side });
-		} else {
-			updateMultiResult(undefined);
-			props.onAddWidgetClick?.({ lineNumber: lineNum, fromLineNumber: lineNum, side });
+		// the clicked line may belong to the selection of the other side (unified mode only)
+		const matched = getMatchedMultiResult(lineNum, side);
+		if (matched) {
+			updateMultiResult({ [matched.sideKey]: matched.lineNumbers } as MultiResult);
+			props.onAddWidgetClick?.({
+				lineNumber: matched.max,
+				fromLineNumber: Math.min(...matched.lineNumbers),
+				side: matched.side
+			});
+			return;
 		}
+		updateMultiResult(undefined);
+		props.onAddWidgetClick?.({ lineNumber: lineNum, fromLineNumber: lineNum, side });
 	};
 
 	const getSelectionResult = () => {
@@ -276,14 +256,13 @@
 	onClose: () => void;
 })}
 	{#if props.renderWidgetLine}
-		{@const sideKey = side === SplitSide.old ? 'old' : 'new'}
-		{@const multiResultItem = multiResultRef?.[sideKey] as number[]}
-		{@const fromLineNumber = multiResultItem ? Math.min(...multiResultItem) : lineNumber}
-		{@const toLineNumber = multiResultItem ? Math.max(...multiResultItem) : lineNumber}
+		{@const matched = getMatchedMultiResult(lineNumber, side, diffFile)}
+		{@const fromLineNumber = matched ? Math.min(...matched.lineNumbers) : lineNumber}
+		{@const toLineNumber = matched ? matched.max : lineNumber}
 		{@render props.renderWidgetLine({
 			lineNumber: toLineNumber,
 			fromLineNumber,
-			side,
+			side: matched?.side ?? side,
 			diffFile,
 			onClose
 		})}
