@@ -122,6 +122,8 @@ const InternalDiffView = <T extends unknown>(props: DiffViewProps<T>) => {
   // eslint-disable-next-line solid/reactivity -- initial value only, updates happen via setId in createEffect below
   const reactiveHook = createDiffConfigStore(props, diffFile()?.getId() || "");
 
+  reactiveHook.getLifeCycle().syncUpdateComponent = true;
+
   createEffect(() => {
     const {
       setId,

@@ -145,6 +145,8 @@ const InternalDiffView = <T extends unknown>(
       setOnCreateUseWidgetHook,
     } = useDiffContext.getReadonlyState();
 
+    useDiffContext.getLifeCycle().syncUpdateComponent = true;
+
     if (diffFileId && diffFileId !== id) {
       setId(diffFileId);
     }
