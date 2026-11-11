@@ -107,7 +107,6 @@ export const MainContentDiffExampleView = memo(
                   </Button>
                   <Button
                     onClick={() => {
-                      onClose();
                       if (str) {
                         const sideKey = side === SplitSide.old ? "oldFile" : "newFile";
                         setExtend((prev) => {
@@ -119,6 +118,7 @@ export const MainContentDiffExampleView = memo(
                           return res;
                         });
                       }
+                      onClose();
                     }}
                     className="text-white"
                     size="xs"

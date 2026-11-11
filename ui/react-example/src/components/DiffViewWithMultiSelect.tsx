@@ -107,8 +107,6 @@ export const DiffViewWithMultiSelect = memo(
         diffFile: DiffFile;
         onClose: () => void;
       }) => {
-        if (!widgetState) return null;
-
         return (
           <Box className="border-color border-b border-t border-solid" p="sm">
             <Stack>
@@ -132,7 +130,14 @@ export const DiffViewWithMultiSelect = memo(
                 >
                   Cancel
                 </Button>
-                <Button size="xs" onClick={handleSubmitComment} disabled={!commentText.trim()}>
+                <Button
+                  size="xs"
+                  onClick={() => {
+                    handleSubmitComment();
+                    onClose();
+                  }}
+                  disabled={!commentText.trim()}
+                >
                   Submit
                 </Button>
               </Group>
@@ -167,7 +172,7 @@ export const DiffViewWithMultiSelect = memo(
           <Box className="border-color border-b border-t border-solid" p="sm">
             <Stack>
               {data.map((d, i) => (
-                <Fragment>
+                <Fragment key={i}>
                   <Text size="xs" c="dimmed">
                     Lines {d.fromLine} - {d.toLine}
                   </Text>
