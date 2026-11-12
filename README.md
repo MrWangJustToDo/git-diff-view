@@ -134,6 +134,7 @@ import { DiffView, DiffModeEnum } from "@git-diff-view/cli";
 - [`@git-diff-view/solid`](https://www.npmjs.com/package/@git-diff-view/solid) - Solid component
 - [`@git-diff-view/svelte`](https://www.npmjs.com/package/@git-diff-view/svelte) - Svelte component
 - [`@git-diff-view/lynx`](https://www.npmjs.com/package/@git-diff-view/lynx) - ReactLynx DiffView (wrap-first Split/Unified)
+- [`@git-diff-view/octane`](https://www.npmjs.com/package/@git-diff-view/octane) - Native Octane DiffView with client and SSR entries
 - [`@git-diff-view/cli`](https://www.npmjs.com/package/@git-diff-view/cli) - Terminal diff viewer (`DiffView`, `CodeView`, scroll API)
 
 **Core Libraries**

@@ -1,0 +1,19 @@
+{
+  "tsrx": {
+    "compiler": "octane/compiler"
+  },
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "jsx": "react-jsx",
+    "jsxImportSource": "octane",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "types": ["node", "vite/client", "vitest/globals"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsrx", "src/**/*.d.ts", "tests/**/*.ts", "tests/**/*.tsrx"],
+  "exclude": ["dist", "node_modules", "src/components/v2"]
+}
