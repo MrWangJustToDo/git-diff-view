@@ -1,4 +1,4 @@
-import { composeLen, SplitSide, type DiffFile } from "@git-diff-view/core";
+import { composeLen, SplitSide, type DiffFile, type DiffHunkItem } from "@git-diff-view/core";
 import {
   diffAsideWidthName,
   DiffModeEnum,
@@ -7,14 +7,16 @@ import {
   hunkLineNumberBGName,
   plainLineNumberColorName,
 } from "@git-diff-view/utils";
-import { createEffect, createMemo, createSignal, onCleanup, Show } from "solid-js";
+import { createEffect, createMemo, createSignal, onCleanup, Show, untrack } from "solid-js";
 
 import { useMode, useSyncHeight } from "../hooks";
 
 import { ExpandAll, ExpandDown, ExpandUp } from "./DiffExpand";
 
 const DiffSplitHunkLineGitHub = (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
-  const currentHunk = createMemo(() => props.diffFile.getSplitHunkLine(props.index));
+  const getHunk = () => props.diffFile.getSplitHunkLine(props.index);
+
+  const [currentHunk, setCurrentHunk] = createSignal(untrack(getHunk));
 
   const enableExpand = createMemo(() => props.diffFile.getExpandEnabled());
 
@@ -24,19 +26,17 @@ const DiffSplitHunkLineGitHub = (props: { index: number; side: SplitSide; diffFi
 
   const currentShowExpand = createMemo(() => props.side === SplitSide.old);
 
-  const checkCurrentShowExpandAll = () => {
-    const hunk = currentHunk();
-    return hunk && hunk.splitInfo && hunk.splitInfo.endHiddenIndex - hunk.splitInfo.startHiddenIndex < composeLen;
-  };
+  const checkCurrentShowExpandAll = (hunk: DiffHunkItem | undefined) =>
+    !!(hunk && hunk.splitInfo && hunk.splitInfo.endHiddenIndex - hunk.splitInfo.startHiddenIndex < composeLen);
 
-  const [currentShowExpandAll, setCurrentShowExpandAll] = createSignal(checkCurrentShowExpandAll());
+  const [currentShowExpandAll, setCurrentShowExpandAll] = createSignal(
+    untrack(() => checkCurrentShowExpandAll(currentHunk()))
+  );
 
-  const checkCurrentIsShow = () => {
-    const hunk = currentHunk();
-    return hunk && hunk.splitInfo && hunk.splitInfo.startHiddenIndex < hunk.splitInfo.endHiddenIndex;
-  };
+  const checkCurrentIsShow = (hunk: DiffHunkItem | undefined) =>
+    !!(hunk && hunk.splitInfo && hunk.splitInfo.startHiddenIndex < hunk.splitInfo.endHiddenIndex);
 
-  const [currentIsShow, setCurrentIsShow] = createSignal(checkCurrentIsShow());
+  const [currentIsShow, setCurrentIsShow] = createSignal(untrack(() => checkCurrentIsShow(currentHunk())));
 
   const currentIsFirstLine = createMemo(() => {
     const hunk = currentHunk();
@@ -55,8 +55,10 @@ const DiffSplitHunkLineGitHub = (props: { index: number; side: SplitSide; diffFi
 
   createEffect(() => {
     const init = () => {
-      setCurrentIsShow(checkCurrentIsShow);
-      setCurrentShowExpandAll(checkCurrentShowExpandAll);
+      const hunk = getHunk();
+      setCurrentHunk(hunk);
+      setCurrentIsShow(checkCurrentIsShow(hunk));
+      setCurrentShowExpandAll(checkCurrentShowExpandAll(hunk));
     };
 
     init();
@@ -181,7 +183,9 @@ const DiffSplitHunkLineGitHub = (props: { index: number; side: SplitSide; diffFi
 };
 
 const DiffSplitHunkLineGitLab = (props: { index: number; side: SplitSide; diffFile: DiffFile; lineNumber: number }) => {
-  const currentHunk = createMemo(() => props.diffFile.getSplitHunkLine(props.index));
+  const getHunk = () => props.diffFile.getSplitHunkLine(props.index);
+
+  const [currentHunk, setCurrentHunk] = createSignal(untrack(getHunk));
 
   const enableExpand = createMemo(() => props.diffFile.getExpandEnabled());
 
@@ -189,19 +193,17 @@ const DiffSplitHunkLineGitLab = (props: { index: number; side: SplitSide; diffFi
 
   const lineSelector = createMemo(() => `tr[data-line="${props.lineNumber}-hunk"]`);
 
-  const checkCurrentShowExpandAll = () => {
-    const hunk = currentHunk();
-    return hunk && hunk.splitInfo && hunk.splitInfo.endHiddenIndex - hunk.splitInfo.startHiddenIndex < composeLen;
-  };
+  const checkCurrentShowExpandAll = (hunk: DiffHunkItem | undefined) =>
+    !!(hunk && hunk.splitInfo && hunk.splitInfo.endHiddenIndex - hunk.splitInfo.startHiddenIndex < composeLen);
 
-  const [currentShowExpandAll, setCurrentShowExpandAll] = createSignal(checkCurrentShowExpandAll());
+  const [currentShowExpandAll, setCurrentShowExpandAll] = createSignal(
+    untrack(() => checkCurrentShowExpandAll(currentHunk()))
+  );
 
-  const checkCurrentIsShow = () => {
-    const hunk = currentHunk();
-    return hunk && hunk.splitInfo && hunk.splitInfo.startHiddenIndex < hunk.splitInfo.endHiddenIndex;
-  };
+  const checkCurrentIsShow = (hunk: DiffHunkItem | undefined) =>
+    !!(hunk && hunk.splitInfo && hunk.splitInfo.startHiddenIndex < hunk.splitInfo.endHiddenIndex);
 
-  const [currentIsShow, setCurrentIsShow] = createSignal(checkCurrentIsShow());
+  const [currentIsShow, setCurrentIsShow] = createSignal(untrack(() => checkCurrentIsShow(currentHunk())));
 
   const currentIsFirstLine = createMemo(() => {
     const hunk = currentHunk();
@@ -226,8 +228,10 @@ const DiffSplitHunkLineGitLab = (props: { index: number; side: SplitSide; diffFi
 
   createEffect(() => {
     const init = () => {
-      setCurrentIsShow(checkCurrentIsShow);
-      setCurrentShowExpandAll(checkCurrentShowExpandAll);
+      const hunk = getHunk();
+      setCurrentHunk(hunk);
+      setCurrentIsShow(checkCurrentIsShow(hunk));
+      setCurrentShowExpandAll(checkCurrentShowExpandAll(hunk));
     };
 
     init();
