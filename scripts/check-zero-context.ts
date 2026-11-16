@@ -265,6 +265,47 @@ assertRow("deletion of the whole file", readUnified("a\nb\nc\n", "", WHOLE_DELET
   '3:- "c\\n"',
 ]);
 
+// the last line of the new file has no trailing newline, so its value must not gain one
+const NO_EOL_DIFF = [
+  "diff --git a/a.txt b/b.txt",
+  "--- a/a.txt",
+  "+++ b/b.txt",
+  "@@ -2,2 +2,2 @@ a",
+  "-b",
+  "-c",
+  "+B",
+  "+c",
+  "\\ No newline at end of file",
+  "",
+].join("\n");
+assertRow("replacement ending without a newline", readUnified("a\nb\nc\n", "a\nB\nc", NO_EOL_DIFF), [
+  '1:1 "a\\n"',
+  '2:- "b\\n"',
+  '3:- "c\\n"',
+  '-:2 "B\\n"',
+  '-:3 "c"',
+]);
+
+// the old file lacks the trailing newline and the new one appends after it
+const ADD_AFTER_NO_EOL_DIFF = [
+  "diff --git a/a.txt b/b.txt",
+  "--- a/a.txt",
+  "+++ b/b.txt",
+  "@@ -3 +3,2 @@ b",
+  "-c",
+  "\\ No newline at end of file",
+  "+c",
+  "+X",
+  "",
+].join("\n");
+assertRow("append after a line without a newline", readUnified("a\nb\nc", "a\nb\nc\nX\n", ADD_AFTER_NO_EOL_DIFF), [
+  '1:1 "a\\n"',
+  '2:2 "b\\n"',
+  '3:- "c"',
+  '-:3 "c\\n"',
+  '-:4 "X\\n"',
+]);
+
 assertInvariants("replace", "a\nb\nc\n", "a\nB\nc\n", REPLACE_DIFF, "unified");
 assertInvariants("replace", "a\nb\nc\n", "a\nB\nc\n", REPLACE_DIFF, "split");
 assertInvariants("delete", "a\nb\nc\n", "a\nc\n", DELETE_DIFF, "unified");
