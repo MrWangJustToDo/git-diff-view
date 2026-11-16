@@ -3,7 +3,7 @@
 	import ExpandDown from './DiffExpandDown.svelte';
 	import ExpandAll from './DiffExpandAll.svelte';
 	import { getEnableWrap } from '$lib/context/enableWrap.js';
-	import { composeLen, type DiffFile } from '@git-diff-view/core';
+	import { composeLen, type DiffFile, type DiffHunkItem } from '@git-diff-view/core';
 	import {
 		hunkContentBGName,
 		hunkContentColorName,
@@ -21,7 +21,7 @@
 
 	let props: Props = $props();
 
-	const currentHunk = $derived.by(() => props.diffFile.getUnifiedHunkLine(props.index));
+	let currentHunk = $state(props.diffFile.getUnifiedHunkLine(props.index));
 
 	const enableExpand = $derived.by(() => props.diffFile.getExpandEnabled());
 
@@ -29,25 +29,15 @@
 
 	const enableWrap = $derived.by(getEnableWrap());
 
-	const checkCurrentIsShow = () => {
-		return (
-			currentHunk &&
-			currentHunk.unifiedInfo &&
-			currentHunk.unifiedInfo.startHiddenIndex < currentHunk.unifiedInfo.endHiddenIndex
-		);
-	};
+	const checkCurrentIsShow = (hunk: DiffHunkItem | undefined) =>
+		!!(hunk && hunk.unifiedInfo && hunk.unifiedInfo.startHiddenIndex < hunk.unifiedInfo.endHiddenIndex);
 
-	let currentIsShow = $state(checkCurrentIsShow());
+	let currentIsShow = $state(checkCurrentIsShow(props.diffFile.getUnifiedHunkLine(props.index)));
 
-	const checkCurrentIsEnableAll = () => {
-		return (
-			currentHunk &&
-			currentHunk.unifiedInfo &&
-			currentHunk.unifiedInfo.endHiddenIndex - currentHunk.unifiedInfo.startHiddenIndex < composeLen
-		);
-	};
+	const checkCurrentIsEnableAll = (hunk: DiffHunkItem | undefined) =>
+		!!(hunk && hunk.unifiedInfo && hunk.unifiedInfo.endHiddenIndex - hunk.unifiedInfo.startHiddenIndex < composeLen);
 
-	let currentIsEnableAll = $state(checkCurrentIsEnableAll());
+	let currentIsEnableAll = $state(checkCurrentIsEnableAll(props.diffFile.getUnifiedHunkLine(props.index)));
 
 	const currentIsFirstLine = $derived.by(() => currentHunk && currentHunk.isFirst);
 
@@ -63,8 +53,10 @@
 		unSubscribe?.current?.();
 
 		const init = () => {
-			currentIsShow = checkCurrentIsShow();
-			currentIsEnableAll = checkCurrentIsEnableAll();
+			const hunk = props.diffFile.getUnifiedHunkLine(props.index);
+			currentHunk = hunk;
+			currentIsShow = checkCurrentIsShow(hunk);
+			currentIsEnableAll = checkCurrentIsEnableAll(hunk);
 		};
 
 		init();

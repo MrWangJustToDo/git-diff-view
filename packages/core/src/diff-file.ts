@@ -1255,7 +1255,12 @@ export class DiffFile {
         startHiddenIndex: current.splitInfo.endHiddenIndex,
       };
     } else if (dir === "down") {
-      for (let i = current.splitInfo.startHiddenIndex; i < current.splitInfo.startHiddenIndex + composeLen; i++) {
+      // clamp to the hunk's own end so an overshoot can not reveal lines guarded by another hunk bar
+      const targetStartHiddenIndex = Math.min(
+        current.splitInfo.startHiddenIndex + composeLen,
+        current.splitInfo.endHiddenIndex
+      );
+      for (let i = current.splitInfo.startHiddenIndex; i < targetStartHiddenIndex; i++) {
         const leftLine = this.#splitLeftLines[i];
         const rightLine = this.#splitRightLines[i];
         if (leftLine?.isHidden) leftLine.isHidden = false;
@@ -1264,12 +1269,12 @@ export class DiffFile {
       if (current.isLast) {
         current.splitInfo = {
           ...current.splitInfo,
-          startHiddenIndex: current.splitInfo.startHiddenIndex + composeLen,
+          startHiddenIndex: targetStartHiddenIndex,
         };
       } else {
         current.splitInfo = {
           ...current.splitInfo,
-          startHiddenIndex: current.splitInfo.startHiddenIndex + composeLen,
+          startHiddenIndex: targetStartHiddenIndex,
           plainText: `@@ -${current.splitInfo.oldStartIndex},${current.splitInfo.oldLength} +${current.splitInfo.newStartIndex},${current.splitInfo.newLength}`,
         };
       }
@@ -1292,19 +1297,25 @@ export class DiffFile {
         }
         return;
       }
-      for (let i = current.splitInfo.endHiddenIndex - composeLen; i < current.splitInfo.endHiddenIndex; i++) {
+      // clamp to the hunk's own start so a short gap reveals only the rows this bar guards
+      const targetEndHiddenIndex = Math.max(
+        current.splitInfo.endHiddenIndex - composeLen,
+        current.splitInfo.startHiddenIndex
+      );
+      for (let i = targetEndHiddenIndex; i < current.splitInfo.endHiddenIndex; i++) {
         const leftLine = this.#splitLeftLines[i];
         const rightLine = this.#splitRightLines[i];
         if (leftLine?.isHidden) leftLine.isHidden = false;
         if (rightLine?.isHidden) rightLine.isHidden = false;
       }
-      const oldStartIndex = current.splitInfo.oldStartIndex - composeLen;
-      const oldLength = current.splitInfo.oldLength + composeLen;
-      const newStartIndex = current.splitInfo.newStartIndex - composeLen;
-      const newLength = current.splitInfo.newLength + composeLen;
+      const expandLen = current.splitInfo.endHiddenIndex - targetEndHiddenIndex;
+      const oldStartIndex = current.splitInfo.oldStartIndex - expandLen;
+      const oldLength = current.splitInfo.oldLength + expandLen;
+      const newStartIndex = current.splitInfo.newStartIndex - expandLen;
+      const newLength = current.splitInfo.newLength + expandLen;
       current.splitInfo = {
         ...current.splitInfo,
-        endHiddenIndex: current.splitInfo.endHiddenIndex - composeLen,
+        endHiddenIndex: targetEndHiddenIndex,
         oldStartIndex,
         oldLength,
         newStartIndex,
@@ -1386,19 +1397,24 @@ export class DiffFile {
         startHiddenIndex: current.unifiedInfo.endHiddenIndex,
       };
     } else if (dir === "down") {
-      for (let i = current.unifiedInfo.startHiddenIndex; i < current.unifiedInfo.startHiddenIndex + composeLen; i++) {
+      // clamp to the hunk's own end so an overshoot can not reveal lines guarded by another hunk bar
+      const targetStartHiddenIndex = Math.min(
+        current.unifiedInfo.startHiddenIndex + composeLen,
+        current.unifiedInfo.endHiddenIndex
+      );
+      for (let i = current.unifiedInfo.startHiddenIndex; i < targetStartHiddenIndex; i++) {
         const unifiedLine = this.#unifiedLines[i];
         if (unifiedLine?.isHidden) unifiedLine.isHidden = false;
       }
       if (current.isLast) {
         current.unifiedInfo = {
           ...current.unifiedInfo,
-          startHiddenIndex: current.unifiedInfo.startHiddenIndex + composeLen,
+          startHiddenIndex: targetStartHiddenIndex,
         };
       } else {
         current.unifiedInfo = {
           ...current.unifiedInfo,
-          startHiddenIndex: current.unifiedInfo.startHiddenIndex + composeLen,
+          startHiddenIndex: targetStartHiddenIndex,
           plainText: `@@ -${current.unifiedInfo.oldStartIndex},${current.unifiedInfo.oldLength} +${current.unifiedInfo.newStartIndex},${current.unifiedInfo.newLength}`,
         };
       }
@@ -1419,17 +1435,23 @@ export class DiffFile {
         }
         return;
       }
-      for (let i = current.unifiedInfo.endHiddenIndex - composeLen; i < current.unifiedInfo.endHiddenIndex; i++) {
+      // clamp to the hunk's own start so a short gap reveals only the rows this bar guards
+      const targetEndHiddenIndex = Math.max(
+        current.unifiedInfo.endHiddenIndex - composeLen,
+        current.unifiedInfo.startHiddenIndex
+      );
+      for (let i = targetEndHiddenIndex; i < current.unifiedInfo.endHiddenIndex; i++) {
         const unifiedLine = this.#unifiedLines[i];
         if (unifiedLine?.isHidden) unifiedLine.isHidden = false;
       }
-      const oldStartIndex = current.unifiedInfo.oldStartIndex - composeLen;
-      const oldLength = current.unifiedInfo.oldLength + composeLen;
-      const newStartIndex = current.unifiedInfo.newStartIndex - composeLen;
-      const newLength = current.unifiedInfo.newLength + composeLen;
+      const expandLen = current.unifiedInfo.endHiddenIndex - targetEndHiddenIndex;
+      const oldStartIndex = current.unifiedInfo.oldStartIndex - expandLen;
+      const oldLength = current.unifiedInfo.oldLength + expandLen;
+      const newStartIndex = current.unifiedInfo.newStartIndex - expandLen;
+      const newLength = current.unifiedInfo.newLength + expandLen;
       current.unifiedInfo = {
         ...current.unifiedInfo,
-        endHiddenIndex: current.unifiedInfo.endHiddenIndex - composeLen,
+        endHiddenIndex: targetEndHiddenIndex,
         oldStartIndex,
         oldLength,
         newStartIndex,
