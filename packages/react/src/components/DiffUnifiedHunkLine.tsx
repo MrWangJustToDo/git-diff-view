@@ -1,3 +1,8 @@
+// The hunk objects returned by getSplitHunkLine / getUnifiedHunkLine are re-keyed whenever the diff
+// is rebuilt, so this component reads the current one straight from the diffFile on every render
+// instead of caching a derived value. A cached copy keeps pointing at the old row and leaves a dead
+// hunk bar behind with inactive buttons. The reactive adapters (vue / solid / svelte) cannot read it
+// per render, so they refresh their stored hunk on every diffFile notification for the same reason.
 import { composeLen } from "@git-diff-view/core";
 import {
   diffAsideWidthName,
