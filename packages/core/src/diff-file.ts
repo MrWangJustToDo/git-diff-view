@@ -622,13 +622,12 @@ export class DiffFile {
         }
 
         prevHunkLine = typedI;
-      } else if (typedI.type === DiffLineType.Context) {
-        const typedItem = i as DiffLineItem;
-        if (prevHunkLine) {
-          typedItem.prevHunkLine = prevHunkLine;
-          prevHunkLine = null;
-        }
-      } else {
+      } else if (prevHunkLine) {
+        // The first line of a hunk body anchors the hunk to the rows in front of it, whatever its type.
+        // It used to be attached to context lines only, but with `git diff -U0` a hunk starts straight
+        // with an addition or a deletion, so no line ever claimed the hunk and the rows above it could
+        // never be expanded (issue #77).
+        (i as DiffLineItem).prevHunkLine = prevHunkLine;
         prevHunkLine = null;
       }
       return typedI;
@@ -727,6 +726,21 @@ export class DiffFile {
   #getNewDiffLine(lineNumber: number | null) {
     if (!lineNumber) return;
     return this.#newFileDiffLines?.[lineNumber];
+  }
+
+  /**
+   * How many rows precede a hunk in either view. The rows in front of a hunk are unmodified and exist
+   * in both files, so they map 1:1 to the leading rows — which is exactly the range the hunk guards.
+   *
+   * Git omits `,1` from a range, so a missing length parses to `NaN` and means a single line. A
+   * zero-length new range (`@@ -2 +1,0 @@`, a pure deletion) reports the line the gap sits *after*,
+   * so the count is `newStartIndex` there instead of `newStartIndex - 1`.
+   */
+  #getHunkLeadingRows(hunk: DiffHunkItem) {
+    if (!hunk.hunkInfo) return 0;
+    const { newStartIndex, newLength } = hunk.hunkInfo;
+    const length = Number.isFinite(newLength) ? newLength : 1;
+    return Math.max((length > 0 ? newStartIndex - 1 : newStartIndex) || 0, 0);
   }
 
   #getOldRawLine(lineNumber: number) {
@@ -933,11 +947,11 @@ export class DiffFile {
               ...prevHunkLine.hunkInfo,
 
               startHiddenIndex: 0,
-              endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
+              endHiddenIndex: this.#getHunkLeadingRows(prevHunkLine),
               plainText: prevHunkLine.text,
 
               _startHiddenIndex: 0,
-              _endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
+              _endHiddenIndex: this.#getHunkLeadingRows(prevHunkLine),
               _plainText: prevHunkLine.text,
             };
             hideStart = Infinity;
@@ -1114,11 +1128,11 @@ export class DiffFile {
               ...prevHunkLine.hunkInfo,
 
               startHiddenIndex: 0,
-              endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
+              endHiddenIndex: this.#getHunkLeadingRows(prevHunkLine),
               plainText: prevHunkLine.text,
 
               _startHiddenIndex: 0,
-              _endHiddenIndex: prevHunkLine.hunkInfo.newStartIndex - 1,
+              _endHiddenIndex: this.#getHunkLeadingRows(prevHunkLine),
               _plainText: prevHunkLine.text,
             };
             hideStart = Infinity;
