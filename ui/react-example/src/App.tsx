@@ -1,17 +1,14 @@
 import {
   AppShell,
   Group,
-  Title,
   Button,
   Flex,
   Burger,
   Space,
   useMantineColorScheme,
-  em,
   Anchor,
   Tooltip,
   ActionIcon,
-  Box,
 } from "@mantine/core";
 import { useDisclosure, useViewportSize } from "@mantine/hooks";
 import { IconBrandGithub, IconGitCompare, IconMoon, IconSun } from "@tabler/icons-react";
@@ -55,88 +52,64 @@ function App() {
     <AppShell
       header={{ height: 60 }}
       navbar={{ width: 300, breakpoint: "sm", collapsed: { desktop: true, mobile: !opened } }}
-      padding="md"
+      // The landing page paints its own full-bleed background: any shell padding shows the body
+      // colour as a frame around it. Other views keep the normal gutter.
+      padding={type === "main" ? 0 : "md"}
     >
       <AppShell.Header
         className="glass z-50 border-b border-solid transition-colors"
         style={{
-          borderColor: colorScheme === "light" ? "rgba(148,163,184,0.28)" : "var(--mantine-color-dark-4)",
-          backgroundColor: colorScheme === "light" ? "rgba(255,255,255,0.82)" : "rgba(26,27,30,0.72)",
-          boxShadow: colorScheme === "light" ? "0 1px 12px rgba(99,102,241,0.06)" : "none",
+          borderColor: "var(--line-soft)",
+          backgroundColor: colorScheme === "light" ? "rgba(255,255,255,0.85)" : "rgba(13,13,15,0.85)",
         }}
       >
         <Group h="100%" px="lg" justify="space-between" align="center">
-          {/* Left: logo */}
           <Flex align="center" gap="sm">
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" className="mr-2" />
             <Flex align="center" gap={8} className="cursor-pointer select-none" onClick={() => goto("main")}>
-              <Box
-                className="flex items-center justify-center rounded-lg"
-                style={{
-                  width: 30,
-                  height: 30,
-                  background: "linear-gradient(135deg,#6366f1,#a855f7)",
-                  color: "#fff",
-                }}
-              >
-                <IconGitCompare size={18} />
-              </Box>
-              <Title order={1} className="text-lg font-extrabold tracking-tight">
-                Git Diff View
-              </Title>
+              <IconGitCompare size={16} className="text-[var(--accent)]" />
+              <span className="text-[13px] font-semibold tracking-tight text-[var(--ink)]">git-diff-view</span>
             </Flex>
             {width > 1000 && (
-              <>
-                <small className="ml-4 mr-1 opacity-60">power by</small>
-                <Tooltip label={<span>Go to @my-react project, version: {version}</span>} withArrow position="top">
-                  <Anchor href="https://github.com/MrWangJustToDo/MyReact" target="_blank">
-                    <small className="font-semibold text-indigo-600 dark:text-indigo-400">@my-react</small>
-                  </Anchor>
-                </Tooltip>
-              </>
+              <Tooltip label={<span>Go to @my-react project, version: {version}</span>} withArrow position="top">
+                <Anchor href="https://github.com/MrWangJustToDo/MyReact" target="_blank" underline="never">
+                  <span className="font-mono text-[11px] text-[var(--ink-faint)]">@my-react</span>
+                </Anchor>
+              </Tooltip>
             )}
           </Flex>
 
-          {/* Right: nav + actions */}
-          <Flex
-            align="center"
-            visibleFrom="sm"
-            className="rounded-full border border-solid px-1.5 py-1"
-            style={{
-              borderColor: colorScheme === "light" ? "rgba(148,163,184,0.3)" : "var(--mantine-color-dark-5)",
-              background: colorScheme === "light" ? "rgba(255,255,255,0.6)" : "rgba(38,38,42,0.6)",
-            }}
-          >
+          <Flex align="center" gap={2} visibleFrom="sm">
             {navItems.map((item) => (
-              <Button
+              <button
                 key={item.key}
-                variant={type === item.key ? "filled" : "subtle"}
-                size="compact-sm"
+                type="button"
                 onClick={() => goto(item.key)}
-                className="rounded-full font-medium"
+                className={`rounded-md px-2.5 py-1 text-[12.5px] transition-colors ${
+                  type === item.key
+                    ? "bg-[var(--accent-soft)] text-[var(--accent)]"
+                    : "text-[var(--ink-soft)] hover:text-[var(--ink)]"
+                }`}
               >
                 {item.label}
-              </Button>
+              </button>
             ))}
             <ActionIcon
               variant="subtle"
+              color="gray"
               size="sm"
               component="a"
               href="https://github.com/MrWangJustToDo/git-diff-view"
               target="_blank"
-              className="mx-1"
+              className="ml-1"
             >
-              <IconBrandGithub size={18} />
+              <IconBrandGithub size={15} />
             </ActionIcon>
-            <ActionIcon variant="subtle" size="sm" onClick={toggleColorScheme} className="mr-1">
-              {colorScheme === "light" ? (
-                <IconSun style={{ width: em(18), height: em(18) }} />
-              ) : (
-                <IconMoon style={{ width: em(18), height: em(18) }} />
-              )}
+            <ActionIcon variant="subtle" color="gray" size="sm" onClick={toggleColorScheme}>
+              {colorScheme === "light" ? <IconSun size={15} /> : <IconMoon size={15} />}
             </ActionIcon>
           </Flex>
-          <Button variant="subtle" hiddenFrom="sm" onClick={toggleColorScheme} color="gray" size="compact-sm">
+          <Button variant="subtle" color="gray" hiddenFrom="sm" onClick={toggleColorScheme} size="compact-sm">
             {colorScheme === "light" ? <IconSun size={18} /> : <IconMoon size={18} />}
           </Button>
         </Group>
@@ -173,7 +146,7 @@ function App() {
       <AppShell.Main>
         {type === "main" && <Main />}
         {type === "example" && (
-          <Example className="border-color h-[calc(100vh-60px-32px)] w-full overflow-hidden rounded-md border" />
+          <Example className="border-color h-[calc(100vh-56px-32px)] w-full overflow-hidden rounded-md border" />
         )}
         {type === "git-playground" && <PlayGroundGitDiff />}
         {type === "file-playground" && <PlayGroundFileDiff />}
