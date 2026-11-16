@@ -4,6 +4,11 @@
 **/dist
 **/dev
 **/.svelte-kit
+**/styles
+**/.agents
+# Generated at build time by scripts/utils.ts preSvelte() (copied from packages/utils/src)
+packages/svelte/src/lib/utils
+.mcp.json
 **/*.md
 **/*.d.ts
 **/*.svelte
