@@ -1,103 +1,60 @@
 import { DiffModeEnum, DiffView } from "@git-diff-view/react";
 import { useMantineColorScheme } from "@mantine/core";
-import { OverlayScrollbars } from "overlayscrollbars";
 import { useEffect, useRef } from "react";
 
 import type { DiffViewProps } from "@git-diff-view/react";
 
+/**
+ * Split view whose two columns scroll horizontally in lockstep.
+ *
+ * The scroll containers are re-created by the diff view whenever the mode / wrap / diffFile
+ * changes, so instead of caching them we look them up on every scroll. Doing this with plain
+ * `scroll` events (rather than OverlayScrollbars) also keeps the example free of that library's
+ * global scrollbar-slot state, which used to blank out unrelated diff views on the same page.
+ */
 export const DiffViewWithScrollBar = (props: Omit<DiffViewProps<string[]>, "data">) => {
-  const { diffViewMode = DiffModeEnum.Split, diffFile, diffViewWrap } = props;
+  const { diffViewMode = DiffModeEnum.Split, diffViewWrap } = props;
 
   const { colorScheme } = useMantineColorScheme();
 
   const ref = useRef<HTMLDivElement>(null);
 
+  const isSplit = !!(diffViewMode & DiffModeEnum.Split) && !diffViewWrap;
+
   useEffect(() => {
-    if (diffFile && !diffViewWrap) {
-      const instanceArray: OverlayScrollbars[] = [];
-      const init = () => {
-        const isSplitMode = diffViewMode & DiffModeEnum.Split;
-        if (isSplitMode) {
-          const leftScrollbar = ref.current?.querySelector("[data-left]") as HTMLDivElement;
-          const rightScrollbar = ref.current?.querySelector("[data-right]") as HTMLDivElement;
-          const scrollContainers = Array.from(
-            ref.current?.querySelectorAll(".diff-table-scroll-container") || []
-          ) as HTMLDivElement[];
-          const [left, right] = scrollContainers;
-          if (left && right) {
-            const i1 = OverlayScrollbars(
-              { target: left, scrollbars: { slot: leftScrollbar } },
-              {
-                scrollbars: {
-                  theme: colorScheme === "dark" ? "os-theme-light" : "os-theme-dark",
-                },
-                overflow: {
-                  y: "hidden",
-                },
-              }
-            );
-            const i2 = OverlayScrollbars(
-              { target: right, scrollbars: { slot: rightScrollbar } },
-              {
-                scrollbars: {
-                  theme: colorScheme === "dark" ? "os-theme-light" : "os-theme-dark",
-                },
-                overflow: {
-                  y: "hidden",
-                },
-              }
-            );
-            instanceArray.push(i1, i2);
-            const leftScrollEle = i1.elements().scrollEventElement as HTMLDivElement;
-            const rightScrollEle = i2.elements().scrollEventElement as HTMLDivElement;
-            i1.on("scroll", () => {
-              rightScrollEle.scrollLeft = leftScrollEle.scrollLeft;
-            });
-            i2.on("scroll", () => {
-              leftScrollEle.scrollLeft = rightScrollEle.scrollLeft;
-            });
-          }
-        } else {
-          const scrollBarContainer = ref.current?.querySelector("[data-full]") as HTMLDivElement;
-          const scrollContainer = ref.current?.querySelector(".diff-table-scroll-container") as HTMLDivElement;
-          if (scrollContainer) {
-            const i = OverlayScrollbars(
-              { target: scrollContainer, scrollbars: { slot: scrollBarContainer } },
-              {
-                scrollbars: {
-                  theme: colorScheme === "dark" ? "os-theme-light" : "os-theme-dark",
-                },
-                overflow: {
-                  y: "hidden",
-                },
-              }
-            );
-            instanceArray.push(i);
-          }
-        }
-      };
-      // 当前 @my-react 的调度还很简陋，所以这里使用 setTimeout
-      const id = setTimeout(init, 1000);
-      return () => {
-        clearTimeout(id);
-        instanceArray.forEach((i) => i.destroy());
-      };
-    }
-  }, [diffFile, diffViewWrap, diffViewMode, colorScheme]);
+    const root = ref.current;
+
+    if (!root || !isSplit) return;
+
+    let syncing = false;
+
+    const onScroll = (e: Event) => {
+      const source = e.target as HTMLDivElement | null;
+
+      if (syncing || !source) return;
+
+      const isOld = source.classList.contains("old-diff-table-wrapper");
+      const isNew = source.classList.contains("new-diff-table-wrapper");
+
+      if (!isOld && !isNew) return;
+
+      const target = root.querySelector(isOld ? ".new-diff-table-wrapper" : ".old-diff-table-wrapper");
+
+      if (!(target instanceof HTMLElement)) return;
+
+      syncing = true;
+      target.scrollLeft = source.scrollLeft;
+      syncing = false;
+    };
+
+    root.addEventListener("scroll", onScroll, true);
+
+    return () => root.removeEventListener("scroll", onScroll, true);
+  }, [isSplit]);
 
   return (
     <div ref={ref}>
       <DiffView {...props} diffViewTheme={colorScheme === "dark" ? "dark" : "light"} />
-      <div data-scroll-target className="sticky bottom-0 mt-[-6px] flex h-[6px] w-full">
-        {diffViewMode & DiffModeEnum.Split ? (
-          <>
-            <div data-left className="relative w-[50%]"></div>
-            <div data-right className="relative w-[50%]"></div>
-          </>
-        ) : (
-          <div data-full></div>
-        )}
-      </div>
     </div>
   );
 };
