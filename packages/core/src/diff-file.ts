@@ -853,24 +853,18 @@ export class DiffFile {
       const len = this.#splitRightLines.length;
       const isHidden = !oldDiffLine && !newDiffLine;
 
-      if (oldDiffLine && !newDiffLine) {
-        if (oldDiffLine.newLineNumber && oldDiffLine.newLineNumber > newFileLineNumber) {
-          newFileLineNumber++;
-          continue;
-        }
-        if (oldDiffLine.newLineNumber === null || oldDiffLine.newLineNumber === undefined) {
-          newFileLineNumber++;
-        }
+      // A deletion has no line number on the new side: nothing was consumed from the new file, so
+      // `newFileLineNumber` must stay put. Advancing it here is what shifted every row after a `-U0`
+      // hunk (issue #77) — with zero context there is no new-side diff line to pair the deletion with.
+      if (oldDiffLine && !newDiffLine && oldDiffLine.newLineNumber && oldDiffLine.newLineNumber > newFileLineNumber) {
+        newFileLineNumber++;
+        continue;
       }
 
-      if (newDiffLine && !oldDiffLine) {
-        if (newDiffLine.oldLineNumber && newDiffLine.oldLineNumber > oldFileLineNumber) {
-          oldFileLineNumber++;
-          continue;
-        }
-        if (newDiffLine.oldLineNumber === null || newDiffLine.oldLineNumber === undefined) {
-          oldFileLineNumber++;
-        }
+      // The mirrored case: an addition has no line number on the old side.
+      if (newDiffLine && !oldDiffLine && newDiffLine.oldLineNumber && newDiffLine.oldLineNumber > oldFileLineNumber) {
+        oldFileLineNumber++;
+        continue;
       }
 
       if (!oldDiffLine && !oldRawLine && !newDiffLine && !newRawLine) break;
@@ -1042,24 +1036,18 @@ export class DiffFile {
       const len = this.#unifiedLines.length;
       const isHidden = !oldDiffLine && !newDiffLine;
 
-      if (oldDiffLine && !newDiffLine) {
-        if (oldDiffLine.newLineNumber && oldDiffLine.newLineNumber > newFileLineNumber) {
-          newFileLineNumber++;
-          continue;
-        }
-        if (oldDiffLine.newLineNumber === null || oldDiffLine.newLineNumber === undefined) {
-          newFileLineNumber++;
-        }
+      // A deletion has no line number on the new side: nothing was consumed from the new file, so
+      // `newFileLineNumber` must stay put. Advancing it here is what shifted every row after a `-U0`
+      // hunk (issue #77) — with zero context there is no new-side diff line to pair the deletion with.
+      if (oldDiffLine && !newDiffLine && oldDiffLine.newLineNumber && oldDiffLine.newLineNumber > newFileLineNumber) {
+        newFileLineNumber++;
+        continue;
       }
 
-      if (newDiffLine && !oldDiffLine) {
-        if (newDiffLine.oldLineNumber && newDiffLine.oldLineNumber > oldFileLineNumber) {
-          oldFileLineNumber++;
-          continue;
-        }
-        if (newDiffLine.oldLineNumber === null || newDiffLine.oldLineNumber === undefined) {
-          oldFileLineNumber++;
-        }
+      // The mirrored case: an addition has no line number on the old side.
+      if (newDiffLine && !oldDiffLine && newDiffLine.oldLineNumber && newDiffLine.oldLineNumber > oldFileLineNumber) {
+        oldFileLineNumber++;
+        continue;
       }
 
       if (!oldRawLine && !newRawLine && !newDiffLine && !oldDiffLine) break;
