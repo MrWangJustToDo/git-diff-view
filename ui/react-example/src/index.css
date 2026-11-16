@@ -280,137 +280,263 @@
   pointer-events: none;
 }
 
-/* Modern slim scrollbar */
-/* ::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
+/* ============================================================
+   Landing page tokens
+   A quiet product page: neutral greys, one accent, soft surfaces.
+   ============================================================ */
+:root {
+  --app-header: 56px;
+  --canvas: #ffffff;
+  --canvas-soft: #fafafa;
+  --surface: #ffffff;
+  --line: rgba(24, 24, 27, 0.1);
+  --line-soft: rgba(24, 24, 27, 0.06);
+  --ink: #18181b;
+  --ink-soft: #52525b;
+  --ink-faint: #8b8b93;
+  --accent: #2f7a5a;
+  --on-accent: #ffffff;
+  --accent-soft: rgba(47, 122, 90, 0.09);
+  --hero-glow: rgba(47, 122, 90, 0.1);
+  --page-tint: rgba(47, 122, 90, 0.035);
+  --shadow-card: 0 1px 2px rgba(24, 24, 27, 0.04), 0 8px 24px -12px rgba(24, 24, 27, 0.12);
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
+[data-mantine-color-scheme="dark"] {
+  --canvas: #0d0d0f;
+  --canvas-soft: #121215;
+  --surface: #16161a;
+  --line: rgba(255, 255, 255, 0.1);
+  --line-soft: rgba(255, 255, 255, 0.06);
+  --ink: #f4f4f5;
+  --ink-soft: #a1a1aa;
+  --ink-faint: #71717a;
+  --accent: #6ee7b7;
+  --on-accent: #06170f;
+  --accent-soft: rgba(110, 231, 183, 0.12);
+  --hero-glow: rgba(90, 190, 155, 0.22);
+  --page-tint: rgba(90, 190, 155, 0.07);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px -12px rgba(0, 0, 0, 0.6);
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.4);
+.lp-page {
+  background-color: var(--canvas);
+  color: var(--ink);
+}
+
+/* One very restrained vertical tint across the whole page so large flat areas are not dead flat */
+.lp-page-wrap {
+  background-image: linear-gradient(180deg, var(--page-tint), transparent 520px);
+  background-repeat: no-repeat;
+}
+
+.lp-band {
+  background-color: var(--canvas-soft);
+}
+
+/* Eyebrow label above a section title */
+.lp-eyebrow {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Section / hero headings */
+.lp-title {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  color: var(--ink);
+}
+
+.lp-lead {
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+}
+
+/* Rounded surface used for the demo shell and the cards */
+.lp-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.15s ease;
+}
+
+.lp-card-hover:hover {
+  border-color: rgba(47, 122, 90, 0.4);
+  transform: translateY(-1px);
+}
+
+/* Inline command block */
+.lp-cmd {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--line);
   border-radius: 8px;
-  border: 2px solid transparent;
-  background-clip: content-box;
+  background: var(--canvas-soft);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--ink);
+  transition: border-color 0.15s ease;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.6);
-  background-clip: content-box;
-} */
+.lp-cmd:hover {
+  border-color: var(--accent);
+}
 
-/* Grid pattern backdrop */
-.bg-grid {
-  background-image:
-    linear-gradient(to right, rgba(148, 163, 184, 0.09) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(148, 163, 184, 0.09) 1px, transparent 1px);
-  background-size: 44px 44px;
-  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%);
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%);
+/* Compact flag row used by the live demo configuration panel */
+.flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.15rem 0;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  transition: color 0.15s ease;
+}
+
+.flag-on {
+  color: var(--accent);
+}
+
+.flag-off {
+  color: var(--ink-faint);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.flag:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 /* ============================================================
-   Hero canvas — near-white paper with a dark code window as the anchor
+   Hero extras: the code card (A), the stat band (B) and the
+   tinted icon tile used by the capability cards (D).
    ============================================================ */
-.hero-canvas {
-  background:
-    radial-gradient(720px 440px at 92% 0%, rgba(99, 102, 241, 0.11), transparent 62%),
-    radial-gradient(520px 320px at 0% 0%, rgba(139, 92, 246, 0.06), transparent 60%),
-    linear-gradient(180deg, #f9f9fc 0%, #ffffff 60%);
-}
 
-[data-mantine-color-scheme="dark"] .hero-canvas {
-  background:
-    radial-gradient(720px 440px at 92% 0%, rgba(99, 102, 241, 0.18), transparent 62%), var(--mantine-color-dark-8);
-}
-
-.hero-dots {
-  background-image: radial-gradient(rgba(15, 23, 42, 0.08) 1px, transparent 1px);
-  background-size: 20px 20px;
-  -webkit-mask-image: radial-gradient(ellipse 88% 78% at 50% 0%, #000 15%, transparent 88%);
-  mask-image: radial-gradient(ellipse 88% 78% at 50% 0%, #000 15%, transparent 88%);
-}
-
-[data-mantine-color-scheme="dark"] .hero-dots {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
-}
-
-.hero-glow {
-  position: absolute;
-  border-radius: 9999px;
-  filter: blur(90px);
-  pointer-events: none;
-}
-
-/* Only one glow, sitting behind the window — no ambient haze over the copy */
-.hero-glow-a {
-  top: -60px;
-  right: -40px;
-  width: 420px;
-  height: 280px;
-  background: rgba(99, 102, 241, 0.14);
-}
-
-[data-mantine-color-scheme="dark"] .hero-glow-a {
-  background: rgba(99, 102, 241, 0.2);
-}
-
-/* Narrow screens: one glow stretched over the whole width reads as a purple wash */
-@media (max-width: 767px) {
-  .hero-glow-a {
-    opacity: 0.55;
-    filter: blur(70px);
-  }
-}
-
-/* Dark editor window shell — #0d1117 matches the library's dark plain bg */
-.hero-window {
-  background: #0d1117;
-  border: 1px solid rgba(15, 23, 42, 0.45);
-  box-shadow:
-    0 40px 80px -28px rgba(15, 23, 42, 0.42),
-    0 10px 24px -14px rgba(15, 23, 42, 0.3);
-}
-
-[data-mantine-color-scheme="dark"] .hero-window {
-  border-color: rgba(255, 255, 255, 0.1);
-  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.85);
-}
-
-.hero-window-glow {
-  position: absolute;
-  inset: -14% -8% -16% -8%;
-  background: radial-gradient(closest-side, rgba(99, 102, 241, 0.26), rgba(139, 92, 246, 0.08) 55%, transparent 72%);
-  filter: blur(46px);
-  pointer-events: none;
-}
-
-[data-mantine-color-scheme="light"] .hero-window-glow {
-  opacity: 0.5;
-}
-
-.diff-symbol {
+/* Soft wash behind the hero: anchored to the top edge and covering the whole section, so it
+   reads as a gradient rather than a floating oval. */
+.lp-hero {
   position: relative;
-  color: #aeaeae !important;
+  overflow: hidden;
+  background-image: radial-gradient(90% 120% at 50% -20%, var(--hero-glow), transparent 62%);
+  background-repeat: no-repeat;
 }
 
-.diff-symbol-space::after {
-  content: "·";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  inset: 0;
-  line-height: 100%;
+.lp-hero > * {
+  position: relative;
 }
 
-.diff-symbol-tab::after {
-  content: "→";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  inset: 0;
-  line-height: 100%;
+/* Code card: dark surface in both schemes, it reads as an editor */
+.lp-code {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: #0f1115;
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.4),
+    0 24px 48px -24px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.lp-code-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.55rem 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #8b93a1;
+}
+
+.lp-code-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.lp-code-body {
+  padding: 0.9rem 1rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.8;
+  color: #d6dae2;
+  overflow-x: auto;
+}
+
+.lp-code .tok-key,
+.lp-code .tok-tag {
+  color: #c792ea;
+}
+
+.lp-code .tok-str {
+  color: #a5e3a1;
+}
+
+.lp-code .tok-fn {
+  color: #82aaff;
+}
+
+.lp-code .tok-cmt {
+  color: #5f6773;
+}
+
+.lp-code .tok-punc {
+  color: #7d8590;
+}
+
+.lp-code .tok-attr {
+  color: #ffcb6b;
+}
+
+/* Stat band under the hero */
+.lp-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.9rem 0;
+}
+
+.lp-stat-value {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.lp-stat-label {
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+/* Tinted icon tile for capability cards */
+.lp-tile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* Keep the document background in sync with the page canvas so no shell/body colour can show
+   through at the edges (overscroll, short pages, iOS rubber-banding). */
+body {
+  background-color: var(--canvas);
 }

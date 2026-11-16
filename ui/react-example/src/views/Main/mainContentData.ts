@@ -1,14 +1,4 @@
-import {
-  IconBraces,
-  IconColumns,
-  IconCpu,
-  IconExternalLink,
-  IconFileDiff,
-  IconGitCompare,
-  IconHighlight,
-  IconSelect,
-  IconTextWrap,
-} from "@tabler/icons-react";
+import { IconBraces, IconColumns, IconHighlight, IconTextWrap } from "@tabler/icons-react";
 
 export const installCmd = "npm install @git-diff-view/react";
 
@@ -28,41 +18,53 @@ export const formatNumber = (num: number): string => {
 export const frameWorkNames = ["React", "Vue", "Solid", "Svelte", "Lynx", "Ink"];
 
 export const capabilities = [
-  { icon: IconColumns, label: "Split & unified", description: "Both diff view modes with full feature parity" },
-  { icon: IconHighlight, label: "Syntax highlighting", description: "Lowlight, Shiki or Lezer powered, theme-aware" },
-  { icon: IconTextWrap, label: "Line wrap", description: "Long lines wrap gracefully with proper alignment" },
-  { icon: IconBraces, label: "Extensible API", description: "Widgets, extend lines, custom renderers and more" },
+  {
+    id: "split-unified",
+    icon: IconColumns,
+    label: "Split & unified",
+    description: "Both diff modes with full feature parity — switch at runtime without re-parsing the file.",
+    api: "diffViewMode",
+  },
+  {
+    id: "syntax-highlight",
+    icon: IconHighlight,
+    label: "Syntax highlighting",
+    description: "Lowlight, Shiki or Lezer, theme aware and swappable per project.",
+    api: "diffViewHighlight",
+  },
+  {
+    id: "line-wrap",
+    icon: IconTextWrap,
+    label: "Line wrap",
+    description: "Long lines wrap with the gutter and indentation kept in alignment.",
+    api: "diffViewWrap",
+  },
+  {
+    id: "extensible-api",
+    icon: IconBraces,
+    label: "Extensible API",
+    description: "Widgets, extend lines and custom renderers — only the parts you need to override.",
+    api: "renderWidgetLine",
+  },
 ];
 
 export const demoCards = [
   {
-    key: "example",
-    icon: IconExternalLink,
-    title: "Live example",
-    description: "Real-world usage in an external application.",
-  },
-  {
     key: "git-playground",
-    icon: IconGitCompare,
+    icon: IconColumns,
     title: "Git playground",
-    description: "Paste git diff output and preview it instantly.",
+    description: "Paste git diff output and preview it instantly, then tune every option.",
   },
   {
     key: "file-playground",
-    icon: IconFileDiff,
+    icon: IconTextWrap,
     title: "File playground",
-    description: "Compare two files side by side.",
-  },
-  {
-    key: "worker",
-    icon: IconCpu,
-    title: "Worker",
-    description: "Off-thread parsing for large diffs.",
+    description: "Compare two file contents side by side without touching git.",
   },
   {
     key: "multiselect",
-    icon: IconSelect,
+    icon: IconBraces,
     title: "Multi-select",
-    description: "Drag to select lines for comments.",
+    description: "Drag across line numbers to select a range and leave a comment on it.",
   },
 ];
