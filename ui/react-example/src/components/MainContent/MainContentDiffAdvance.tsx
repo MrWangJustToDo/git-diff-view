@@ -8,7 +8,6 @@ import {
   setEnableDiffSemanticCleanup,
   resetEnableDiffSemanticCleanup,
 } from "@git-diff-view/core";
-import { Button, Group } from "@mantine/core";
 import { useEffect } from "react";
 
 import { useDiffConfig } from "../../hooks/useDiffConfig";
@@ -17,6 +16,24 @@ const transform = (str: string) =>
   escapeHtml(str)
     .replace(/ /g, '<span class="diff-symbol diff-symbol-space"> </span>')
     .replace(/\t/g, '<span class="diff-symbol diff-symbol-tab">\t</span>');
+
+/** Same one-option-per-line treatment as the configuration panel. */
+const Flag = ({
+  flag,
+  on,
+  disabled,
+  onClick,
+}: {
+  flag: string;
+  on: boolean;
+  disabled?: boolean;
+  onClick: () => void;
+}) => (
+  <button type="button" disabled={disabled} onClick={onClick} className={`flag ${on ? "flag-on" : "flag-off"}`}>
+    <span className="w-3 shrink-0 text-center opacity-60">{on ? "+" : "−"}</span>
+    <span>{flag}</span>
+  </button>
+);
 
 export const MainContentDiffAdvance = () => {
   const {
@@ -74,19 +91,20 @@ export const MainContentDiffAdvance = () => {
   }, []);
 
   return (
-    <Group>
-      <Button onClick={() => setTabSpace(!tabSpace)}>
-        {tabSpace ? "disable tab/space symbol" : "enable tab/space symbol"}
-      </Button>
-      <Button onClick={() => setFastDiff(!fastDiff)}>
-        {fastDiff ? "disable fast diff template" : "enable fast diff template"}
-      </Button>
-      <Button disabled={!fastDiff} onClick={() => setSemanticCleanup(!semanticCleanup)}>
-        {semanticCleanup ? "disable semantic cleanup" : "enable semantic cleanup"}
-      </Button>
-      <Button onClick={() => setAutoExpandCommentLine(!autoExpandCommentLine)}>
-        {autoExpandCommentLine ? "disable auto expand comment line" : "enable auto expand comment line"}
-      </Button>
-    </Group>
+    <div className="flex flex-col gap-1">
+      <Flag flag="symbols" on={tabSpace} onClick={() => setTabSpace(!tabSpace)} />
+      <Flag flag="fast-diff" on={fastDiff} onClick={() => setFastDiff(!fastDiff)} />
+      <Flag
+        flag="semantic-cleanup"
+        on={semanticCleanup}
+        disabled={!fastDiff}
+        onClick={() => setSemanticCleanup(!semanticCleanup)}
+      />
+      <Flag
+        flag="auto-expand-comment"
+        on={autoExpandCommentLine}
+        onClick={() => setAutoExpandCommentLine(!autoExpandCommentLine)}
+      />
+    </div>
   );
 };
