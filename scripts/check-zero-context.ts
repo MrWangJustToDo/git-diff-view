@@ -38,12 +38,22 @@ const assertRow = (label: string, actual: string[], expected: string[]) => {
   failures.push(label);
 };
 
+/** Turn file content into the exact value every row must carry, trailing newline included. */
+const toLines = (content: string) => {
+  if (!content) return [];
+
+  // the trailing newline terminates the last line instead of starting an empty one
+  const terminated = content.endsWith("\n");
+  const parts = (terminated ? content.slice(0, -1) : content).split("\n");
+
+  return parts.map((line, i) => (i < parts.length - 1 || terminated ? `${line}\n` : line));
+};
+
 /** Build a unified diff view and read every row back as `old:new "value"`. */
 const readUnified = (oldContent: string, newContent: string, diff: string) => {
   const file = new DiffFile("a.txt", oldContent, "b.txt", newContent, [diff], "txt", "txt");
 
-  file.initTheme("light");
-  file.init();
+  file.initRaw();
   file.buildUnifiedDiffLines();
   file.onAllExpand("unified");
 
@@ -65,8 +75,7 @@ const readUnified = (oldContent: string, newContent: string, diff: string) => {
 const readSplit = (oldContent: string, newContent: string, diff: string) => {
   const file = new DiffFile("a.txt", oldContent, "b.txt", newContent, [diff], "txt", "txt");
 
-  file.initTheme("light");
-  file.init();
+  file.initRaw();
   file.buildSplitDiffLines();
   file.onAllExpand("split");
 
@@ -85,9 +94,16 @@ const readSplit = (oldContent: string, newContent: string, diff: string) => {
 };
 
 /**
- * Generic invariant: after `onAllExpand` nothing may stay hidden, and every row must carry the real
- * content of the line number it claims — that is what catches a shifted or blank row anywhere in the
- * file, without having to spell out every expected row by hand.
+ * Generic invariant, checked after `onAllExpand`:
+ *
+ *   - nothing may stay hidden;
+ *   - every row must carry the real content of the line number it claims;
+ *   - every row must be anchored to a line on at least one side;
+ *   - each side must cover its file exactly once (no missing, repeated or swapped rows).
+ *
+ * The coverage rule is what catches a row that silently disappeared, which the per-row content check
+ * alone would miss. If this fails, `onAllExpand` or the line numbering is wrong — no need to spell out
+ * every expected row for each fixture.
  */
 const assertInvariants = (
   label: string,
@@ -96,28 +112,31 @@ const assertInvariants = (
   diff: string,
   mode: "split" | "unified"
 ) => {
-  const oldLines = oldContent ? oldContent.split("\n").slice(0, -1) : [];
-  const newLines = newContent ? newContent.split("\n").slice(0, -1) : [];
+  const oldLines = toLines(oldContent);
+  const newLines = toLines(newContent);
   const problems: string[] = [];
+  const seen = { old: new Map<number, number>(), new: new Map<number, number>() };
 
-  const check = (side: "old" | "new", rowIndex: number, lineNumber: number | null, value?: string) => {
-    const expected = lineNumber ? (side === "old" ? oldLines : newLines)[lineNumber - 1] : undefined;
-
+  const check = (side: "old" | "new", rowIndex: number, lineNumber: number | null | undefined, value?: string) => {
     if (!lineNumber) return;
 
+    const lines = side === "old" ? oldLines : newLines;
+    const expected = lines[lineNumber - 1];
+
+    seen[side].set(lineNumber, (seen[side].get(lineNumber) ?? 0) + 1);
+
     if (expected === undefined) {
-      problems.push(`${side} row ${rowIndex} claims line ${lineNumber}, which does not exist`);
-    } else if (value !== `${expected}\n`) {
+      problems.push(`${side} row ${rowIndex} claims line ${lineNumber}, but the file only has ${lines.length}`);
+    } else if (value !== expected) {
       problems.push(
-        `${side} row ${rowIndex} line ${lineNumber}: ${JSON.stringify(value)} !== ${JSON.stringify(`${expected}\n`)}`
+        `${side} row ${rowIndex} line ${lineNumber}: ${JSON.stringify(value)} !== ${JSON.stringify(expected)}`
       );
     }
   };
 
   const file = new DiffFile("a.txt", oldContent, "b.txt", newContent, [diff], "txt", "txt");
 
-  file.initTheme("light");
-  file.init();
+  file.initRaw();
 
   if (mode === "split") {
     file.buildSplitDiffLines();
@@ -128,6 +147,7 @@ const assertInvariants = (
       const r = file.getSplitRightLine(i);
 
       if (l.isHidden || r.isHidden) problems.push(`row ${i} is still hidden after onAllExpand`);
+      if (!l.lineNumber && !r.lineNumber) problems.push(`row ${i} is not anchored to any line`);
 
       check("old", i, l.lineNumber, l.value);
       check("new", i, r.lineNumber, r.value);
@@ -140,13 +160,25 @@ const assertInvariants = (
       const line = file.getUnifiedLine(i)!;
 
       if (line.isHidden) problems.push(`row ${i} is still hidden after onAllExpand`);
+      if (!line.oldLineNumber && !line.newLineNumber) problems.push(`row ${i} is not anchored to any line`);
 
       check("old", i, line.oldLineNumber, line.value);
       check("new", i, line.newLineNumber, line.value);
     }
   }
 
-  assertRow(`${label} (${mode}) invariant`, problems.slice(0, 3), []);
+  (["old", "new"] as const).forEach((side) => {
+    const lines = side === "old" ? oldLines : newLines;
+
+    for (let lineNumber = 1; lineNumber <= lines.length; lineNumber++) {
+      const hits = seen[side].get(lineNumber) ?? 0;
+
+      if (hits === 0) problems.push(`${side} line ${lineNumber} never appears`);
+      if (hits > 1) problems.push(`${side} line ${lineNumber} appears ${hits} times`);
+    }
+  });
+
+  assertRow(`${label} (${mode}) invariant`, problems.slice(0, 5), []);
 };
 
 const REPLACE_DIFF = "diff --git a/a.txt b/b.txt\n--- a/a.txt\n+++ b/b.txt\n@@ -2 +2 @@\n-b\n+B\n";
@@ -240,6 +272,29 @@ assertRow("unified rows across three hunks", readUnified(MULTI_OLD, MULTI_NEW, M
   '-:7 "X\\n"',
   '8:8 "h\\n"',
 ]);
+const multiSplit = readSplit(MULTI_OLD, MULTI_NEW, MULTI_DIFF);
+assertRow("split rows across three hunks (old column)", multiSplit.left, [
+  '1 "a\\n"',
+  '2 "b\\n"',
+  '3 "c\\n"',
+  '4 "d\\n"',
+  '5 "e\\n"',
+  '6 "f\\n"',
+  '7 "g\\n"',
+  "- null",
+  '8 "h\\n"',
+]);
+assertRow("split rows across three hunks (new column)", multiSplit.right, [
+  '1 "a\\n"',
+  '2 "B\\n"',
+  '3 "c\\n"',
+  '4 "d\\n"',
+  "- null",
+  '5 "f\\n"',
+  '6 "g\\n"',
+  '7 "X\\n"',
+  '8 "h\\n"',
+]);
 assertInvariants("three hunks", MULTI_OLD, MULTI_NEW, MULTI_DIFF, "unified");
 assertInvariants("three hunks", MULTI_OLD, MULTI_NEW, MULTI_DIFF, "split");
 
@@ -306,6 +361,39 @@ assertRow("append after a line without a newline", readUnified("a\nb\nc", "a\nb\
   '-:4 "X\\n"',
 ]);
 
+// the old file has no trailing newline and a deletion sits in the middle, so the far side still has
+// content to consume when the deletion is processed — that is what the old counter bump got wrong
+const MID_DELETE_NO_EOL_DIFF = "diff --git a/a.txt b/b.txt\n--- a/a.txt\n+++ b/b.txt\n@@ -3 +2,0 @@ b\n-c\n";
+assertRow(
+  "middle deletion in an unterminated file",
+  readUnified("a\nb\nc\nd\ne", "a\nb\nd\ne", MID_DELETE_NO_EOL_DIFF),
+  ['1:1 "a\\n"', '2:2 "b\\n"', '3:- "c\\n"', '4:3 "d\\n"', '5:4 "e"']
+);
+assertInvariants(
+  "middle deletion, no trailing newline",
+  "a\nb\nc\nd\ne",
+  "a\nb\nd\ne",
+  MID_DELETE_NO_EOL_DIFF,
+  "unified"
+);
+assertInvariants(
+  "middle deletion, no trailing newline",
+  "a\nb\nc\nd\ne",
+  "a\nb\nd\ne",
+  MID_DELETE_NO_EOL_DIFF,
+  "split"
+);
+
+const REPLACE_NO_EOL_DIFF = "diff --git a/a.txt b/b.txt\n--- a/a.txt\n+++ b/b.txt\n@@ -3 +3 @@ b\n-c\n+C\n";
+assertInvariants(
+  "replacement in an unterminated file",
+  "a\nb\nc\nd\ne",
+  "a\nb\nC\nd\ne",
+  REPLACE_NO_EOL_DIFF,
+  "unified"
+);
+assertInvariants("replacement in an unterminated file", "a\nb\nc\nd\ne", "a\nb\nC\nd\ne", REPLACE_NO_EOL_DIFF, "split");
+
 assertInvariants("replace", "a\nb\nc\n", "a\nB\nc\n", REPLACE_DIFF, "unified");
 assertInvariants("replace", "a\nb\nc\n", "a\nB\nc\n", REPLACE_DIFF, "split");
 assertInvariants("delete", "a\nb\nc\n", "a\nc\n", DELETE_DIFF, "unified");
@@ -314,6 +402,10 @@ assertInvariants("insert", "a\nb\nc\n", "a\nb\nX\nc\n", INSERT_DIFF, "unified");
 assertInvariants("insert", "a\nb\nc\n", "a\nb\nX\nc\n", INSERT_DIFF, "split");
 assertInvariants("end of file delete", "a\nb\nc\n", "a\nb\n", EOF_DELETE_DIFF, "split");
 assertInvariants("start of file insert", "a\nb\n", "X\na\nb\n", BOF_INSERT_DIFF, "split");
+assertInvariants("replacement ending without a newline", "a\nb\nc\n", "a\nB\nc", NO_EOL_DIFF, "unified");
+assertInvariants("replacement ending without a newline", "a\nb\nc\n", "a\nB\nc", NO_EOL_DIFF, "split");
+assertInvariants("append after a line without a newline", "a\nb\nc", "a\nb\nc\nX\n", ADD_AFTER_NO_EOL_DIFF, "unified");
+assertInvariants("append after a line without a newline", "a\nb\nc", "a\nb\nc\nX\n", ADD_AFTER_NO_EOL_DIFF, "split");
 
 console.log("\n-u3 regression (default git context)");
 const U3_DIFF = [
