@@ -728,21 +728,6 @@ export class DiffFile {
     return this.#newFileDiffLines?.[lineNumber];
   }
 
-  /**
-   * How many rows precede a hunk in either view. The rows in front of a hunk are unmodified and exist
-   * in both files, so they map 1:1 to the leading rows — which is exactly the range the hunk guards.
-   *
-   * Git omits `,1` from a range, so a missing length parses to `NaN` and means a single line. A
-   * zero-length new range (`@@ -2 +1,0 @@`, a pure deletion) reports the line the gap sits *after*,
-   * so the count is `newStartIndex` there instead of `newStartIndex - 1`.
-   */
-  #getHunkLeadingRows(hunk: DiffHunkItem) {
-    if (!hunk.hunkInfo) return 0;
-    const { newStartIndex, newLength } = hunk.hunkInfo;
-    const length = Number.isFinite(newLength) ? newLength : 1;
-    return Math.max((length > 0 ? newStartIndex - 1 : newStartIndex) || 0, 0);
-  }
-
   #getOldRawLine(lineNumber: number) {
     return this.#oldFileLines?.[lineNumber];
   }
@@ -937,15 +922,18 @@ export class DiffFile {
             if (__DEV__ && Number.isFinite(hideStart)) {
               console.warn("[@git-diff-view/core] The first hunk cannot have a previous diff line.");
             }
+            // `len` is the index of the row being pushed, i.e. of this hunk's first body line, so the
+            // rows in front of the first hunk are exactly `[0, len)` — unlike `hunkInfo.newStartIndex`
+            // this stays right for a fragment whose earlier hunks were stripped.
             prevHunkLine.splitInfo = {
               ...prevHunkLine.hunkInfo,
 
               startHiddenIndex: 0,
-              endHiddenIndex: this.#getHunkLeadingRows(prevHunkLine),
+              endHiddenIndex: len,
               plainText: prevHunkLine.text,
 
               _startHiddenIndex: 0,
-              _endHiddenIndex: this.#getHunkLeadingRows(prevHunkLine),
+              _endHiddenIndex: len,
               _plainText: prevHunkLine.text,
             };
             hideStart = Infinity;
@@ -1112,15 +1100,18 @@ export class DiffFile {
             if (__DEV__ && Number.isFinite(hideStart)) {
               console.warn("[@git-diff-view/core] The first hunk cannot have a previous diff line.");
             }
+            // `len` is the index of the row being pushed, i.e. of this hunk's first body line, so the
+            // rows in front of the first hunk are exactly `[0, len)` — unlike `hunkInfo.newStartIndex`
+            // this stays right for a fragment whose earlier hunks were stripped.
             prevHunkLine.unifiedInfo = {
               ...prevHunkLine.hunkInfo,
 
               startHiddenIndex: 0,
-              endHiddenIndex: this.#getHunkLeadingRows(prevHunkLine),
+              endHiddenIndex: len,
               plainText: prevHunkLine.text,
 
               _startHiddenIndex: 0,
-              _endHiddenIndex: this.#getHunkLeadingRows(prevHunkLine),
+              _endHiddenIndex: len,
               _plainText: prevHunkLine.text,
             };
             hideStart = Infinity;
