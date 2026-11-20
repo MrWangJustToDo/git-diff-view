@@ -90,6 +90,18 @@ const buildLynx = async () => {
   await copyCss("lynx", "diff-view.css");
 };
 
+const buildOctane = async () => {
+  await new Promise<void>((resolve, reject) => {
+    const process = spawn("pnpm", ["run", "build"], {
+      cwd: "packages/octane",
+      shell: true,
+      stdio: "inherit",
+    });
+    process.on("close", (code) => (code === 0 ? resolve() : reject(new Error(`Octane build exited with ${code}`))));
+    process.on("error", reject);
+  });
+};
+
 const buildSolid = async () => {
   await new Promise<void>((r, j) => {
     const ls = spawn(`cd packages/solid && pnpm run build`, { shell: true, stdio: "inherit" });
@@ -139,6 +151,7 @@ const start = async () => {
   await buildCli();
   await buildReact();
   await buildLynx();
+  await buildOctane();
   await buildSolid();
   await buildSvelte();
   await buildVue();

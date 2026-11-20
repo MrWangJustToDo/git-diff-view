@@ -1,0 +1,180 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { getUnifiedContentLine, SplitSide } from "@git-diff-view/core";
+import { diffFontSizeName, removeAllSelection, diffAsideWidthName, getDiffIdFromElement } from "@git-diff-view/utils";
+import { Fragment, memo, useEffect, useMemo, useRef } from "octane";
+// @ts-ignore
+import { useSyncExternalStore } from "octane";
+
+import { useTextWidth } from "../hooks/useTextWidth";
+
+import { DiffUnifiedContentLine } from "./DiffUnifiedContentLine.tsrx";
+import { DiffUnifiedExtendLine } from "./DiffUnifiedExtendLine.tsrx";
+import { DiffUnifiedHunkLine } from "./DiffUnifiedHunkLine.tsrx";
+import { DiffUnifiedWidgetLine } from "./DiffUnifiedWidgetLine.tsrx";
+import { useDiffViewContext } from "./DiffViewContext";
+import { DiffWidgetContext } from "./DiffWidgetContext";
+import { createDiffWidgetStore } from "./tools";
+
+import type { DiffFile } from "@git-diff-view/core";
+import type { NativeMouseEventHandler, OctaneStyle } from "../octane-types";
+
+export const DiffUnifiedView = memo(({ diffFile }: { diffFile: DiffFile }) => {
+  const { useDiffContext } = useDiffViewContext();
+
+  const ref = useRef<HTMLStyleElement | null>(null);
+
+  const tempRef = useRef<SplitSide | undefined>(undefined);
+
+  const useDiffContextRef = useRef(useDiffContext);
+
+  useDiffContextRef.current = useDiffContext;
+
+  // performance optimization
+  const useWidget = useMemo(() => createDiffWidgetStore(useDiffContextRef), []);
+
+  const contextValue = useMemo(() => ({ useWidget }), [useWidget]);
+
+  const { fontSize, enableWrap, enableHighlight, enableAddWidget, onCreateUseWidgetHook } =
+    useDiffContext.useShallowStableSelector((s) => ({
+      fontSize: s.fontSize,
+      enableWrap: s.enableWrap,
+      enableHighlight: s.enableHighlight,
+      enableAddWidget: s.enableAddWidget,
+      onCreateUseWidgetHook: s.onCreateUseWidgetHook,
+    }));
+
+  useSyncExternalStore(diffFile.subscribe, diffFile.getUpdateCount, diffFile.getUpdateCount);
+
+  useEffect(() => {
+    const { setWidget } = useWidget.getReadonlyState();
+
+    setWidget({});
+  }, [diffFile, useWidget]);
+
+  useEffect(() => {
+    onCreateUseWidgetHook?.(useWidget);
+  }, [useWidget, onCreateUseWidgetHook]);
+
+  const unifiedLineLength = Math.max(diffFile.unifiedLineLength, diffFile.fileLineLength);
+
+  const _width = useTextWidth({
+    text: unifiedLineLength.toString(),
+    font: useMemo(() => ({ fontSize: fontSize + "px", fontFamily: "Menlo, Consolas, monospace" }), [fontSize]),
+  });
+
+  const width = Math.max(40, _width + 10);
+
+  const lines = getUnifiedContentLine(diffFile);
+
+  const setStyle = (side?: SplitSide) => {
+    if (!ref.current) return;
+    if (!side) {
+      ref.current.textContent = "";
+    } else {
+      const id = `diff-root${diffFile.getId()}`;
+      ref.current.textContent = `#${id} [data-state="extend"] {user-select: none} \n#${id} [data-state="hunk"] {user-select: none} \n#${id} [data-state="widget"] {user-select: none}`;
+    }
+  };
+
+  const onMouseDown: NativeMouseEventHandler<HTMLTableSectionElement> = (e) => {
+    let ele: Element | null = e.target as Element;
+
+    // need remove all the selection
+    if (ele && ele instanceof HTMLElement && ele.nodeName === "BUTTON") {
+      removeAllSelection();
+      return;
+    }
+
+    const id = getDiffIdFromElement(ele as HTMLElement);
+
+    if (id && id !== `diff-root${diffFile.getId()}`) {
+      return;
+    }
+
+    while (ele && ele instanceof HTMLElement) {
+      const state = ele.getAttribute("data-state");
+      if (state) {
+        if (state === "extend" || state === "hunk" || state === "widget") {
+          if (tempRef.current !== undefined) {
+            tempRef.current = undefined;
+            setStyle(undefined);
+            removeAllSelection();
+          }
+          return;
+        } else {
+          if (tempRef.current !== SplitSide.new) {
+            tempRef.current = SplitSide.new;
+            setStyle(SplitSide.new);
+            removeAllSelection();
+          }
+          return;
+        }
+      }
+
+      ele = ele.parentElement;
+    }
+  };
+
+  return (
+    <DiffWidgetContext.Provider value={contextValue}>
+      <div className={`unified-diff-view ${enableWrap ? "unified-diff-view-wrap" : "unified-diff-view-normal"} w-full`}>
+        <style data-select-style ref={ref} />
+        <div
+          className="unified-diff-table-wrapper diff-table-scroll-container w-full overflow-x-auto overflow-y-hidden"
+          style={{
+            [diffAsideWidthName]: `${Math.round(width)}px`,
+            fontFamily: "Menlo, Consolas, monospace",
+            fontSize: `var(${diffFontSizeName})`,
+          } as OctaneStyle}
+        >
+          <table
+            className={`unified-diff-table w-full border-collapse border-spacing-0 ${enableWrap ? "table-fixed" : ""}`}
+          >
+            <colgroup>
+              <col className="unified-diff-table-num-col" />
+              <col className="unified-diff-table-content-col" />
+            </colgroup>
+            <thead className="hidden">
+              <tr>
+                <th scope="col">line number</th>
+                <th scope="col">line content</th>
+              </tr>
+            </thead>
+            <tbody className="diff-table-body leading-[1.6]" onMouseDownCapture={onMouseDown}>
+              {lines.map((item) => (
+                <Fragment key={item.index}>
+                  <DiffUnifiedHunkLine index={item.index} lineNumber={item.lineNumber} diffFile={diffFile} />
+                  <DiffUnifiedContentLine
+                    index={item.index}
+                    lineNumber={item.lineNumber}
+                    diffFile={diffFile}
+                    enableWrap={!!enableWrap}
+                    enableHighlight={!!enableHighlight}
+                    enableAddWidget={!!enableAddWidget}
+                  />
+                  <DiffUnifiedWidgetLine
+                    index={item.index}
+                    lineNumber={item.lineNumber}
+                    diffFile={diffFile}
+                    enableWrap={!!enableWrap}
+                  />
+                  <DiffUnifiedExtendLine
+                    index={item.index}
+                    lineNumber={item.lineNumber}
+                    diffFile={diffFile}
+                    enableWrap={!!enableWrap}
+                  />
+                </Fragment>
+              ))}
+              <DiffUnifiedHunkLine
+                index={diffFile.unifiedLineLength}
+                lineNumber={diffFile.unifiedLineLength}
+                diffFile={diffFile}
+              />
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </DiffWidgetContext.Provider>
+  );
+});

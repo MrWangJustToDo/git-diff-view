@@ -1,0 +1,33 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
+const { resolve } = require("path");
+
+module.exports = {
+  plugins: {
+    "postcss-import": {},
+    tailwindcss: { config: resolve(__dirname) + "/tailwind.config.cjs" },
+    "postcss-prefix-selector": {
+      prefix: ".diff-tailwindcss-wrapper",
+      transform: function (prefix, selector, prefixedSelector, _filePath, rule) {
+        const filePath = rule.source?.input?.file;
+        if (filePath.includes("_base.css")) return prefixedSelector;
+        if (
+          selector.includes("diff-line-extend-wrapper") ||
+          selector.includes("diff-line-widget-wrapper") ||
+          selector.includes("diff-multiselect-wrapper") ||
+          selector.includes("diff-multi-selecting")
+        ) {
+          return selector;
+        }
+        if (selector.includes("[data-theme")) return prefix + selector;
+        if (filePath.includes("node_modules")) {
+          if (filePath.includes("dark.css")) {
+            return `${prefix}[data-theme="dark"] .diff-line-syntax-raw ${selector}`;
+          }
+          return `${prefix}[data-theme="light"] .diff-line-syntax-raw ${selector}`;
+        }
+        return prefixedSelector;
+      },
+    },
+    autoprefixer: {},
+  },
+};
