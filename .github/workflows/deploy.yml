@@ -7,6 +7,10 @@
 # "Found 0 artifact(s)" - the REST API lists the artifact, the service that deploy-pages queries does
 # not. `upload-pages-artifact@v5` ships `upload-artifact@v7`; keep it and `deploy-pages` on the same
 # v5 line, and keep the upload and the deploy in separate jobs like the upstream template does.
+#
+# The toolchain runs on current LTS actions/runtime: `pnpm/action-setup@v6` takes the pnpm version
+# from `packageManager`, and `setup-node@v7` on Node 22 (18 is end-of-life, and v3 of both actions
+# runs on the retired node16 runtime).
 name: Deploy static content to Pages
 
 on:
@@ -35,11 +39,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: install pnpm
-        uses: pnpm/action-setup@v2
+        # no `version` input on purpose: the action reads `packageManager` from package.json
+        uses: pnpm/action-setup@v6
       - name: Set up Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
-          node-version: 18
+          node-version: 22
           cache: 'pnpm'
       - name: Install dependencies
         run: pnpm install
