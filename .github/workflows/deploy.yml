@@ -1,4 +1,12 @@
-# Simple workflow for deploying static content to GitHub Pages
+# Deploys the react example to GitHub Pages.
+#
+# The fragile part is the artifact hand-off: `deploy-pages` does not read the uploaded file, it looks
+# the artifact up in the artifact service (`@actions/artifact` -> Twirp ListArtifacts), and that
+# service only lists artifacts written by a recent `upload-artifact`. `upload-pages-artifact@v3` still
+# pins `upload-artifact@v4`, so the upload step reports success while the deploy step fails with
+# "Found 0 artifact(s)" - the REST API lists the artifact, the service that deploy-pages queries does
+# not. `upload-pages-artifact@v5` ships `upload-artifact@v7`; keep it and `deploy-pages` on the same
+# v5 line, and keep the upload and the deploy in separate jobs like the upstream template does.
 name: Deploy static content to Pages
 
 on:
@@ -21,11 +29,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Single deploy job since we're just deploying
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -42,12 +46,19 @@ jobs:
       - name: Build
         run: pnpm run build:packages && pnpm run build:react
       - name: Setup Pages
-        uses: actions/configure-pages@v4
+        uses: actions/configure-pages@v5
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
-          # Upload dist repository
           path: './ui/react-example/dist'
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
