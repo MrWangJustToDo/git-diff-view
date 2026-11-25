@@ -505,7 +505,9 @@
   display: flex;
   flex-direction: column;
   gap: 0.15rem;
-  padding: 0.9rem 0;
+  /* block padding only: the horizontal gutter comes from utilities on the cell, and a `padding`
+     shorthand here would silently win the cascade over them (same specificity, defined later) */
+  padding-block: 0.9rem;
 }
 
 .lp-stat-value {

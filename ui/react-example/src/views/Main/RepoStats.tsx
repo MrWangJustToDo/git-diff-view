@@ -47,13 +47,21 @@ export const StatBand = () => {
   return (
     <div className="lp-page border-b border-solid border-[var(--line-soft)]">
       <div className="mx-auto w-full max-w-[1120px] px-6 md:px-8">
-        <div className="grid grid-cols-2 border-y border-solid border-[var(--line-soft)] sm:grid-cols-3 lg:grid-cols-5">
+        {/*
+         * The hero already draws the hairline above this band, and the wrapper draws the one below,
+         * so the grid itself must stay borderless — an inset `border-y` here doubled both rules.
+         *
+         * The divider is a cell's left border, so the gutter has to live on the cells: `pl-4` after
+         * the first keeps the text off the line, `pr-4` breathes before the next one, and the outer
+         * edges stay flush with the container to line up with the sections above and below.
+         */}
+        <div className="grid grid-cols-2 lg:grid-cols-5">
           {items.map((item, i) => (
             <div
               key={item.label}
-              className={`lp-stat px-4 ${i > 0 ? "border-l border-solid border-[var(--line-soft)]" : ""} ${
-                i >= 2 ? "max-lg:hidden lg:flex" : ""
-              }`}
+              className={`lp-stat ${i > 0 ? "border-l border-solid border-[var(--line-soft)] pl-4" : ""} ${
+                i < items.length - 1 ? "pr-4" : ""
+              } ${i >= 2 ? "max-lg:hidden lg:flex" : ""}`}
             >
               <span className="lp-stat-value">{item.value}</span>
               <span className="lp-stat-label">{item.label}</span>
